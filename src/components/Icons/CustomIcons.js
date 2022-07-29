@@ -465,3 +465,23 @@ export const ShareSelectedIcon = createIcon({
     </svg>
   ),
 });
+
+export const TagIcon = createIcon({
+  displayName: "TagSelectedIcon",
+  path: (
+    <svg
+      width="35"
+      height="28"
+      viewBox="0 0 25 17"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M11.499 1H1.49902V11H11.499L17.499 6L11.499 1Z"
+        fill="#3B5D7C"
+        stroke="#3B5D7C"
+        strokeWidth="1.5"
+      />
+    </svg>
+  ),
+});
