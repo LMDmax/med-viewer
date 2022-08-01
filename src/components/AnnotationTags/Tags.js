@@ -120,6 +120,78 @@ const DisplayMenu = ({ tagName, tagColour, tags, setTags }) => {
   );
 };
 
+const NewTags = ({ tagName, tagColour, tags, setTags }) => {
+  const [subMenu, setSubMenu] = useState(false);
+  return (
+    <Menu closeOnSelect={false} isOpen={subMenu}>
+      <MenuButton w="100%" onClick={() => setSubMenu(!subMenu)}>
+        <HStack>
+          <Text>+ Add new Tags</Text>
+        </HStack>
+      </MenuButton>
+      <Portal>
+        <MenuList
+          pos="relative"
+          left="210px"
+          bottom="39px"
+          borderRadius={0}
+          bgColor="#FCFCFC"
+          p={0}
+        >
+          <MenuItem bgColor="#FFFFFF" _hover={{ bgColor: "#FFFFFF" }} p={0}>
+            <Box w={300} h={192}>
+              <Flex
+                bgColor="#F6F6F6"
+                w="100%"
+                h={42}
+                paddingStart={5}
+                alignItems="center"
+              >
+                Add Tag
+              </Flex>
+              <HStack paddingStart={5} paddingTop={5} spacing={5}>
+                <Text fontSize={14}>Tag Name</Text>
+                <Input
+                  w={150}
+                  borderRadius={0}
+                  placeholder="Enter name here"
+                  onClick={(e) => e.stopPropagation()}
+                  padding={1}
+                  fontSize={14}
+                />
+              </HStack>
+              <HStack paddingStart={16} paddingTop={8} spacing={5}>
+                <Button
+                  borderRadius={0}
+                  bgColor="#F6F6F6"
+                  _focus={{ outline: "none" }}
+                  border="1px solid #2D3047"
+                  _hover={{ bgColor: "#F6F6F6" }}
+                  fontWeight={400}
+                  w={100}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  borderRadius={0}
+                  bgColor="#F6F6F6"
+                  _focus={{ outline: "none" }}
+                  border="1px solid #2D3047"
+                  _hover={{ bgColor: "#F6F6F6" }}
+                  fontWeight={400}
+                  w={100}
+                >
+                  Okay
+                </Button>
+              </HStack>
+            </Box>
+          </MenuItem>
+        </MenuList>
+      </Portal>
+    </Menu>
+  );
+};
+
 const Tags = () => {
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
   const [isOpen, setIsOpen] = useState(false);
@@ -225,7 +297,7 @@ const Tags = () => {
             bgColor: "#DEDEDE",
           }}
         >
-          +Add new Tags
+          <NewTags />
         </MenuItem>
       </MenuList>
     </Menu>
