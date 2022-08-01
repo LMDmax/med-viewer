@@ -23,8 +23,8 @@ import { TagIcon } from "../Icons/CustomIcons";
 const DisplayMenu = ({ tagName, tagColour, tags, setTags }) => {
   const [subMenu, setSubMenu] = useState(false);
   return (
-    <Menu closeOnSelect={false}>
-      <MenuButton w="100%">
+    <Menu closeOnSelect={false} isOpen={subMenu}>
+      <MenuButton w="100%" onClick={() => setSubMenu(!subMenu)}>
         <HStack>
           <Box h="20px" w="20px" bgColor={tagColour} />
           <Text>{tagName}</Text>
@@ -51,7 +51,7 @@ const DisplayMenu = ({ tagName, tagColour, tags, setTags }) => {
                 Edit
               </Flex>
               <HStack paddingStart={5} paddingTop={5}>
-                <Menu isOpen={subMenu}>
+                <Menu>
                   <MenuButton
                     as={Button}
                     w={151}
@@ -64,7 +64,6 @@ const DisplayMenu = ({ tagName, tagColour, tags, setTags }) => {
                       border: "none",
                     }}
                     _active={{ bgColor: "#F6F6F6" }}
-                    onClick={() => setSubMenu(!subMenu)}
                   >
                     <HStack justifyContent="center">
                       <Box h="20px" w="20px" bgColor={tagColour} />
@@ -75,12 +74,7 @@ const DisplayMenu = ({ tagName, tagColour, tags, setTags }) => {
                   </MenuButton>
                   <Portal>
                     <MenuList>
-                      <MenuItem
-                        closeOnSelect={false}
-                        p={0}
-                        borderRadius={0}
-                        onClick={() => setSubMenu(!subMenu)}
-                      >
+                      <MenuItem closeOnSelect={false} p={0} borderRadius={0}>
                         <SwatchesPicker />
                       </MenuItem>
                     </MenuList>
