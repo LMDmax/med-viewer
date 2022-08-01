@@ -13,8 +13,106 @@ import {
   MenuButton,
   HStack,
   Box,
+  Flex,
+  Input,
 } from "@chakra-ui/react";
 import { TagIcon } from "../Icons/CustomIcons";
+import { ChevronDownIcon } from "@chakra-ui/icons";
+
+const DisplayMenu = () => (
+  <Menu closeOnSelect={false}>
+    <MenuButton w="100%">
+      <HStack>
+        <Box h="20px" w="20px" bgColor="#C80000" />
+        <Text>Tumor</Text>
+      </HStack>
+    </MenuButton>
+    <Portal>
+      <MenuList
+        pos="relative"
+        left="210px"
+        bottom="39px"
+        borderRadius={0}
+        bgColor="#FCFCFC"
+        p={0}
+      >
+        <MenuItem bgColor="#FFFFFF" _hover={{ bgColor: "#FFFFFF" }} p={0}>
+          <Box w={300} h={192}>
+            <Flex
+              bgColor="#F6F6F6"
+              w="100%"
+              h={42}
+              paddingStart={5}
+              alignItems="center"
+            >
+              Edit
+            </Flex>
+            <HStack paddingStart={5} paddingTop={5}>
+              <Menu>
+                <MenuButton
+                  as={Button}
+                  w={151}
+                  h={42}
+                  alignItems="center"
+                  bgColor="#F6F6F6"
+                  rightIcon={<ChevronDownIcon />}
+                  borderRadius={0}
+                  _focus={{
+                    border: "none",
+                  }}
+                  _active={{ bgColor: "#F6F6F6" }}
+                >
+                  <HStack justifyContent="center">
+                    <Box h="20px" w="20px" bgColor="#C80000" />
+                    <Text fontSize={14} fontWeight={400}>
+                      #C80000
+                    </Text>
+                  </HStack>
+                </MenuButton>
+                <Portal>
+                  <MenuList>
+                    <MenuItem>Here will be colours</MenuItem>
+                  </MenuList>
+                </Portal>
+              </Menu>
+              <Input
+                w={100}
+                borderRadius={0}
+                placeholder="Stroma"
+                onClick={(e) => e.stopPropagation()}
+                padding={1}
+              />
+            </HStack>
+            <HStack paddingStart={16} paddingTop={8} spacing={5}>
+              <Button
+                borderRadius={0}
+                bgColor="#F6F6F6"
+                _focus={{ outline: "none" }}
+                border="1px solid #2D3047"
+                _hover={{ bgColor: "#F6F6F6" }}
+                fontWeight={400}
+                w={100}
+              >
+                Cancel
+              </Button>
+              <Button
+                borderRadius={0}
+                bgColor="#F6F6F6"
+                _focus={{ outline: "none" }}
+                border="1px solid #2D3047"
+                _hover={{ bgColor: "#F6F6F6" }}
+                fontWeight={400}
+                w={100}
+              >
+                Okay
+              </Button>
+            </HStack>
+          </Box>
+        </MenuItem>
+      </MenuList>
+    </Portal>
+  </Menu>
+);
 
 const Tags = () => {
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
@@ -81,10 +179,7 @@ const Tags = () => {
           }}
           alignItems="center"
         >
-          <HStack>
-            <Box h="20px" w="20px" bgColor="#C80000" />
-            <Text>Tumor</Text>
-          </HStack>
+          <DisplayMenu />
         </MenuItem>
         <MenuItem
           _hover={{ bgColor: "#DEDEDE" }}
