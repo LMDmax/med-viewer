@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { BiTag } from "react-icons/bi";
+import { SwatchesPicker } from "react-color";
 import {
   Button,
   Menu,
@@ -19,100 +20,111 @@ import {
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { TagIcon } from "../Icons/CustomIcons";
 
-const DisplayMenu = ({ tagName, tagColour }) => (
-  <Menu closeOnSelect={false}>
-    <MenuButton w="100%">
-      <HStack>
-        <Box h="20px" w="20px" bgColor={tagColour} />
-        <Text>{tagName}</Text>
-      </HStack>
-    </MenuButton>
-    <Portal>
-      <MenuList
-        pos="relative"
-        left="210px"
-        bottom="39px"
-        borderRadius={0}
-        bgColor="#FCFCFC"
-        p={0}
-      >
-        <MenuItem bgColor="#FFFFFF" _hover={{ bgColor: "#FFFFFF" }} p={0}>
-          <Box w={300} h={192}>
-            <Flex
-              bgColor="#F6F6F6"
-              w="100%"
-              h={42}
-              paddingStart={5}
-              alignItems="center"
-            >
-              Edit
-            </Flex>
-            <HStack paddingStart={5} paddingTop={5}>
-              <Menu>
-                <MenuButton
-                  as={Button}
-                  w={151}
-                  h={42}
-                  alignItems="center"
-                  bgColor="#F6F6F6"
-                  rightIcon={<ChevronDownIcon />}
+const DisplayMenu = ({ tagName, tagColour, tags, setTags }) => {
+  const [subMenu, setSubMenu] = useState(false);
+  return (
+    <Menu closeOnSelect={false}>
+      <MenuButton w="100%">
+        <HStack>
+          <Box h="20px" w="20px" bgColor={tagColour} />
+          <Text>{tagName}</Text>
+        </HStack>
+      </MenuButton>
+      <Portal>
+        <MenuList
+          pos="relative"
+          left="210px"
+          bottom="39px"
+          borderRadius={0}
+          bgColor="#FCFCFC"
+          p={0}
+        >
+          <MenuItem bgColor="#FFFFFF" _hover={{ bgColor: "#FFFFFF" }} p={0}>
+            <Box w={300} h={192}>
+              <Flex
+                bgColor="#F6F6F6"
+                w="100%"
+                h={42}
+                paddingStart={5}
+                alignItems="center"
+              >
+                Edit
+              </Flex>
+              <HStack paddingStart={5} paddingTop={5}>
+                <Menu isOpen={subMenu}>
+                  <MenuButton
+                    as={Button}
+                    w={151}
+                    h={42}
+                    alignItems="center"
+                    bgColor="#F6F6F6"
+                    rightIcon={<ChevronDownIcon />}
+                    borderRadius={0}
+                    _focus={{
+                      border: "none",
+                    }}
+                    _active={{ bgColor: "#F6F6F6" }}
+                    onClick={() => setSubMenu(!subMenu)}
+                  >
+                    <HStack justifyContent="center">
+                      <Box h="20px" w="20px" bgColor={tagColour} />
+                      <Text fontSize={14} fontWeight={400}>
+                        {tagColour}
+                      </Text>
+                    </HStack>
+                  </MenuButton>
+                  <Portal>
+                    <MenuList>
+                      <MenuItem
+                        closeOnSelect={false}
+                        p={0}
+                        borderRadius={0}
+                        onClick={() => setSubMenu(!subMenu)}
+                      >
+                        <SwatchesPicker />
+                      </MenuItem>
+                    </MenuList>
+                  </Portal>
+                </Menu>
+                <Input
+                  w={100}
                   borderRadius={0}
-                  _focus={{
-                    border: "none",
-                  }}
-                  _active={{ bgColor: "#F6F6F6" }}
+                  placeholder={tagName}
+                  onClick={(e) => e.stopPropagation()}
+                  padding={1}
+                />
+              </HStack>
+              <HStack paddingStart={16} paddingTop={8} spacing={5}>
+                <Button
+                  borderRadius={0}
+                  bgColor="#F6F6F6"
+                  _focus={{ outline: "none" }}
+                  border="1px solid #2D3047"
+                  _hover={{ bgColor: "#F6F6F6" }}
+                  fontWeight={400}
+                  w={100}
                 >
-                  <HStack justifyContent="center">
-                    <Box h="20px" w="20px" bgColor={tagColour} />
-                    <Text fontSize={14} fontWeight={400}>
-                      {tagColour}
-                    </Text>
-                  </HStack>
-                </MenuButton>
-                <Portal>
-                  <MenuList>
-                    <MenuItem>Here will be colours</MenuItem>
-                  </MenuList>
-                </Portal>
-              </Menu>
-              <Input
-                w={100}
-                borderRadius={0}
-                placeholder={tagName}
-                onClick={(e) => e.stopPropagation()}
-                padding={1}
-              />
-            </HStack>
-            <HStack paddingStart={16} paddingTop={8} spacing={5}>
-              <Button
-                borderRadius={0}
-                bgColor="#F6F6F6"
-                _focus={{ outline: "none" }}
-                border="1px solid #2D3047"
-                _hover={{ bgColor: "#F6F6F6" }}
-                fontWeight={400}
-                w={100}
-              >
-                Cancel
-              </Button>
-              <Button
-                borderRadius={0}
-                bgColor="#F6F6F6"
-                _focus={{ outline: "none" }}
-                border="1px solid #2D3047"
-                _hover={{ bgColor: "#F6F6F6" }}
-                fontWeight={400}
-                w={100}
-              >
-                Okay
-              </Button>
-            </HStack>
-          </Box>
-        </MenuItem>
-      </MenuList>
-    </Portal>
-  </Menu>
-);
+                  Cancel
+                </Button>
+                <Button
+                  borderRadius={0}
+                  bgColor="#F6F6F6"
+                  _focus={{ outline: "none" }}
+                  border="1px solid #2D3047"
+                  _hover={{ bgColor: "#F6F6F6" }}
+                  fontWeight={400}
+                  w={100}
+                >
+                  Okay
+                </Button>
+              </HStack>
+            </Box>
+          </MenuItem>
+        </MenuList>
+      </Portal>
+    </Menu>
+  );
+};
 
 const Tags = () => {
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
@@ -139,6 +151,7 @@ const Tags = () => {
       colour: "#FFC800",
     },
   ];
+  const [definedTags, setDefinedTags] = useState(tags);
   return (
     <Menu isOpen={isOpen}>
       <Tooltip
@@ -203,7 +216,12 @@ const Tags = () => {
               }}
               alignItems="center"
             >
-              <DisplayMenu tagName={tagItem.tag} tagColour={tagItem.colour} />
+              <DisplayMenu
+                tagName={tagItem.tag}
+                tagColour={tagItem.colour}
+                tags={definedTags}
+                setTags={setDefinedTags}
+              />
             </MenuItem>
           );
         })}
