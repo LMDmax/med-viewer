@@ -16,15 +16,15 @@ import {
   Flex,
   Input,
 } from "@chakra-ui/react";
-import { TagIcon } from "../Icons/CustomIcons";
 import { ChevronDownIcon } from "@chakra-ui/icons";
+import { TagIcon } from "../Icons/CustomIcons";
 
-const DisplayMenu = () => (
+const DisplayMenu = ({ tagName, tagColour }) => (
   <Menu closeOnSelect={false}>
     <MenuButton w="100%">
       <HStack>
-        <Box h="20px" w="20px" bgColor="#C80000" />
-        <Text>Tumor</Text>
+        <Box h="20px" w="20px" bgColor={tagColour} />
+        <Text>{tagName}</Text>
       </HStack>
     </MenuButton>
     <Portal>
@@ -63,9 +63,9 @@ const DisplayMenu = () => (
                   _active={{ bgColor: "#F6F6F6" }}
                 >
                   <HStack justifyContent="center">
-                    <Box h="20px" w="20px" bgColor="#C80000" />
+                    <Box h="20px" w="20px" bgColor={tagColour} />
                     <Text fontSize={14} fontWeight={400}>
-                      #C80000
+                      {tagColour}
                     </Text>
                   </HStack>
                 </MenuButton>
@@ -78,7 +78,7 @@ const DisplayMenu = () => (
               <Input
                 w={100}
                 borderRadius={0}
-                placeholder="Stroma"
+                placeholder={tagName}
                 onClick={(e) => e.stopPropagation()}
                 padding={1}
               />
@@ -117,6 +117,28 @@ const DisplayMenu = () => (
 const Tags = () => {
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
   const [isOpen, setIsOpen] = useState(false);
+  const tags = [
+    {
+      tag: "Tumor",
+      colour: "#C80000",
+    },
+    {
+      tag: "Stroma",
+      colour: "#96C896",
+    },
+    {
+      tag: "Immune Cells",
+      colour: "#A05AA0",
+    },
+    {
+      tag: "Necrosis",
+      colour: "#323232",
+    },
+    {
+      tag: "Other",
+      colour: "#FFC800",
+    },
+  ];
   return (
     <Menu isOpen={isOpen}>
       <Tooltip
@@ -172,59 +194,19 @@ const Tags = () => {
         p={0}
         boxShadow="0px 2px 4px rgba(0, 0, 0, 0.15)"
       >
-        <MenuItem
-          _hover={{ bgColor: "#DEDEDE" }}
-          _active={{
-            bgColor: "#DEDEDE",
-          }}
-          alignItems="center"
-        >
-          <DisplayMenu />
-        </MenuItem>
-        <MenuItem
-          _hover={{ bgColor: "#DEDEDE" }}
-          _active={{
-            bgColor: "#DEDEDE",
-          }}
-        >
-          <HStack>
-            <Box h="20px" w="20px" bgColor="#96C896" />
-            <Text>Stroma</Text>
-          </HStack>
-        </MenuItem>{" "}
-        <MenuItem
-          _hover={{ bgColor: "#DEDEDE" }}
-          _active={{
-            bgColor: "#DEDEDE",
-          }}
-        >
-          <HStack>
-            <Box h="20px" w="20px" bgColor="#A05AA0" />
-            <Text>Immune Cells</Text>
-          </HStack>
-        </MenuItem>{" "}
-        <MenuItem
-          _hover={{ bgColor: "#DEDEDE" }}
-          _active={{
-            bgColor: "#DEDEDE",
-          }}
-        >
-          <HStack>
-            <Box h="20px" w="20px" bgColor="#323232" />
-            <Text>Necrosis</Text>
-          </HStack>
-        </MenuItem>
-        <MenuItem
-          _hover={{ bgColor: "#DEDEDE" }}
-          _active={{
-            bgColor: "#DEDEDE",
-          }}
-        >
-          <HStack>
-            <Box h="20px" w="20px" bgColor="#FFC800" />
-            <Text>Other</Text>
-          </HStack>
-        </MenuItem>
+        {tags.map((tagItem) => {
+          return (
+            <MenuItem
+              _hover={{ bgColor: "#DEDEDE" }}
+              _active={{
+                bgColor: "#DEDEDE",
+              }}
+              alignItems="center"
+            >
+              <DisplayMenu tagName={tagItem.tag} tagColour={tagItem.colour} />
+            </MenuItem>
+          );
+        })}
         <MenuItem
           _hover={{ bgColor: "#DEDEDE" }}
           _active={{
