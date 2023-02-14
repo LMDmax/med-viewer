@@ -598,7 +598,7 @@ const ViewerControls = ({
           gap="1.3vh"
           alignItems="end"
           mt="8px"
-          mr="18px"
+          mr="23px"
         >
           <VStack
             // w="fit-content"
