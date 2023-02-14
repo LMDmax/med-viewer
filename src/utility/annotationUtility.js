@@ -5,6 +5,9 @@ import { normalizeUnits } from "./utility";
 /** Get annotation JSON */
 export const getAnnotationJSON = (annotation) => {
   if (!annotation) return null;
+  // console.log("====================================");
+  // console.log("annotationssss", annotation);
+  // console.log("====================================");
   if (annotation.type === "viewport") return annotation;
   return annotation.toJSON([
     "slide",
@@ -13,6 +16,7 @@ export const getAnnotationJSON = (annotation) => {
     "title",
     "zoomLevel",
     "points",
+    "cords",
     "timeStamp",
     "area",
     "perimeter",
@@ -20,6 +24,7 @@ export const getAnnotationJSON = (annotation) => {
     "end_points",
     "isAnalysed",
     "analysedROI",
+    "timeStamp",
   ]);
 };
 
@@ -48,13 +53,14 @@ export const createAnnotationMessage = ({
   slideId,
   shape,
   viewer,
-  user,
+  userInfo,
   annotation,
+  maskType,
+  type,
 }) => {
   if (!viewer || !shape) return null;
-
   const message = {
-    username: user ? `${user.firstName} ${user.lastName}` : "",
+    username: userInfo ? `${userInfo.firstName} ${userInfo.lastName}` : "",
     object: shape,
     image: null,
   };
@@ -125,6 +131,8 @@ export const createAnnotationMessage = ({
         slide: slideId,
         zoomLevel: viewer.viewport.getZoom(),
         text: "",
+        maskType: maskType || "",
+        type: type || "",
       };
     } else {
       message.object.set({
@@ -132,7 +140,9 @@ export const createAnnotationMessage = ({
         hash,
         slide: slideId,
         zoomLevel: viewer.viewport.getZoom(),
-        text: "",
+        text: message.object.text,
+        maskType: maskType || "",
+        type: type || "",
       });
     }
   }
@@ -158,6 +168,22 @@ export const createAnnotation = (annotation) => {
         rx: annotation.rx,
         ry: annotation.ry,
         angle: annotation.angle,
+      });
+      break;
+
+    case "textbox":
+      shape = new fabric.Textbox(`${annotation.text}`, {
+        left: annotation.left,
+        top: annotation.top,
+        width: 450,
+        color: annotation.color,
+        backgroundColor: "#B0C8D6",
+        opacity: annotation.opacity,
+        title: annotation.title,
+        text: annotation.text,
+        // hasBorders: false,
+        hasControls: false,
+        hasRotatingPoint: false,
       });
       break;
 
@@ -195,7 +221,7 @@ export const createAnnotation = (annotation) => {
       break;
 
     case "line":
-      shape = new fabric.Line(annotation.points, {
+      shape = new fabric.Line(annotation.cords, {
         color: annotation.color,
         stroke: annotation.stroke,
         strokeWidth: annotation.strokeWidth,
@@ -214,12 +240,31 @@ export const createAnnotation = (annotation) => {
   return shape;
 };
 
+export const addAnnotationToCanvas = ({ canvas, user, viewer, annotation }) => {
+  if (!canvas || !annotation || !viewer) return null;
+
+  const shape = createAnnotation(annotation);
+
+  // add shape to canvas and to activity feed
+  if (shape && shape.type !== "viewport") canvas.add(shape);
+
+  const message = createAnnotationMessage({
+    shape,
+    viewer,
+    annotation,
+    user,
+  });
+
+  return message;
+};
+
 // add annotation to the canvas
 export const addAnnotationsToCanvas = ({
   canvas,
   viewer,
   user,
   annotations = [],
+  userInfo,
 }) => {
   if (!canvas || !viewer || annotations.length === 0) return null;
   // remove render on each add annotation
@@ -239,6 +284,7 @@ export const addAnnotationsToCanvas = ({
       viewer,
       annotation,
       user,
+      userInfo,
     });
 
     feed.push(message);
@@ -325,11 +371,15 @@ export const deleteAnnotationFromDB = async ({
   slideId,
   hash,
   onDeleteAnnotation,
+  type,
 }) => {
   if (!onDeleteAnnotation) return false;
   try {
-    const resp = await onDeleteAnnotation({ hash, slideId });
-    if (resp.data.success) return true;
+    // const resp = await onDeleteAnnotation({ hash, slideId });
+    onDeleteAnnotation({ hash, slideId, type });
+
+    // if (resp.data.success) return true;
+    return true;
   } catch (error) {
     console.error(error);
   }
@@ -343,9 +393,16 @@ export const saveAnnotationToDB = async ({
   onSaveAnnotation,
 }) => {
   if (!slideId || !annotation || !onSaveAnnotation) return false;
+
   const annotationJSON = getAnnotationJSON(annotation);
   try {
-    await onSaveAnnotation({ slideId, data: annotationJSON });
+    annotationJSON.strokeWidth = annotationJSON.strokeWidth.toString();
+    delete annotationJSON?.strokeDashArray;
+    delete annotationJSON?.slide;
+    delete annotationJSON?.shadow;
+    delete annotationJSON?.timeStamp;
+
+    onSaveAnnotation({ slideId, data: annotationJSON });
   } catch (error) {
     return false;
   }
@@ -395,17 +452,22 @@ export const loadAnnotationsFromDB = async ({
   slideId,
   canvas,
   viewer,
-  onLoadAnnotations,
+  // onLoadAnnotations,
+  data,
+  success,
+  userInfo,
 }) => {
-  if (!slideId || !canvas || !viewer || !onLoadAnnotations)
+  // if (!slideId || !canvas || !viewer || !onLoadAnnotations)
+  if (!slideId || !canvas || !viewer)
     return { feed: null, status: "error", message: "Invalid parameters" };
   try {
-    const { data, success } = await onLoadAnnotations({ slideId }).unwrap();
+    // const { data, success } = await onLoadAnnotations({ slideId }).unwrap();
     if (success) {
       const feed = addAnnotationsToCanvas({
         canvas,
         viewer,
         annotations: data,
+        userInfo,
       });
 
       return { feed, status: "success" };
@@ -524,7 +586,20 @@ export const getAnnotationMetric = (annotation, mpp) => {
   let metric = { type: "", value: "", unit: "μm" };
 
   if (annotation.type === "line") {
-    const [x1, y1, x2, y2] = annotation.points;
+    console.log("====================================");
+    console.log("annotation", annotation);
+    console.log("====================================");
+    let x1, y1, x2, y2;
+    if (annotation.cords) {
+      [x1, y1, x2, y2] = annotation.cords;
+    } else {
+      //  var {x1, y1, x2, y2} = annotation
+      x1 = annotation.x1;
+      x2 = annotation.x2;
+      y1 = annotation.y1;
+      y2 = annotation.y2;
+    }
+    // const [x1, y1, x2, y2] = annotation.cords || annotation;
     metric = { type: "length", value: Math.hypot(x2 - x1, y2 - y1) * mpp };
   } else if (annotation.type === "rectang") {
     metric = {
