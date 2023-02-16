@@ -165,6 +165,7 @@ useEffect(()=>{
   setLymphocyteCount(data?.getTils?.data?.lymphocyte_count);
     const canvas = fabricOverlay?.fabricCanvas();
     canvas?.remove(cords)?.requestRenderAll();
+    canvas?.remove(originalTil)?.requestRenderAll();
     allPathStroma?.forEach(obj => {
       canvas?.remove(obj).requestRenderAll();
     });
