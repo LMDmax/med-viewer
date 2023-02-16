@@ -109,7 +109,7 @@ if(tilSubscriptionData){
   setTilScore(tilSubscriptionData?.tilStatus?.data?.TILS_score);
   setLymphocyteCount(tilSubscriptionData?.tilStatus?.data?.lymphocyte_count);
 }
-},[TilHover,data,hideModification,tilSubscriptionData,refetch])
+},[data,hideModification,tilSubscriptionData])
 
 // console.log(tilSubscriptionData);
   useEffect(() => {
@@ -272,6 +272,10 @@ if(hideModification){
   setModifiedLymphocyte(data1?.getTils?.data?.lymphocyte_cords);
   setModifiedTumor(data1?.getTils?.data?.tumor_cords);
   setModifiedStroma(data1?.getTils?.data?.stroma_cords);
+  setStromaArea(data1?.getTils?.data?.stroma_area);
+  setTumorArea(data1?.getTils?.data?.tumor_area);
+  setTilScore(data1?.getTils?.data?.TILS_score);
+  setLymphocyteCount(data1?.getTils?.data?.lymphocyte_count);
   const canvas = fabricOverlay.fabricCanvas();
   const color = "#2Aff00";
   const roi = modifiedLymphocyte.flat(2).map((TIL_cord) => {
@@ -336,6 +340,10 @@ if(hideModification){
       canvas.add(ts);
 }
 else{
+  setStromaArea(data?.getTils?.data?.stroma_area);
+  setTumorArea(data?.getTils?.data?.tumor_area);
+  setTilScore(data?.getTils?.data?.TILS_score);
+  setLymphocyteCount(data?.getTils?.data?.lymphocyte_count);
   handleTIL();
 }
 },[hideModification])
