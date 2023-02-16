@@ -247,15 +247,12 @@ useEffect(()=>{
   });
 // console.log(data1);
 // console.log(data);
-
-if(data1){
-  setModifiedLymphocyte(data1?.getTils?.data?.lymphocyte_cords);
+    setModifiedLymphocyte(data1?.getTils?.data?.lymphocyte_cords);
   setModifiedTumor(data1?.getTils?.data?.tumor_cords);
   setModifiedStroma(data1?.getTils?.data?.stroma_cords);
-  
-}
+  // console.log(modifiedTumor);
 
-},[TilHover])
+},[])
 
 
 useEffect(()=>{
@@ -268,17 +265,14 @@ useEffect(()=>{
 },[data])
 
 useEffect(()=>{
-if(hideModification){
-  setModifiedLymphocyte(data1?.getTils?.data?.lymphocyte_cords);
-  setModifiedTumor(data1?.getTils?.data?.tumor_cords);
-  setModifiedStroma(data1?.getTils?.data?.stroma_cords);
+if(hideModification && data1){
   setStromaArea(data1?.getTils?.data?.stroma_area);
   setTumorArea(data1?.getTils?.data?.tumor_area);
   setTilScore(data1?.getTils?.data?.TILS_score);
   setLymphocyteCount(data1?.getTils?.data?.lymphocyte_count);
   const canvas = fabricOverlay.fabricCanvas();
   const color = "#2Aff00";
-  const roi = modifiedLymphocyte.flat(2).map((TIL_cord) => {
+  const roi = data1?.getTils?.data?.lymphocyte_cords?.flat(2).map((TIL_cord) => {
     return new fabric.Rect({
       top: TIL_cord[1],
       // bottom:TIL_cord[1],
@@ -293,7 +287,7 @@ if(hideModification){
       strokeUniform: true,
     });
   });
-  const roi2 = modifiedTumor?.map((tumor_cord) => {
+  const roi2 = data1?.getTils?.data?.tumor_cords?.map((tumor_cord) => {
     // console.log(tumor_cord);
     const points2 = tumor_cord.map((point2) => ({
       x: point2[0][0],
@@ -307,7 +301,7 @@ if(hideModification){
       strokeUniform: true,
     });
   })
-  const roi3 = modifiedStroma?.map((stroma_cord) => {
+  const roi3 = data1?.getTils?.data?.stroma_cords?.map((stroma_cord) => {
     const points3 = stroma_cord.map((point3) => ({
       x: point3[0][0],
       y: point3[0][1],
