@@ -21,16 +21,17 @@ const ZoomSlider = ({ viewerId }) => {
     var regExpr = new RegExp("^[0-9.]+$");
     if (!regExpr.test(event.key)) {
       if (
-        event.key === "Backspace" ||
-        event.key === "Shift" ||
-        event.key === "Enter" ||
-        event.key === "Ctrl" ||
-        event.key === "Alt" ||
-        event.key === "Tab" ||
-        event.key === "Esc" ||
-        event.key === "CapsLock"
+        !(
+          event.key === "Backspace" ||
+          event.key === "Shift" ||
+          event.key === "Enter" ||
+          event.key === "Ctrl" ||
+          event.key === "Alt" ||
+          event.key === "Tab" ||
+          event.key === "Esc" ||
+          event.key === "CapsLock"
+        )
       ) {
-      } else {
         toast({
           title: "Not Valid Input",
           description: "Please Provide Me A Valid Input",
@@ -40,7 +41,6 @@ const ZoomSlider = ({ viewerId }) => {
         });
         setAlphabet(true);
       }
-      console.log(event.key);
     }
   };
   const handleZoomLevel = (e) => {
