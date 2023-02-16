@@ -21,6 +21,10 @@ const Move = ({
   annotations,
   enableAI,
   enableFilters,
+  setStromaArea,
+  setTumorArea,
+  setTilScore,
+  setLymphocyteCount,
   pathStroma,
   hideModification,
   setNewHilData,
@@ -184,6 +188,10 @@ const Move = ({
           setNewHilData={setNewHilData}
           refreshHil={refreshHil}
           viewerId={viewerId}
+          setStromaArea={setStromaArea}
+  setTumorArea={setTumorArea}
+  setTilScore={setTilScore}
+  setLymphocyteCount={setLymphocyteCount}
           pathStroma={pathStroma}
         />
         <CommentBox

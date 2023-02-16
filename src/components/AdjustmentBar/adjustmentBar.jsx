@@ -22,6 +22,10 @@ const AdjustmentBar = ({
   slides,
   slide,
   refreshHil,
+  setTumorArea,
+  setStromaArea,
+  setTilScore,
+  setLymphocyteCount,
   report,
   setNewHilData,
   application,
@@ -162,6 +166,10 @@ const AdjustmentBar = ({
         enableAI={enableAI}
         enableFilters={enableFilters}
         pathStroma={pathStroma}
+        setTumorArea={setTumorArea}
+        setStromaArea={setStromaArea}
+        setTilScore={setTilScore}
+        setLymphocyteCount={setLymphocyteCount}
         viewerId={currentViewer}
         setNewHilData={setNewHilData}
         viewerIds={viewerIds}
