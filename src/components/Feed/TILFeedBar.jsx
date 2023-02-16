@@ -72,6 +72,10 @@ const TILFeedBar = ({
   setPathStroma,
   hideModification,
   setHideModification,
+  lymphocyteCount,
+  tumorArea,
+  stromaArea,
+  tilScore,
   pathStroma,
   setHideLymphocyte,
   hideLymphocyte,
@@ -557,18 +561,15 @@ const TILFeedBar = ({
             borderRadius="none"
             size="sm"
             onClick={()=>{
-              setHideModification(hideModification +1);
+              setHideModification(!hideModification);
             }}
           >
-           {hideModification % 2 === 0 ? "Show Modification" : "Hide Modification"}
+           {hideModification  === true ? "Show Modification" : "Hide Modification"}
           </Button>
         </Flex>
         <Box borderBottom="1px solid gray" px="5px" mb="10px" py="3px">
           <Text fontSize="15px">
-            TIL Score :{" "}
-            {localStorage.getItem("tilScore")
-              ? localStorage.getItem("tilScore")
-              : ""}{" "}
+            TIL Score : {tilScore}
           </Text>
         </Box>
         <Box borderBottom="1px solid gray" px="5px" mb="10px" py="3px">
@@ -579,26 +580,17 @@ const TILFeedBar = ({
         </Box>
         <Box borderBottom="1px solid gray" px="5px" mb="10px" py="3px">
           <Text fontSize="15px">
-            Tumor Area :{" "}
-            {localStorage.getItem("tumorArea")
-              ? localStorage.getItem("tumorArea")
-              : ""}
+            Tumor Area : {tumorArea}
           </Text>
         </Box>
         <Box borderBottom="1px solid gray" px="5px" mb="10px" py="3px">
           <Text fontSize="15px">
-            Stroma Area :{" "}
-            {localStorage.getItem("stromaArea")
-              ? localStorage.getItem("stromaArea")
-              : ""}
+            Stroma Area : {stromaArea}
           </Text>
         </Box>
         <Box borderBottom="1px solid gray" px="5px" mb="10px" py="3px">
           <Text fontSize="15px">
-            Lymphocytes Count:{" "}
-            {localStorage.getItem("lymphocyteCount")
-              ? localStorage.getItem("lymphocyteCount")
-              : ""}
+            Lymphocytes Count: {lymphocyteCount}
           </Text>
         </Box>
       </Box>

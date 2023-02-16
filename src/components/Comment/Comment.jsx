@@ -166,7 +166,7 @@ const CommentBox = ({ userInfo, viewerId, application }) => {
   useEffect(() => {
     const addToFeed = async () => {
       if (!shape) return;
-      console.log(shape);
+      // console.log(shape);
       const message = createAnnotationMessage({
         slideId,
         shape,
