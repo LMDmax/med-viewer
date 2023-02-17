@@ -894,7 +894,7 @@ else{
         // console.log(t);
         setCords(t);
         canvas.add(t);
-        setStromaArea(tilSubscriptionData?.tilStatus?.data?.stroma_cord);
+        setStromaArea(tilSubscriptionData?.tilStatus?.data?.stroma_area);
         setTumorArea(0);
         setTilScore(tilSubscriptionData?.tilStatus?.data?.TILS_score);
      setLymphocyteCount(tilSubscriptionData?.tilStatus?.data?.lymphocyte_count);
@@ -1075,7 +1075,7 @@ else{
         // console.log(t);
         setCords(t);
         canvas.add(t);
-        setStromaArea(tilSubscriptionData?.tilStatus?.data?.stroma_cord);
+        setStromaArea(tilSubscriptionData?.tilStatus?.data?.stroma_area);
         setTumorArea(tilSubscriptionData?.tilStatus?.data?.tumor_area);
         setTilScore(tilSubscriptionData?.tilStatus?.data?.TILS_score);
      setLymphocyteCount(tilSubscriptionData?.tilStatus?.data?.lymphocyte_count);

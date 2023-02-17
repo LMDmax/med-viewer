@@ -108,7 +108,7 @@ const CommentBox = ({ userInfo, viewerId, application }) => {
       const scaleFactor = getScaleFactor(viewer);
 
       var text = new fabric.Textbox("Comment", {
-        width: 450,
+        width: 100,
         left: origX,
         top: origY,
         styles: null,
@@ -132,7 +132,7 @@ const CommentBox = ({ userInfo, viewerId, application }) => {
       });
 
       // Add new shape to the canvas
-      text && fabricOverlay.fabricCanvas().add(text);
+      // text && fabricOverlay.fabricCanvas().add(text);
 
       canvas.setActiveObject(myStateRef.current.currentDragShape);
 
