@@ -105,7 +105,6 @@ const CommentBox = ({ userInfo, viewerId, application }) => {
       // Create new Shape instance
 
       // Stroke fill
-      const scaleFactor = getScaleFactor(viewer);
 
       var text = new fabric.Textbox("Comment", {
         width: 100,
@@ -120,7 +119,7 @@ const CommentBox = ({ userInfo, viewerId, application }) => {
       });
 
       // console.log(text);
-      // canvas.add(text);
+      canvas.add(text);
 
       // canvas.add(mousecursor);
       setMyState({
