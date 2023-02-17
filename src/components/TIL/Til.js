@@ -143,6 +143,8 @@ if(tilSubscriptionData){
 
   useEffect(()=>{
     if(tilSubscriptionData?.tilStatus?.message=== "Hil is completed"){
+    const canvas = fabricOverlay?.fabricCanvas();
+      canvas.isDrawingMode = false;
       toast({
                 title: "HIL is processed",
                 description: "",
@@ -151,8 +153,13 @@ if(tilSubscriptionData){
                 isClosable: true,
               });
       client.resetStore();
-     refetch();
-     setNewHilData(true);
+        refetch();
+     setNewHilData(false);
+     setTimeout(() => {
+      const canvas = fabricOverlay?.fabricCanvas();
+      canvas.isDrawingMode = true;
+      setNewHilData(true);
+    }, 2000);
     // console.log(tilSubscriptionData?.tilStatus);
   }
 },[tilSubscriptionData])
@@ -615,6 +622,10 @@ else{
         // console.log(t);
         setCords(t);
         canvas.add(t);
+        setStromaArea(data?.getTils?.data?.stroma_area);
+  setTumorArea(0);
+  setTilScore(data?.getTils?.data?.TILS_score);
+  setLymphocyteCount(data?.getTils?.data?.lymphocyte_count);
   }
   if(TilHover && hideStroma === true){
     // console.log("s");
@@ -681,7 +692,10 @@ else{
     //  console.log(t);
      setCords(t);
      canvas.add(t);
-  
+     setStromaArea(0);
+     setTumorArea(data?.getTils?.data?.tumor_area);
+     setTilScore(data?.getTils?.data?.TILS_score);
+  setLymphocyteCount(data?.getTils?.data?.lymphocyte_count);
   }
   if(TilHover && hideLymphocyte === true){
     // console.log("s");
@@ -748,6 +762,11 @@ else{
         // console.log(t);
         setCords(t);
         canvas.add(t);
+        setStromaArea(data?.getTils?.data?.stroma_area);
+  setTumorArea(data?.getTils?.data?.tumor_area);
+  setTilScore(data?.getTils?.data?.TILS_score);
+  setLymphocyteCount(0);
+
   }
   if(TilHover && hideTumor === false && hideStroma === false && hideLymphocyte === false){
     const canvas = fabricOverlay.fabricCanvas();
@@ -813,6 +832,10 @@ else{
         // console.log(t);
         setCords(t);
         canvas.add(t);
+        setStromaArea(data?.getTils?.data?.stroma_cord);
+        setTumorArea(data?.getTils?.data?.tumor_area);
+        setTilScore(data?.getTils?.data?.TILS_score);
+     setLymphocyteCount(data?.getTils?.data?.lymphocyte_count);
   }
     }
     else if (
@@ -871,6 +894,10 @@ else{
         // console.log(t);
         setCords(t);
         canvas.add(t);
+        setStromaArea(tilSubscriptionData?.tilStatus?.data?.stroma_cord);
+        setTumorArea(0);
+        setTilScore(tilSubscriptionData?.tilStatus?.data?.TILS_score);
+     setLymphocyteCount(tilSubscriptionData?.tilStatus?.data?.lymphocyte_count);
   }
   if(TilHover && hideStroma === true){
     // console.log("s");
@@ -924,7 +951,10 @@ else{
     //  console.log(t);
      setCords(t);
      canvas.add(t);
-  
+     setStromaArea(0);
+     setTumorArea(tilSubscriptionData?.tilStatus?.data?.tumor_area);
+     setTilScore(tilSubscriptionData?.tilStatus?.data?.TILS_score);
+  setLymphocyteCount(tilSubscriptionData?.tilStatus?.data?.lymphocyte_count);
   }
   if(TilHover && hideLymphocyte === true){
     // console.log("s");
@@ -976,6 +1006,10 @@ else{
         // console.log(t);
         setCords(t);
         canvas.add(t);
+        setStromaArea(tilSubscriptionData?.tilStatus?.data?.stroma_cord);
+        setTumorArea(tilSubscriptionData?.tilStatus?.data?.tumor_area);
+        setTilScore(tilSubscriptionData?.tilStatus?.data?.TILS_score);
+     setLymphocyteCount(0);
   }
   if(TilHover && hideTumor === false && hideStroma === false && hideLymphocyte === false){
     const canvas = fabricOverlay.fabricCanvas();
@@ -1041,6 +1075,10 @@ else{
         // console.log(t);
         setCords(t);
         canvas.add(t);
+        setStromaArea(tilSubscriptionData?.tilStatus?.data?.stroma_cord);
+        setTumorArea(tilSubscriptionData?.tilStatus?.data?.tumor_area);
+        setTilScore(tilSubscriptionData?.tilStatus?.data?.TILS_score);
+     setLymphocyteCount(tilSubscriptionData?.tilStatus?.data?.lymphocyte_count);
   }
     }
   },[hideLymphocyte, hideStroma, hideTumor])
