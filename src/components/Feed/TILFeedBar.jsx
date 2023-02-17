@@ -560,7 +560,7 @@ const TILFeedBar = ({
             borderColor="#00153f"
             borderRadius="none"
             size="sm"
-disabled={newHilData? false : true}
+            disabled={newHilData? false : true}
             onClick={()=>{
               setHideModification(!hideModification);
             }}
