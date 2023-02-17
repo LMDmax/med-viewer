@@ -101,7 +101,7 @@ const Rotate = ({ viewerId }) => {
           alignItems="flex-end"
         >
           <Flex
-            w="15vw"
+            w="250px"
             h="100%"
             direction="column"
             bgColor="#f5f7fa"
@@ -133,13 +133,9 @@ const Rotate = ({ viewerId }) => {
                   disabled={rotationValue >= 180}
                 />
               </HStack>
-              <HStack ml="1vw" spacing={0}>
+              <HStack ml="1vw" spacing="15px">
                 <Text>Angle:</Text>
-                <Input
-                  value={rotationValue}
-                  onChange={(e) => setRotationValue(e.target.value)}
-                  borderRadius={0}
-                />
+                <Text>{rotationValue}</Text>
               </HStack>
             </Flex>
             <HStack
@@ -158,7 +154,7 @@ const Rotate = ({ viewerId }) => {
               >
                 Reset
               </Button>
-              <Button
+              {/* <Button
                 borderRadius={0}
                 onClick={() => setSliderToggle(!sliderToggle)}
                 bgColor="#3B5D7C"
@@ -167,7 +163,7 @@ const Rotate = ({ viewerId }) => {
                 fontSize={12}
               >
                 Save Action
-              </Button>
+              </Button> */}
             </HStack>
           </Flex>
           <Slider
