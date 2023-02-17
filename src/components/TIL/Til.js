@@ -109,7 +109,7 @@ if(tilSubscriptionData){
   setTilScore(tilSubscriptionData?.tilStatus?.data?.TILS_score);
   setLymphocyteCount(tilSubscriptionData?.tilStatus?.data?.lymphocyte_count);
 }
-},[TilHover,data,hideModification,tilSubscriptionData,refetch])
+},[data,hideModification,tilSubscriptionData])
 
 // console.log(tilSubscriptionData);
   useEffect(() => {
@@ -143,6 +143,8 @@ if(tilSubscriptionData){
 
   useEffect(()=>{
     if(tilSubscriptionData?.tilStatus?.message=== "Hil is completed"){
+    const canvas = fabricOverlay?.fabricCanvas();
+      canvas.isDrawingMode = false;
       toast({
                 title: "HIL is processed",
                 description: "",
@@ -151,8 +153,13 @@ if(tilSubscriptionData){
                 isClosable: true,
               });
       client.resetStore();
-     refetch();
-     setNewHilData(true);
+        refetch();
+     setNewHilData(false);
+     setTimeout(() => {
+      const canvas = fabricOverlay?.fabricCanvas();
+      canvas.isDrawingMode = true;
+      setNewHilData(true);
+    }, 2000);
     // console.log(tilSubscriptionData?.tilStatus);
   }
 },[tilSubscriptionData])
@@ -165,6 +172,7 @@ useEffect(()=>{
   setLymphocyteCount(data?.getTils?.data?.lymphocyte_count);
     const canvas = fabricOverlay?.fabricCanvas();
     canvas?.remove(cords)?.requestRenderAll();
+    canvas?.remove(originalTil)?.requestRenderAll();
     allPathStroma?.forEach(obj => {
       canvas?.remove(obj).requestRenderAll();
     });
@@ -246,15 +254,12 @@ useEffect(()=>{
   });
 // console.log(data1);
 // console.log(data);
-
-if(data1){
-  setModifiedLymphocyte(data1?.getTils?.data?.lymphocyte_cords);
+    setModifiedLymphocyte(data1?.getTils?.data?.lymphocyte_cords);
   setModifiedTumor(data1?.getTils?.data?.tumor_cords);
   setModifiedStroma(data1?.getTils?.data?.stroma_cords);
-  
-}
+  // console.log(modifiedTumor);
 
-},[TilHover])
+},[])
 
 
 useEffect(()=>{
@@ -267,13 +272,14 @@ useEffect(()=>{
 },[data])
 
 useEffect(()=>{
-if(hideModification){
-  setModifiedLymphocyte(data1?.getTils?.data?.lymphocyte_cords);
-  setModifiedTumor(data1?.getTils?.data?.tumor_cords);
-  setModifiedStroma(data1?.getTils?.data?.stroma_cords);
+if(hideModification && data1){
+  setStromaArea(data1?.getTils?.data?.stroma_area);
+  setTumorArea(data1?.getTils?.data?.tumor_area);
+  setTilScore(data1?.getTils?.data?.TILS_score);
+  setLymphocyteCount(data1?.getTils?.data?.lymphocyte_count);
   const canvas = fabricOverlay.fabricCanvas();
   const color = "#2Aff00";
-  const roi = modifiedLymphocyte.flat(2).map((TIL_cord) => {
+  const roi = data1?.getTils?.data?.lymphocyte_cords?.flat(2).map((TIL_cord) => {
     return new fabric.Rect({
       top: TIL_cord[1],
       // bottom:TIL_cord[1],
@@ -288,7 +294,7 @@ if(hideModification){
       strokeUniform: true,
     });
   });
-  const roi2 = modifiedTumor?.map((tumor_cord) => {
+  const roi2 = data1?.getTils?.data?.tumor_cords?.map((tumor_cord) => {
     // console.log(tumor_cord);
     const points2 = tumor_cord.map((point2) => ({
       x: point2[0][0],
@@ -302,7 +308,7 @@ if(hideModification){
       strokeUniform: true,
     });
   })
-  const roi3 = modifiedStroma?.map((stroma_cord) => {
+  const roi3 = data1?.getTils?.data?.stroma_cords?.map((stroma_cord) => {
     const points3 = stroma_cord.map((point3) => ({
       x: point3[0][0],
       y: point3[0][1],
@@ -335,6 +341,10 @@ if(hideModification){
       canvas.add(ts);
 }
 else{
+  setStromaArea(data?.getTils?.data?.stroma_area);
+  setTumorArea(data?.getTils?.data?.tumor_area);
+  setTilScore(data?.getTils?.data?.TILS_score);
+  setLymphocyteCount(data?.getTils?.data?.lymphocyte_count);
   handleTIL();
 }
 },[hideModification])
@@ -612,6 +622,10 @@ else{
         // console.log(t);
         setCords(t);
         canvas.add(t);
+        setStromaArea(data?.getTils?.data?.stroma_area);
+  setTumorArea(0);
+  setTilScore(data?.getTils?.data?.TILS_score);
+  setLymphocyteCount(data?.getTils?.data?.lymphocyte_count);
   }
   if(TilHover && hideStroma === true){
     // console.log("s");
@@ -678,7 +692,10 @@ else{
     //  console.log(t);
      setCords(t);
      canvas.add(t);
-  
+     setStromaArea(0);
+     setTumorArea(data?.getTils?.data?.tumor_area);
+     setTilScore(data?.getTils?.data?.TILS_score);
+  setLymphocyteCount(data?.getTils?.data?.lymphocyte_count);
   }
   if(TilHover && hideLymphocyte === true){
     // console.log("s");
@@ -745,6 +762,11 @@ else{
         // console.log(t);
         setCords(t);
         canvas.add(t);
+        setStromaArea(data?.getTils?.data?.stroma_area);
+  setTumorArea(data?.getTils?.data?.tumor_area);
+  setTilScore(data?.getTils?.data?.TILS_score);
+  setLymphocyteCount(0);
+
   }
   if(TilHover && hideTumor === false && hideStroma === false && hideLymphocyte === false){
     const canvas = fabricOverlay.fabricCanvas();
@@ -810,6 +832,10 @@ else{
         // console.log(t);
         setCords(t);
         canvas.add(t);
+        setStromaArea(data?.getTils?.data?.stroma_cord);
+        setTumorArea(data?.getTils?.data?.tumor_area);
+        setTilScore(data?.getTils?.data?.TILS_score);
+     setLymphocyteCount(data?.getTils?.data?.lymphocyte_count);
   }
     }
     else if (
@@ -868,6 +894,10 @@ else{
         // console.log(t);
         setCords(t);
         canvas.add(t);
+        setStromaArea(tilSubscriptionData?.tilStatus?.data?.stroma_cord);
+        setTumorArea(0);
+        setTilScore(tilSubscriptionData?.tilStatus?.data?.TILS_score);
+     setLymphocyteCount(tilSubscriptionData?.tilStatus?.data?.lymphocyte_count);
   }
   if(TilHover && hideStroma === true){
     // console.log("s");
@@ -921,7 +951,10 @@ else{
     //  console.log(t);
      setCords(t);
      canvas.add(t);
-  
+     setStromaArea(0);
+     setTumorArea(tilSubscriptionData?.tilStatus?.data?.tumor_area);
+     setTilScore(tilSubscriptionData?.tilStatus?.data?.TILS_score);
+  setLymphocyteCount(tilSubscriptionData?.tilStatus?.data?.lymphocyte_count);
   }
   if(TilHover && hideLymphocyte === true){
     // console.log("s");
@@ -973,6 +1006,10 @@ else{
         // console.log(t);
         setCords(t);
         canvas.add(t);
+        setStromaArea(tilSubscriptionData?.tilStatus?.data?.stroma_cord);
+        setTumorArea(tilSubscriptionData?.tilStatus?.data?.tumor_area);
+        setTilScore(tilSubscriptionData?.tilStatus?.data?.TILS_score);
+     setLymphocyteCount(0);
   }
   if(TilHover && hideTumor === false && hideStroma === false && hideLymphocyte === false){
     const canvas = fabricOverlay.fabricCanvas();
@@ -1038,6 +1075,10 @@ else{
         // console.log(t);
         setCords(t);
         canvas.add(t);
+        setStromaArea(tilSubscriptionData?.tilStatus?.data?.stroma_cord);
+        setTumorArea(tilSubscriptionData?.tilStatus?.data?.tumor_area);
+        setTilScore(tilSubscriptionData?.tilStatus?.data?.TILS_score);
+     setLymphocyteCount(tilSubscriptionData?.tilStatus?.data?.lymphocyte_count);
   }
     }
   },[hideLymphocyte, hideStroma, hideTumor])
