@@ -21,6 +21,7 @@ const Move = ({
   annotations,
   enableAI,
   enableFilters,
+  hitTil,
   setStromaArea,
   setTumorArea,
   setTilScore,
@@ -184,6 +185,7 @@ const Move = ({
           viewerIds={viewerIds}
           hideModification={hideModification}
           slide={slide}
+          hitTil={hitTil}
           mongoId={mongoId}
           setNewHilData={setNewHilData}
           refreshHil={refreshHil}

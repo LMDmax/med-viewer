@@ -26,6 +26,7 @@ const AdjustmentBar = ({
   setStromaArea,
   setTilScore,
   setLymphocyteCount,
+  hitTil,
   report,
   setNewHilData,
   application,
@@ -171,6 +172,7 @@ const AdjustmentBar = ({
         setTilScore={setTilScore}
         setLymphocyteCount={setLymphocyteCount}
         viewerId={currentViewer}
+        hitTil={hitTil}
         setNewHilData={setNewHilData}
         viewerIds={viewerIds}
         isMultiview={isMultiview}

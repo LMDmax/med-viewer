@@ -29,6 +29,7 @@ const Til = ({
   setTumorArea,
   setTilScore,
   setLymphocyteCount,
+  hitTil,
   slide,
   refreshHil,
   hideTumor,
@@ -113,7 +114,7 @@ if(tilSubscriptionData){
 
 // console.log(tilSubscriptionData);
   useEffect(() => {
-    if (!tilSubscriptionData) {
+    if (!tilSubscriptionData && hitTil === true) {
       getTils({
         variables: {
           query: {
@@ -136,7 +137,7 @@ if(tilSubscriptionData){
     // console.log("data",data);
     // console.log("eror",error);
     // getData();
-  }, []);
+  }, [hitTil,tilSubscriptionData]);
 
     // console.log(tilSubscriptionData?.tilStatus);
 
@@ -241,6 +242,7 @@ useEffect(()=>{
 },[refreshHil])
 
 useEffect(()=>{
+ if(data?.getTils?.data?.tumor_cord || data?.getTils?.data?.stroma_cord || data?.getTils?.data?.stroma_cord || tilSubscriptionData?.tilStatus?.data?.tumor_cord || tilSubscriptionData?.tilStatus?.data?.stroma_cord){
   getTils1({
     variables: {
       query: {
@@ -257,9 +259,10 @@ useEffect(()=>{
     setModifiedLymphocyte(data1?.getTils?.data?.lymphocyte_cords);
   setModifiedTumor(data1?.getTils?.data?.tumor_cords);
   setModifiedStroma(data1?.getTils?.data?.stroma_cords);
+ }
   // console.log(modifiedTumor);
 
-},[])
+},[data, tilSubscriptionData])
 
 
 useEffect(()=>{
@@ -1006,7 +1009,7 @@ else{
         // console.log(t);
         setCords(t);
         canvas.add(t);
-        setStromaArea(tilSubscriptionData?.tilStatus?.data?.stroma_cord);
+        setStromaArea(tilSubscriptionData?.tilStatus?.data?.stroma_area);
         setTumorArea(tilSubscriptionData?.tilStatus?.data?.tumor_area);
         setTilScore(tilSubscriptionData?.tilStatus?.data?.TILS_score);
      setLymphocyteCount(0);

@@ -78,6 +78,7 @@ const theme = extendTheme({
 
 const MedViewer = ({ viewerIds, ...props }) => {
   const [isReady, setIsReady] = useState(false);
+  const[hitTil, setHitTil] = useState(false);
   const [fabricOverlayState, setFabricOverlayState] = useReducer(
     fabricOverlayReducer,
     {
@@ -111,10 +112,11 @@ const MedViewer = ({ viewerIds, ...props }) => {
     setFabricOverlayState(addViewerWindow(viewerWindows));
     const key = getFileBucketFolder(viewerIds[0].originalFileUrl);
     // console.log(viewerIds);
-    axios.post("https://backup-quantize-vhut.prr.ai/vhut/download", {
+   const respPromise = axios.post("https://backup-quantize-vhut.prr.ai/vhut/download", {
       key,
       bucket_name: "med-ai-image-processor",
     });
+      setTimeout(()=> setHitTil(true),6000);
     setIsReady(true);
   }, [fabricOverlayState, viewerIds]);
 
@@ -128,7 +130,7 @@ const MedViewer = ({ viewerIds, ...props }) => {
     <React.StrictMode>
       <ChakraProvider theme={theme}>
         <StoreProvider value={{ fabricOverlayState, setFabricOverlayState }}>
-          <LayoutApp viewerIds={viewerIds} {...props} />
+          <LayoutApp  hitTil={hitTil} viewerIds={viewerIds} {...props} />
         </StoreProvider>
       </ChakraProvider>
     </React.StrictMode>

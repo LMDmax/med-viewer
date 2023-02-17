@@ -20,6 +20,7 @@ const LayoutApp = ({
   questionnaire,
   report,
   application,
+  hitTil,
   annotations,
   enableAI,
   enableFilters,
@@ -124,6 +125,7 @@ const LayoutApp = ({
           caseInfo={caseInfo}
           refreshHil={refreshHil}
           pathStroma={pathStroma}
+          hitTil={hitTil}
           setTumorArea={setTumorArea}
           setTilScore = {setTilScore}
           setStromaArea={setStromaArea}
