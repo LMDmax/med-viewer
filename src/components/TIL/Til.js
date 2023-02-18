@@ -242,7 +242,6 @@ useEffect(()=>{
 },[refreshHil])
 
 useEffect(()=>{
- if(data?.getTils?.data?.tumor_cord || data?.getTils?.data?.stroma_cord || data?.getTils?.data?.stroma_cord || tilSubscriptionData?.tilStatus?.data?.tumor_cord || tilSubscriptionData?.tilStatus?.data?.stroma_cord){
   getTils1({
     variables: {
       query: {
@@ -259,10 +258,10 @@ useEffect(()=>{
     setModifiedLymphocyte(data1?.getTils?.data?.lymphocyte_cords);
   setModifiedTumor(data1?.getTils?.data?.tumor_cords);
   setModifiedStroma(data1?.getTils?.data?.stroma_cords);
- }
+ 
   // console.log(modifiedTumor);
 
-},[data, tilSubscriptionData])
+},[TilHover])
 
 
 useEffect(()=>{
