@@ -111,7 +111,7 @@ const useCanvasHelpers = (viewerId) => {
   const deleteAnnotation = async (onDeleteAnnotation) => {
     if (!canvas || !onDeleteAnnotation) return;
     const activeObject = canvas.getActiveObject();
-    console.log("active....", activeObject);
+    // console.log("active....", activeObject);
     // // Object has children (ie. arrow has children objects triangle and line)
     // if (activeObject.getObjects) {
     //   const objs = activeObject.getObjects();

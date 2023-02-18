@@ -57,6 +57,12 @@ const Til = ({
   const client = useApolloClient();
   const [getTils, { data, loading, error, refetch }] = useLazyQuery(GET_TILS_ANALYSIS);
   const [getTils1, { data: data1, loading: loading1, error: error1, refetch: refetch1 }] = useLazyQuery(GET_TILS_ANALYSIS);
+
+  
+  // ------------------------------------------------------------------------------
+  // --------------------Use subscription hook fethcing data for 1st time-------------------------------
+  // ---------------------------------------------------------------------------------------
+
   const { data: tilSubscriptionData, error: vhutSubscription_error } =
     useSubscription(TIL_ANALYSIS_SUBSCRIPTION, {
       variables: {
@@ -66,6 +72,9 @@ const Til = ({
       },
     });
 
+// ------------------------------
+// ------------- To show the notification Toast when til is fetching
+// ------------------
   useEffect(() => {
     if (!data || !tilSubscriptionData) {
       toast({
@@ -77,7 +86,9 @@ const Til = ({
       });
     }
   }, []);
-
+// ------------------------------
+// ------------- To show the notification Toast when TIL is plotted
+// ------------------
 
   useEffect(()=>{
     if(Tilloading === false){
@@ -90,6 +101,10 @@ const Til = ({
       });
     }
   },[Tilloading])
+
+  // ------------------------------
+// ------------- updating state if data found,if hideModification button clicked,if hook data recived
+// ------------------
 
 useEffect(()=>{
 if(data){
@@ -111,6 +126,10 @@ if(tilSubscriptionData){
   setLymphocyteCount(tilSubscriptionData?.tilStatus?.data?.lymphocyte_count);
 }
 },[data,hideModification,tilSubscriptionData])
+
+  // ------------------------------
+// ------------- updating state for existing slide
+// ------------------
 
 // console.log(tilSubscriptionData);
   useEffect(() => {
@@ -141,6 +160,9 @@ if(tilSubscriptionData){
 
     // console.log(tilSubscriptionData?.tilStatus);
 
+      // ------------------------------
+// ------------- updating state after drawing stroma, abd refetching data from DB
+// ------------------
 
   useEffect(()=>{
     if(tilSubscriptionData?.tilStatus?.message=== "Hil is completed"){
@@ -164,6 +186,10 @@ if(tilSubscriptionData){
     // console.log(tilSubscriptionData?.tilStatus);
   }
 },[tilSubscriptionData])
+
+  // ------------------------------
+// ------------- Plotting TIL after hitting refresh button
+// ------------------
 
 useEffect(()=>{
   if(refreshHil>0){
@@ -241,6 +267,10 @@ useEffect(()=>{
   }
 },[refreshHil])
 
+  // ------------------------------
+// ------------- fetching data only TIL for hideModification
+// ------------------
+
 useEffect(()=>{
   getTils1({
     variables: {
@@ -263,6 +293,9 @@ useEffect(()=>{
 
 },[TilHover])
 
+  // ------------------------------
+// ------------- updating state if data found
+// ------------------
 
 useEffect(()=>{
   if (data?.getTils?.data) {
@@ -272,6 +305,11 @@ useEffect(()=>{
     setTilLoading(false);
   }
 },[data])
+
+
+  // ------------------------------
+// ------------- Plotting TIL only and removing HIL
+// ------------------
 
 useEffect(()=>{
 if(hideModification && data1){
@@ -351,7 +389,9 @@ else{
 }
 },[hideModification])
 
-
+  // ------------------------------
+// ------------- updating state after drawing stroma, and clearing canvas on hit til button
+// ------------------
 
   useEffect(() => {
     if(pathStroma){
@@ -371,6 +411,9 @@ else{
   }, [TilHover,pathStroma]);
 
 
+    // ------------------------------
+// ------------- hitting til button for first time
+// ------------------
 
 
   const handleTIL = () => {
@@ -549,6 +592,9 @@ else{
     }
   };
 
+    // ------------------------------
+// ------------- hiding stroma or tumor or lymphocytes
+// ------------------
 
   
   
@@ -1084,6 +1130,7 @@ else{
   }
     }
   },[hideLymphocyte, hideStroma, hideTumor])
+
   
   return (
     <>
