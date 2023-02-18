@@ -68,7 +68,8 @@ const Rotate = ({ viewerId }) => {
             size={ifScreenlessthan1536px ? 60 : 0}
             height={ifScreenlessthan1536px ? "26px" : "34px"}
             variant="unstyled"
-            backgroundColor="#F8F8F5"
+            backgroundColor={sliderToggle ? "#E4E5E8" : "#F8F8F5"}
+            outline={sliderToggle ? " 0.5px solid rgba(0, 21, 63, 1)" : ""}
             color="#3963c3"
             pl={ifScreenlessthan1536px ? "7px" : "10px"}
             mr="7px"
@@ -81,7 +82,17 @@ const Rotate = ({ viewerId }) => {
             _focus={{
               border: "none",
             }}
-            icon={<FiRotateCw size={IconSize()} color="#151C25" />}
+            boxShadow={
+              sliderToggle
+                ? "inset -2px -2px 2px rgba(0, 0, 0, 0.1), inset 2px 2px 2px rgba(0, 0, 0, 0.1)"
+                : null
+            }
+            icon={
+              <FiRotateCw
+                size={IconSize()}
+                color={sliderToggle ? "#3B5D7C" : "#000"}
+              />
+            }
             onClick={() => setSliderToggle(!sliderToggle)}
           />
           {/* rgba(0, 21, 63, 1) */}

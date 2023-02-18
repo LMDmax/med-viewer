@@ -191,9 +191,9 @@ const Move = ({
           refreshHil={refreshHil}
           viewerId={viewerId}
           setStromaArea={setStromaArea}
-  setTumorArea={setTumorArea}
-  setTilScore={setTilScore}
-  setLymphocyteCount={setLymphocyteCount}
+          setTumorArea={setTumorArea}
+          setTilScore={setTilScore}
+          setLymphocyteCount={setLymphocyteCount}
           pathStroma={pathStroma}
         />
         <CommentBox
