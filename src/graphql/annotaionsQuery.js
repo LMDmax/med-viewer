@@ -279,6 +279,7 @@ export const ANNOTATIONS_SUBSCRIPTION = gql`
         isUpdated
         isDeleted
       }
+      deleteType
     }
   }
 `;

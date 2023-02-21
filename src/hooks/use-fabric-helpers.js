@@ -53,17 +53,18 @@ const useCanvasHelpers = (viewerId) => {
   };
 
   //subscription sync clear annotations from canvas
-  const subscriptionClearAnnotations = (typeOfAnnotation) => {
+  const subscriptionClearAnnotations = (deleteType) => {
     if (!canvas) return;
 
-    setFabricOverlayState(updateActivityFeed({ id: viewerId, fullFeed: [] }));
-
-    // let objects = canvas.getObjects();
-    // for (var i = 0; i < objects.length; i++) {
-    //   //console.log(objects[i]);
-    //   console.log(objects[i].type);
-    // }
-    canvas.clear().requestRenderAll();
+    let objects = canvas.getObjects();
+    for (let i = 0; i < objects.length; i++) {
+      if (deleteType.includes(objects[i].type)) {
+        canvas.remove(objects[i]).requestRenderAll();
+        setFabricOverlayState(
+          removeFromActivityFeed({ id: viewerId, hash: objects[i].hash })
+        );
+      }
+    }
 
     toast({
       title: "Annotations deleted",

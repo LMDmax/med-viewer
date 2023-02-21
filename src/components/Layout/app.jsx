@@ -53,7 +53,6 @@ const LayoutApp = ({
   const [refreshHil, setRefreshHil] = useState(0);
   const [hideModification, setHideModification] = useState(false);
   const [totalCells, setTotalCells] = useState(0);
-
   const [tilScore, setTilScore] = useState();
   const [tumorArea, setTumorArea] = useState();
   const [stromaArea, setStromaArea] = useState();
@@ -127,7 +126,7 @@ const LayoutApp = ({
           pathStroma={pathStroma}
           hitTil={hitTil}
           setTumorArea={setTumorArea}
-          setTilScore = {setTilScore}
+          setTilScore={setTilScore}
           setStromaArea={setStromaArea}
           setLymphocyteCount={setLymphocyteCount}
           slide={viewerIds?.[0]}

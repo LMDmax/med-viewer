@@ -83,6 +83,8 @@ const ViewerControls = ({
   // console.log("activeFeed", activeFeed);
   const slideRef = useRef(null);
 
+  // console.log("annotation type:", annotationType);
+
   const toast = useToast();
   const iconSize = IconSize();
   const { isOpen, onOpen: openMenu, onClose: closeMenu } = useDisclosure();
@@ -381,12 +383,13 @@ const ViewerControls = ({
   useEffect(() => {
     if (subscriptionData && data) {
       // console.log("Subscribed Changed Annotation", subscriptionData);
-
-      // if annotation has been deleted
       if (subscriptionData.changedAnnotations.status.isDeleted) {
         const received_hash = subscriptionData.changedAnnotations.data.hash;
         if (received_hash) subscriptionDeleteAnnotation(received_hash);
-        else subscriptionClearAnnotations();
+        else
+          subscriptionClearAnnotations(
+            subscriptionData.changedAnnotations.deleteType
+          );
       } else if (subscriptionData.changedAnnotations.status.isCreated) {
         subscriptionAddAnnotation(subscriptionData.changedAnnotations.data);
       } else if (subscriptionData.changedAnnotations.status.isUpdated) {
