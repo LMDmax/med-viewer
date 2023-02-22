@@ -186,6 +186,7 @@ if(tilSubscriptionData){
       const canvas = fabricOverlay?.fabricCanvas();
       canvas.isDrawingMode = true;
       setNewHilData(true);
+      setLoadUI(true);
     }, 2000);
     // console.log(tilSubscriptionData?.tilStatus);
   }
@@ -202,6 +203,7 @@ useEffect(()=>{
   setTilScore(data?.getTils?.data?.TILS_score);
   setLymphocyteCount(data?.getTils?.data?.lymphocyte_count);
     const canvas = fabricOverlay?.fabricCanvas();
+    setLoadUI(false)
     canvas?.remove(cords)?.requestRenderAll();
     canvas?.remove(originalTil)?.requestRenderAll();
     allPathStroma?.forEach(obj => {
@@ -267,7 +269,11 @@ useEffect(()=>{
             });
             // console.log(t);
             setCords(t);
-            canvas.add(t);
+            setTimeout(()=>{canvas.add(t)},1000);
+            setTimeout(()=>{ requestAnimationFrame(() => {
+             console.log("Task completed by requestAnimationFrame")
+         setTimeout(()=>{ setLoadUI(true)},4000);
+       })},1000)
   }
 },[refreshHil])
 
@@ -325,6 +331,7 @@ if(hideModification && data1){
   setTilScore(data1?.getTils?.data?.TILS_score);
   setLymphocyteCount(data1?.getTils?.data?.lymphocyte_count);
   const canvas = fabricOverlay.fabricCanvas();
+  setLoadUI(false);
   const color = "#2Aff00";
   const roi = data1?.getTils?.data?.lymphocyte_cords?.flat(2).map((TIL_cord) => {
     return new fabric.Rect({
@@ -385,14 +392,183 @@ if(hideModification && data1){
         objectCaching: false,
       });
       setOriginalTil(ts);
-      canvas.add(ts);
+      setTimeout(()=>{canvas.add(ts)},1000);
+     setTimeout(()=>{ requestAnimationFrame(() => {
+      console.log("Task completed by requestAnimationFrame")
+  setTimeout(()=>{ setLoadUI(true)},4000);
+  })},1000)
 }
 else{
   setStromaArea(data?.getTils?.data?.stroma_area);
   setTumorArea(data?.getTils?.data?.tumor_area);
   setTilScore(data?.getTils?.data?.TILS_score);
   setLymphocyteCount(data?.getTils?.data?.lymphocyte_count);
-  handleTIL();
+  if (
+    tumorCords?.length > 0 ||
+    stromaCords?.length > 0 ||
+    tilCords?.length > 0
+  ) {
+    setLoadUI(false);
+    localStorage.setItem("til", "til");
+    const canvas = fabricOverlay.fabricCanvas();
+    const color = "#2Aff00";
+    const roi = tilCords
+      .flat(2)
+      .map((TIL_cord) =>
+        new fabric.Rect({
+          top: TIL_cord[1],
+          left: TIL_cord[0],
+          width: TIL_cord[2] - TIL_cord[0],
+          height: TIL_cord[3] - TIL_cord[1],
+          stroke: "red",
+          fill: "transparent",
+          strokeWidth: 1,
+          opacity: 1,
+          strokeUniform: true,
+        })
+      );
+    const roi2 = tumorCords?.map((tumor_cord) => {
+      const points2 = tumor_cord.map((point2) => ({
+        x: point2[0][0],
+        y: point2[0][1],
+      }));
+      return new fabric.Polygon(points2, {
+        stroke: `${color}83`,
+        strokeWidth: 1.2,
+        fill: "green",
+        opacity: 0.2,
+        strokeUniform: true,
+      });
+    });
+    const roi3 = stromaCords?.map((stroma_cord) => {
+      const points3 = stroma_cord.map((point3) => ({
+        x: point3[0][0],
+        y: point3[0][1],
+      }));
+      return new fabric.Polygon(points3, {
+        stroke: `yellow`,
+        strokeWidth: 1.2,
+        fill: color ? `yellow` : "",
+        opacity: 0.5,
+        strokeUniform: true,
+      });
+    });
+    canvas?.remove(cords)?.requestRenderAll();
+    canvas?.remove(originalTil)?.requestRenderAll();
+    const t = new fabric.Group(
+      [...roi2, ...roi3, ...roi],
+      {
+        selectable: false,
+        lockMovementX: false,
+        lockMovementY: false,
+        lockRotation: false,
+        lockScalingX: false,
+        lockScalingY: false,
+        lockUniScaling: false,
+        hoverCursor: "auto",
+        evented: false,
+        stroke: "",
+        strokeWidth: 1,
+        objectCaching: false,
+      }
+    );
+    setCords(t);
+    setTimeout(()=>{canvas.add(t)},1000);
+    if (TilHover === false) {
+      toast({
+        title: "TIL Process Done",
+        description: "",
+        status: "success",
+        duration: 1500,
+        isClosable: true,
+      });
+    }
+   setTimeout(()=>{ requestAnimationFrame(() => {
+    console.log("Task completed by requestAnimationFrame")
+setTimeout(()=>{ setLoadUI(true)},4000);
+})},1000)
+  }
+    else if (
+        tilSubscriptionData?.tilStatus?.data?.tumor_cords?.length > 0 ||
+        tilSubscriptionData?.tilStatus?.data?.stroma_cords?.length > 0 ||
+        tilSubscriptionData?.tilStatus?.data?.lymphocyte_cords?.length > 0
+      ) {
+        // console.log("til is setting in canvas");
+    setLoadUI(false);
+        localStorage.setItem("til", "til");
+        const canvas = fabricOverlay.fabricCanvas();
+        const color = "#2Aff00";
+        const roi = tilSubscriptionData?.tilStatus?.data?.lymphocyte_cords
+          .flat(2)
+          .map((TIL_cord) => {
+            return new fabric.Rect({
+              top: TIL_cord[1],
+              // bottom:TIL_cord[1],
+              left: TIL_cord[0],
+              // right:TIL_cord[2],
+              width: TIL_cord[2] - TIL_cord[0],
+              height: TIL_cord[3] - TIL_cord[1],
+              stroke: "red",
+              fill: "transparent",
+              strokeWidth: 1,
+              opacity: 1,
+              strokeUniform: true,
+            });
+          });
+        const roi2 = tilSubscriptionData?.tilStatus?.data?.tumor_cords?.map(
+          (tumor_cord) => {
+            // console.log(tumor_cord);
+            const points2 = tumor_cord.map((point2) => ({
+              x: point2[0][0],
+              y: point2[0][1],
+            }));
+            return new fabric.Polygon(points2, {
+              stroke: `${color}83`,
+              strokeWidth: 1.2,
+              fill: "green",
+              opacity: 0.2,
+              strokeUniform: true,
+            });
+          }
+        );
+        const roi3 = tilSubscriptionData?.tilStatus?.data?.stroma_cords?.map(
+          (stroma_cord) => {
+            const points3 = stroma_cord.map((point3) => ({
+              x: point3[0][0],
+              y: point3[0][1],
+            }));
+            return new fabric.Polygon(points3, {
+              stroke: `yellow`,
+              strokeWidth: 1.2,
+              fill: color ? `yellow` : "",
+              opacity: 0.5,
+              strokeUniform: true,
+            });
+          }
+        );
+         canvas?.remove(cords)?.requestRenderAll();
+    canvas?.remove(originalTil)?.requestRenderAll();
+          const newSlidet = new fabric.Group([...roi2, ...roi3, ...roi], {
+            selectable: false,
+            lockMovementX: true,
+            lockMovementY: true,
+            lockRotation: true,
+            lockScalingX: true,
+            lockScalingY: true,
+            lockUniScaling: true,
+            hoverCursor: "auto",
+            evented: false,
+            stroke: "red",
+            strokeWidth: 1,
+            objectCaching: false,
+          });
+          setCords(newSlidet);
+          setTimeout(()=>{canvas.add(newSlidet)},1000);
+         setTimeout(()=>{ requestAnimationFrame(() => {
+          console.log("Task completed by requestAnimationFrame")
+      setTimeout(()=>{ setLoadUI(true)},4000);
+      })},1000)
+      }
 }
 },[hideModification])
 
@@ -424,7 +600,7 @@ else{
 
 
 const handleTIL = () => {
-  if (TilHover === false && hideModification === false) {
+  if (TilHover === false) {
     if (
       tumorCords?.length > 0 ||
       stromaCords?.length > 0 ||
@@ -517,6 +693,7 @@ const handleTIL = () => {
         ) {
           // console.log("til is setting in canvas");
           localStorage.setItem("til", "til");
+          setLoadUI(false)
           const canvas = fabricOverlay.fabricCanvas();
           const color = "#2Aff00";
           const roi = tilSubscriptionData?.tilStatus?.data?.lymphocyte_cords
@@ -584,18 +761,11 @@ const handleTIL = () => {
               objectCaching: false,
             });
             setCords(newSlidet);
-            canvas.add(newSlidet);
-          
-          // console.log(roi);
-          if (TilHover === false) {
-            toast({
-              title: "TIL Process Done",
-              description: "",
-              status: "success",
-              duration: 2500,
-              isClosable: true,
-            });
-          }
+            setTimeout(()=>{canvas.add(newSlidet)},1000);
+     setTimeout(()=>{ requestAnimationFrame(() => {
+      console.log("Task completed by requestAnimationFrame")
+  setTimeout(()=>{ setLoadUI(true)},4000);
+})},1000)
         
     
         }
@@ -619,6 +789,7 @@ const handleTIL = () => {
       if(TilHover && hideTumor === true){
         // console.log("s");
         const canvas = fabricOverlay.fabricCanvas();
+        setLoadUI(false);
         const color = "#2Aff00";
         const roi = tilCords.flat(2).map((TIL_cord) => {
           return new fabric.Rect({
@@ -666,10 +837,11 @@ const handleTIL = () => {
         });
         // console.log(t);
         setCords(t);
-        canvas.add(t);
-        requestAnimationFrame(() => {
-          console.log("Task completed by hideTumorRequest requestAnimationFrame");
-        });
+        setTimeout(()=>{canvas.add(t)},1000);
+        setTimeout(()=>{ requestAnimationFrame(() => {
+         console.log("Task completed by requestAnimationFrame")
+     setTimeout(()=>{ setLoadUI(true)},4000);
+   })},1000)
 
         setStromaArea(data?.getTils?.data?.stroma_area);
   setTumorArea(0);
@@ -679,6 +851,7 @@ const handleTIL = () => {
   if(TilHover && hideStroma === true){
     // console.log("s");
     const canvas = fabricOverlay.fabricCanvas();
+    setLoadUI(false);
     const color = "#2Aff00";
     const roi = tilCords.flat(2).map((TIL_cord) => {
       return new fabric.Rect({
@@ -727,11 +900,11 @@ const handleTIL = () => {
      });
     //  console.log(t);
      setCords(t);
-     canvas.add(t);
-
-     requestAnimationFrame(() => {
-      console.log("Task completed by hideStroma");
-    });
+     setTimeout(()=>{canvas.add(t)},1000);
+     setTimeout(()=>{ requestAnimationFrame(() => {
+      console.log("Task completed by requestAnimationFrame")
+  setTimeout(()=>{ setLoadUI(true)},4000);
+})},1000)
 
      setStromaArea(0);
      setTumorArea(data?.getTils?.data?.tumor_area);
@@ -741,6 +914,7 @@ const handleTIL = () => {
   if(TilHover && hideLymphocyte === true){
     // console.log("s");
     const canvas = fabricOverlay.fabricCanvas();
+    setLoadUI(false);
     const color = "#2Aff00";
     const roi2 = tumorCords?.map((tumor_cord) => {
       // console.log(tumor_cord);
@@ -787,10 +961,11 @@ const handleTIL = () => {
         });
         // console.log(t);
         setCords(t);
-        canvas.add(t);
-        requestAnimationFrame(() => {
-          console.log("Task completed by hideLymphocyte");
-        });
+        setTimeout(()=>{canvas.add(t)},1000);
+        setTimeout(()=>{ requestAnimationFrame(() => {
+         console.log("Task completed by requestAnimationFrame")
+     setTimeout(()=>{ setLoadUI(true)},4000);
+   })},1000)
 
         setStromaArea(data?.getTils?.data?.stroma_area);
   setTumorArea(data?.getTils?.data?.tumor_area);
@@ -800,6 +975,7 @@ const handleTIL = () => {
   }
   if(TilHover && hideTumor === false && hideStroma === false && hideLymphocyte === false){
     const canvas = fabricOverlay.fabricCanvas();
+    setLoadUI(false);
     const color = "#2Aff00";
     const roi = tilCords.flat(2).map((TIL_cord) => {
       return new fabric.Rect({
@@ -861,7 +1037,11 @@ const handleTIL = () => {
         });
         // console.log(t);
         setCords(t);
-        canvas.add(t);
+        setTimeout(()=>{canvas.add(t)},1000);
+        setTimeout(()=>{ requestAnimationFrame(() => {
+         console.log("Task completed by requestAnimationFrame")
+     setTimeout(()=>{ setLoadUI(true)},4000);
+   })},1000)
         setStromaArea(data?.getTils?.data?.stroma_area);
         setTumorArea(data?.getTils?.data?.tumor_area);
         setTilScore(data?.getTils?.data?.TILS_score);
@@ -876,6 +1056,7 @@ const handleTIL = () => {
       if(TilHover && hideTumor === true){
         // console.log("s");
         const canvas = fabricOverlay.fabricCanvas();
+        setLoadUI(false);
         const color = "#2Aff00";
         const roi = tilSubscriptionData?.tilStatus?.data?.lymphocyte_cords.flat(2).map((TIL_cord) => {
           return new fabric.Rect({
@@ -923,7 +1104,11 @@ const handleTIL = () => {
         });
         // console.log(t);
         setCords(t);
-        canvas.add(t);
+        setTimeout(()=>{canvas.add(t)},1000);
+        setTimeout(()=>{ requestAnimationFrame(() => {
+         console.log("Task completed by requestAnimationFrame")
+     setTimeout(()=>{ setLoadUI(true)},4000);
+   })},1000)
         setStromaArea(tilSubscriptionData?.tilStatus?.data?.stroma_area);
         setTumorArea(0);
         setTilScore(tilSubscriptionData?.tilStatus?.data?.TILS_score);
@@ -932,6 +1117,7 @@ const handleTIL = () => {
   if(TilHover && hideStroma === true){
     // console.log("s");
     const canvas = fabricOverlay.fabricCanvas();
+    setLoadUI(false);
     const color = "#2Aff00";
     const roi = tilSubscriptionData?.tilStatus?.data?.lymphocyte_cords.flat(2).map((TIL_cord) => {
       return new fabric.Rect({
@@ -980,7 +1166,11 @@ const handleTIL = () => {
      });
     //  console.log(t);
      setCords(t);
-     canvas.add(t);
+     setTimeout(()=>{canvas.add(t)},1000);
+     setTimeout(()=>{ requestAnimationFrame(() => {
+      console.log("Task completed by requestAnimationFrame")
+  setTimeout(()=>{ setLoadUI(true)},4000);
+})},1000)
      setStromaArea(0);
      setTumorArea(tilSubscriptionData?.tilStatus?.data?.tumor_area);
      setTilScore(tilSubscriptionData?.tilStatus?.data?.TILS_score);
@@ -989,6 +1179,7 @@ const handleTIL = () => {
   if(TilHover && hideLymphocyte === true){
     // console.log("s");
     const canvas = fabricOverlay.fabricCanvas();
+    setLoadUI(false);
     const color = "#2Aff00";
     const roi2 =  tilSubscriptionData?.tilStatus?.data?.tumor_cords?.map((tumor_cord) => {
       // console.log(tumor_cord);
@@ -1035,7 +1226,11 @@ const handleTIL = () => {
         });
         // console.log(t);
         setCords(t);
-        canvas.add(t);
+        setTimeout(()=>{canvas.add(t)},1000);
+        setTimeout(()=>{ requestAnimationFrame(() => {
+         console.log("Task completed by requestAnimationFrame")
+     setTimeout(()=>{ setLoadUI(true)},4000);
+   })},1000)
         setStromaArea(tilSubscriptionData?.tilStatus?.data?.stroma_area);
         setTumorArea(tilSubscriptionData?.tilStatus?.data?.tumor_area);
         setTilScore(tilSubscriptionData?.tilStatus?.data?.TILS_score);
@@ -1043,6 +1238,7 @@ const handleTIL = () => {
   }
   if(TilHover && hideTumor === false && hideStroma === false && hideLymphocyte === false){
     const canvas = fabricOverlay.fabricCanvas();
+    setLoadUI(false);
     const color = "#2Aff00";
     const roi = tilSubscriptionData?.tilStatus?.data?.lymphocyte_cords.flat(2).map((TIL_cord) => {
       return new fabric.Rect({
@@ -1104,7 +1300,11 @@ const handleTIL = () => {
         });
         // console.log(t);
         setCords(t);
-        canvas.add(t);
+        setTimeout(()=>{canvas.add(t)},1000);
+        setTimeout(()=>{ requestAnimationFrame(() => {
+         console.log("Task completed by requestAnimationFrame")
+     setTimeout(()=>{ setLoadUI(true)},4000);
+   })},1000)
         setStromaArea(tilSubscriptionData?.tilStatus?.data?.stroma_area);
         setTumorArea(tilSubscriptionData?.tilStatus?.data?.tumor_area);
         setTilScore(tilSubscriptionData?.tilStatus?.data?.TILS_score);
