@@ -195,7 +195,6 @@ if(tilSubscriptionData){
 // ------------- Plotting TIL after hitting refresh button
 // ------------------
 
-
 useEffect(()=>{
   if(refreshHil>0){
     setStromaArea(data?.getTils?.data?.stroma_area);
@@ -297,6 +296,7 @@ if(TilHover === true){
  
   // console.log(modifiedTumor);
 }
+
 
 },[TilHover])
 
@@ -670,6 +670,7 @@ const handleTIL = () => {
         requestAnimationFrame(() => {
           console.log("Task completed by hideTumorRequest requestAnimationFrame");
         });
+
         setStromaArea(data?.getTils?.data?.stroma_area);
   setTumorArea(0);
   setTilScore(data?.getTils?.data?.TILS_score);
@@ -727,9 +728,11 @@ const handleTIL = () => {
     //  console.log(t);
      setCords(t);
      canvas.add(t);
+
      requestAnimationFrame(() => {
       console.log("Task completed by hideStroma");
     });
+
      setStromaArea(0);
      setTumorArea(data?.getTils?.data?.tumor_area);
      setTilScore(data?.getTils?.data?.TILS_score);
@@ -788,6 +791,7 @@ const handleTIL = () => {
         requestAnimationFrame(() => {
           console.log("Task completed by hideLymphocyte");
         });
+
         setStromaArea(data?.getTils?.data?.stroma_area);
   setTumorArea(data?.getTils?.data?.tumor_area);
   setTilScore(data?.getTils?.data?.TILS_score);
@@ -1107,8 +1111,7 @@ const handleTIL = () => {
      setLymphocyteCount(tilSubscriptionData?.tilStatus?.data?.lymphocyte_count);
   }
     }
-  },[hideLymphocyte, hideStroma, hideTumor])
-
+  },[hideLymphocyte, hideStroma, hideTumor]);
 
   useEffect(() => {
 if(!loadUI){
@@ -1125,6 +1128,7 @@ if(!loadUI){
     prevLoadUIRef.current = loadUI;
   }, [loadUI]);
   
+
 
   
   return (
