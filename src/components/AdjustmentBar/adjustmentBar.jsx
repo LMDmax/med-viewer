@@ -26,6 +26,7 @@ const AdjustmentBar = ({
   setStromaArea,
   setTilScore,
   setLymphocyteCount,
+  hitTil,
   report,
   setNewHilData,
   application,
@@ -66,6 +67,8 @@ const AdjustmentBar = ({
   synopticType,
   setSynopticType,
   getSynopticReport,
+  loadUI,
+  setLoadUI,
   handleChatFeedbar,
   handleChatFeedBarClose,
   updateSynopticReport,
@@ -159,6 +162,8 @@ const AdjustmentBar = ({
         hideLymphocyte={hideLymphocyte}
         slide={slide}
         mongoId={mongoId}
+        loadUI={loadUI}
+        setLoadUI={setLoadUI}
         refreshHil={refreshHil}
         hideModification={hideModification}
         handleTILFeedBar={handleTILFeedBar}
@@ -171,6 +176,7 @@ const AdjustmentBar = ({
         setTilScore={setTilScore}
         setLymphocyteCount={setLymphocyteCount}
         viewerId={currentViewer}
+        hitTil={hitTil}
         setNewHilData={setNewHilData}
         viewerIds={viewerIds}
         isMultiview={isMultiview}

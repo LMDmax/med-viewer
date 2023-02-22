@@ -21,6 +21,9 @@ const Move = ({
   annotations,
   enableAI,
   enableFilters,
+  loadUI,
+  setLoadUI,
+  hitTil,
   setStromaArea,
   setTumorArea,
   setTilScore,
@@ -184,14 +187,17 @@ const Move = ({
           viewerIds={viewerIds}
           hideModification={hideModification}
           slide={slide}
+          hitTil={hitTil}
           mongoId={mongoId}
           setNewHilData={setNewHilData}
           refreshHil={refreshHil}
+          loadUI={loadUI}
+          setLoadUI={setLoadUI}
           viewerId={viewerId}
           setStromaArea={setStromaArea}
-  setTumorArea={setTumorArea}
-  setTilScore={setTilScore}
-  setLymphocyteCount={setLymphocyteCount}
+          setTumorArea={setTumorArea}
+          setTilScore={setTilScore}
+          setLymphocyteCount={setLymphocyteCount}
           pathStroma={pathStroma}
         />
         <CommentBox

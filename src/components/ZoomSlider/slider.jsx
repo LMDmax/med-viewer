@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import PropTypes from "prop-types";
-import { Flex, Input, Text, useMediaQuery,useToast } from "@chakra-ui/react";
+import { Flex, Input, Text, useMediaQuery, useToast } from "@chakra-ui/react";
 import { useFabricOverlayState } from "../../state/store";
 import {
   getScaleFactor,
@@ -11,27 +11,66 @@ import {
 const ZoomSlider = ({ viewerId }) => {
   const { fabricOverlayState } = useFabricOverlayState();
   const { viewerWindow } = fabricOverlayState;
-  const { viewer, fabricOverlay  } = viewerWindow[viewerId];
+  const { viewer, fabricOverlay } = viewerWindow[viewerId];
   const [zoomValue, setZoomValue] = useState(1);
+  const [alphabet, setAlphabet] = useState(false);
+
   const inputRef = useRef(null);
   const toast = useToast();
-  const [validationError, setValidationError] = useState(false);
+  const handleKeyDown = (event) => {
+    var regExpr = new RegExp("^[0-9.]+$");
+    if (!regExpr.test(event.key)) {
+      if (
+        !(
+          event.key === "Backspace" ||
+          event.key === "Shift" ||
+          event.key === "Enter" ||
+          event.key === "Ctrl" ||
+          event.key === "Alt" ||
+          event.key === "Tab" ||
+          event.key === "Esc" ||
+          event.key === "CapsLock"
+        )
+      ) {
+        toast({
+          title: "Not Valid Input",
+          description: "Please Provide Me A Valid Input",
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
+        setAlphabet(true);
+      }
+    }
+  };
   const handleZoomLevel = (e) => {
     const { value } = e.target;
-    // zoomToLevel({ viewer, value });
-    // setZoomValue(value);
-    if (value.toString().split(".")[1]?.length >= 2) {
-      setValidationError(true);
-    }
-    if (value > 40 || validationError) {
-      toast({
-        title: "Not Valid Input",
-        description: "Please Provide Me A Valid Input",
-        status: "error",
-        duration: 2000,
-        isClosable: true,
-      });
-      setValidationError(false);
+
+    if (
+      alphabet ||
+      parseInt(value) > 40 ||
+      value.split(".")[1]?.length >= 3 ||
+      value.length >= 6 ||
+      parseInt(value) < -1 ||
+      value === "0" ||
+      value === "-1" ||
+      value === "+" ||
+      value === "-" ||
+      value === "_" ||
+      value === "."
+    ) {
+      if (value === "+" || value === "-" || value === "_" || alphabet) {
+        setAlphabet(false);
+      } else {
+        toast({
+          title: "Not Valid Input",
+          description: "Please Provide Me A Valid Input",
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
+        setAlphabet(false);
+      }
     } else {
       zoomToLevel({ viewer, value });
       setZoomValue(value);
@@ -66,6 +105,7 @@ const ZoomSlider = ({ viewerId }) => {
         Math.ceil((e.zoom * 40) / viewer.viewport.getMaxZoom()),
         10
       );
+      setZoomValue(value > 40 ? 40 : value);
       // const bounds = viewer.viewport.getBounds();
       // const { x, y, width, height } = viewer.viewport.viewportToImageRectangle(
       //   bounds.x,
@@ -90,13 +130,13 @@ const ZoomSlider = ({ viewerId }) => {
     };
   }, [viewer]);
 
-   
   return (
     <Flex>
       <Input
         ref={inputRef}
-        type="number"
-        value={zoomValue}
+        maxLength={6}
+        onKeyDown={handleKeyDown}
+        value={zoomValue > 40 ? 40 : zoomValue}
         onChange={handleZoomLevel}
         onBlur={handleZoomLevelBlur}
         variant="unstyled"
