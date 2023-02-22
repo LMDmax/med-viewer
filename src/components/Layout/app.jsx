@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Flex, useMediaQuery } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 import AdjustmentBar from "../AdjustmentBar/adjustmentBar";
@@ -11,6 +11,7 @@ import Navigator from "../Navigator/navigator";
 import SlideFeed from "../Feed/feed";
 import ChatFeed from "../Feed/ChatFeed";
 import TILFeedBar from "../Feed/TILFeedBar";
+import ProgressBar from "../Loading/ProgressBar";
 
 const LayoutApp = ({
   userInfo,
@@ -76,6 +77,14 @@ const LayoutApp = ({
   const [hideStroma, setHideStroma] = useState(false);
   const [hideLymphocyte, setHideLymphocyte] = useState(false);
 
+  const [loadUI, setLoadUI] = useState(true);
+
+  useEffect(() => {
+    if (loadUI) {
+      console.log("from object");
+    }
+  }, [loadUI]);
+
   const showSidebar = () => {
     setSidebar(!sidebar);
   };
@@ -116,12 +125,15 @@ const LayoutApp = ({
       direction="column"
     >
       <LayoutOuterBody>
+      {!loadUI === true ? <ProgressBar /> : null}
         <AdjustmentBar
           userInfo={userInfo}
           hideStroma={hideStroma}
           hideTumor={hideTumor}
           hideLymphocyte={hideLymphocyte}
           caseInfo={caseInfo}
+          loadUI={loadUI}
+          setLoadUI={setLoadUI}
           refreshHil={refreshHil}
           pathStroma={pathStroma}
           hitTil={hitTil}
@@ -286,7 +298,7 @@ const LayoutApp = ({
               client2={client2}
               mentionUsers={mentionUsers}
               addUsersToCase={addUsersToCase}
-            />
+              />
           </LayoutAppBody>
         </LayoutInnerBody>
       </LayoutOuterBody>

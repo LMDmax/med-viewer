@@ -21,6 +21,8 @@ const Move = ({
   annotations,
   enableAI,
   enableFilters,
+  loadUI,
+  setLoadUI,
   hitTil,
   setStromaArea,
   setTumorArea,
@@ -189,6 +191,8 @@ const Move = ({
           mongoId={mongoId}
           setNewHilData={setNewHilData}
           refreshHil={refreshHil}
+          loadUI={loadUI}
+          setLoadUI={setLoadUI}
           viewerId={viewerId}
           setStromaArea={setStromaArea}
           setTumorArea={setTumorArea}

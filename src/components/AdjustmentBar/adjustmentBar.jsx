@@ -67,6 +67,8 @@ const AdjustmentBar = ({
   synopticType,
   setSynopticType,
   getSynopticReport,
+  loadUI,
+  setLoadUI,
   handleChatFeedbar,
   handleChatFeedBarClose,
   updateSynopticReport,
@@ -160,6 +162,8 @@ const AdjustmentBar = ({
         hideLymphocyte={hideLymphocyte}
         slide={slide}
         mongoId={mongoId}
+        loadUI={loadUI}
+        setLoadUI={setLoadUI}
         refreshHil={refreshHil}
         hideModification={hideModification}
         handleTILFeedBar={handleTILFeedBar}
