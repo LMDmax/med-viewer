@@ -67,6 +67,7 @@ const TILFeedBar = ({
   newHilData,
   setRefreshHil,
   refreshHil,
+  setLoadUI,
   caseInfo,
   setHideTumor,
   setPathStroma,
@@ -194,6 +195,7 @@ const TILFeedBar = ({
       );
       // console.log(resp);
       if ((resp.status = "Accepted")) {
+        setLoadUI(false);
         toast({
           title: "HIL is Processing ",
           status: "success",

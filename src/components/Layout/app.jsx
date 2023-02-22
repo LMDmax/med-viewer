@@ -265,6 +265,7 @@ const LayoutApp = ({
               handleFeedBarClose={handleFeedBarClose}
               showReport={showReport}
               setRefreshHil={setRefreshHil}
+              setLoadUI={setLoadUI}
               refreshHil={refreshHil}
               tumorArea={tumorArea}
               stromaArea={stromaArea}
