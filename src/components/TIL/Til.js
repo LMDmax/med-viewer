@@ -186,8 +186,10 @@ if(tilSubscriptionData){
       const canvas = fabricOverlay?.fabricCanvas();
       canvas.isDrawingMode = true;
       setNewHilData(true);
-      setLoadUI(true);
     }, 2000);
+       setTimeout(() => {
+  setLoadUI(true);
+}, 3500);
     // console.log(tilSubscriptionData?.tilStatus);
   }
 },[tilSubscriptionData])
