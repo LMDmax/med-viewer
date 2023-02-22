@@ -60,6 +60,8 @@ const Viewer = ({
   const [viewer, setViewer] = useState(null);
   const boxRef = useRef();
 
+  
+
   // Customize Fabric selection handles
   fabric.Object.prototype.set({
     borderColor: "#22a2f8",
