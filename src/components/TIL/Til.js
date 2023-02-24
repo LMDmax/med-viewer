@@ -184,8 +184,6 @@ if(tilSubscriptionData){
      setNewHilData(false);
      setTimeout(() => {
       const canvas = fabricOverlay?.fabricCanvas();
-           setTimeout(() => {
-      const canvas = fabricOverlay?.fabricCanvas();
       // canvas.isDrawingMode = true;
        setTimeout(() => {
   setLoadUI(true);
@@ -194,7 +192,7 @@ if(tilSubscriptionData){
     }, 2000);
     // console.log(tilSubscriptionData?.tilStatus);
   }
-},[tilSubscriptionData])
+},[tilSubscriptionData]);
 
   // ------------------------------
 // ------------- Plotting TIL after hitting refresh button
