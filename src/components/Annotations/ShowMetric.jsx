@@ -18,6 +18,8 @@ const ShowMetric = ({ viewerId, slide }) => {
     top: "",
   });
 
+  console.log(metric);
+
   useEffect(() => {
     if (!viewer || !fabricOverlay) return;
 
@@ -32,7 +34,7 @@ const ShowMetric = ({ viewerId, slide }) => {
       const annotation = getAnnotationJSON(event.target);
       const mpp = slide?.metadata?.mpp || 0.25;
       setMetric(getAnnotationMetric(annotation, mpp));
-      setPosition({ left: x + 10, top: y + 10 });
+      setPosition({ left: x, top: y });
     };
 
     const handleMouseOut = () => {
@@ -55,6 +57,7 @@ const ShowMetric = ({ viewerId, slide }) => {
       left={position.left}
       bg="white"
       p={1}
+      zIndex="25"
     >
       <Text fontSize="14px">
         {metric.value} {metric.unit}
