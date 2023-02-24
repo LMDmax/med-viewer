@@ -294,6 +294,10 @@ export const VHUT_ANALYSIS_SUBSCRIPTION = gql`
         hash
         annotationId
         slideId
+        results {
+          type
+          contours
+        }
       }
       analysisType
     }
