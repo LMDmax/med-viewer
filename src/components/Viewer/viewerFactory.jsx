@@ -9,6 +9,7 @@ const ViewerFactory = ({
   caseInfo,
   userInfo,
   slide,
+  setLoadUI,
   slides,
   setCurrentViewer,
   application,
@@ -78,6 +79,7 @@ const ViewerFactory = ({
             viewerId={viewer}
             userInfo={userInfo}
             enableAI={enableAI}
+            setLoadUI={setLoadUI}
             slide={slide}
             client2={client2}
             mentionUsers={mentionUsers}

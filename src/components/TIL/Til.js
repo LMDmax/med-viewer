@@ -184,9 +184,11 @@ if(tilSubscriptionData){
      setNewHilData(false);
      setTimeout(() => {
       const canvas = fabricOverlay?.fabricCanvas();
-      canvas.isDrawingMode = true;
+      // canvas.isDrawingMode = true;
+       setTimeout(() => {
+  setLoadUI(true);
+}, 7000);
       setNewHilData(true);
-      setLoadUI(true);
     }, 2000);
     // console.log(tilSubscriptionData?.tilStatus);
   }
@@ -273,7 +275,7 @@ useEffect(()=>{
             setTimeout(()=>{ requestAnimationFrame(() => {
              console.log("Task completed by requestAnimationFrame")
          setTimeout(()=>{ setLoadUI(true)},4000);
-       })},1000)
+         })},1000)
   }
 },[refreshHil])
 
@@ -626,6 +628,8 @@ const handleTIL = () => {
           })
         );
       const roi2 = tumorCords?.map((tumor_cord) => {
+        console.log(tumor_cord);
+        console.log(tumorCords);
         const points2 = tumor_cord.map((point2) => ({
           x: point2[0][0],
           y: point2[0][1],

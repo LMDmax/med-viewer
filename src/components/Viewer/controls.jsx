@@ -54,6 +54,7 @@ const ViewerControls = ({
   enableAI,
   slide,
   application,
+  setLoadUI,
   client2,
   mentionUsers,
   caseInfo,
@@ -190,6 +191,7 @@ const ViewerControls = ({
       onVhutAnalysis({
         variables: { body: { ...body } },
       });
+      setLoadUI(false);
       // toast({
       //   title: resp.data.message,
       //   status: "success",
@@ -340,7 +342,8 @@ const ViewerControls = ({
 
   useEffect(() => {
     if (vhutSubscriptionData) {
-      // console.log("subscribed", vhutSubscriptionData);
+      console.log("subscribed", vhutSubscriptionData);
+      console.log("subscribedError", vhutSubscription_error);
       const {
         data,
         status,
@@ -357,6 +360,7 @@ const ViewerControls = ({
           if (annotation) {
             annotation.set({ isAnalysed: true, analysedROI });
           }
+          setLoadUI(true);
         }
         // console.log(vhutSubscriptionData.analysisStatus);
         toast({

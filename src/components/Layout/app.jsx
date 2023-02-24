@@ -297,6 +297,7 @@ const LayoutApp = ({
               slides={slides}
               setCurrentViewer={setCurrentViewer}
               client2={client2}
+              setLoadUI={setLoadUI}
               mentionUsers={mentionUsers}
               addUsersToCase={addUsersToCase}
               />

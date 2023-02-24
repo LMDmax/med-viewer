@@ -16,9 +16,11 @@ const ProgressBar = () => {
         }
         return newProgress;
       });
-    }, 100); // Updated interval time here
+    }, 50); // Updated interval time here
     return () => clearInterval(intervalId);
   }, []);
+
+  const progressWidth = `${Math.round(progress / 10) * 10}%`; // Round progress to nearest multiple of 10
 
   return (
     <Box
@@ -39,12 +41,12 @@ const ProgressBar = () => {
         border="1px solid black"
         borderRadius="sm"
         overflow="hidden"
+        transition="width 0.3s ease"
       >
         <Box
-          w={`${progress}%`}
+          w={progressWidth}
           h="100%"
           backgroundColor="#3b5d7c"
-          transition="width 0.3s ease"
         >
           <Text color="white" fontWeight="bold" textAlign="center">
             {progress}%
@@ -60,19 +62,9 @@ const ProgressBar = () => {
         zIndex="-1"
         backdropFilter="blur(4px)"
         opacity="0.6"
-        backgroundColor="rgba(255, 255, 255, 0.4)"
-        _before={{
-          content: '""',
-          position: "absolute",
-          top: "0",
-          left: "0",
-          width: "100%",
-          height: "100%",
-          filter: "blur(4px)",
-          zIndex: "-1",
-          backgroundColor: "rgba(255, 255, 255, 0.2)",
-        }}
-      ></Box>
+        backgroundColor="rgba(255, 255, 255)"
+        >
+      </Box>
     </Box>
   );
 };

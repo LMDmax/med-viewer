@@ -52,6 +52,7 @@ const Viewer = ({
   slide,
   application,
   caseInfo,
+  setLoadUI,
   client2,
   mentionUsers,
   addUsersToCase,
@@ -130,6 +131,7 @@ const Viewer = ({
           userInfo={userInfo}
           enableAI={enableAI}
           slide={slide}
+          setLoadUI={setLoadUI}
           client2={client2}
           mentionUsers={mentionUsers}
           caseInfo={caseInfo}

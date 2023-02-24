@@ -25,6 +25,7 @@ const ViewerContainer = ({
   onMessageListener,
   application,
   client2,
+  setLoadUI,
   mentionUsers,
   caseInfo,
   addUsersToCase,
@@ -86,6 +87,7 @@ const ViewerContainer = ({
       client2={client2}
       mentionUsers={mentionUsers}
       caseInfo={caseInfo}
+      setLoadUI={setLoadUI}
       addUsersToCase={addUsersToCase}
     />
   );
