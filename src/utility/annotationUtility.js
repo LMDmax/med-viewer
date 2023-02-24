@@ -181,9 +181,11 @@ export const createAnnotation = (annotation) => {
         opacity: annotation.opacity,
         title: annotation.title,
         text: annotation.text,
-        // hasBorders: false,
+        hasBorders: false,
         hasControls: false,
         hasRotatingPoint: false,
+        lockMovementX: true,
+        lockMovementY: true,
       });
       break;
 

@@ -116,6 +116,8 @@ const CommentBox = ({ userInfo, viewerId, application }) => {
         title: `${userInfo.firstName} ${userInfo.lastName}`,
         hasControls: false,
         hasRotatingPoint: false,
+        lockMovementX: true,
+        lockMovementY: true,
       });
 
       // console.log(text);

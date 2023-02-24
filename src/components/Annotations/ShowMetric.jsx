@@ -18,8 +18,6 @@ const ShowMetric = ({ viewerId, slide }) => {
     top: "",
   });
 
-  console.log(metric);
-
   useEffect(() => {
     if (!viewer || !fabricOverlay) return;
 
