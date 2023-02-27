@@ -175,6 +175,7 @@ export const createAnnotation = (annotation) => {
 			});
 			break;
 
+<<<<<<< HEAD
 		case "textbox":
 			shape = new fabric.Textbox(`${annotation.text}`, {
 				left: annotation.left,
@@ -190,6 +191,25 @@ export const createAnnotation = (annotation) => {
 				hasRotatingPoint: false,
 			});
 			break;
+=======
+    case "textbox":
+      shape = new fabric.Textbox(`${annotation.text}`, {
+        left: annotation.left,
+        top: annotation.top,
+        width: 450,
+        color: annotation.color,
+        backgroundColor: "#B0C8D6",
+        opacity: annotation.opacity,
+        title: annotation.title,
+        text: annotation.text,
+        hasBorders: false,
+        hasControls: false,
+        hasRotatingPoint: false,
+        lockMovementX: true,
+        lockMovementY: true,
+      });
+      break;
+>>>>>>> 1969f3a090c087bcb4797e5ff141f06434d05032
 
 		case "rect":
 			shape = new fabric.Rect({

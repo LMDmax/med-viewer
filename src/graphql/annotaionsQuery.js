@@ -233,6 +233,7 @@ export const DELETE_ANNOTATION = gql`
 `;
 
 export const ANNOTATIONS_SUBSCRIPTION = gql`
+<<<<<<< HEAD
 	subscription Subscription($slideId: ID!) {
 		changedAnnotations(slideId: $slideId) {
 			data {
@@ -317,6 +318,97 @@ export const VHUT_ANALYSIS_SUBSCRIPTION = gql`
 			analysisType
 		}
 	}
+=======
+  subscription Subscription($slideId: ID!) {
+    changedAnnotations(slideId: $slideId) {
+      data {
+        slideId
+        type
+        version
+        originX
+        originY
+        left
+        top
+        width
+        height
+        fill
+        stroke
+        strokeWidth
+        strokeLineCap
+        strokeDashOffset
+        strokeLineJoin
+        strokeMiterLimit
+        scaleX
+        scaleY
+        angle
+        flipX
+        flipY
+        opacity
+        visible
+        backgroundColor
+        fillRule
+        paintFirst
+        globalCompositeOperation
+        skewX
+        skewY
+        rx
+        ry
+        hash
+        text
+        zoomLevel
+        tag
+        title
+        x1
+        y1
+        x2
+        y2
+        points {
+          x
+          y
+        }
+        path
+        cords
+        area
+        perimeter
+        centroid
+        end_points
+        isAnalysed
+        analysedROI
+        classType
+        isDeleted
+        belongsToApp
+        createdAt
+        updatedAt
+      }
+      status {
+        isCreated
+        isUpdated
+        isDeleted
+      }
+      deleteType
+    }
+  }
+`;
+export const VHUT_ANALYSIS_SUBSCRIPTION = gql`
+  subscription Subscription($body: AnalysisInput) {
+    analysisStatus(body: $body) {
+      status
+      message
+      data {
+        isAnalysed
+        analysedROI
+        hash
+        annotationId
+        slideId
+        results {
+          type
+          contours
+        }
+      }
+      analysisType
+    }
+  }
+>>>>>>> 1969f3a090c087bcb4797e5ff141f06434d05032
 `;
 
 export const TIL_ANALYSIS_SUBSCRIPTION = gql`

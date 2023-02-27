@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { IconButton, useToast } from "@chakra-ui/react";
 import { VscWand } from "react-icons/vsc";
-import { useMutation } from "@apollo/client";
+import { useMutation, useSubscription } from "@apollo/client";
 import { useFabricOverlayState } from "../../state/store";
 import {
   updateTool,
@@ -17,7 +17,7 @@ import {
   createContour,
   getViewportBounds,
 } from "../../utility";
-import { VHUT_VIEWPORT_ANALYSIS } from "../../graphql/annotaionsQuery";
+import { VHUT_ANALYSIS_SUBSCRIPTION, VHUT_VIEWPORT_ANALYSIS } from "../../graphql/annotaionsQuery";
 
 const cellColor = {
   Neutrophil: { hex: "#9800FF" },
@@ -39,6 +39,8 @@ const MagicWandTool = ({
   const { fabricOverlay, viewer, slideId, originalFileUrl } =
     viewerWindow[viewerId];
   const [zoomValue, setZoomValue] = useState(1);
+
+
   const toast = useToast();
 
   const isActive = activeTool === "MagicWand";
@@ -79,6 +81,89 @@ const MagicWandTool = ({
 
   const [onVhutViewportAnalysis] = useMutation(VHUT_VIEWPORT_ANALYSIS);
 
+  // const { data: vhutSubscriptionData, error: vhutSubscription_error } =
+  // useSubscription(VHUT_ANALYSIS_SUBSCRIPTION, {
+  //   variables: {
+  //     body: {
+  //       slideId,
+  //     },
+  //   },
+  // });
+//   useEffect(() => {
+//     if (vhutSubscriptionData) {
+//       console.log("subscribed", vhutSubscriptionData);
+//       console.log("subscribedError", vhutSubscription_error);
+//       const {
+//         data,
+//         status,
+//         message,
+//         analysisType: type,
+//       } = vhutSubscriptionData.analysisStatus;
+//       if (type === "VIEWPORT_ANALYSIS" && data?.results !== null) {
+//        console.log(data.results[0]);
+//         if (data && data.isAnalysed )
+//           setFabricOverlayState(updateIsViewportAnalysing(false));
+//       console.log(data?.results[0]?.contours.flat(2));
+//       const color = "#2Aff00";
+//       const canvas = fabricOverlay?.fabricCanvas();
+
+//       const roi = data?.results[0]?.contours.flat(2);
+
+//       const roi2 = roi?.map((tumor_cord) => {
+//         // console.log(tumor_cord);
+//         // console.log(tumorCords);
+//         const points2 = tumor_cord.map((point2) => ({
+//           x: point2[0],
+//           y: point2[1],
+//         }));
+//         return new fabric.Polygon(points2, {
+//           stroke: `${color}83`,
+//           strokeWidth: 1.2,
+//           fill: "green",
+//           opacity: 0.2,
+//           strokeUniform: true,
+//         });
+//       });
+// canvas.add(roi2).requestRenderAll();
+      
+//     //   const pathString = roi.reduce((acc, val, idx, arr) => {
+//     //     if (idx === 0) {
+//     //       return `M ${val} `;
+//     //     } else if (idx % 4 === 1) {
+//     //       return `${acc} Q ${arr[idx - 1]} ${arr[idx]} `;
+//     //     } else if (idx === arr.length - 2) {
+//     //       return `${acc} L ${arr[idx]} ${arr[idx + 1]} `;
+//     //     } else {
+//     //       return acc;
+//     //     }
+//     //   }, '');
+    
+//     //   // Create the path object
+//     //   const path = new fabric.Path(pathString, {
+//     //     stroke: 'black',
+//     //     fill: '',
+//     //     strokeWidth: 3,
+//     //   });
+    
+//     //   // Scale down the path to fit within the canvas
+//     //   const pathWidth = path.width;
+//     //   const pathHeight = path.height;
+//     //   const canvasWidth = canvas.width;
+//     //   const canvasHeight = canvas.height;
+//     //   const scaleFactor = Math.min(canvasWidth / pathWidth, canvasHeight / pathHeight);
+//     //   path.scale(scaleFactor);
+//     // console.log(scaleFactor);
+//     //   // Add the path to the canvas and render it
+//     //   canvas.add(path);
+//     //   canvas.renderAll();
+      
+      
+      
+
+//       }
+//     }
+//   }, [vhutSubscriptionData]);
+
   useEffect(() => {
     if (!fabricOverlay || !isActive) return;
     const canvas = fabricOverlay.fabricCanvas();
@@ -108,6 +193,8 @@ const MagicWandTool = ({
       }
     };
 
+
+
     initiateAnalysis({
       left,
       top,
@@ -125,7 +212,7 @@ const MagicWandTool = ({
         "https://backup-quantize-vhut.prr.ai/vhut/click/xy",
         body
       );
-
+        console.log(body);
       // if the click positon is a cell, create annotation
       // also add it the annotation feed
       if (resp && typeof resp.data === "object") {

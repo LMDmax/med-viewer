@@ -108,17 +108,19 @@ function CommentBox({ userInfo, viewerId, application }) {
 
 			// Stroke fill
 
-			const text = new fabric.Arrow("Comment", {
-				width: 100,
-				left: origX,
-				top: origY,
-				styles: null,
-				backgroundColor: "#B0C8D6",
-				opacity: "0.75",
-				title: `${userInfo.firstName} ${userInfo.lastName}`,
-				hasControls: false,
-				hasRotatingPoint: false,
-			});
+      var text = new fabric.Textbox("Comment", {
+        width: 100,
+        left: origX,
+        top: origY,
+        styles: null,
+        backgroundColor: "#B0C8D6",
+        opacity: "0.75",
+        title: `${userInfo.firstName} ${userInfo.lastName}`,
+        hasControls: false,
+        hasRotatingPoint: false,
+        lockMovementX: true,
+        lockMovementY: true,
+      });
 
 			// console.log(text);
 			canvas.add(text);

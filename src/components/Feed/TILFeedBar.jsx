@@ -67,6 +67,7 @@ const TILFeedBar = ({
   newHilData,
   setRefreshHil,
   refreshHil,
+  setLoadUI,
   caseInfo,
   setHideTumor,
   setPathStroma,
@@ -192,8 +193,10 @@ const TILFeedBar = ({
         "https://backup-quantize-vhut.prr.ai/TILS/HIL",
         newObject
       );
-      // console.log(resp);
+      console.log(resp);
       if ((resp.status = "Accepted")) {
+        setLoadUI(false);
+        handleDrawStroma();
         toast({
           title: "HIL is Processing ",
           status: "success",
