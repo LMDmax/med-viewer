@@ -1,7 +1,5 @@
 import React, { memo, useEffect, useState } from "react";
 
-import { Flex, Text, useMediaQuery } from "@chakra-ui/react";
-import axios from "axios";
 import { GiHamburgerMenu } from "react-icons/gi";
 
 import { useFabricOverlayState } from "../../state/store";
@@ -123,18 +121,7 @@ function AdjustmentBar({
 				px="18px"
 				align="center"
 			>
-				{Object.keys(viewerWindow).length === 1 && (
-					<ChangeSlide
-						caseInfo={caseInfo}
-						slides={slides}
-						viewerId={currentViewer}
-						slideUrl={tile}
-						setIsMultiview={setIsMultiview}
-						setIsNavigatorActive={setIsNavigatorActive}
-						isAnnotationLoading={isAnnotationLoading}
-						isNavigatorActive={isNavigatorActive}
-					/>
-				)}
+				
 				{/* <ToolbarButton
           icon={<SlideNavigatorIcon isNavigatorActive={isNavigatorActive} />}
           label={
