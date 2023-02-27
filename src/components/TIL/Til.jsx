@@ -675,6 +675,7 @@ const handleTIL = () => {
         }
       );
       setCords(t);
+      // console.log(roi2);
       setTimeout(()=>{canvas.add(t)},1000);
       if (TilHover === false) {
         toast({
