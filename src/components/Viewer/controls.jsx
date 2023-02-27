@@ -11,6 +11,7 @@ import {
 	Text,
 	Box,
 } from "@chakra-ui/react";
+import axios from "axios";
 import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 
 import {
@@ -18,6 +19,7 @@ import {
 	DELETE_ANNOTATION,
 	GET_ANNOTATION,
 	GET_VHUT_ANALYSIS,
+	GET_XMLANNOTATION,
 	UPDATE_ANNOTATION,
 	VHUT_ANALTSIS,
 	VHUT_ANALYSIS_SUBSCRIPTION,
@@ -60,10 +62,13 @@ function ViewerControls({
 	mentionUsers,
 	caseInfo,
 	addUsersToCase,
+	Environment,
+	accessToken,
+	setIsXmlAnnotations,
 }) {
 	const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
 	const { viewerWindow, isViewportAnalysing } = fabricOverlayState;
-	const { viewer, fabricOverlay, slideId, originalFileUrl } =
+	const { viewer, fabricOverlay, slideId, originalFileUrl, tile } =
 		viewerWindow[viewerId];
 	const {
 		updateAnnotation,
@@ -82,9 +87,9 @@ function ViewerControls({
 	const [annotationText, setAnnotationText] = useState("");
 	const [annotationShape, setAnnotationShape] = useState(null);
 	const [activeFeed, setActiveFeed] = useState([]);
-	// console.log("activeFeed", activeFeed);
+	const [xmlLink, setXmlLink] = useState("");
+	const [annotatedData, setAnnotatedData] = useState("");
 	const slideRef = useRef(null);
-
 	const toast = useToast();
 	const iconSize = IconSize();
 	const { isOpen, onOpen: openMenu, onClose: closeMenu } = useDisclosure();
@@ -99,6 +104,47 @@ function ViewerControls({
 		onOpen: openEdit,
 		onClose: closeEdit,
 	} = useDisclosure();
+
+	// ############### LOAD_ANNOTATION ####################
+	const [getAnnotation, { data: annotationData, loading, error }] =
+		useLazyQuery(GET_ANNOTATION);
+	const [getXmlAnnotation, { data: xmlAnnotationData }] =
+		useLazyQuery(GET_XMLANNOTATION);
+	// ########## RUN MORPHOMETRY ##########################
+	const [onVhutAnalysis, { data: analysis_data, error: analysis_error }] =
+		useMutation(VHUT_ANALTSIS);
+
+	// ######## SHOW ANALYSIS AFTER RUNNING MORPHOMETRY ##############
+	const [onGetVhutAnalysis, { data: responseData, error: responseError }] =
+		useLazyQuery(GET_VHUT_ANALYSIS);
+
+	const [
+		modifyAnnotation,
+		{ data: updatedData, error: updateError, loading: updateLoading },
+	] = useMutation(UPDATE_ANNOTATION);
+
+	const [removeAnnotation, { data: deletedData, error: deleteError }] =
+		useMutation(DELETE_ANNOTATION);
+
+	// ############### ANNOTATION_SUBSCRIPTION ########################
+	const { data: subscriptionData, error: subscription_error } = useSubscription(
+		ANNOTATIONS_SUBSCRIPTION,
+		{
+			variables: {
+				slideId,
+			},
+		}
+	);
+
+	// #################### VHUT_ANALYSIS_SUBSCRIPTION ##############
+	const { data: vhutSubscriptionData, error: vhutSubscription_error } =
+		useSubscription(VHUT_ANALYSIS_SUBSCRIPTION, {
+			variables: {
+				body: {
+					slideId,
+				},
+			},
+		});
 
 	const handleZoomIn = () => {
 		try {
@@ -146,15 +192,12 @@ function ViewerControls({
 		annotationChat();
 		// annotationClose();
 	};
-	// ########## RUN MORPHOMETRY ##########################
-	const [onVhutAnalysis, { data: analysis_data, error: analysis_error }] =
-		useMutation(VHUT_ANALTSIS);
+
 	const handleVhutAnalysis = async () => {
 		if (!fabricOverlay || !annotationObject) return;
 
 		// get s3 folder key from the originalFileUrl
 		const key = getFileBucketFolder(originalFileUrl);
-
 		const { left, top, width, height, type } = annotationObject;
 		let body = {
 			key,
@@ -206,21 +249,6 @@ function ViewerControls({
 			});
 		}
 	};
-
-	// ######## SHOW ANALYSIS AFTER RUNNING MORPHOMETRY ##############
-
-	const [onGetVhutAnalysis, { data: responseData, error: responseError }] =
-		useLazyQuery(GET_VHUT_ANALYSIS);
-
-	useEffect(() => {
-		if (responseData) {
-			// console.log("====================================");
-			// console.log("analysis...", responseData);
-			// console.log("====================================");
-
-			showAnalysisData(responseData);
-		}
-	}, [responseData]);
 
 	const showAnalysisData = async (resp) => {
 		const canvas = fabricOverlay.fabricCanvas();
@@ -310,33 +338,41 @@ function ViewerControls({
 		// }
 	};
 
+	// update Annotation in db
+	const onUpdateAnnotation = (data) => {
+		delete data?.slideId;
+		modifyAnnotation({
+			variables: { body: { ...data } },
+		});
+	};
+
+	if (deleteError)
+		toast({
+			title: "Annotation could not be deleted",
+			description: "server error",
+			status: "error",
+			duration: 1000,
+			isClosable: true,
+		});
+
+	// delete Annotation from db
+	const onDeleteAnnotation = (data) => {
+		removeAnnotation({ variables: { body: data } });
+	};
+
 	useEffect(() => {
-		setIsAnnotationLoaded(false);
+		setIsAnnotationLoaded(true);
 	}, [slideId]);
 
-	// ############### LOAD_ANNOTATION ####################
-	const [getAnnotation, { data, loading, error }] =
-		useLazyQuery(GET_ANNOTATION);
+	useEffect(() => {
+		if (responseData) {
+			// console.log("====================================");
+			// console.log("analysis...", responseData);
+			// console.log("====================================");
 
-	// ############### ANNOTATION_SUBSCRIPTION ########################
-	const { data: subscriptionData, error: subscription_error } = useSubscription(
-		ANNOTATIONS_SUBSCRIPTION,
-		{
-			variables: {
-				slideId,
-			},
+			showAnalysisData(responseData);
 		}
-	);
-
-	// #################### VHUT_ANALYSIS_SUBSCRIPTION ##############
-	const { data: vhutSubscriptionData, error: vhutSubscription_error } =
-		useSubscription(VHUT_ANALYSIS_SUBSCRIPTION, {
-			variables: {
-				body: {
-					slideId,
-				},
-			},
-		});
+	}, [responseData]);
 
 	useEffect(() => {
 		if (vhutSubscriptionData) {
@@ -381,7 +417,7 @@ function ViewerControls({
 
 	// ################ UPDATING ANNOTATION VIA SUBSCRIPTION #######################
 	useEffect(() => {
-		if (subscriptionData && data) {
+		if (subscriptionData && annotationData) {
 			// console.log("Subscribed Changed Annotation", subscriptionData);
 
 			// if annotation has been deleted
@@ -396,10 +432,38 @@ function ViewerControls({
 			}
 		}
 	}, [subscriptionData]);
-
-	// ######### FETCHING ANNOTATION #######################
+	// fetch xml file
 	useEffect(() => {
-		if (slideId)
+		async function fetchXmlFile() {
+			const response = await axios.get(
+				`${Environment.FILES_URL}/v1/files/xml-file/?slideUrl=${tile}`,
+				{
+					headers: {
+						authorization: `Bearer ${accessToken}`,
+					},
+				}
+			);
+			setXmlLink(response?.data?.data?.originalUrl);
+		}
+		fetchXmlFile();
+		return () => {
+			setXmlLink("");
+		};
+	}, [tile]);
+
+	// load saved annotations from the server
+	// once viewer is initialized
+	useEffect(() => {
+		if (xmlLink) {
+			getXmlAnnotation({
+				variables: {
+					query: {
+						slideId,
+					},
+				},
+			});
+			setIsXmlAnnotations(true);
+		} else {
 			getAnnotation({
 				variables: {
 					query: {
@@ -407,59 +471,39 @@ function ViewerControls({
 					},
 				},
 			});
-	}, [slideId]);
-	// load saved annotations from the server
-	// once viewer is initialized
+			setIsXmlAnnotations(false);
+		}
+	}, [xmlLink, slideId]);
 
-	const [
-		modifyAnnotation,
-		{ data: updatedData, error: updateError, loading: updateLoading },
-	] = useMutation(UPDATE_ANNOTATION);
-
-	// update Annotation in db
-	const onUpdateAnnotation = (data) => {
-		delete data?.slideId;
-		modifyAnnotation({
-			variables: { body: { ...data } },
-		});
-	};
-
-	const [removeAnnotation, { data: deletedData, error: deleteError }] =
-		useMutation(DELETE_ANNOTATION);
-
-	if (deleteError)
-		toast({
-			title: "Annotation could not be deleted",
-			description: "server error",
-			status: "error",
-			duration: 1000,
-			isClosable: true,
-		});
-
-	// delete Annotation from db
-	const onDeleteAnnotation = (data) => {
-		removeAnnotation({ variables: { body: data } });
-	};
+	// set annotation data
+	useEffect(() => {
+		if (
+			!xmlAnnotationData?.loadImportedAnnotation?.ImportedAnnotation[0]?.data
+		) {
+			setAnnotatedData(annotationData?.loadAnnotation?.data);
+		} else {
+			setAnnotatedData(
+				xmlAnnotationData?.loadImportedAnnotation?.ImportedAnnotation[0]?.data
+			);
+		}
+	}, [xmlAnnotationData, annotationData]);
 
 	useEffect(() => {
 		if (!fabricOverlay) return;
-
 		const canvas = fabricOverlay.fabricCanvas();
 
 		const loadAnnotations = async () => {
 			// check if the annotations is already loaded
-			if (canvas.toJSON().objects.length === 0) {
+			if (canvas.toJSON().objects.length === 0 && annotatedData) {
 				const { feed, status } = await loadAnnotationsFromDB({
 					slideId,
 					canvas,
 					viewer,
 					// onLoadAnnotations,
-					data: data?.loadAnnotation?.data,
-					success: data?.loadAnnotation?.success,
+					data: annotatedData,
+					success: annotatedData,
 					userInfo,
 				});
-
-				// console.log(feed);
 
 				if (status === "success") {
 					if (feed) {
@@ -493,12 +537,8 @@ function ViewerControls({
 
 			setIsAnnotationLoaded(true);
 		};
-
-		if (slideRef.current !== slideId && data) {
-			loadAnnotations();
-			slideRef.current = slideId;
-		}
-	}, [fabricOverlay, data]);
+		loadAnnotations();
+	}, [fabricOverlay, annotatedData]);
 
 	// check if annotation is loaded or not
 	// and then update fabricOverlayState
@@ -587,6 +627,7 @@ function ViewerControls({
 			canvas.on("mouse:move", handleMouseDown);
 		};
 	}, [viewer, fabricOverlay]);
+
 	useEffect(() => {
 		updateAnnotation({
 			text: annotationText,

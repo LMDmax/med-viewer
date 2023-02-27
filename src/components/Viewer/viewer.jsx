@@ -57,6 +57,9 @@ function Viewer({
 	client2,
 	mentionUsers,
 	addUsersToCase,
+	Environment,
+	accessToken,
+	setIsXmlAnnotations,
 }) {
 	const { setFabricOverlayState } = useFabricOverlayState();
 	const [viewer, setViewer] = useState(null);
@@ -134,6 +137,9 @@ function Viewer({
 					mentionUsers={mentionUsers}
 					caseInfo={caseInfo}
 					addUsersToCase={addUsersToCase}
+					Environment={Environment}
+					accessToken={accessToken}
+					setIsXmlAnnotations={setIsXmlAnnotations}
 				/>
 			)}
 			{/* <Button onClick={selection}>Select</Button> */}
