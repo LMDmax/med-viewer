@@ -82,7 +82,7 @@ export const GET_XMLANNOTATION = gql`
 					height
 					rx
 					ry
-					Zoom
+					zoomLevel
 				}
 			}
 		}

@@ -53,6 +53,7 @@ function Viewer({
 	enableAI,
 	slide,
 	application,
+	setLoadUI,
 	caseInfo,
 	client2,
 	mentionUsers,
@@ -133,6 +134,7 @@ function Viewer({
 					userInfo={userInfo}
 					enableAI={enableAI}
 					slide={slide}
+					setLoadUI={setLoadUI}
 					client2={client2}
 					mentionUsers={mentionUsers}
 					caseInfo={caseInfo}

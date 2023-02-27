@@ -201,6 +201,7 @@ function ActivityFeed({
 	}, [tile]);
 
 	const handleClick = (feed) => {
+		console.log(feed);
 		if (!feed.object || !feed.object?.visible) return;
 		const canvas = fabricOverlay.fabricCanvas();
 
@@ -211,9 +212,8 @@ function ActivityFeed({
 		// change position to annotation object location
 		// except for when MagicWand tool is activated
 		if (activeTool !== "MagicWand") {
-			const { zoomLevel, left, top, width, height, Zoom } = feed.object;
-			const zoom = zoomLevel || Zoom;
-			viewer.viewport.zoomTo(zoom);
+			const { zoomLevel, left, top, width, height } = feed.object;
+			viewer.viewport.zoomTo(zoomLevel);
 
 			// get viewport point of middle of selected annotation
 			const vpoint = viewer.viewport.imageToViewportRectangle(
@@ -343,11 +343,13 @@ function ActivityFeed({
 												: `Annotation ${index + 1}`}
 										</Text>
 									</Flex>
-									<EditTextButton
-										feed={feed}
-										handleEditClick={handleEditClick}
-										mr={2}
-									/>
+									{!isXmlAnnotations && (
+										<EditTextButton
+											feed={feed}
+											handleEditClick={handleEditClick}
+											mr={2}
+										/>
+									)}
 								</Flex>
 							) : null;
 						})}
