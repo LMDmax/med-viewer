@@ -182,7 +182,7 @@ function Move({
 				) : null}
 
 				{enableFilters ? <FilterAdjustments viewerId={viewerId} /> : null}
-				{slide.isBreastCancer ? <Til
+				 <Til
 					hideLymphocyte={hideLymphocyte}
 					hideStroma={hideStroma}
 					hideTumor={hideTumor}
@@ -201,7 +201,7 @@ function Move({
 					setTilScore={setTilScore}
 					setLymphocyteCount={setLymphocyteCount}
 					pathStroma={pathStroma}
-				/> : null}
+				/> 
 				<CommentBox
 					userInfo={userInfo}
 					viewerId={viewerId}
