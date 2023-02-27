@@ -20,12 +20,12 @@ import {
 import { VHUT_ANALYSIS_SUBSCRIPTION, VHUT_VIEWPORT_ANALYSIS } from "../../graphql/annotaionsQuery";
 
 const cellColor = {
-  Neutrophil: { hex: "#9800FF" },
-  Epithelial: { hex: "#0008FF" },
-  Lymphocyte: { hex: "#00F6FF" },
-  Plasma: { hex: "#2AFF00" },
-  Eosinohil: { hex: "#FAFF00" },
-  Connective: { hex: "#478C9E" },
+  Neutrophil: { hex: "#FFFF00" },
+  Epithelial: { hex: "#FF0000" },
+  Lymphocyte: { hex: "#00FFFF" },
+  Plasma: { hex: "#8FED66" },
+  Eosinohil: { hex: "#FF00FF" },
+  Connective: { hex: "#FFA500" },
 };
 
 const MagicWandTool = ({
@@ -80,89 +80,6 @@ const MagicWandTool = ({
   }, [viewer]);
 
   const [onVhutViewportAnalysis] = useMutation(VHUT_VIEWPORT_ANALYSIS);
-
-  // const { data: vhutSubscriptionData, error: vhutSubscription_error } =
-  // useSubscription(VHUT_ANALYSIS_SUBSCRIPTION, {
-  //   variables: {
-  //     body: {
-  //       slideId,
-  //     },
-  //   },
-  // });
-//   useEffect(() => {
-//     if (vhutSubscriptionData) {
-//       console.log("subscribed", vhutSubscriptionData);
-//       console.log("subscribedError", vhutSubscription_error);
-//       const {
-//         data,
-//         status,
-//         message,
-//         analysisType: type,
-//       } = vhutSubscriptionData.analysisStatus;
-//       if (type === "VIEWPORT_ANALYSIS" && data?.results !== null) {
-//        console.log(data.results[0]);
-//         if (data && data.isAnalysed )
-//           setFabricOverlayState(updateIsViewportAnalysing(false));
-//       console.log(data?.results[0]?.contours.flat(2));
-//       const color = "#2Aff00";
-//       const canvas = fabricOverlay?.fabricCanvas();
-
-//       const roi = data?.results[0]?.contours.flat(2);
-
-//       const roi2 = roi?.map((tumor_cord) => {
-//         // console.log(tumor_cord);
-//         // console.log(tumorCords);
-//         const points2 = tumor_cord.map((point2) => ({
-//           x: point2[0],
-//           y: point2[1],
-//         }));
-//         return new fabric.Polygon(points2, {
-//           stroke: `${color}83`,
-//           strokeWidth: 1.2,
-//           fill: "green",
-//           opacity: 0.2,
-//           strokeUniform: true,
-//         });
-//       });
-// canvas.add(roi2).requestRenderAll();
-      
-//     //   const pathString = roi.reduce((acc, val, idx, arr) => {
-//     //     if (idx === 0) {
-//     //       return `M ${val} `;
-//     //     } else if (idx % 4 === 1) {
-//     //       return `${acc} Q ${arr[idx - 1]} ${arr[idx]} `;
-//     //     } else if (idx === arr.length - 2) {
-//     //       return `${acc} L ${arr[idx]} ${arr[idx + 1]} `;
-//     //     } else {
-//     //       return acc;
-//     //     }
-//     //   }, '');
-    
-//     //   // Create the path object
-//     //   const path = new fabric.Path(pathString, {
-//     //     stroke: 'black',
-//     //     fill: '',
-//     //     strokeWidth: 3,
-//     //   });
-    
-//     //   // Scale down the path to fit within the canvas
-//     //   const pathWidth = path.width;
-//     //   const pathHeight = path.height;
-//     //   const canvasWidth = canvas.width;
-//     //   const canvasHeight = canvas.height;
-//     //   const scaleFactor = Math.min(canvasWidth / pathWidth, canvasHeight / pathHeight);
-//     //   path.scale(scaleFactor);
-//     // console.log(scaleFactor);
-//     //   // Add the path to the canvas and render it
-//     //   canvas.add(path);
-//     //   canvas.renderAll();
-      
-      
-      
-
-//       }
-//     }
-//   }, [vhutSubscriptionData]);
 
   useEffect(() => {
     if (!fabricOverlay || !isActive) return;
@@ -289,6 +206,169 @@ const MagicWandTool = ({
     setFabricOverlayState(updateTool({ tool: "MagicWand" }));
     setFabricOverlayState(updateIsViewportAnalysing(true));
   };
+
+  const { data: vhutSubscriptionData, error: vhutSubscription_error } =
+  useSubscription(VHUT_ANALYSIS_SUBSCRIPTION, {
+    variables: {
+      body: {
+        slideId,
+      },
+    },
+  });
+
+  useEffect(()=>{
+    if (vhutSubscriptionData) {
+      console.log("subscribed", vhutSubscriptionData);
+      console.log("subscribedError", vhutSubscription_error);
+      const {
+        data,
+        status,
+        message,
+        analysisType: type,
+      } = vhutSubscriptionData.analysisStatus;
+
+      if (type === "VIEWPORT_ANALYSIS" && data.results !== null){
+          console.log(data.results[0]);
+    const canvas = fabricOverlay.fabricCanvas();
+          const neutrophilContours = data.results[0].contours;
+          const EpithelialContours = data.results[1].contours;
+          const LympocyteContours = data.results[2].contours;
+          const PlasmaContours = data.results[3].contours;
+          const EosinohilContours = data.results[4].contours;
+          const ConnectiveContours = data.results[5].contours;
+    const { x: left, y: top, width, height } = getViewportBounds(viewer);
+    const neutrophile = neutrophilContours?.flat().map((coords) => {
+      // Map each nested array of coordinates to a Point object
+      const points = coords.map((coord) => {
+        return {
+          x: coord[0][0] + left,
+          y: coord[0][1] + top,
+        };
+      });
+      
+      // Create and return a new fabric.js Polygon object
+      return new fabric.Polygon(points, {
+        stroke: 'black',
+        strokeWidth: 1,
+        fill: '',
+        opacity: 0.7,
+        strokeUniform: true,
+      });
+    });
+    const epithelial = EpithelialContours?.flat().map((coords) => {
+      // Map each nested array of coordinates to a Point object
+      const points = coords.map((coord) => {
+        return {
+          x: coord[0][0] + left,
+          y: coord[0][1] + top,
+        };
+      });
+      
+      // Create and return a new fabric.js Polygon object
+      return new fabric.Polygon(points, {
+        stroke: 'black',
+        strokeWidth: 1,
+        fill: '',
+        opacity: 0.7,
+        strokeUniform: true,
+      });
+    });
+    const lymphocyte = LympocyteContours?.flat().map((coords) => {
+      // Map each nested array of coordinates to a Point object
+      const points = coords.map((coord) => {
+        return {
+          x: coord[0][0] + left,
+          y: coord[0][1] + top,
+        };
+      });
+      
+      // Create and return a new fabric.js Polygon object
+      return new fabric.Polygon(points, {
+        stroke: 'black',
+        strokeWidth: 1,
+        fill: '',
+        opacity: 0.7,
+        strokeUniform: true,
+      });
+    });
+    const plasma = PlasmaContours?.flat().map((coords) => {
+      // Map each nested array of coordinates to a Point object
+      const points = coords.map((coord) => {
+        return {
+          x: coord[0][0] + left,
+          y: coord[0][1] + top,
+        };
+      });
+      
+      // Create and return a new fabric.js Polygon object
+      return new fabric.Polygon(points, {
+        stroke: 'black',
+        strokeWidth: 1,
+        fill: '',
+        opacity: 0.7,
+        strokeUniform: true,
+      });
+    });
+    const eosinoil = EosinohilContours?.flat().map((coords) => {
+      // Map each nested array of coordinates to a Point object
+      const points = coords.map((coord) => {
+        return {
+          x: coord[0][0] + left,
+          y: coord[0][1] + top,
+        };
+      });
+      
+      // Create and return a new fabric.js Polygon object
+      return new fabric.Polygon(points, {
+        stroke: 'black',
+        strokeWidth: 1,
+        fill: '',
+        opacity: 0.7,
+        strokeUniform: true,
+      });
+    });
+    const connective = ConnectiveContours?.flat().map((coords) => {
+      // Map each nested array of coordinates to a Point object
+      const points = coords.map((coord) => {
+        return {
+          x: coord[0][0] + left,
+          y: coord[0][1] + top,
+        };
+      });
+      
+      // Create and return a new fabric.js Polygon object
+      return new fabric.Polygon(points, {
+        stroke: 'black',
+        strokeWidth: 1,
+        fill: '',
+        opacity: 0.7,
+        strokeUniform: true,
+      });
+    });
+    const t = new fabric.Group(
+      [...neutrophile, ...epithelial, ...lymphocyte, ...plasma, ...eosinoil, ...connective],
+      {
+        selectable: false,
+        lockMovementX: false,
+        lockMovementY: false,
+        lockRotation: false,
+        lockScalingX: false,
+        lockScalingY: false,
+        lockUniScaling: false,
+        hoverCursor: "auto",
+        evented: false,
+        stroke: "",
+        strokeWidth: 1,
+        objectCaching: false,
+      })
+    
+    // // Add the Polygon objects to the canvas and request a render
+    // console.log(roi2);
+    canvas.add(t).bringToFront().requestRenderAll();
+    
+      }
+    }
+  },[vhutSubscriptionData])
 
   return (
     <IconButton
