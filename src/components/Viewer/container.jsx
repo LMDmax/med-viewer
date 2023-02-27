@@ -22,6 +22,7 @@ function ViewerContainer({
 	onSaveAnnotation,
 	onDeleteAnnotation,
 	onUpdateAnnotation,
+	setLoadUI,
 	onVhutAnalysis,
 	onGetVhutAnalysis,
 	onMessageListener,
@@ -89,6 +90,7 @@ function ViewerContainer({
 			slide={slide}
 			userInfo={userInfo}
 			client2={client2}
+			setLoadUI={setLoadUI}
 			mentionUsers={mentionUsers}
 			caseInfo={caseInfo}
 			addUsersToCase={addUsersToCase}

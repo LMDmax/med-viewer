@@ -28,6 +28,7 @@ function AdjustmentBar({
 	setLymphocyteCount,
 	hitTil,
 	report,
+	setLoadUI,
 	setNewHilData,
 	application,
 	viewerIds,
@@ -82,7 +83,8 @@ function AdjustmentBar({
 	const handleSidebar = () => {
 		showSidebar();
 	};
-	// console.log(mongoId);
+	console.log("slides",slides);
+	console.log("slide",slide);
 	return (
 		<Flex
 			className="adjustmentbar"
@@ -166,6 +168,7 @@ function AdjustmentBar({
 				handleTILFeedBar={handleTILFeedBar}
 				annotations={annotations}
 				enableAI={enableAI}
+				setLoadUI={setLoadUI}
 				enableFilters={enableFilters}
 				pathStroma={pathStroma}
 				setTumorArea={setTumorArea}

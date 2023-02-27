@@ -14,6 +14,7 @@ function ViewerFactory({
 	slides,
 	setCurrentViewer,
 	application,
+	setLoadUI,
 	client2,
 	mentionUsers,
 	addUsersToCase,
@@ -84,6 +85,7 @@ function ViewerFactory({
 						userInfo={userInfo}
 						enableAI={enableAI}
 						slide={slide}
+						setLoadUI={setLoadUI}
 						client2={client2}
 						mentionUsers={mentionUsers}
 						caseInfo={caseInfo}

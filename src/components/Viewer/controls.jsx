@@ -59,6 +59,7 @@ function ViewerControls({
 	slide,
 	application,
 	client2,
+	setLoadUI,
 	mentionUsers,
 	caseInfo,
 	addUsersToCase,
