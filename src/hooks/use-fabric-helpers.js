@@ -66,12 +66,22 @@ const useCanvasHelpers = (viewerId) => {
       }
     }
 
-    toast({
-      title: "Annotations deleted",
-      status: "success",
-      duration: 1000,
-      isClosable: true,
-    });
+    if (deleteType.includes("textbox")) {
+      toast({
+        title: "Comments deleted",
+        status: "success",
+        duration: 1000,
+        isClosable: true,
+      });
+      console.log("comments");
+    } else {
+      toast({
+        title: "Annotations deleted",
+        status: "success",
+        duration: 1000,
+        isClosable: true,
+      });
+    }
   };
 
   // subscription sync add annotation to canvas
@@ -101,12 +111,21 @@ const useCanvasHelpers = (viewerId) => {
     const target = canvas.getObjectByHash(annotation?.hash);
     target.set(annotation);
 
-    toast({
-      title: "Annotation updated",
-      status: "success",
-      duration: 1000,
-      isClosable: true,
-    });
+    if (target.type === "textbox") {
+      toast({
+        title: "Comment updated",
+        status: "success",
+        duration: 1000,
+        isClosable: true,
+      });
+    } else {
+      toast({
+        title: "Annotation updated",
+        status: "success",
+        duration: 1000,
+        isClosable: true,
+      });
+    }
   };
   // delete annotation/object from canvas
   const deleteAnnotation = async (onDeleteAnnotation) => {
