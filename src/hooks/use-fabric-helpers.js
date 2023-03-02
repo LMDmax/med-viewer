@@ -35,10 +35,7 @@ const useCanvasHelpers = (viewerId) => {
   // subscription sync delete annotation from canvas
   const subscriptionDeleteAnnotation = (hash) => {
     if (!canvas || !hash) return;
-    console.log("delete hook", hash);
     const target = canvas.getObjectByHash(hash);
-    console.log(target);
-
     setFabricOverlayState(
       removeFromActivityFeed({ id: viewerId, hash: target?.hash })
     );
