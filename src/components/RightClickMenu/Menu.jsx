@@ -229,7 +229,7 @@ export function CustomMenu({
 							onClick={handleAnnotationChat}
 							isDisabled={!isAnnotationSelected}
 						>
-							Create Chat
+							Create Query
 						</MenuItem>
 					)}
 					<MenuDivider />
