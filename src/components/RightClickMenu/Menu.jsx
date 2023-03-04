@@ -276,7 +276,6 @@ export function CustomMenu({
 					>
 						Delete
 					</MenuItem>
-					
 				</MenuList>
 			</Menu>
 		</Box>
