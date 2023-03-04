@@ -318,6 +318,13 @@ export const VHUT_ANALYSIS_SUBSCRIPTION = gql`
 					type
 					contours
 				}
+				kiResults{
+					num_positive
+					num_negative
+					proliferation_score
+					pos_contours
+					neg_contours
+				}
 			}
 			analysisType
 		}

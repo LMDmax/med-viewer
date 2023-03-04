@@ -125,8 +125,6 @@ function ScreenTools({
 						<MenuItem onClick={handleAnnotationBar}>
 							Annotation and Comment Details
 						</MenuItem>
-						<MenuItem>Morphomatery results</MenuItem>
-						<MenuItem>Hierarchy</MenuItem>
 						{localStorage.getItem("til") ? (
 							<MenuItem onClick={handleTILFeedBar}>TIL</MenuItem>
 						) : null}

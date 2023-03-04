@@ -90,7 +90,6 @@ const ZoomButton = ({ viewerId }) => {
 					pt="3px"
 					pb="5px"
 					color={customZoom40 ? "#468" : ""}
-					borderBottom="1px solid black"
 					cursor="pointer"
 					onClick={() => {
 						setCustomZoom10(false);
