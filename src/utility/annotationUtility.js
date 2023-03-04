@@ -185,6 +185,8 @@ export const createAnnotation = (annotation) => {
         opacity: annotation.opacity,
         title: annotation.title,
         text: annotation.text,
+        hasBorders: false,
+        hasControls: false,
         hasRotatingPoint: false,
         lockMovementX: true,
         lockMovementY: true,
@@ -386,7 +388,7 @@ export const groupAnnotationAndCells = ({
 
   // check if optionalData is available and also is not empty
   if (optionalData && Object.keys(optionalData).length > 0) {
-    group.set({ analysedData: optionalData });
+    group.set({ analysedData: optionalData, roiType: optionalData.roiType });
   }
 
   const message = {
@@ -556,12 +558,12 @@ export const getVhutAnalysisData = async ({ canvas, vhut, left, top }) => {
   let totalCells = 0;
 
   const cellColor = {
-    Neutrophil: { hex: "#9800FF" },
-    Epithelial: { hex: "#0008FF" },
-    Lymphocyte: { hex: "#00F6FF" },
-    Plasma: { hex: "#2AFF00" },
-    Eosinohil: { hex: "#FAFF00" },
-    Connective: { hex: "#478C9E" },
+    Neutrophil: { hex: "#FFFF00" },
+    Epithelial: { hex: "#FF0000" },
+    Lymphocyte: { hex: "#00FFFF" },
+    Plasma: { hex: "#8FED66" },
+    Eosinohil: { hex: "#FF00FF" },
+    Connective: { hex: "#FFA500" },
   };
 
   data.forEach((item) => {

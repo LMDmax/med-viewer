@@ -79,7 +79,7 @@ function AdjustmentBar({
   const { viewerWindow, isAnnotationLoading } = fabricOverlayState;
   const { tile } = viewerWindow[currentViewer];
   const [mongoId, setMongoId] = useState("");
-
+  
   const handleSidebar = () => {
     showSidebar();
   };

@@ -158,8 +158,11 @@ export function CustomMenu({
 	left,
 	top,
 	setZoom,
+	viewer,
 	enableAI,
+	runKI67,
 	onHandleVhutAnalysis,
+	slide,
 	onHandleShowAnalysis,
 	isMorphometryDisabled,
 	isAnalysed,
@@ -168,6 +171,7 @@ export function CustomMenu({
 	handleEditOpen,
 	handleAnnotationChat,
 	application,
+	isKI67Analysed,
 }) {
 	return isMenuOpen ? (
 		<Box>
@@ -213,6 +217,31 @@ export function CustomMenu({
 								closeOnSelect
 							>
 								Show Analysis
+							</MenuItem>
+						)
+					) : null}
+					{enableAI && slide?.isIHC ? (
+						!isKI67Analysed ? (
+							<MenuItem
+								_hover={{ bgColor: "#DEDEDE" }}
+								onClick={() => {
+									runKI67();
+									closeMenu();
+								}}
+								closeOnSelect
+								isDisabled={isMorphometryDisabled}
+							>
+								Run KI-67
+							</MenuItem>
+						) : (
+							<MenuItem
+								_hover={{ bgColor: "transparent" }}
+								disabled={isAnalysed}
+								style={{ cursor: isAnalysed ? 'not-allowed' : 'default' }}
+								closeOnSelect
+								color="gray.500"
+							>
+								KI-67 Analysed
 							</MenuItem>
 						)
 					) : null}
