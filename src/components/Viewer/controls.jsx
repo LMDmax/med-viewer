@@ -913,8 +913,8 @@ function ViewerControls({
             isAnnotationSelected={annotationObject}
             isAnalysed={annotationObject?.isAnalysed}
             isKI67Analysed={annotationObject?.isKI67Analysed}
-						viewer={viewer}
-						runKI67={runKI67}
+	    viewer={viewer}
+	    runKI67={runKI67}
             onHandleShowAnalysis={handleShowAnalysis}
             handleDeleteAnnotation={handleDeleteAnnotation}
             handleEditOpen={handleEditOpen}
