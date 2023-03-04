@@ -893,6 +893,7 @@ function ViewerControls({
             top={menuPosition.top}
             onHandleVhutAnalysis={handleVhutAnalysis}
             setZoom={handleZoomLevel}
+            slide={slide}
             enableAI={enableAI}
             isMorphometryDisabled={isMorphometryDisabled}
             isAnnotationSelected={annotationObject}
