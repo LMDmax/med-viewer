@@ -171,7 +171,6 @@ function ActivityFeed({
 
   const { deleteAllAnnotations } = useCanvasHelpers(viewerId);
 
-
   const scrollbar = useRef(null);
   const { isOpen, onClose, onOpen } = useDisclosure();
   const {
@@ -183,7 +182,7 @@ function ActivityFeed({
   const [annotationObject, setAnnotationObject] = useState(null);
   const [annotationDetails, setAnnotationsDetails] = useState(null);
   const [ifScreenlessthan1660px] = useMediaQuery("(max-width:1660px)");
-  const [ki67Feed,setKi67Feed] = useState({});
+  const [ki67Feed, setKi67Feed] = useState({});
   const [activeTab, setActiveTab] = useState("");
 
   useEffect(() => {
@@ -204,13 +203,13 @@ function ActivityFeed({
   }, [tile]);
 
   const handleClick = (feed) => {
-	  if(feed.object.roiType === "KI67"){
-		  setKi67Feed(feed);
-		  console.log(ki67Feed);
-   }
-   if(feed.object.roiType !== "KI67"){
-	setKi67Feed({});
-   }
+    if (feed.object.roiType === "KI67") {
+      setKi67Feed(feed);
+      console.log(ki67Feed);
+    }
+    if (feed.object.roiType !== "KI67") {
+      setKi67Feed({});
+    }
     if (!feed.object || !feed.object?.visible) return;
     const canvas = fabricOverlay.fabricCanvas();
 
@@ -348,7 +347,7 @@ function ActivityFeed({
                         ? feed.object.title
                         : feed.object?.roiType === "morphometry"
                         ? "ROI"
-						: feed.object?.roiType === "KI67"
+                        : feed.object?.roiType === "KI67"
                         ? "KI-67"
                         : feed.object?.type === "viewport"
                         ? `Viewport ${index + 1}`
@@ -377,11 +376,15 @@ function ActivityFeed({
               <CustomTab title="Annotation Values" />
               <CustomTab
                 isDisabled={!annotationDetails?.analysedData}
-                title={ki67Feed?.object? "KI - 67 Analysis" : "Morphometry values"}
-				onClick={(e) => {
-					e.preventDefault();
-					setActiveTab(ki67Feed?.object ? "KI67 Values" : "Morphometry Values");
-				  }}
+                title={
+                  ki67Feed?.object ? "KI - 67 Analysis" : "Morphometry values"
+                }
+                onClick={(e) => {
+                  e.preventDefault();
+                  setActiveTab(
+                    ki67Feed?.object ? "KI67 Values" : "Morphometry Values"
+                  );
+                }}
               />
             </TabList>
             <TabPanels px={0}>
@@ -436,97 +439,130 @@ function ActivityFeed({
                   </>
                 ) : null}
               </CustomTabPanel>
-              <CustomTabPanel title={ki67Feed?.object? "KI-67 Values" : "Morphometry values"} activeTab={activeTab}>
-               {activeTab === "Morphometry Values"? 
-			   annotationDetails?.analysedData &&
-                annotationDetails.analysedData.data.length > 0 ? (
-                  <Accordion allowToggle>
-                    {annotationDetails.analysedData.data.map((cell) => {
-                      return (
-                        <AccordionItem
-                          key={uuidv4()}
-                          color="black"
-                          isDisabled={cell.status !== "detected"}
-                        >
-                          <h2>
-                            <AccordionButton _focus={{ outline: "none" }}>
-                              <HStack flex="1" textAlign="left" align="center">
-                                <Text fontSize="14px">{cell.type}</Text>
-                                {cell.status === "detected" ? (
-                                  <Circle size="12px" bg={cell.color} />
-                                ) : null}
-                              </HStack>
-                              <AccordionIcon />
-                            </AccordionButton>
-                          </h2>
-                          {cell.status === "detected" ? (
-                            <AccordionPanel pb={4}>
-                              {/* <CardDetailsRow
+              <CustomTabPanel
+                title={ki67Feed?.object ? "KI-67 Values" : "Morphometry values"}
+                activeTab={activeTab}
+              >
+                {activeTab === "Morphometry Values" ? (
+                  annotationDetails?.analysedData &&
+                  annotationDetails.analysedData.data.length > 0 ? (
+                    <Accordion allowToggle>
+                      {annotationDetails.analysedData.data.map((cell) => {
+                        return (
+                          <AccordionItem
+                            key={uuidv4()}
+                            color="black"
+                            isDisabled={cell.status !== "detected"}
+                          >
+                            <h2>
+                              <AccordionButton _focus={{ outline: "none" }}>
+                                <HStack
+                                  flex="1"
+                                  textAlign="left"
+                                  align="center"
+                                >
+                                  <Text fontSize="14px">{cell.type}</Text>
+                                  {cell.status === "detected" ? (
+                                    <Circle size="12px" bg={cell.color} />
+                                  ) : null}
+                                </HStack>
+                                <AccordionIcon />
+                              </AccordionButton>
+                            </h2>
+                            {cell.status === "detected" ? (
+                              <AccordionPanel pb={4}>
+                                {/* <CardDetailsRow
                                   title="Total Cells"
                                   value={
                                     annotationDetails.analysedData.totalCells
                                   }
                                 /> */}
-                              <CardDetailsRow
-                                title="Nucleus Count"
-                                value={cell.count}
-                              />
-                              {/* <CardDetailsRow
+                                <CardDetailsRow
+                                  title="Nucleus Count"
+                                  value={cell.count}
+                                />
+                                {/* <CardDetailsRow
                                 title="Nucleus Cytoplasm Ratio"
                                 value={cell.ratio.toFixed(2)}
                               /> */}
-                              <CardDetailsRow
-                                title="Min. Perimeter"
-                                value={<>{cell.min_perimeter.toFixed(2)}</>}
-                              />
-                              <CardDetailsRow
-                                title="Max. Perimeter"
-                                value={<>{cell.max_perimeter.toFixed(2)}</>}
-                              />
-                              <CardDetailsRow
-                                title="Avg. Perimeter"
-                                value={<>{cell.avg_perimeter.toFixed(2)}</>}
-                              />
-                              <CardDetailsRow
-                                title="Min. Area"
-                                value={<>{cell.min_area.toFixed(2)}</>}
-                              />
-                              <CardDetailsRow
-                                title="Max. Area"
-                                value={<>{cell.max_area.toFixed(2)}</>}
-                              />
-                              <CardDetailsRow
-                                title="Avg. Area"
-                                value={<>{cell.avg_area.toFixed(2)}</>}
-                              />
-                            </AccordionPanel>
-                          ) : null}
-                        </AccordionItem>
-                      );
-                    })}
-                  </Accordion>
-                ) : null  : null}
-				{activeTab === "KI67 Values" ? (
-    <Flex flexDir="column" h="100%">
-     <Flex w="100%" mt="10px" h="35%"  justifyContent="center" alignItems="flex-start" direction="column">
-	 <Flex justifyContent="flex-start" px="18px" alignItems="center" w="100%">
-	 <Circle size="10px" bg="#BB4139" />
-	 <Text ml="5px">Positive Cells</Text>
-	 </Flex>
-	 <Flex justifyContent="flex-start" px="18px" alignItems="center" w="100%">
-	 <Circle size="10px" bg="#17478D" />
+                                <CardDetailsRow
+                                  title="Min. Perimeter"
+                                  value={<>{cell.min_perimeter.toFixed(2)}</>}
+                                />
+                                <CardDetailsRow
+                                  title="Max. Perimeter"
+                                  value={<>{cell.max_perimeter.toFixed(2)}</>}
+                                />
+                                <CardDetailsRow
+                                  title="Avg. Perimeter"
+                                  value={<>{cell.avg_perimeter.toFixed(2)}</>}
+                                />
+                                <CardDetailsRow
+                                  title="Min. Area"
+                                  value={<>{cell.min_area.toFixed(2)}</>}
+                                />
+                                <CardDetailsRow
+                                  title="Max. Area"
+                                  value={<>{cell.max_area.toFixed(2)}</>}
+                                />
+                                <CardDetailsRow
+                                  title="Avg. Area"
+                                  value={<>{cell.avg_area.toFixed(2)}</>}
+                                />
+                              </AccordionPanel>
+                            ) : null}
+                          </AccordionItem>
+                        );
+                      })}
+                    </Accordion>
+                  ) : null
+                ) : null}
+                {activeTab === "KI67 Values" ? (
+                  <Flex flexDir="column" h="100%">
+                    <Flex
+                      w="100%"
+                      mt="10px"
+                      h="35%"
+                      justifyContent="center"
+                      alignItems="flex-start"
+                      direction="column"
+                    >
+                      <Flex
+                        justifyContent="flex-start"
+                        px="18px"
+                        alignItems="center"
+                        w="100%"
+                      >
+                        <Circle size="10px" bg="#BB4139" />
+                        <Text ml="5px">Positive Cells</Text>
+                      </Flex>
+                      <Flex
+                        justifyContent="flex-start"
+                        px="18px"
+                        alignItems="center"
+                        w="100%"
+                      >
+                        <Circle size="10px" bg="#17478D" />
 
-	 <Text ml="5px">Negative Cells</Text>
-	 </Flex>
-	 </Flex>
-	 <Box w="100%" h ="90px" px="18px" mt="15px" >
-		<Text>Positive Count : {ki67Feed?.object?.analysedData?.num_positive}</Text>
-		<Text>Negative Count : {ki67Feed?.object?.analysedData?.num_negative}</Text>
-		<Text>Proliferation Score : {ki67Feed?.object?.analysedData?.proliferation_score}</Text>
-		
-	 </Box>
-    </Flex>
-  ) : null}
+                        <Text ml="5px">Negative Cells</Text>
+                      </Flex>
+                    </Flex>
+                    <Box w="100%" h="90px" px="18px" mt="15px">
+                      <Text>
+                        Positive Count :
+                        {ki67Feed?.object?.analysedData?.num_positive}
+                      </Text>
+                      <Text>
+                        Negative Count :
+                        {ki67Feed?.object?.analysedData?.num_negative}
+                      </Text>
+                      <Text>
+                        Proliferation Score :
+                        {ki67Feed?.object?.analysedData?.proliferation_score}
+                      </Text>
+                    </Box>
+                  </Flex>
+                ) : null}
               </CustomTabPanel>
             </TabPanels>
           </Tabs>
