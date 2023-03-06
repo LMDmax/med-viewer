@@ -554,11 +554,11 @@ function ActivityFeed({
                         {ki67Feed?.object?.analysedData?.num_positive}
                       </Text>
                       <Text borderBottom="1px solid #C0C0C0" py="5px">
-                        Negative Count :
+                        <span as='b'>Negative Count :</span>
                         {ki67Feed?.object?.analysedData?.num_negative}
                       </Text>
                       <Text borderBottom="1px solid #C0C0C0" py="5px">
-                        Proliferation Score :
+                        <span as='b'>Proliferation Score :</span>
                         {ki67Feed?.object?.analysedData?.proliferation_score}
                       </Text>
                     </Box>
