@@ -236,7 +236,7 @@ export function CustomMenu({
 						) : (
 							<MenuItem
 								_hover={{ bgColor: "transparent" }}
-								disabled={isAnalysed}
+								disabled={true}
 								style={{ cursor: isAnalysed ? 'not-allowed' : 'default' }}
 								closeOnSelect
 								color="gray.500"
