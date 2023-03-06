@@ -523,9 +523,10 @@ function ActivityFeed({
                       w="100%"
                       mt="10px"
                       h="35%"
-                      justifyContent="center"
+                      justifyContent="space-between"
                       alignItems="flex-start"
                       direction="column"
+                      
                     >
                       <Flex
                         justifyContent="flex-start"
@@ -548,16 +549,16 @@ function ActivityFeed({
                       </Flex>
                     </Flex>
                     <Box w="100%" h="90px" px="18px" mt="15px">
-                      <Text>
-                        Positive Count :
+                      <Text borderBottom="1px solid #C0C0C0" py="5px">
+                        <span as='b'>Positive Count :</span>
                         {ki67Feed?.object?.analysedData?.num_positive}
                       </Text>
-                      <Text>
-                        Negative Count :
+                      <Text borderBottom="1px solid #C0C0C0" py="5px">
+                        <span as='b'>Negative Count :</span>
                         {ki67Feed?.object?.analysedData?.num_negative}
                       </Text>
-                      <Text>
-                        Proliferation Score :
+                      <Text borderBottom="1px solid #C0C0C0" py="5px">
+                        <span as='b'>Proliferation Score :</span>
                         {ki67Feed?.object?.analysedData?.proliferation_score}
                       </Text>
                     </Box>
