@@ -35,21 +35,28 @@ const useCanvasHelpers = (viewerId) => {
   // subscription sync delete annotation from canvas
   const subscriptionDeleteAnnotation = (hash) => {
     if (!canvas || !hash) return;
-    console.log("delete hook", hash);
     const target = canvas.getObjectByHash(hash);
-
     setFabricOverlayState(
       removeFromActivityFeed({ id: viewerId, hash: target?.hash })
     );
 
     canvas.remove(target).requestRenderAll();
 
-    toast({
-      title: "Annotation deleted",
-      status: "success",
-      duration: 1000,
-      isClosable: true,
-    });
+    if (target.type === "textbox") {
+      toast({
+        title: "Comment deleted",
+        status: "success",
+        duration: 1000,
+        isClosable: true,
+      });
+    } else {
+      toast({
+        title: "Annotation deleted",
+        status: "success",
+        duration: 1000,
+        isClosable: true,
+      });
+    }
   };
 
   //subscription sync clear annotations from canvas
