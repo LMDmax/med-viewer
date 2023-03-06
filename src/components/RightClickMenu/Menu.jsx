@@ -262,11 +262,7 @@ export function CustomMenu({
 						</MenuItem>
 					)}
 					<MenuDivider />
-						<MenuItem
-							_hover={{ bgColor: "#DEDEDE" }}
-						>
-							Create Queriiy
-						</MenuItem>
+						
 					{/* <MenuItem
             _hover={{ bgColor: "#DEDEDE" }}
             onClick={() => setIsOpen(false)}
