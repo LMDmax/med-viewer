@@ -168,7 +168,6 @@ function ActivityFeed({
 	const { activeTool, viewerWindow } = fabricOverlayState;
 	const { fabricOverlay, activityFeed, viewer, tile, slideId } =
 		viewerWindow[viewerId];
-
 	const { deleteAllAnnotations } = useCanvasHelpers(viewerId);
 
 	const scrollbar = useRef(null);
@@ -201,7 +200,6 @@ function ActivityFeed({
 	}, [tile]);
 
 	const handleClick = (feed) => {
-		console.log(feed);
 		if (!feed.object || !feed.object?.visible) return;
 		const canvas = fabricOverlay.fabricCanvas();
 

@@ -76,13 +76,72 @@ export const GET_XMLANNOTATION = gql`
 				slideId
 				data {
 					type
+					version
+					originX
+					originY
+					left
 					top
 					width
-					left
 					height
+					fill
+					stroke
+					strokeWidth
+					strokeLineCap
+					strokeDashOffset
+					strokeLineJoin
+					strokeMiterLimit
+					scaleX
+					scaleY
+					angle
+					flipX
+					flipY
+					opacity
+					visible
+					backgroundColor
+					fillRule
+					paintFirst
+					globalCompositeOperation
+					skewX
+					skewY
 					rx
 					ry
+					hash
+					Text
 					zoomLevel
+					tag
+					title
+					x1
+					y1
+					x2
+					y2
+					Points
+					path
+					cords
+					area
+					perimeter
+					center
+					end_points
+					isAnalysed
+					analysedROI
+					classType
+					isDeleted
+					belongsToApp
+					fontSize
+					fontWeight
+					fontFamily
+					fontStyle
+					lineHeight
+					underline
+					overline
+					linethrough
+					textAlign
+					charSpacing
+					minWidth
+					splitByGrapheme
+					styles
+					textBackgroundColor
+					createdAt
+					updatedAt
 				}
 			}
 		}
