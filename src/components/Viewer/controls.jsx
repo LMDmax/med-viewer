@@ -140,8 +140,6 @@ function ViewerControls({
 		}
 	);
 
-	console.log("subs", subscriptionData);
-
 	// #################### VHUT_ANALYSIS_SUBSCRIPTION ##############
 	const { data: vhutSubscriptionData, error: vhutSubscription_error } =
 		useSubscription(VHUT_ANALYSIS_SUBSCRIPTION, {
@@ -547,7 +545,6 @@ function ViewerControls({
 							isClosable: true,
 						});
 					}
-					
 				} else {
 					setFabricOverlayState(
 						updateActivityFeed({ id: viewerId, fullFeed: [] })
