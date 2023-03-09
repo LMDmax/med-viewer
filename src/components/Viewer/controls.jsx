@@ -107,6 +107,8 @@ function ViewerControls({
 		onClose: closeEdit,
 	} = useDisclosure();
 
+	const { isOpen: isKI67Open, onOpen: isKI67, onClose:isKI67Close  } = useDisclosure()
+
 	// ############### LOAD_ANNOTATION ####################
 	const [getAnnotation, { data: annotationData, loading, error }] =
 		useLazyQuery(GET_ANNOTATION);
@@ -534,12 +536,15 @@ function ViewerControls({
 					}
 
 					canvas.requestRenderAll();
-					toast({
-						title: "Annotations loaded",
-						status: "success",
-						duration: 1000,
-						isClosable: true,
-					});
+					console.log(annotatedData);
+					if(annotatedData?.length>0){
+						toast({
+							title: "Annotation loaded",
+							status: "success",
+							duration: 1000,
+							isClosable: true,
+						});
+					}
 				} else {
 					setFabricOverlayState(
 						updateActivityFeed({ id: viewerId, fullFeed: [] })
@@ -703,69 +708,80 @@ function ViewerControls({
 
     return message;
   };
+
+
   const runKI67 = async () => {
     if (!fabricOverlay || !annotationObject) return;
-    // get s3 folder key from the originalFileUrl
-    const key = getFileBucketFolder(originalFileUrl);
-    const { left, top, width, height, type } = annotationObject;
-    let body = {
-      key,
-      type,
-      left,
-      top,
-      width,
-      height,
-      slideId,
-      hash: annotationObject.hash,
-    };
 
-    // if annoatation is a freehand, send the coordinates of the path
-    // otherwise, send the coordinates of the rectangle
-    if (annotationObject.type === "path") {
-      body = { ...body, path: annotationObject.path };
-    } else if (annotationObject.type === "ellipse") {
-      body = {
-        ...body,
-        cx: annotationObject.cx,
-        cy: annotationObject.cy,
-        rx: annotationObject.rx,
-        ry: annotationObject.ry,
-        type: "ellipse",
-      };
-    } else if (annotationObject.type === "polygon") {
-      body = { ...body, points: annotationObject.points };
-    }
-    // console.log("slideID", slideId);
-    // console.log("body....", body);
-    const originalBody = {
-      ...body,
-      notifyHook: `${Environment.VIEWER_URL}/notify_KI67`,
-      annotationId: "",
-    };
-    console.log("body", originalBody);
-    try {
-      // const resp = await onVhutAnalysis(body);
-      const resp = await axios.post(
-        "https://backup-quantize-vhut.prr.ai/ki_six_seven_predict",
-        originalBody
-      );
-      console.log("resp", resp);
-      //   setLoadUI(false);
-      // toast({
-      //   title: resp.data.message,
-      //   status: "success",
-      //   duration: 1500,
-      //   isClosable: true,
-      // });
-    } catch (err) {
-      toast({
-        title: "Server Unavailable",
-        description: err.message,
-        status: "error",
-        duration: 1500,
-        isClosable: true,
-      });
-    }
+
+	else{
+		// get s3 folder key from the originalFileUrl
+		const key = getFileBucketFolder(originalFileUrl);
+		const { left, top, width, height, type } = annotationObject;
+		let body = {
+		  key,
+		  type,
+		  left,
+		  top,
+		  width,
+		  height,
+		  slideId,
+		  hash: annotationObject.hash,
+		};
+	
+		// if annoatation is a freehand, send the coordinates of the path
+		// otherwise, send the coordinates of the rectangle
+		if (annotationObject.type === "path") {
+		  body = { ...body, path: annotationObject.path };
+
+		  if(slide?.isIHC === false) {
+			isKI67Open()
+F		  }
+		} else if (annotationObject.type === "ellipse") {
+		  body = {
+			...body,
+			cx: annotationObject.cx,
+			cy: annotationObject.cy,
+			rx: annotationObject.rx,
+			ry: annotationObject.ry,
+			type: "ellipse",
+		  };
+		} else if (annotationObject.type === "polygon") {
+		  body = { ...body, points: annotationObject.points };
+		}
+		// console.log("slideID", slideId);
+		// console.log("body....", body);
+		const originalBody = {
+		  ...body,
+		  notifyHook: `${Environment.VIEWER_URL}/notify_KI67`,
+		  annotationId: "",
+		};
+		console.log("body", originalBody);
+		try {
+		  // const resp = await onVhutAnalysis(body);
+		  const resp = await axios.post(
+			"https://backup-quantize-vhut.prr.ai/ki_six_seven_predict",
+			originalBody
+		  );
+		  console.log("resp", resp);
+		  //   setLoadUI(false);
+		  // toast({
+		  //   title: resp.data.message,
+		  //   status: "success",
+		  //   duration: 1500,
+		  //   isClosable: true,
+		  // });
+		} catch (err) {
+		  toast({
+			title: "Server Unavailable",
+			description: err.message,
+			status: "error",
+			duration: 1500,
+			isClosable: true,
+		  });
+		}
+	}
+    
   };
 
   useEffect(() => {
@@ -948,6 +964,32 @@ function ViewerControls({
           <ShowMetric viewerId={viewerId} slide={slide} />
         </Flex>
       </Box>
+	 {isKI67Open ?  <Box
+      position="absolute"
+      top="50%"
+      left="50%"
+      transform="translate(-50%, -50%)"
+	  zIndex='999'
+    >
+       <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Create your account</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
+            <Lorem count={2} />
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme='blue' mr={3}>
+              Save
+            </Button>
+            <Button onClick={onClose}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </Box> : ""}
+
     </>
   );
 }
