@@ -220,7 +220,7 @@ export function CustomMenu({
 							</MenuItem>
 						)
 					) : null}
-					{enableAI  ? (
+					{enableAI && slide?.isIHC ? (
 						!isKI67Analysed ? (
 							<MenuItem
 								_hover={{ bgColor: "#DEDEDE" }}
