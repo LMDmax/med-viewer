@@ -712,8 +712,6 @@ function ViewerControls({
 
   const runKI67 = async () => {
     if (!fabricOverlay || !annotationObject) return;
-
-
 	else{
 		// get s3 folder key from the originalFileUrl
 		const key = getFileBucketFolder(originalFileUrl);
