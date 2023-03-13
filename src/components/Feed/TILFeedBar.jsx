@@ -186,6 +186,7 @@ const TILFeedBar = ({
         maskType: message?.object?.maskType,
         slideId: message?.object?.slide,
         type: message?.object?.type,
+	bucket_name: "med-ai-image-processor",
         notifyHook: `${Environment.VIEWER_URL}/notify_hil`,
         key,
       };
