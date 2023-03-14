@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { Flex, useMediaQuery } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 
-import { useFabricOverlayState } from "../../state/store";
 import AdjustmentBar from "../AdjustmentBar/adjustmentBar";
 import ChatFeed from "../Feed/ChatFeed";
 import SlideFeed from "../Feed/feed";

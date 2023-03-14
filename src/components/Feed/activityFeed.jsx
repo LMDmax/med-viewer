@@ -203,10 +203,6 @@ function ActivityFeed({
 		setAnnotationsDetails(null);
 	}, [tile]);
 
-	// useEffect(() => {
-	// 	const canvas = fabricOverlay.fabricCanvas();
-	// 	canvas.setActiveObject();
-	// }, [selectedObject]);
 	const handleClick = (feed) => {
 		if (feed?.object?.roiType === "KI67") {
 			setKi67Feed(feed);
@@ -245,7 +241,7 @@ function ActivityFeed({
 	};
 	// on annotation click
 	useEffect(() => {
-		handleClick({ username: "", object: activeObject, image: null });
+		setAnnotationsDetails(activeObject);
 	}, [activeObject]);
 
 	const handleSave = ({ text, title }) => {
