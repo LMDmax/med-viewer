@@ -303,6 +303,7 @@ export const createAnnotation = (annotation) => {
 					arrowHead.angle = angle;
 				}
 			}
+
 			var objs = [line, arrowHead];
 			shape = new fabric.Group(objs, {
 				hasControls: annotation.hash,
@@ -315,7 +316,7 @@ export const createAnnotation = (annotation) => {
 			const line1 = new fabric.Line(
 				[
 					annotation.Points[0][0],
-					annotation.Points[0][1],
+					annotation.Points[0][1] - 20,
 					annotation.Points[0][0],
 					annotation.Points[0][1] - 150,
 				],
@@ -327,7 +328,7 @@ export const createAnnotation = (annotation) => {
 			const line2 = new fabric.Line(
 				[
 					annotation.Points[0][0],
-					annotation.Points[0][1],
+					annotation.Points[0][1] + 20,
 					annotation.Points[0][0],
 					annotation.Points[0][1] + 150,
 				],
@@ -338,10 +339,10 @@ export const createAnnotation = (annotation) => {
 			);
 			const line3 = new fabric.Line(
 				[
-					annotation.Points[0][0],
-					annotation.Points[0][1],
+					annotation.Points[0][0] - 10,
+					annotation.Points[0][1] - 10,
 					annotation.Points[0][0] - 150,
-					annotation.Points[0][1],
+					annotation.Points[0][1] - 10,
 				],
 				{
 					stroke: "#55eb34",
@@ -350,17 +351,23 @@ export const createAnnotation = (annotation) => {
 			);
 			const line4 = new fabric.Line(
 				[
-					annotation.Points[0][0],
-					annotation.Points[0][1],
-					annotation.Points[0][0] + 150,
-					annotation.Points[0][1],
+					annotation.Points[0][0] + 30,
+					annotation.Points[0][1] - 10,
+					annotation.Points[0][0] + 170,
+					annotation.Points[0][1] - 10,
 				],
 				{
 					stroke: "#55eb34",
 					strokeWidth: 20,
 				}
 			);
-			var objs = [line1, line2, line3, line4];
+			const Id = new fabric.Textbox(`${annotation.Id}`, {
+				left: annotation.Points[0][0] - 150,
+				top: annotation.Points[0][1] - 200,
+				color: annotation.color,
+				backgroundColor: "rgba(0,0,0,0.6)",
+			});
+			var objs = [line1, line2, line3, line4, Id];
 			shape = new fabric.Group(objs, {
 				hasControls: annotation.hash,
 				hasRotatingPoint: annotation.hash,

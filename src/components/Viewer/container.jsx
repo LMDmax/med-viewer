@@ -34,6 +34,7 @@ function ViewerContainer({
 	Environment,
 	accessToken,
 	setIsXmlAnnotations,
+	handleAnnotationClick,
 }) {
 	const location = useLocation();
 
@@ -97,6 +98,7 @@ function ViewerContainer({
 			Environment={Environment}
 			accessToken={accessToken}
 			setIsXmlAnnotations={setIsXmlAnnotations}
+			handleAnnotationClick={handleAnnotationClick}
 		/>
 	);
 }
