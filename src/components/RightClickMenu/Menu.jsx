@@ -203,7 +203,7 @@ export function CustomMenu({
 									closeMenu();
 								}}
 								closeOnSelect
-								isDisabled={isMorphometryDisabled}
+								isDisabled={isMorphometryDisabled || slide?.isIHC}
 							>
 								Run Morphometry
 							</MenuItem>
