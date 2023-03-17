@@ -28,7 +28,7 @@ import {
 const FunctionsMenu = () => {
   const { getButtonProps, isOpen } = useDisclosure();
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
-  const [selectedOption, setSelectedOption] = useState("slides");
+  const [selectedOption, setSelectedOption] = useState("");
   return (
     <Box
       pos="absolute"
@@ -40,7 +40,7 @@ const FunctionsMenu = () => {
       <motion.div
         animate={{ width: isOpen ? "35vh" : "70px" }}
         style={{
-          background: "rgba(217, 217, 217, 0.3)",
+          background: "rgba(217, 217, 217, 0.5)",
           overflow: "hidden",
           whiteSpace: "nowrap",
           position: "absolute",
@@ -54,15 +54,16 @@ const FunctionsMenu = () => {
             {...getButtonProps()}
             w="70px"
             borderRadius={0}
-            background="#F6F6F6"
+            background="rgba(246, 246, 246,0.5)"
             box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
+            _hover={{ bgColor: "rgba(246, 246, 246,0.5)" }}
           >
             {isOpen ? ">>" : "<<"}
           </Button>
           <Tooltip label="View slides">
             <Button
-              height="10vh"
-              w="70px"
+              height="73px"
+              w="73px"
               borderRadius={0}
               background="#F6F6F6"
               box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
@@ -81,6 +82,7 @@ const FunctionsMenu = () => {
                   fontSize="10px"
                   lineHeight="12px"
                   letterSpacing="0.0025em"
+                  color={selectedOption === "slides" ? "#3B5D7C" : "fff"}
                 >
                   Slides
                 </Text>
@@ -89,8 +91,8 @@ const FunctionsMenu = () => {
           </Tooltip>
           <Tooltip label="View timeline">
             <Button
-              height="10vh"
-              w="70px"
+              height="73px"
+              w="73px"
               borderRadius={0}
               background="#F6F6F6"
               box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
@@ -109,6 +111,7 @@ const FunctionsMenu = () => {
                   fontSize="10px"
                   lineHeight="12px"
                   letterSpacing="0.0025em"
+                  color={selectedOption === "timeline" ? "#3B5D7C" : "fff"}
                 >
                   Timeline
                 </Text>
@@ -117,8 +120,8 @@ const FunctionsMenu = () => {
           </Tooltip>
           <Tooltip label="View annotations">
             <Button
-              height="10vh"
-              w="70px"
+              height="73px"
+              w="73px"
               borderRadius={0}
               background="#F6F6F6"
               box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
@@ -137,6 +140,7 @@ const FunctionsMenu = () => {
                   fontSize="10px"
                   lineHeight="12px"
                   letterSpacing="0.0025em"
+                  color={selectedOption === "annotations" ? "#3B5D7C" : "fff"}
                 >
                   Annotations
                 </Text>
@@ -145,8 +149,8 @@ const FunctionsMenu = () => {
           </Tooltip>
           <Tooltip label="View comments">
             <Button
-              height="10vh"
-              w="70px"
+              height="73px"
+              w="73px"
               borderRadius={0}
               background="#F6F6F6"
               box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
@@ -165,6 +169,7 @@ const FunctionsMenu = () => {
                   fontSize="10px"
                   lineHeight="12px"
                   letterSpacing="0.0025em"
+                  color={selectedOption === "comments" ? "#3B5D7C" : "fff"}
                 >
                   Comments
                 </Text>
@@ -173,8 +178,8 @@ const FunctionsMenu = () => {
           </Tooltip>
           <Tooltip label="View slide info">
             <Button
-              height="10vh"
-              w="70px"
+              height="73px"
+              w="73px"
               borderRadius={0}
               background="#F6F6F6"
               box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
@@ -193,6 +198,7 @@ const FunctionsMenu = () => {
                   fontSize="10px"
                   lineHeight="12px"
                   letterSpacing="0.0025em"
+                  color={selectedOption === "information" ? "#3B5D7C" : "fff"}
                 >
                   Information
                 </Text>
@@ -201,8 +207,8 @@ const FunctionsMenu = () => {
           </Tooltip>
           <Tooltip label="Report slide">
             <Button
-              height="10vh"
-              w="70px"
+              height="73px"
+              w="73px"
               borderRadius={0}
               background="#F6F6F6"
               box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
@@ -217,6 +223,7 @@ const FunctionsMenu = () => {
                   fontSize="10px"
                   lineHeight="12px"
                   letterSpacing="0.0025em"
+                  color={selectedOption === "report" ? "#3B5D7C" : "fff"}
                 >
                   Report
                 </Text>

@@ -852,7 +852,7 @@ function ViewerControls({
       {!isAnnotationLoaded || isViewportAnalysing ? (
         <Loading position="absolute" w="100%" zIndex="3" h="79vh" />
       ) : null}
-      <Box position="absolute" left="2vw">
+      <Box position="absolute" left="2vw" top="5vh">
         <Flex
           direction="column"
           gap="1.3vh"
