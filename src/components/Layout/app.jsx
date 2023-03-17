@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 
-import { Flex, useMediaQuery } from "@chakra-ui/react";
+import { Box, Flex, useMediaQuery } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 
 import AdjustmentBar from "../AdjustmentBar/adjustmentBar";
@@ -14,6 +14,7 @@ import LayoutAppBody from "./body";
 import LayoutInnerBody from "./innerbody";
 import LayoutOuterBody from "./outerbody";
 import LayoutAppSidebar from "./sidebar";
+import FunctionsMenu from "../Menu/menu";
 
 function LayoutApp({
   userInfo,
@@ -304,6 +305,7 @@ function LayoutApp({
               setIsXmlAnnotations={setIsXmlAnnotations}
             />
           </LayoutAppBody>
+          <FunctionsMenu />
         </LayoutInnerBody>
       </LayoutOuterBody>
     </Flex>
