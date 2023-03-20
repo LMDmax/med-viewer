@@ -76,6 +76,8 @@ export const GET_XMLANNOTATION = gql`
 				slideId
 				data {
 					Id
+					localId
+					color
 					type
 					version
 					originX

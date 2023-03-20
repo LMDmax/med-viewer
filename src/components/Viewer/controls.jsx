@@ -631,6 +631,85 @@ function ViewerControls({
 		};
 	}, [viewer, fabricOverlay]);
 
+	// useEffect(() => {
+	// 	if (!viewer || !fabricOverlay) return;
+	// 	const canvas = fabricOverlay.fabricCanvas();
+	// 	const ctx = canvas.getContext("2d");
+	// 	const cw = canvas.width;
+	// 	const ch = canvas.height;
+	// 	let offsetX;
+	// 	let offsetY;
+
+	// 	const annotation = canvas.getActiveObject();
+	// 	function reOffset() {
+	// 		const BB = canvas.getBoundingClientRect();
+	// 		offsetX = BB.left;
+	// 		offsetY = BB.top;
+	// 	}
+	// 	reOffset();
+	// 	window.onscroll = function (e) {
+	// 		reOffset();
+	// 	};
+	// 	window.onresize = function (e) {
+	// 		reOffset();
+	// 	};
+	// 	ctx.font = "14px verdana";
+	// 	const shapes = [];
+	// 	function drawAll() {
+	// 		for (let i = 0; i < shapes.length; i++) {
+	// 			const s = shapes[i];
+	// 			defineShape(s.points);
+	// 			ctx.fillStyle = s.drawcolor;
+	// 			ctx.fill();
+	// 			ctx.stroke();
+	// 			if (s.color !== s.drawcolor) {
+	// 				ctx.fillStyle = "black";
+	// 				ctx.fillText(s.name, s.points[0].x, s.points[0].y);
+	// 			}
+	// 		}
+	// 	}
+	// 	drawAll();
+	// 	function defineShape(s) {
+	// 		ctx.beginPath();
+	// 		ctx.moveTo(s[0].x, s[0].y);
+	// 		for (let i = 1; i < s.length; ++i) {
+	// 			ctx.lineTo(s[i].x, s[i].y);
+	// 		}
+	// 		ctx.closePath();
+	// 	}
+	// 	const handleMouseDown = (e) => {
+	// 		e.preventDefault();
+	// 		e.stopPropagation();
+
+	// 		const mouseX = parseInt(e.clientX - offsetX, 10);
+	// 		const mouseY = parseInt(e.clientY - offsetY, 10);
+
+	// 		// clear the canvas
+	// 		ctx.clearRect(0, 0, cw, ch);
+
+	// 		for (let i = 0; i < shapes.length; i++) {
+	// 			const s = shapes[i];
+
+	// 			// define the shape path we want to test against the mouse position
+	// 			defineShape(s.points);
+	// 			// is the mouse insied the defined shape?
+	// 			if (ctx.isPointInPath(mouseX, mouseY)) {
+	// 				// if yes, fill the shape in red
+	// 				s.drawcolor = "red";
+	// 			} else {
+	// 				// if no, fill the shape with blue
+	// 				s.drawcolor = s.color;
+	// 			}
+	// 		}
+	// 	};
+
+	// 	canvas.requestRenderAll();
+
+	// 	canvas.on("mouse:move", handleMouseDown);
+	// 	return () => {
+	// 		canvas.on("mouse:move", handleMouseDown);
+	// 	};
+	// }, [viewer, fabricOverlay]);
 	useEffect(() => {
 		if (!viewer || !fabricOverlay) return;
 		const canvas = fabricOverlay.fabricCanvas();
