@@ -12,6 +12,7 @@ import ViewerControls from "./controls";
 import "../../utility/fabricUtility";
 
 const osdOptions = {
+  maxZoomLevel: 6.0,
   constrainDuringPan: !!isBrowser,
   debugMode: false,
   gestureSettingsMouse: {

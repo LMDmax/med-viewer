@@ -38,7 +38,7 @@ const ZoomButton = ({ viewerId }) => {
 					w="30px"
 					textAlign="center"
 					pb="5px"
-					color={customZoom4 ? "#468" : ""}
+					// color={customZoom4 ? "#468" : ""}
 					borderBottom="1px solid black"
 					cursor="pointer"
 					onClick={() => {
@@ -55,7 +55,7 @@ const ZoomButton = ({ viewerId }) => {
 					textAlign="center"
 					pt="3px"
 					pb="5px"
-					color={customZoom10 ? "#468" : ""}
+					// color={customZoom10 ? "#468" : ""}
 					borderBottom="1px solid black"
 					cursor="pointer"
 					onClick={() => {
@@ -72,7 +72,7 @@ const ZoomButton = ({ viewerId }) => {
 					textAlign="center"
 					pt="3px"
 					pb="5px"
-					color={customZoom20 ? "#468" : ""}
+					// color={customZoom20 ? "#468" : ""}
 					borderBottom="1px solid black"
 					cursor="pointer"
 					onClick={() => {
@@ -89,7 +89,7 @@ const ZoomButton = ({ viewerId }) => {
 					textAlign="center"
 					pt="3px"
 					pb="5px"
-					color={customZoom40 ? "#468" : ""}
+					// color={customZoom40 ? "#468" : ""}
 					cursor="pointer"
 					onClick={() => {
 						setCustomZoom10(false);
