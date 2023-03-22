@@ -11,7 +11,7 @@ const Fullscreen = ({ viewerId }) => {
 
   const handleFullScreen = () => {
     if (!isFullscreen) {
-      viewer.setControlsEnabled(true);
+      // viewer.setControlsEnabled(true);
       setIsFullscreen(true);
       document.body.requestFullscreen();
     } else {
