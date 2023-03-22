@@ -201,7 +201,7 @@ const Line = ({ viewerId, onSaveAnnotation }) => {
     const addToFeed = async () => {
       if (!shape) return;
 
-      const message = createAnnotationMessage({ slideId, shape, viewer });
+      const message = createAnnotationMessage({ slideId, shape, viewer, type:"line" });
 
       const { x1, y1, x2, y2 } = message.object;
       message.object.set({

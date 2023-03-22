@@ -324,6 +324,8 @@ const Lymphoma = ({
               name="wholeTumourSize"
               defaultValue={synopticReportData?.wholeTumourSize}
               onChange={handleInput}
+              type="number"
+              onWheel={(e) => e.target.blur()}
             />{" "}
             MM
           </Text>

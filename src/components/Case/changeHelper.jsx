@@ -11,7 +11,10 @@ const ChangeHelper = ({
   disabledLeft,
   disabledRight,
   clickHandler,
-  ...restProps
+  setIsMultiview,
+  setIsNavigatorActive,
+  isNavigatorActive,
+  isAnnotationLoading,
 }) => {
   return (
     <Flex
@@ -20,7 +23,6 @@ const ChangeHelper = ({
       height="18px"
       minW="140px"
       maxW="800px"
-      {...restProps}
     >
       <HStack>
         <Tooltip
@@ -56,11 +58,19 @@ const ChangeHelper = ({
           mr="24px"
           fontWeight="400"
           fontSize="14px"
-          lineHeight="17px"
+          lineHeight="25px"
           letterSpacing="0.0025em"
           fontFamily="Inter"
           wordBreak="break-word"
           noOfLines={1}
+          _hover={{ bgColor: "#ECECEC" }}
+          cursor="pointer"
+          isDisabled={isAnnotationLoading}
+          isActive={isNavigatorActive}
+          onClick={() => {
+            setIsMultiview(false);
+            setIsNavigatorActive((state) => !state);
+          }}
         >
           {title}
         </Text>

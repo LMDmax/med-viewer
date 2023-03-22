@@ -1,16 +1,34 @@
 import { useMutation } from "@apollo/client";
 import { Button, Flex, Input } from "@chakra-ui/react";
+import moment from "moment";
 import React, { useState } from "react";
 import { AiOutlineSend } from "react-icons/ai";
 import { SEND_MESSAGE } from "../../state/graphql/ChatQuery";
 
-const QueryHelper = ({ userInfo, chatId, client, setSubmitData }) => {
+const QueryHelper = ({
+  userInfo,
+  chatId,
+  client,
+  groupMessages,
+  setGroupMessages,
+  refetch,
+}) => {
   const [messageInput, setMessageInput] = useState("");
   const [sendNewMessage, { error: newMessageError }] = useMutation(
     SEND_MESSAGE,
     { client }
   );
   const sendMessage = async () => {
+    setGroupMessages([
+      ...groupMessages,
+      {
+        from: userInfo?._id,
+        createdAt: moment(),
+        payload: { body: messageInput },
+        fromName: `${userInfo.firstName} ${userInfo.lastName}`,
+      },
+    ]);
+    setMessageInput("");
     const { data } = await sendNewMessage({
       variables: {
         body: {
@@ -29,8 +47,7 @@ const QueryHelper = ({ userInfo, chatId, client, setSubmitData }) => {
         },
       },
     });
-    setSubmitData(data);
-    setMessageInput("");
+    refetch();
   };
   return (
     <Flex w="100%">

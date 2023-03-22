@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import PropTypes from "prop-types";
-import { Flex, Input, Text, useMediaQuery } from "@chakra-ui/react";
+import { Flex, Input, Text, useMediaQuery, useToast } from "@chakra-ui/react";
 import { useFabricOverlayState } from "../../state/store";
 import {
   getScaleFactor,
@@ -13,12 +13,68 @@ const ZoomSlider = ({ viewerId }) => {
   const { viewerWindow } = fabricOverlayState;
   const { viewer, fabricOverlay } = viewerWindow[viewerId];
   const [zoomValue, setZoomValue] = useState(1);
-  const inputRef = useRef(null);
+  const [alphabet, setAlphabet] = useState(false);
 
+  const inputRef = useRef(null);
+  const toast = useToast();
+  const handleKeyDown = (event) => {
+    var regExpr = new RegExp("^[0-9.]+$");
+    if (!regExpr.test(event.key)) {
+      if (
+        !(
+          event.key === "Backspace" ||
+          event.key === "Shift" ||
+          event.key === "Enter" ||
+          event.key === "Ctrl" ||
+          event.key === "Alt" ||
+          event.key === "Tab" ||
+          event.key === "Esc" ||
+          event.key === "CapsLock"
+        )
+      ) {
+        toast({
+          title: "Not Valid Input",
+          description: "Please Provide Me A Valid Input",
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
+        setAlphabet(true);
+      }
+    }
+  };
   const handleZoomLevel = (e) => {
     const { value } = e.target;
-    zoomToLevel({ viewer, value });
-    setZoomValue(value);
+
+    if (
+      alphabet ||
+      parseInt(value) > 40 ||
+      value.split(".")[1]?.length >= 3 ||
+      value.length >= 6 ||
+      parseInt(value) < -1 ||
+      value === "0" ||
+      value === "-1" ||
+      value === "+" ||
+      value === "-" ||
+      value === "_" ||
+      value === "."
+    ) {
+      if (value === "+" || value === "-" || value === "_" || alphabet) {
+        setAlphabet(false);
+      } else {
+        toast({
+          title: "Not Valid Input",
+          description: "Please Provide Me A Valid Input",
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
+        setAlphabet(false);
+      }
+    } else {
+      zoomToLevel({ viewer, value });
+      setZoomValue(value);
+    }
   };
 
   const handleZoomLevelBlur = () => {
@@ -78,12 +134,13 @@ const ZoomSlider = ({ viewerId }) => {
     <Flex>
       <Input
         ref={inputRef}
-        type="number"
-        value={zoomValue}
+        maxLength={6}
+        onKeyDown={handleKeyDown}
+        value={zoomValue > 40 ? 40 : zoomValue}
         onChange={handleZoomLevel}
         onBlur={handleZoomLevelBlur}
         variant="unstyled"
-        w="20px"
+        w={inputRef?.current?.value?.length > 2 ? "45px" : "25px"}
         textAlign="center"
       />
       <Text>x</Text>

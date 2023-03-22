@@ -1,4 +1,4 @@
-import React,{useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLazyQuery, useMutation, useSubscription } from "@apollo/client";
 import { Mention, MentionsInput } from "react-mentions";
 import {
@@ -24,6 +24,7 @@ import {
 } from "../../state/graphql/ChatQuery";
 import ScrollBar from "../others/ScrollBar";
 import QueryChat from "./QueryChat";
+import { useFabricOverlayState } from "../../state/store";
 // import AnnotationChat from "../AnnotationChat/AnnotationChat";
 
 const formats = {
@@ -34,6 +35,7 @@ const formats = {
   lastWeek: "[Last] dddd",
   sameElse: "DD/MM/YYYY",
 };
+
 const DateSeperatorComponent = ({ messageSepratorDate }) => {
   return (
     <Text
@@ -47,7 +49,7 @@ const DateSeperatorComponent = ({ messageSepratorDate }) => {
     </Text>
   );
 };
-const RightMessageComponent = ({ data, setQueryChat }) => {
+const RightMessageComponent = ({ data, setQueryChat, zoomIntoAnnotation }) => {
   return data?.mentionedUsers?.length > 0 ? (
     <Box
       key={uuidv4()}
@@ -75,10 +77,36 @@ const RightMessageComponent = ({ data, setQueryChat }) => {
       <Text color="#52585D" fontSize="12px" fontWeight="bold">
         {data.payload.body}
       </Text>
-      <Text color="#212224" fontSize="10px" textAlign="right">
-        {/* {data.sendAt.fromNow()} */}
-        {moment(data.createdAt).format("HH:MM ")}
-      </Text>
+      <Flex alignItems="Center" justifyContent="space-between" w="100%">
+        {data?.annotation && (
+          <Button
+            size="xs"
+            _hover={{ bg: "rgba(176, 200, 214, 0.15)" }}
+            _focus={{ bg: "rgba(176, 200, 214, 0.15)" }}
+            color="#3B5D7C"
+            borderRadius="0"
+            textDecoration="underline"
+            fontSize="12px"
+            fontWeight="400"
+            zIndex="1"
+            onClick={(e) => {
+              e.stopPropagation();
+              zoomIntoAnnotation(data?.annotation);
+            }}
+          >
+            View region in slide
+          </Button>
+        )}
+        <Text
+          color="#212224"
+          fontSize="10px"
+          textAlign="right"
+          w={data?.annotation ? "" : "100%"}
+        >
+          {/* {data.sendAt.fromNow()} */}
+          {moment(data.createdAt).format("HH:mm")}
+        </Text>
+      </Flex>
     </Box>
   ) : (
     <Box
@@ -94,14 +122,13 @@ const RightMessageComponent = ({ data, setQueryChat }) => {
       </Text>
       <Text color="#212224" fontSize="10px" textAlign="right">
         {/* {data.sendAt.fromNow()} */}
-        {moment(data.createdAt).format("HH:MM")}
+        {moment(data.createdAt).format("HH:mm")}
       </Text>
     </Box>
   );
 };
 
-const LeftMessageComponent = ({ data, setQueryChat }) => {
-  console.log(data);
+const LeftMessageComponent = ({ data, setQueryChat, zoomIntoAnnotation }) => {
   return (
     <Flex>
       <Avatar
@@ -126,6 +153,7 @@ const LeftMessageComponent = ({ data, setQueryChat }) => {
           maxW="506px"
           minW="220px"
           borderRadius="0"
+          ml="0.3rem"
         >
           <Flex color="#3B5D7C" fontSize="12px" justifyContent="space-between">
             <Text color="#3B5D7C" fontSize="12px">
@@ -136,10 +164,36 @@ const LeftMessageComponent = ({ data, setQueryChat }) => {
           <Text color="#52585D" fontSize="12px" fontWeight="bold">
             {data.payload.body}
           </Text>
-          <Text color="#212224" fontSize="10px" textAlign="right">
-            {/* {data.sendAt.fromNow()} */}
-            {moment(data.createdAt).format("HH:MM ")}
-          </Text>
+          <Flex alignItems="Center" justifyContent="space-between" w="100%">
+            {data?.annotation && (
+              <Button
+                size="xs"
+                _hover={{ bg: "rgba(176, 200, 214, 0.15)" }}
+                _focus={{ bg: "rgba(176, 200, 214, 0.15)" }}
+                color="#3B5D7C"
+                borderRadius="0"
+                textDecoration="underline"
+                fontSize="12px"
+                fontWeight="400"
+                zIndex="1"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  zoomIntoAnnotation(data?.annotation);
+                }}
+              >
+                View region in slide
+              </Button>
+            )}
+            <Text
+              color="#212224"
+              fontSize="10px"
+              textAlign="right"
+              w={data?.annotation ? "" : "100%"}
+            >
+              {/* {data.sendAt.fromNow()} */}
+              {moment(data.createdAt).format("HH:mm")}
+            </Text>
+          </Flex>
         </Box>
       ) : (
         <Box
@@ -149,6 +203,7 @@ const LeftMessageComponent = ({ data, setQueryChat }) => {
           alignSelf="flex-start"
           maxW="506px"
           borderRadius=" 0px 14px 14px 14px"
+          ml="0.3rem"
         >
           {/* {index === 0 && <Text marginTop="-10px">user </Text>} */}
           <Text marginTop="-10px" fontSize="14px" textTransform="capitalize">
@@ -175,9 +230,10 @@ const ChatConversationFeed = ({
   users,
   mentionUsers,
   client2,
+  addUsersToCase,
+  viewerId,
 }) => {
   let lastDate = "1999-01-01";
-  console.log(client2);
   const [groupMessages, setGroupMessages] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
@@ -190,6 +246,19 @@ const ChatConversationFeed = ({
   const messageRef = useRef(null);
   const bottomRef = useRef(null);
 
+  const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
+  const { activeTool, viewerWindow } = fabricOverlayState;
+  const { fabricOverlay, viewer } = viewerWindow[viewerId];
+  const zoomIntoAnnotation = (annotationDimension) => {
+    // change position to annotation object location
+    const { left, width, top, height, zoomLevel } = annotationDimension;
+    const vpoint = viewer.viewport.imageToViewportRectangle(
+      left + width / 2,
+      top + height / 2
+    );
+    viewer.viewport.zoomTo(zoomLevel * 2);
+    viewer.viewport.panTo(vpoint);
+  };
   // const users = [
   //   {
   //     id: "ASck",
@@ -207,7 +276,7 @@ const ChatConversationFeed = ({
 
   const [
     fetchMessages,
-    { loading: isConversationLoading, data: msgData, error },
+    { loading: isConversationLoading, refetch, data: msgData, error },
   ] = useLazyQuery(FETCH_CONVERSATION, { client: client2 });
 
   useEffect(() => {
@@ -282,6 +351,11 @@ const ChatConversationFeed = ({
 
   const sendMessage = async (e) => {
     e.preventDefault();
+    const ids = messageInput?.mentionedUsers?.map((item) => item.toId);
+    const newIds = [...new Set(ids)];
+    const userIds = mentionUsers
+      ?.filter((user) => newIds.includes(user?.id))
+      .map((user) => user.userId);
     const newMessage = messageInput.text.trim();
     if (!newMessage) return;
     setGroupMessages([
@@ -290,15 +364,11 @@ const ChatConversationFeed = ({
         from: userInfo?._id,
         createdAt: moment(),
         payload: { body: newMessage },
+        mentionedUsers: messageInput.mentionedUsers,
+        fromName: `${userInfo.firstName} ${userInfo.lastName}`,
       },
     ]);
 
-    e.target.reset();
-    setMessageInput({
-      mentionedText: "",
-      text: "",
-      mentionedUsers: [],
-    });
     const { data } = await sendNewMessage({
       variables: {
         body: {
@@ -312,11 +382,24 @@ const ChatConversationFeed = ({
           to: groupChatId,
           toName: "",
           fromImage: "",
-          fromName: `${userInfo.firstName}`,
+          fromName: `${userInfo.firstName} ${userInfo.lastName}`,
           mentionedUsers: messageInput.mentionedUsers,
         },
       },
     });
+    if (messageInput?.mentionedUsers?.length > 0) {
+      addUsersToCase({
+        caseId: groupChatId,
+        userIds,
+      });
+    }
+    e.target.reset();
+    setMessageInput({
+      mentionedText: "",
+      text: "",
+      mentionedUsers: [],
+    });
+    refetch();
   };
 
   // const handleScroll: any = (e: any) => {
@@ -345,18 +428,22 @@ const ChatConversationFeed = ({
   // 	// );
   // };
 
-  const { data: subscribedMessageData } = useSubscription(CHAT_SUBSCRIPTION, {
-    variables: {
-      toId: groupChatId,
-      fromId: userInfo?._id,
-    },
-  });
+  const { data: subscribedMessageData } = useSubscription(
+    CHAT_SUBSCRIPTION,
+    { client: client2 },
+    {
+      variables: {
+        toId: groupChatId,
+        fromId: userInfo?._id,
+      },
+    }
+  );
 
   useEffect(() => {
     if (subscribedMessageData) {
       const newMessages = [
         ...groupMessages,
-        subscribedMessageData.queryChat.data,
+        subscribedMessageData.newChat.data,
       ];
 
       setGroupMessages(newMessages);
@@ -387,7 +474,7 @@ const ChatConversationFeed = ({
     const mentionedUsers = mentions.map((mention) => ({
       toId: mention.id,
       toName: mention.display,
-      message: mentionedText,
+      message: messageInput?.text,
     }));
     setMessageInput({
       mentionedText,
@@ -461,6 +548,7 @@ const ChatConversationFeed = ({
                         key={uuidv4()}
                         queryChat={queryChat}
                         setQueryChat={setQueryChat}
+                        zoomIntoAnnotation={zoomIntoAnnotation}
                       />
                     ) : (
                       <LeftMessageComponent
@@ -468,6 +556,7 @@ const ChatConversationFeed = ({
                         key={uuidv4()}
                         queryChat={queryChat}
                         setQueryChat={setQueryChat}
+                        zoomIntoAnnotation={zoomIntoAnnotation}
                       />
                     )}
                   </>
@@ -480,6 +569,7 @@ const ChatConversationFeed = ({
                   key={uuidv4()}
                   queryChat={queryChat}
                   setQueryChat={setQueryChat}
+                  zoomIntoAnnotation={zoomIntoAnnotation}
                 />
               ) : (
                 <LeftMessageComponent
@@ -487,6 +577,7 @@ const ChatConversationFeed = ({
                   key={uuidv4()}
                   queryChat={queryChat}
                   setQueryChat={setQueryChat}
+                  zoomIntoAnnotation={zoomIntoAnnotation}
                 />
               );
             })}

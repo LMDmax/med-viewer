@@ -1,12 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-import { fabric, initFabricJSOverlay } from "openseadragon-fabricjs-overlay";
-import OpenSeadragon from "openseadragon";
-import { isBrowser } from "react-device-detect";
+
 import { Box } from "@chakra-ui/react";
+import OpenSeadragon from "openseadragon";
+import { fabric, initFabricJSOverlay } from "openseadragon-fabricjs-overlay";
 import PropTypes from "prop-types";
-import ViewerControls from "./controls";
-import { useFabricOverlayState } from "../../state/store";
+import { isBrowser } from "react-device-detect";
+
 import { updateOverlay } from "../../state/actions/fabricOverlayActions";
+import { useFabricOverlayState } from "../../state/store";
+import ViewerControls from "./controls";
 import "../../utility/fabricUtility";
 
 const osdOptions = {
@@ -26,9 +28,9 @@ const osdOptions = {
   },
   showNavigator: true,
   showNavigationControl: false,
-  navigatorPosition: "BOTTOM_RIGHT",
-  navigatorHeight: "130px",
-  navigatorWidth: "220px",
+  navigatorPosition: "BOTTOM_LEFT",
+  navigatorHeight: "30vh",
+  navigatorWidth: "20vw",
   navigatorAutoFade: false,
   navigatorAutoResize: false,
   springStiffness: isBrowser ? 20 : 10,
@@ -44,17 +46,22 @@ const osdOptions = {
   timeout: 60000,
 };
 
-const Viewer = ({
+function Viewer({
   viewerId,
   tile,
   userInfo,
   enableAI,
   slide,
   application,
+  setLoadUI,
   caseInfo,
   client2,
   mentionUsers,
-}) => {
+  addUsersToCase,
+  Environment,
+  accessToken,
+  setIsXmlAnnotations,
+}) {
   const { setFabricOverlayState } = useFabricOverlayState();
   const [viewer, setViewer] = useState(null);
   const boxRef = useRef();
@@ -127,15 +134,20 @@ const Viewer = ({
           userInfo={userInfo}
           enableAI={enableAI}
           slide={slide}
+          setLoadUI={setLoadUI}
           client2={client2}
           mentionUsers={mentionUsers}
           caseInfo={caseInfo}
+          addUsersToCase={addUsersToCase}
+          Environment={Environment}
+          accessToken={accessToken}
+          setIsXmlAnnotations={setIsXmlAnnotations}
         />
       )}
       {/* <Button onClick={selection}>Select</Button> */}
     </Box>
   );
-};
+}
 
 Viewer.propTypes = {
   tile: PropTypes.string,
