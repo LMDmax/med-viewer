@@ -424,7 +424,9 @@ export const addAnnotationsToCanvas = ({
     canvas.on("mouse:over", function (e) {
       const zoomLevel = viewer.viewport.getZoom();
       const textboxWidth =
-        zoomLevel <= 2.5
+        zoomLevel <= 1.5
+          ? 3400
+          : zoomLevel <= 2.5
           ? 2800
           : zoomLevel <= 5
           ? 600
@@ -432,7 +434,9 @@ export const addAnnotationsToCanvas = ({
           ? 500
           : 350;
       const fontSize =
-        zoomLevel <= 2.5
+        zoomLevel <= 1.5
+          ? 560
+          : zoomLevel <= 2.5
           ? 480
           : zoomLevel <= 5
           ? 150
