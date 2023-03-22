@@ -163,7 +163,7 @@ export const createAnnotation = (annotation) => {
         color: annotation.color,
         fill: annotation.fill,
         stroke: "#000",
-        strokeWidth: annotation.strokeWidth,
+        strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         strokeUniform: annotation.strokeUniform,
         rx: annotation.rx,
         ry: annotation.ry,
@@ -202,7 +202,7 @@ export const createAnnotation = (annotation) => {
         color: annotation.color,
         fill: annotation.fill,
         stroke: "#000",
-        strokeWidth: annotation.strokeWidth,
+        strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         strokeUniform: annotation.strokeUniform,
         hasControls: annotation.hash,
         hasRotatingPoint: annotation.hash,
@@ -214,7 +214,7 @@ export const createAnnotation = (annotation) => {
     case "polygon":
       shape = new fabric.Polygon(annotation.points, {
         stroke: "#000",
-        strokeWidth: annotation.strokeWidth,
+        strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         fill: annotation.fill,
         strokeUniform: annotation.strokeUniform,
         hasControls: annotation.hash,
@@ -228,7 +228,7 @@ export const createAnnotation = (annotation) => {
       shape = new fabric.Path(annotation.path, {
         color: annotation.color,
         stroke: "#000",
-        strokeWidth: annotation.strokeWidth,
+        strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         strokeUniform: annotation.strokeUniform,
         fill: annotation.fill,
         hasControls: annotation.hash,
@@ -242,7 +242,7 @@ export const createAnnotation = (annotation) => {
       shape = new fabric.Line(annotation.cords, {
         color: annotation.color,
         stroke: "#000",
-        strokeWidth: annotation.strokeWidth,
+        strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         strokeUniform: annotation.strokeUniform,
         fill: annotation.fill,
         hasControls: annotation.hash,
@@ -271,7 +271,7 @@ export const createAnnotation = (annotation) => {
         ],
         {
           stroke: annotation?.color ? annotation?.color : "#55eb34",
-          strokeWidth: 20,
+          strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         }
       );
       const arrowHead = new fabric.Polygon(
@@ -282,7 +282,7 @@ export const createAnnotation = (annotation) => {
         ],
         {
           stroke: annotation?.color ? annotation?.color : "#55eb34",
-          strokeWidth: 20,
+          strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
           fill: annotation?.color ? annotation?.color : "#55eb34",
           top: annotation.Points[0][1],
           left: annotation.Points[0][0],
@@ -321,19 +321,19 @@ export const createAnnotation = (annotation) => {
         ],
         {
           stroke: annotation?.color ? annotation?.color : "#55eb34",
-          strokeWidth: 20,
+          strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         }
       );
       const line2 = new fabric.Line(
         [
           annotation.Points[0][0],
-          annotation.Points[0][1] + 20,
+          annotation.Points[0][1] + 30,
           annotation.Points[0][0],
           annotation.Points[0][1] + 150,
         ],
         {
           stroke: annotation?.color ? annotation?.color : "#55eb34",
-          strokeWidth: 20,
+          strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         }
       );
       const line3 = new fabric.Line(
@@ -345,19 +345,19 @@ export const createAnnotation = (annotation) => {
         ],
         {
           stroke: annotation?.color ? annotation?.color : "#55eb34",
-          strokeWidth: 20,
+          strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         }
       );
       const line4 = new fabric.Line(
         [
-          annotation.Points[0][0] + 30,
+          annotation.Points[0][0] + 40,
           annotation.Points[0][1] - 10,
           annotation.Points[0][0] + 170,
           annotation.Points[0][1] - 10,
         ],
         {
           stroke: annotation?.color ? annotation?.color : "#55eb34",
-          strokeWidth: 20,
+          strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         }
       );
       const Id = new fabric.Textbox(`${annotation.localId}`, {
@@ -422,19 +422,38 @@ export const addAnnotationsToCanvas = ({
   annotations.forEach((annotation) => {
     const shape = createAnnotation(annotation);
     canvas.on("mouse:over", function (e) {
-      const textHeight = e.target.height / 2; //height of target
-      const text = new fabric.Textbox(`${e?.target?.text}`, {
+      const zoomLevel = viewer.viewport.getZoom();
+      const textboxWidth =
+        zoomLevel <= 2.5
+          ? 2000
+          : zoomLevel <= 5
+          ? 600
+          : zoomLevel <= 10
+          ? 500
+          : 350;
+      const fontSize =
+        zoomLevel <= 2.5
+          ? 400
+          : zoomLevel <= 5
+          ? 150
+          : zoomLevel <= 10
+          ? 100
+          : 70;
+      const textHeight = e?.target?.height / 2; //height of target
+      const text = new fabric.Text(`${e?.target?.text}`, {
         left: e?.target?.left + e?.target?.width + 20, // positining text
         top: e?.target?.top + textHeight,
         backgroundColor: "rgba(0,0,0,0.6)",
         fill: e?.taget?.color ? e?.taget?.color : "#55eb34",
         selectable: false,
         textAlign: "center",
+        fontWeight: 600,
+        fontFamily: "inter",
       });
       if (e?.target === shape && e?.target?.text) {
         if (shape && shape.type !== "viewport") canvas.add(text);
-        text.width = 250;
-        text.fontSize = 30;
+        text.width = textboxWidth;
+        text.fontSize = fontSize;
       }
       canvas.on("mouse:out", function (e) {
         canvas.remove(text).requestRenderAll();
