@@ -44,8 +44,6 @@ const SRHelper = ({ inputField, handleInput, synopticReportData }) => {
                 : ""
             }
             // readOnly={synopticReportData?.[inputField?.inputName]}
-            type={inputField?.type === "number" ? "number" : "text"}
-            onWheel={(e) => e.target.blur()}
             onChange={handleInput}
           />
         )}

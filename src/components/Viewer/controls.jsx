@@ -1,76 +1,59 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
-
+import React, { useEffect, useState, useRef } from "react";
 import "./zoom-levels";
 import "./openseadragon-scalebar";
-import { useLazyQuery, useMutation, useSubscription } from "@apollo/client";
-import {
-  VStack,
-  useToast,
-  useDisclosure,
-  Flex,
-  Text,
-  Box,
-} from "@chakra-ui/react";
-import axios from "axios";
+import { VStack, useToast, useDisclosure, Flex, Text } from "@chakra-ui/react";
 import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
-
-import {
-  ANNOTATIONS_SUBSCRIPTION,
-  DELETE_ANNOTATION,
-  GET_ANNOTATION,
-  GET_VHUT_ANALYSIS,
-  GET_XMLANNOTATION,
-  UPDATE_ANNOTATION,
-  VHUT_ANALTSIS,
-  VHUT_ANALYSIS_SUBSCRIPTION,
-} from "../../graphql/annotaionsQuery";
-import useCanvasHelpers from "../../hooks/use-fabric-helpers";
+import { useLazyQuery, useMutation, useSubscription } from "@apollo/client";
+import ZoomSlider from "../ZoomSlider/slider";
+import ToolbarButton from "../ViewerToolbar/button";
+import IconSize from "../ViewerToolbar/IconSize";
+import FullScreen from "../Fullscreen/Fullscreen";
+import { useFabricOverlayState } from "../../state/store";
 import {
   updateIsAnnotationLoading,
   updateActivityFeed,
   updateFeedInAnnotationFeed,
   updateIsViewportAnalysing,
 } from "../../state/actions/fabricOverlayActions";
-import { useFabricOverlayState } from "../../state/store";
+import Loading from "../Loading/loading";
+import { CustomMenu } from "../RightClickMenu/Menu";
+import ZoomButton from "../ZoomButton/ZoomButton"
 import {
   convertToZoomValue,
   getFileBucketFolder,
   groupAnnotationAndCells,
   loadAnnotationsFromDB,
   zoomToLevel,
-  getViewportBounds,
   getVhutAnalysisData,
   getPPMfromMPP,
 } from "../../utility";
-import AnnotationChat from "../AnnotationChat/AnnotationChat";
-import ShowMetric from "../Annotations/ShowMetric";
 import EditText from "../Feed/editText";
-import FullScreen from "../Fullscreen/Fullscreen";
-import Loading from "../Loading/loading";
-import { CustomMenu } from "../RightClickMenu/Menu";
-import ToolbarButton from "../ViewerToolbar/button";
-import IconSize from "../ViewerToolbar/IconSize";
-import ZoomButton from "../ZoomButton/ZoomButton";
-import ZoomSlider from "../ZoomSlider/slider";
+import useCanvasHelpers from "../../hooks/use-fabric-helpers";
+import ShowMetric from "../Annotations/ShowMetric";
+import {
+  ANNOTATIONS_SUBSCRIPTION,
+  DELETE_ANNOTATION,
+  GET_ANNOTATION,
+  GET_VHUT_ANALYSIS,
+  UPDATE_ANNOTATION,
+  VHUT_ANALTSIS,
+  VHUT_ANALYSIS_SUBSCRIPTION,
+} from "../../graphql/annotaionsQuery";
+import AnnotationChat from "../AnnotationChat/AnnotationChat";
 
-function ViewerControls({
+const ViewerControls = ({
   viewerId,
   userInfo,
   enableAI,
   slide,
   application,
-  setLoadUI,
   client2,
   mentionUsers,
   caseInfo,
-  addUsersToCase,
-  Environment,
-  accessToken,
-  setIsXmlAnnotations,
-}) {
+}) => {
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { viewerWindow, isViewportAnalysing } = fabricOverlayState;
-  const { viewer, fabricOverlay, slideId, originalFileUrl, tile } =
+  const { viewer, fabricOverlay, slideId, originalFileUrl } =
     viewerWindow[viewerId];
   const {
     updateAnnotation,
@@ -86,12 +69,8 @@ function ViewerControls({
   const [menuPosition, setMenuPosition] = useState({ left: 0, top: 0 });
   const [annotationObject, setAnnotationObject] = useState(null);
   const [isMorphometryDisabled, setIsMorphometryDisabled] = useState(true);
-  const [annotationText, setAnnotationText] = useState("");
-  const [annotationShape, setAnnotationShape] = useState(null);
-  const [activeFeed, setActiveFeed] = useState([]);
-  const [xmlLink, setXmlLink] = useState("");
-  const [annotatedData, setAnnotatedData] = useState("");
   const slideRef = useRef(null);
+
   const toast = useToast();
   const iconSize = IconSize();
   const { isOpen, onOpen: openMenu, onClose: closeMenu } = useDisclosure();
@@ -107,72 +86,23 @@ function ViewerControls({
     onClose: closeEdit,
   } = useDisclosure();
 
-  const {
-    isOpen: isKI67Open,
-    onOpen: isKI67,
-    onClose: isKI67Close,
-  } = useDisclosure();
-
-  // ############### LOAD_ANNOTATION ####################
-  const [getAnnotation, { data: annotationData, loading, error }] =
-    useLazyQuery(GET_ANNOTATION);
-  const [getXmlAnnotation, { data: xmlAnnotationData }] =
-    useLazyQuery(GET_XMLANNOTATION);
-  // ########## RUN MORPHOMETRY ##########################
-  const [onVhutAnalysis, { data: analysis_data, error: analysis_error }] =
-    useMutation(VHUT_ANALTSIS);
-
-  // ######## SHOW ANALYSIS AFTER RUNNING MORPHOMETRY ##############
-  const [onGetVhutAnalysis, { data: responseData, error: responseError }] =
-    useLazyQuery(GET_VHUT_ANALYSIS);
-
-  const [
-    modifyAnnotation,
-    { data: updatedData, error: updateError, loading: updateLoading },
-  ] = useMutation(UPDATE_ANNOTATION);
-
-  const [removeAnnotation, { data: deletedData, error: deleteError }] =
-    useMutation(DELETE_ANNOTATION);
-
-  // ############### ANNOTATION_SUBSCRIPTION ########################
-  const { data: subscriptionData, error: subscription_error } = useSubscription(
-    ANNOTATIONS_SUBSCRIPTION,
-    {
-      variables: {
-        slideId,
-      },
-    }
-  );
-
-  // #################### VHUT_ANALYSIS_SUBSCRIPTION ##############
-  const { data: vhutSubscriptionData, error: vhutSubscription_error } =
-    useSubscription(VHUT_ANALYSIS_SUBSCRIPTION, {
-      variables: {
-        body: {
-          slideId,
-        },
-      },
-    });
-
   const handleZoomIn = () => {
     try {
-      const value1 = Math.ceil(
-        (viewer.viewport.getZoom() * 40) / viewer.viewport.getMaxZoom()
-      );
-      zoomToLevel({ viewer, value: value1 + 0.6 });
+      if (viewer.viewport.getMaxZoom() > viewer.viewport.getZoom()) {
+        viewer.viewport.zoomBy(1.0 / 0.7);
+      }
     } catch (err) {
-      // console.error("Error handling Zoom In button click", err);
+      console.error("Error handling Zoom In button click", err);
     }
   };
 
   const handleZoomOut = () => {
     try {
-      const value2 = Math.ceil(
-        (viewer.viewport.getZoom() * 40) / viewer.viewport.getMaxZoom()
-      );
-      zoomToLevel({ viewer, value: value2 - 1.06 });
+      if (viewer.viewport.getMinZoom() < viewer.viewport.getZoom()) {
+        viewer.viewport.zoomBy(0.7);
+      }
     } catch (err) {
-      // console.error("Error handling Zoom Out button click", err);
+      console.error("Error handling Zoom Out button click", err);
     }
   };
 
@@ -200,12 +130,15 @@ function ViewerControls({
     annotationChat();
     // annotationClose();
   };
-
+  // ########## RUN MORPHOMETRY ##########################
+  const [onVhutAnalysis, { data: analysis_data, error: analysis_error }] =
+    useMutation(VHUT_ANALTSIS);
   const handleVhutAnalysis = async () => {
     if (!fabricOverlay || !annotationObject) return;
 
     // get s3 folder key from the originalFileUrl
     const key = getFileBucketFolder(originalFileUrl);
+
     const { left, top, width, height, type } = annotationObject;
     let body = {
       key,
@@ -214,8 +147,8 @@ function ViewerControls({
       top,
       width,
       height,
-      slideId,
       hash: annotationObject.hash,
+      userId: userInfo._id || userInfo.userId,
     };
 
     // if annoatation is a freehand, send the coordinates of the path
@@ -234,14 +167,13 @@ function ViewerControls({
     } else if (annotationObject.type === "polygon") {
       body = { ...body, points: annotationObject.points };
     }
-    // console.log("slideID", slideId);
-    // console.log("body....", body);
+
+    console.log("body....", body);
     try {
       // const resp = await onVhutAnalysis(body);
       onVhutAnalysis({
         variables: { body: { ...body } },
       });
-      setLoadUI(false);
       // toast({
       //   title: resp.data.message,
       //   status: "success",
@@ -258,6 +190,21 @@ function ViewerControls({
       });
     }
   };
+
+  // ######## SHOW ANALYSIS AFTER RUNNING MORPHOMETRY ##############
+
+  const [onGetVhutAnalysis, { data: responseData, error: responseError }] =
+    useLazyQuery(GET_VHUT_ANALYSIS);
+
+  useEffect(() => {
+    if (responseData) {
+      console.log("====================================");
+      console.log("analysis...", responseData);
+      console.log("====================================");
+
+      showAnalysisData(responseData);
+    }
+  }, [responseData]);
 
   const showAnalysisData = async (resp) => {
     const canvas = fabricOverlay.fabricCanvas();
@@ -279,7 +226,6 @@ function ViewerControls({
         optionalData: {
           data: analysedData,
           totalCells,
-          roiType: "morphometry",
         },
       });
 
@@ -348,45 +294,38 @@ function ViewerControls({
     // }
   };
 
-  // update Annotation in db
-  const onUpdateAnnotation = (data) => {
-    delete data?.slideId;
-    modifyAnnotation({
-      variables: { body: { ...data } },
-    });
-  };
-
-  if (deleteError)
-    toast({
-      title: "Annotation could not be deleted",
-      description: "server error",
-      status: "error",
-      duration: 1000,
-      isClosable: true,
-    });
-
-  // delete Annotation from db
-  const onDeleteAnnotation = (data) => {
-    removeAnnotation({ variables: { body: data } });
-  };
-
   useEffect(() => {
-    setIsAnnotationLoaded(true);
+    setIsAnnotationLoaded(false);
   }, [slideId]);
 
-  useEffect(() => {
-    if (responseData) {
-      // console.log("====================================");
-      // console.log("analysis...", responseData);
-      // console.log("====================================");
+  // ############### LOAD_ANNOTATION ####################
+  const [getAnnotation, { data, loading, error }] =
+    useLazyQuery(GET_ANNOTATION);
 
-      showAnalysisData(responseData);
+  // ############### ANNOTATION_SUBSCRIPTION ########################
+  const { data: subscriptionData, error: subscription_error } = useSubscription(
+    ANNOTATIONS_SUBSCRIPTION,
+    {
+      variables: {
+        slideId,
+      },
     }
-  }, [responseData]);
+  );
+
+  // #################### VHUT_ANALYSIS_SUBSCRIPTION ##############
+  const { data: vhutSubscriptionData, error: vhutSubscription_error } =
+    useSubscription(VHUT_ANALYSIS_SUBSCRIPTION, {
+      variables: {
+        body: {
+          slideId,
+          userId: userInfo._id || userInfo.userId,
+        },
+      },
+    });
 
   useEffect(() => {
     if (vhutSubscriptionData) {
-      // console.log("subscribed", vhutSubscriptionData);
+      console.log("subscribed", vhutSubscriptionData);
       const {
         data,
         status,
@@ -403,16 +342,7 @@ function ViewerControls({
           if (annotation) {
             annotation.set({ isAnalysed: true, analysedROI });
           }
-          setLoadUI(true);
         }
-        // console.log(vhutSubscriptionData.analysisStatus);
-        toast({
-          title: message,
-          status: "success",
-          duration: 1500,
-          isClosable: true,
-        });
-      } else if (type === "KI67_ANALYSIS") {
         toast({
           title: message,
           status: "success",
@@ -435,15 +365,14 @@ function ViewerControls({
 
   // ################ UPDATING ANNOTATION VIA SUBSCRIPTION #######################
   useEffect(() => {
-    if (subscriptionData && annotationData) {
-      // console.log("Subscribed Changed Annotation", subscriptionData);
+    if (subscriptionData && data) {
+      console.log("Subscribed Changed Annotation", subscriptionData);
+
+      // if annotation has been deleted
       if (subscriptionData.changedAnnotations.status.isDeleted) {
         const received_hash = subscriptionData.changedAnnotations.data.hash;
         if (received_hash) subscriptionDeleteAnnotation(received_hash);
-        else
-          subscriptionClearAnnotations(
-            subscriptionData.changedAnnotations.deleteType
-          );
+        else subscriptionClearAnnotations();
       } else if (subscriptionData.changedAnnotations.status.isCreated) {
         subscriptionAddAnnotation(subscriptionData.changedAnnotations.data);
       } else if (subscriptionData.changedAnnotations.status.isUpdated) {
@@ -451,38 +380,10 @@ function ViewerControls({
       }
     }
   }, [subscriptionData]);
-  // fetch xml file
-  useEffect(() => {
-    async function fetchXmlFile() {
-      const response = await axios.get(
-        `${Environment.FILES_URL}/v1/files/xml-file/?slideUrl=${tile}`,
-        {
-          headers: {
-            authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      setXmlLink(response?.data?.data?.originalUrl);
-    }
-    fetchXmlFile();
-    return () => {
-      setXmlLink("");
-    };
-  }, [tile]);
 
-  // load saved annotations from the server
-  // once viewer is initialized
+  // ######### FETCHING ANNOTATION #######################
   useEffect(() => {
-    if (xmlLink) {
-      getXmlAnnotation({
-        variables: {
-          query: {
-            slideId,
-          },
-        },
-      });
-      setIsXmlAnnotations(true);
-    } else {
+    if (slideId)
       getAnnotation({
         variables: {
           query: {
@@ -490,65 +391,69 @@ function ViewerControls({
           },
         },
       });
-      setIsXmlAnnotations(false);
-    }
-  }, [xmlLink, slideId]);
+  }, [slideId]);
+  // load saved annotations from the server
+  // once viewer is initialized
 
-  // set annotation data
-  useEffect(() => {
-    if (
-      !xmlAnnotationData?.loadImportedAnnotation?.ImportedAnnotation[0]?.data
-    ) {
-      setAnnotatedData(annotationData?.loadAnnotation?.data);
-    } else {
-      setAnnotatedData(
-        xmlAnnotationData?.loadImportedAnnotation?.ImportedAnnotation[0]?.data
-      );
-    }
-  }, [xmlAnnotationData, annotationData]);
+  const [
+    modifyAnnotation,
+    { data: updatedData, error: updateError, loading: updateLoading },
+  ] = useMutation(UPDATE_ANNOTATION);
+
+  // update Annotation in db
+  const onUpdateAnnotation = (data) => {
+    delete data?.slideId;
+    modifyAnnotation({
+      variables: { body: { ...data } },
+    });
+  };
+
+  const [removeAnnotation, { data: deletedData, error: deleteError }] =
+    useMutation(DELETE_ANNOTATION);
+
+  if (deleteError)
+    toast({
+      title: "Annotation could not be deleted",
+      description: "server error",
+      status: "error",
+      duration: 1000,
+      isClosable: true,
+    });
+
+  // delete Annotation from db
+  const onDeleteAnnotation = (data) => {
+    removeAnnotation({ variables: { body: data } });
+  };
 
   useEffect(() => {
     if (!fabricOverlay) return;
+
     const canvas = fabricOverlay.fabricCanvas();
-    const data = [
-      {
-        type: "arrow",
-        points: [
-          [32025, 39905],
-          [32225, 39496],
-        ],
-      },
-    ];
+
     const loadAnnotations = async () => {
       // check if the annotations is already loaded
-      if (canvas.toJSON().objects.length === 0 && annotatedData) {
-        const { feed, status, error } = await loadAnnotationsFromDB({
+      if (canvas.toJSON().objects.length === 0) {
+        const { feed, status } = await loadAnnotationsFromDB({
           slideId,
           canvas,
           viewer,
           // onLoadAnnotations,
-          data: annotatedData,
-          success: annotatedData,
-          userInfo,
+          data: data?.loadAnnotation?.data,
+          success: data?.loadAnnotation?.success,
         });
+
         if (status === "success") {
-          if (feed) {
+          if (feed)
             setFabricOverlayState(
               updateActivityFeed({ id: viewerId, fullFeed: feed })
             );
-            setActiveFeed(feed);
-          }
-
           canvas.requestRenderAll();
-          console.log(annotatedData);
-          if (annotatedData?.length > 0) {
-            toast({
-              title: "Annotation loaded",
-              status: "success",
-              duration: 1000,
-              isClosable: true,
-            });
-          }
+          toast({
+            title: "Annotations loaded",
+            status: "success",
+            duration: 1000,
+            isClosable: true,
+          });
         } else {
           setFabricOverlayState(
             updateActivityFeed({ id: viewerId, fullFeed: [] })
@@ -566,8 +471,12 @@ function ViewerControls({
 
       setIsAnnotationLoaded(true);
     };
-    loadAnnotations();
-  }, [fabricOverlay, annotatedData]);
+
+    if (slideRef.current !== slideId && data) {
+      loadAnnotations();
+      slideRef.current = slideId;
+    }
+  }, [fabricOverlay, data]);
 
   // check if annotation is loaded or not
   // and then update fabricOverlayState
@@ -636,364 +545,114 @@ function ViewerControls({
     };
   }, [viewer, fabricOverlay]);
 
-  useEffect(() => {
-    if (!viewer || !fabricOverlay) return;
-    const canvas = fabricOverlay.fabricCanvas();
-
-    const handleMouseDown = (event) => {
-      const annotation = canvas.getActiveObject();
-
-      if (annotation && annotation.type === "textbox") {
-        setAnnotationText(annotation.text);
-        setAnnotationShape("textbox");
-      }
-    };
-
-    canvas.requestRenderAll();
-
-    canvas.on("mouse:move", handleMouseDown);
-    return () => {
-      canvas.on("mouse:move", handleMouseDown);
-    };
-  }, [viewer, fabricOverlay]);
-
-  useEffect(() => {
-    updateAnnotation({
-      text: annotationText,
-      title: `${userInfo.firstName} ${userInfo.lastName}`,
-      onUpdateAnnotation,
-    });
-  }, [annotationText]);
-
-  useEffect(() => {
-    updateAnnotation({
-      text: annotationText,
-      title: `${userInfo.firstName} ${userInfo.lastName}`,
-      onUpdateAnnotation,
-    });
-  }, [annotationText]);
-
-  // ######################## RUN KI67 ###############################################
-  // ######################## RUN KI67 ###############################################
-  const groupAnnotationAndCellsKI67 = ({
-    cells,
-    enclosingAnnotation,
-    optionalData,
-  }) => {
-    if (!cells || !enclosingAnnotation) return null;
-    const { slide, hash, title, text, zoomLevel, points, timeStamp, path } =
-      enclosingAnnotation;
-    enclosingAnnotation.set({ fill: "" });
-    const group = new fabric.Group([enclosingAnnotation, ...cells]).set({
-      slide,
-      hash,
-      title,
-      text,
-      zoomLevel,
-      points,
-      path,
-      timeStamp,
-      isKI67Analysed: true,
-      fill: "",
-    });
-
-    // check if optionalData is available and also is not empty
-    if (optionalData && Object.keys(optionalData).length > 0) {
-      group.set({ analysedData: optionalData, roiType: optionalData.roiType });
-    }
-
-    const message = {
-      username: "",
-      object: group,
-      image: null,
-    };
-
-    return message;
-  };
-
-  const runKI67 = async () => {
-    if (!fabricOverlay || !annotationObject) return;
-    else {
-      // get s3 folder key from the originalFileUrl
-      const key = getFileBucketFolder(originalFileUrl);
-      const { left, top, width, height, type } = annotationObject;
-      let body = {
-        key,
-        type,
-        left,
-        top,
-        width,
-        height,
-        slideId,
-        hash: annotationObject.hash,
-      };
-
-      // if annoatation is a freehand, send the coordinates of the path
-      // otherwise, send the coordinates of the rectangle
-      if (annotationObject.type === "path") {
-        body = { ...body, path: annotationObject.path };
-
-        if (slide?.isIHC === false) {
-          isKI67Open();
-          F;
-        }
-      } else if (annotationObject.type === "ellipse") {
-        body = {
-          ...body,
-          cx: annotationObject.cx,
-          cy: annotationObject.cy,
-          rx: annotationObject.rx,
-          ry: annotationObject.ry,
-          type: "ellipse",
-        };
-      } else if (annotationObject.type === "polygon") {
-        body = { ...body, points: annotationObject.points };
-      }
-      // console.log("slideID", slideId);
-      // console.log("body....", body);
-      const originalBody = {
-        ...body,
-        notifyHook: `${Environment.VIEWER_URL}/notify_KI67`,
-        annotationId: "",
-      };
-      console.log("body", originalBody);
-      try {
-        // const resp = await onVhutAnalysis(body);
-        const resp = await axios.post(
-          "https://backup-quantize-vhut.prr.ai/ki_six_seven_predict",
-          originalBody
-        );
-        console.log("resp", resp);
-        //   setLoadUI(false);
-        // toast({
-        //   title: resp.data.message,
-        //   status: "success",
-        //   duration: 1500,
-        //   isClosable: true,
-        // });
-      } catch (err) {
-        toast({
-          title: "Server Unavailable",
-          description: err.message,
-          status: "error",
-          duration: 1500,
-          isClosable: true,
-        });
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (vhutSubscriptionData) {
-      // console.log("subscribed", vhutSubscriptionData);
-      const {
-        data,
-        status,
-        message,
-        analysisType: type,
-      } = vhutSubscriptionData.analysisStatus;
-
-      if (type === "KI67_ANALYSIS") {
-        const posContours = data.kiResults.pos_contours;
-        const negContours = data.kiResults.neg_contours;
-        const canvas = fabricOverlay.fabricCanvas();
-        const { left, top } = annotationObject;
-        const circles = posContours.map((coord) => {
-          const circle = new fabric.Circle({
-            left: coord[0] + left,
-            top: coord[1] + top,
-            radius: 3,
-            fill: "#BB4139",
-            stroke: "#BB4139",
-            strokeWidth: 2,
-          });
-          return circle;
-        });
-        const circlesNegative = negContours.map((coord) => {
-          const circle = new fabric.Circle({
-            left: coord[0] + left,
-            top: coord[1] + top,
-            radius: 3,
-            fill: "#17478D",
-            stroke: "#17478D",
-            strokeWidth: 2,
-          });
-          return circle;
-        });
-        const cells = [...circles, ...circlesNegative];
-        const feedMessage = groupAnnotationAndCellsKI67({
-          enclosingAnnotation: annotationObject,
-          cells,
-          optionalData: {
-            data: "",
-            roiType: "KI67",
-            num_positive: data?.kiResults?.num_positive,
-            num_negative: data?.kiResults?.num_negative,
-            proliferation_score: data?.kiResults?.proliferation_score,
-          },
-        });
-        console.log(feedMessage);
-        if (feedMessage?.object) {
-          // remove enclosing annotation and add new one to canvas
-          // console.log(feedMessage);
-          canvas.remove(annotationObject);
-          canvas.add(feedMessage.object).requestRenderAll();
-
-          setFabricOverlayState(
-            updateFeedInAnnotationFeed({ id: viewerId, feed: feedMessage })
-          );
-        }
-      }
-    }
-  }, [vhutSubscriptionData]);
-
   return (
     <>
       {!isAnnotationLoaded || isViewportAnalysing ? (
         <Loading position="absolute" w="100%" zIndex="3" h="79vh" />
       ) : null}
-      <Box position="absolute" left="2vw" top="5vh">
-        <Flex
-          direction="column"
-          gap="1.3vh"
-          alignItems="end"
-          mt="8px"
-          mr="23px"
-        >
-          <VStack
-            // w="fit-content"
-            backgroundColor="#F8F8F5"
-            border="1px solid #00153F"
-            // borderRadius="5px"
-            py={2}
-            px={1.5}
-            zIndex="1"
-          >
-            <FullScreen viewerId={viewerId} />
-          </VStack>
-          <VStack
-            // w="fit-content"
-            backgroundColor="#F8F8F5"
-            border="1px solid #00153F"
-            // borderRadius="5px"
-            py={2}
-            px={1.5}
-            zIndex="1"
-          >
-            <ToolbarButton
-              icon={<AiOutlinePlus color="#00153F" size={iconSize} />}
-              // border="1px solid #3965C6"
-              backgroundColor="#E4E5E8"
-              onClick={handleZoomIn}
-              label="Zoom In"
-              mr="0px"
-              _hover={{ bgColor: "#ECECEC" }}
-              _active={{
-                outline: "none",
-              }}
-            />
-            <ZoomSlider viewerId={viewerId} />
-            <ToolbarButton
-              icon={<AiOutlineMinus color="#00153F" size={iconSize} />}
-              // border="1px solid #3965C6"
-              backgroundColor="#E4E5E8"
-              onClick={handleZoomOut}
-              label="Zoom Out"
-              mr="0px"
-              _hover={{ bgColor: "#ECECEC" }}
-              _active={{
-                outline: "none",
-              }}
-            />
-          </VStack>
-          <VStack
-            // w="fit-content"
-            backgroundColor="#F8F8F5"
-            border="1px solid #00153F"
-            // borderRadius="5px"
-            py={2}
-            px={1.5}
-            zIndex="1"
-          >
-            <ZoomButton viewerId={viewerId} />
-          </VStack>
-          <CustomMenu
-            isMenuOpen={isOpen}
-            closeMenu={closeMenu}
-            setIsOpen={setIsRightClickActive}
-            left={menuPosition.left}
-            top={menuPosition.top}
-            onHandleVhutAnalysis={handleVhutAnalysis}
-            setZoom={handleZoomLevel}
-            slide={slide}
-            enableAI={enableAI}
-            isMorphometryDisabled={isMorphometryDisabled}
-            isAnnotationSelected={annotationObject}
-            isAnalysed={annotationObject?.isAnalysed}
-            isKI67Analysed={annotationObject?.isKI67Analysed}
-            viewer={viewer}
-            runKI67={runKI67}
-            onHandleShowAnalysis={handleShowAnalysis}
-            handleDeleteAnnotation={handleDeleteAnnotation}
-            handleEditOpen={handleEditOpen}
-            handleAnnotationChat={handleAnnotationChat}
-            application={application}
-          />
-          <EditText
-            isOpen={isEditOpen}
-            onClose={closeEdit}
-            handleClose={closeEdit}
-            handleSave={handleSave}
-            textValue={annotationObject?.text ? annotationObject.text : ""}
-            titleValue={annotationObject?.title ? annotationObject.title : ""}
-          />
-          {application === "hospital" && (
-            <AnnotationChat
-              isOpen={isAnnotationOpen}
-              onClose={annotationClose}
-              onOpen={annotationChat}
-              userInfo={userInfo}
-              client={client2}
-              mentionUsers={mentionUsers}
-              chatId={caseInfo?._id}
-              annotationObject={annotationObject}
-              addUsersToCase={addUsersToCase}
-            />
-          )}
-          <ShowMetric viewerId={viewerId} slide={slide} />
-        </Flex>
-      </Box>
-      {isKI67Open ? (
-        <Box
-          position="absolute"
-          top="50%"
-          left="50%"
-          transform="translate(-50%, -50%)"
-          zIndex="999"
-        >
-          <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>Create your account</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody pb={6}>
-                <Lorem count={2} />
-              </ModalBody>
-
-              <ModalFooter>
-                <Button colorScheme="blue" mr={3}>
-                  Save
-                </Button>
-                <Button onClick={onClose}>Cancel</Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
-        </Box>
-      ) : (
-        ""
-      )}
+      <VStack
+        // w="fit-content"
+        backgroundColor="#F8F8F5"
+        border="1px solid #00153F"
+        // borderRadius="5px"
+        py={2}
+        px={1.5}
+        zIndex="1"
+        position="absolute"
+        right="20px"
+        top="20px"
+      >
+        <FullScreen viewerId={viewerId} />
+      </VStack>
+      <VStack
+        // w="fit-content"
+        backgroundColor="#F8F8F5"
+        border="1px solid #00153F"
+        // borderRadius="5px"
+        py={2}
+        px={1.5}
+        zIndex="1"
+        position="absolute"
+        right="20px"
+        top="10.48vh"
+      >
+        <ToolbarButton
+          icon={<AiOutlinePlus color="#00153F" size={iconSize} />}
+          // border="1px solid #3965C6"
+          backgroundColor="#E4E5E8"
+          onClick={handleZoomIn}
+          label="Zoom In"
+          mr="0px"
+          _hover={{ bgColor: "#ECECEC" }}
+          _active={{
+            outline: "none",
+          }}
+        />
+        <ZoomSlider viewerId={viewerId} />
+        <ToolbarButton
+          icon={<AiOutlineMinus color="#00153F" size={iconSize} />}
+          // border="1px solid #3965C6"
+          backgroundColor="#E4E5E8"
+          onClick={handleZoomOut}
+          label="Zoom Out"
+          mr="0px"
+          _hover={{ bgColor: "#ECECEC" }}
+          _active={{
+            outline: "none",
+          }}
+        />
+      </VStack>
+      <VStack
+        // w="fit-content"
+        backgroundColor="#F8F8F5"
+        border="1px solid #00153F"
+        // borderRadius="5px"
+        py={2}
+        px={1.5}
+        zIndex="1"
+        position="absolute"
+        right="20px"
+        top="25.6vh"
+      >
+        <ZoomButton viewerId={viewerId}></ZoomButton>
+      </VStack>
+      <CustomMenu
+        isMenuOpen={isOpen}
+        closeMenu={closeMenu}
+        setIsOpen={setIsRightClickActive}
+        left={menuPosition.left}
+        top={menuPosition.top}
+        onHandleVhutAnalysis={handleVhutAnalysis}
+        setZoom={handleZoomLevel}
+        enableAI={enableAI}
+        isMorphometryDisabled={isMorphometryDisabled}
+        isAnnotationSelected={annotationObject}
+        isAnalysed={annotationObject?.isAnalysed}
+        onHandleShowAnalysis={handleShowAnalysis}
+        handleDeleteAnnotation={handleDeleteAnnotation}
+        handleEditOpen={handleEditOpen}
+        handleAnnotationChat={handleAnnotationChat}
+      />
+      <EditText
+        isOpen={isEditOpen}
+        onClose={closeEdit}
+        handleClose={closeEdit}
+        handleSave={handleSave}
+        textValue={annotationObject?.text ? annotationObject.text : ""}
+        titleValue={annotationObject?.title ? annotationObject.title : ""}
+      />
+      <AnnotationChat
+        isOpen={isAnnotationOpen}
+        onClose={annotationClose}
+        onOpen={annotationChat}
+        userInfo={userInfo}
+        client={client2}
+        mentionUsers={mentionUsers}
+        chatId={caseInfo?._id}
+      />
+      <ShowMetric viewerId={viewerId} slide={slide} />
     </>
   );
-}
+};
 
 export default ViewerControls;

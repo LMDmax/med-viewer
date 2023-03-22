@@ -260,7 +260,7 @@ const Polygon = ({ viewerId, onSaveAnnotation }) => {
     if (!shape) return;
 
     const addToFeed = async () => {
-      const message = createAnnotationMessage({ slideId, shape, viewer, type:"polygon" });
+      const message = createAnnotationMessage({ slideId, shape, viewer });
 
       saveAnnotationToDB({
         slideId,

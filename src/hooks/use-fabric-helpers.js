@@ -35,60 +35,37 @@ const useCanvasHelpers = (viewerId) => {
   // subscription sync delete annotation from canvas
   const subscriptionDeleteAnnotation = (hash) => {
     if (!canvas || !hash) return;
+    console.log("delete hook", hash);
     const target = canvas.getObjectByHash(hash);
+
     setFabricOverlayState(
       removeFromActivityFeed({ id: viewerId, hash: target?.hash })
     );
 
     canvas.remove(target).requestRenderAll();
 
-    if (target.type === "textbox") {
-      toast({
-        title: "Comment deleted",
-        status: "success",
-        duration: 1000,
-        isClosable: true,
-      });
-    } else {
-      toast({
-        title: "Annotation deleted",
-        status: "success",
-        duration: 1000,
-        isClosable: true,
-      });
-    }
+    toast({
+      title: "Annotation deleted",
+      status: "success",
+      duration: 1000,
+      isClosable: true,
+    });
   };
 
   //subscription sync clear annotations from canvas
-  const subscriptionClearAnnotations = (deleteType) => {
+  const subscriptionClearAnnotations = () => {
     if (!canvas) return;
 
-    let objects = canvas.getObjects();
-    for (let i = 0; i < objects.length; i++) {
-      if (deleteType.includes(objects[i].type)) {
-        canvas.remove(objects[i]).requestRenderAll();
-        setFabricOverlayState(
-          removeFromActivityFeed({ id: viewerId, hash: objects[i].hash })
-        );
-      }
-    }
+    setFabricOverlayState(updateActivityFeed({ id: viewerId, fullFeed: [] }));
 
-    if (deleteType.includes("textbox")) {
-      toast({
-        title: "Comments deleted",
-        status: "success",
-        duration: 1000,
-        isClosable: true,
-      });
-      console.log("comments");
-    } else {
-      toast({
-        title: "Annotations deleted",
-        status: "success",
-        duration: 1000,
-        isClosable: true,
-      });
-    }
+    canvas.clear().requestRenderAll();
+
+    toast({
+      title: "Annotations deleted",
+      status: "success",
+      duration: 1000,
+      isClosable: true,
+    });
   };
 
   // subscription sync add annotation to canvas
@@ -118,27 +95,18 @@ const useCanvasHelpers = (viewerId) => {
     const target = canvas.getObjectByHash(annotation?.hash);
     target.set(annotation);
 
-    if (target.type === "textbox") {
-      toast({
-        title: "Comment updated",
-        status: "success",
-        duration: 1000,
-        isClosable: true,
-      });
-    } else {
-      toast({
-        title: "Annotation updated",
-        status: "success",
-        duration: 1000,
-        isClosable: true,
-      });
-    }
+    toast({
+      title: "Annotation updated",
+      status: "success",
+      duration: 1000,
+      isClosable: true,
+    });
   };
   // delete annotation/object from canvas
   const deleteAnnotation = async (onDeleteAnnotation) => {
     if (!canvas || !onDeleteAnnotation) return;
     const activeObject = canvas.getActiveObject();
-    // console.log("active....", activeObject);
+    console.log("active....", activeObject);
     // // Object has children (ie. arrow has children objects triangle and line)
     // if (activeObject.getObjects) {
     //   const objs = activeObject.getObjects();
@@ -150,7 +118,6 @@ const useCanvasHelpers = (viewerId) => {
     if (
       !(await deleteAnnotationFromDB({
         slideId,
-        type: [],
         hash: activeObject?.hash,
         onDeleteAnnotation,
       }))
@@ -190,7 +157,6 @@ const useCanvasHelpers = (viewerId) => {
     if (
       !(await deleteAnnotationFromDB({
         slideId,
-        type: ["ellipse", "rect", "polygon", "path", "line"],
         onDeleteAnnotation,
       }))
     ) {
@@ -199,26 +165,6 @@ const useCanvasHelpers = (viewerId) => {
         description: "server error",
         status: "error",
         duration: 1000,
-        isClosable: true,
-      });
-    }
-  };
-
-  const deleteAllComments = async (onDeleteAnnotation) => {
-    if (!canvas || !onDeleteAnnotation) return;
-
-    if (
-      !(await deleteAnnotationFromDB({
-        slideId,
-        type: ["textbox"],
-        onDeleteAnnotation,
-      }))
-    ) {
-      toast({
-        title: "Comments could not be deleted",
-        description: "server error",
-        status: "error",
-        duration: 2000,
         isClosable: true,
       });
     }
@@ -288,7 +234,6 @@ const useCanvasHelpers = (viewerId) => {
     subscriptionClearAnnotations,
     subscriptionDeleteAnnotation,
     subscriptionUpdateAnnotation,
-    deleteAllComments,
   };
 };
 

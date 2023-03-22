@@ -77,7 +77,7 @@ import OpenSeadragon from "openseadragon";
         const canvas = window.document.createElement("canvas");
         canvas.width = image.width;
         canvas.height = image.height;
-        const context = canvas.getContext("2d", { willReadFrequently: true }); // Add the option here
+        const context = canvas.getContext("2d");
         context.drawImage(image, 0, 0);
         tile._renderedContext = context;
         const callback = event.getCompletionCallback();

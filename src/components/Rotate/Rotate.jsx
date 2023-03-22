@@ -68,8 +68,7 @@ const Rotate = ({ viewerId }) => {
             size={ifScreenlessthan1536px ? 60 : 0}
             height={ifScreenlessthan1536px ? "26px" : "34px"}
             variant="unstyled"
-            backgroundColor={sliderToggle ? "#E4E5E8" : "#F8F8F5"}
-            outline={sliderToggle ? " 0.5px solid rgba(0, 21, 63, 1)" : ""}
+            backgroundColor="#F8F8F5"
             color="#3963c3"
             pl={ifScreenlessthan1536px ? "7px" : "10px"}
             mr="7px"
@@ -82,17 +81,7 @@ const Rotate = ({ viewerId }) => {
             _focus={{
               border: "none",
             }}
-            boxShadow={
-              sliderToggle
-                ? "inset -2px -2px 2px rgba(0, 0, 0, 0.1), inset 2px 2px 2px rgba(0, 0, 0, 0.1)"
-                : null
-            }
-            icon={
-              <FiRotateCw
-                size={IconSize()}
-                color={sliderToggle ? "#3B5D7C" : "#000"}
-              />
-            }
+            icon={<FiRotateCw size={IconSize()} color="#151C25" />}
             onClick={() => setSliderToggle(!sliderToggle)}
           />
           {/* rgba(0, 21, 63, 1) */}
@@ -112,7 +101,7 @@ const Rotate = ({ viewerId }) => {
           alignItems="flex-end"
         >
           <Flex
-            w="250px"
+            w="15vw"
             h="100%"
             direction="column"
             bgColor="#f5f7fa"
@@ -130,23 +119,25 @@ const Rotate = ({ viewerId }) => {
                 <IconButton
                   aria-label="Rotate left"
                   icon={<BiRotateLeft />}
-                  onClick={() => setRotationValue(rotationValue - 90)}
+                  onClick={() => setRotationValue(rotationValue - 1)}
                   borderRadius={0}
                   bgColor="#f5f7fa"
-                  disabled={rotationValue <= -180}
                 />
                 <IconButton
                   aria-label="Rotate right"
                   icon={<BiRotateRight />}
-                  onClick={() => setRotationValue(rotationValue + 90)}
+                  onClick={() => setRotationValue(rotationValue + 1)}
                   borderRadius={0}
                   bgColor="#f5f7fa"
-                  disabled={rotationValue >= 180}
                 />
               </HStack>
-              <HStack ml="1vw" spacing="15px">
+              <HStack ml="1vw" spacing={0}>
                 <Text>Angle:</Text>
-                <Text>{rotationValue}</Text>
+                <Input
+                  value={rotationValue}
+                  onChange={(e) => setRotationValue(e.target.value)}
+                  borderRadius={0}
+                />
               </HStack>
             </Flex>
             <HStack
@@ -165,7 +156,7 @@ const Rotate = ({ viewerId }) => {
               >
                 Reset
               </Button>
-              {/* <Button
+              <Button
                 borderRadius={0}
                 onClick={() => setSliderToggle(!sliderToggle)}
                 bgColor="#3B5D7C"
@@ -174,7 +165,7 @@ const Rotate = ({ viewerId }) => {
                 fontSize={12}
               >
                 Save Action
-              </Button> */}
+              </Button>
             </HStack>
           </Flex>
           <Slider

@@ -21,9 +21,10 @@ const QueryChat = ({ setQueryChat, queryChat, userInfo, client }) => {
   const [groupMessages, setGroupMessages] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
+  const [submitData, setSubmitData] = useState("");
   const [
     fetchMessages,
-    { loading: isConversationLoading, refetch, data: msgData, error },
+    { loading: isConversationLoading, data: msgData, error },
   ] = useLazyQuery(FETCH_CONVERSATION, { client });
 
   useEffect(() => {
@@ -78,7 +79,7 @@ const QueryChat = ({ setQueryChat, queryChat, userInfo, client }) => {
     });
     setPageNumber(1);
     setTotalPage(1);
-  }, [queryChat?._id]);
+  }, [queryChat?._id, submitData]);
 
   const { data: subscribedMessageData } = useSubscription(CHAT_SUBSCRIPTION, {
     variables: {
@@ -91,7 +92,7 @@ const QueryChat = ({ setQueryChat, queryChat, userInfo, client }) => {
     if (subscribedMessageData) {
       const newMessages = [
         ...groupMessages,
-        subscribedMessageData.newChat.data,
+        subscribedMessageData.queryChat.data,
       ];
 
       setGroupMessages(newMessages);
@@ -143,17 +144,13 @@ const QueryChat = ({ setQueryChat, queryChat, userInfo, client }) => {
           })}
         </Flex>
 
-        <Flex py="0.4rem" alignItems="center">
+        <Flex py="0.4rem">
           <Avatar
             size="sm"
             src={queryChat?.fromImage}
             name={`${queryChat?.fromName}`}
           />
-          <Text ml="0.5rem">
-            {queryChat?.payload?.body
-              ? queryChat?.payload?.body
-              : queryChat?.mentionedUsers[0].message}
-          </Text>
+          <Text ml="0.5rem">{queryChat?.mentionedUsers[0]?.message}</Text>
         </Flex>
         {/* {isConversationLoading ? (
           <Text my="0.3vh">fetching conversation...</Text>
@@ -196,9 +193,7 @@ const QueryChat = ({ setQueryChat, queryChat, userInfo, client }) => {
             userInfo={userInfo}
             chatId={queryChat?._id}
             client={client}
-            groupMessages={groupMessages}
-            setGroupMessages={setGroupMessages}
-            refetch={refetch}
+            setSubmitData={setSubmitData}
           />
         </Flex>
         {/* <Button

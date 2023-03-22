@@ -2,8 +2,6 @@ import React from "react";
 import { Flex, Text, VStack } from "@chakra-ui/react";
 
 const DetailsCard = ({ cardTitle, details = [], ...restProps }) => {
-
-  // console.log(details);
   return (
     <Flex
       bg="#FFFFFF"
@@ -35,7 +33,7 @@ const DetailsCard = ({ cardTitle, details = [], ...restProps }) => {
             borderBottom="1px solid #DEDEDE"
           >
             <Text flex={1}>{title}:</Text>
-            <Text textTransform="capitalize" flex={1}>{details[title]}</Text>
+            <Text flex={1}>{details[title]}</Text>
           </Flex>
         ))}
       </VStack>

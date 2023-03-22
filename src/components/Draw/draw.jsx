@@ -71,13 +71,32 @@ const Draw = ({ viewerId, onSaveAnnotation }) => {
     if (!fabricOverlay || !isActive) return;
     const canvas = fabricOverlay.fabricCanvas();
 
+    // // Create new Textbox instance and add it to canvas
+    // const createTextbox = ({ left, top, height }) => {
+    //   const tbox = new fabric.IText("", {
+    //     left,
+    //     top: top + height + 10,
+    //     fontFamily: fonts[0].fontFamily,
+    //     fontSize,
+    //     fontWeight: "bold",
+    //     selectionBackgroundColor: "rgba(255, 255, 255, 0.5)",
+    //   });
+
+    //   fabricOverlay.fabricCanvas().add(tbox);
+    //   canvas.setActiveObject(tbox);
+    //   tbox.enterEditing();
+    // };
+
     // to set path when draw completes
     const pathCreated = (event) => {
-      canvas.selection = false;
+      canvas.selection = true;
       setPath(event.path);
     };
 
     function handleMouseDown(event) {
+      if (event.button !== 1 || !myStateRef.current.isActive) return;
+      // Need this as double protection to make sure OSD isn't swallowing
+      // Fabric's drawing mode for some reason
       canvas.selection = false;
       viewer.setMouseNavEnabled(false);
       viewer.outerTracker.setTracking(false);
@@ -85,8 +104,10 @@ const Draw = ({ viewerId, onSaveAnnotation }) => {
 
     const brushWidth = myState.width.pixelWidth;
     const scaleFactor = getScaleFactor(viewer);
+    // Enable Fabric drawing; disable OSD mouseclicks
+    viewer.setMouseNavEnabled(false);
+    viewer.outerTracker.setTracking(false);
     canvas.isDrawingMode = true;
-    canvas.selection = true;
     canvas.freeDrawingBrush.color = color.hex;
     canvas.freeDrawingBrush.width = brushWidth / scaleFactor;
     canvas.renderAll();
@@ -97,16 +118,15 @@ const Draw = ({ viewerId, onSaveAnnotation }) => {
 
     canvas.freeDrawingCursor = createFreeDrawingCursor(brushWidth, color.hex);
 
-    canvas.on("mouse:down", handleMouseDown);
     canvas.on("path:created", pathCreated);
+    canvas.on("mouse:down", handleMouseDown);
 
     // Remove handler
     return () => {
-      canvas.off("mouse:down", handleMouseDown);
       canvas.off("path:created", pathCreated);
+      canvas.off("mouse:down", handleMouseDown);
 
       // Disable Fabric drawing; enable OSD mouseclicks
-
       viewer.setMouseNavEnabled(true);
       viewer.outerTracker.setTracking(true);
       canvas.isDrawingMode = false;
@@ -133,14 +153,14 @@ const Draw = ({ viewerId, onSaveAnnotation }) => {
     if (!path) return;
 
     const addToFeed = async () => {
-      const message = createAnnotationMessage({ slideId, shape: path, viewer, type:"path" });
+      const message = createAnnotationMessage({ slideId, shape: path, viewer });
 
       saveAnnotationToDB({
         slideId,
         annotation: message.object,
         onSaveAnnotation,
       });
-// console.log(message);
+
       setFabricOverlayState(
         addToActivityFeed({
           id: viewerId,

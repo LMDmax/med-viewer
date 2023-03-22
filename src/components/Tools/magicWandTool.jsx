@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { IconButton, useToast } from "@chakra-ui/react";
 import { VscWand } from "react-icons/vsc";
-import { useMutation, useSubscription } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { useFabricOverlayState } from "../../state/store";
 import {
   updateTool,
@@ -17,15 +17,15 @@ import {
   createContour,
   getViewportBounds,
 } from "../../utility";
-import { VHUT_ANALYSIS_SUBSCRIPTION, VHUT_VIEWPORT_ANALYSIS } from "../../graphql/annotaionsQuery";
+import { VHUT_VIEWPORT_ANALYSIS } from "../../graphql/annotaionsQuery";
 
 const cellColor = {
-  Neutrophil: { hex: "#FFFF00" },
-  Epithelial: { hex: "#FF0000" },
-  Lymphocyte: { hex: "#00FFFF" },
-  Plasma: { hex: "#8FED66" },
-  Eosinohil: { hex: "#FF00FF" },
-  Connective: { hex: "#FFA500" },
+  Neutrophil: { hex: "#9800FF" },
+  Epithelial: { hex: "#0008FF" },
+  Lymphocyte: { hex: "#00F6FF" },
+  Plasma: { hex: "#2AFF00" },
+  Eosinohil: { hex: "#FAFF00" },
+  Connective: { hex: "#478C9E" },
 };
 
 const MagicWandTool = ({
@@ -39,8 +39,6 @@ const MagicWandTool = ({
   const { fabricOverlay, viewer, slideId, originalFileUrl } =
     viewerWindow[viewerId];
   const [zoomValue, setZoomValue] = useState(1);
-
-
   const toast = useToast();
 
   const isActive = activeTool === "MagicWand";
@@ -97,7 +95,7 @@ const MagicWandTool = ({
           variables: { body },
         });
       } catch (error) {
-        // console.log(error);
+        console.log(error);
         setFabricOverlayState(updateTool({ tool: "Move" }));
         toast({
           title: "Viewport Analysing",
@@ -110,15 +108,14 @@ const MagicWandTool = ({
       }
     };
 
-
-
     initiateAnalysis({
       left,
       top,
       width,
       height,
       key,
-      type: "viewport",
+      type: "rect",
+      userId: userInfo._id || userInfo.userId,
       slideId,
     });
 
@@ -126,10 +123,10 @@ const MagicWandTool = ({
     const createContours = async (body) => {
       // get cell data from the clicked position in viewer
       const resp = await axios.post(
-        "https://backup-quantize-vhut.prr.ai/vhut/click/xy",
+        "https://development-morphometry-api.prr.ai/vhut/click/xy",
         body
       );
-        console.log(body);
+
       // if the click positon is a cell, create annotation
       // also add it the annotation feed
       if (resp && typeof resp.data === "object") {
@@ -206,169 +203,6 @@ const MagicWandTool = ({
     setFabricOverlayState(updateTool({ tool: "MagicWand" }));
     setFabricOverlayState(updateIsViewportAnalysing(true));
   };
-
-  const { data: vhutSubscriptionData, error: vhutSubscription_error } =
-  useSubscription(VHUT_ANALYSIS_SUBSCRIPTION, {
-    variables: {
-      body: {
-        slideId,
-      },
-    },
-  });
-
-  useEffect(()=>{
-    if (vhutSubscriptionData) {
-      console.log("subscribed", vhutSubscriptionData);
-      console.log("subscribedError", vhutSubscription_error);
-      const {
-        data,
-        status,
-        message,
-        analysisType: type,
-      } = vhutSubscriptionData.analysisStatus;
-
-      if (type === "VIEWPORT_ANALYSIS" && data.results !== null){
-          console.log(data.results[0]);
-    const canvas = fabricOverlay.fabricCanvas();
-          const neutrophilContours = data.results[0].contours;
-          const EpithelialContours = data.results[1].contours;
-          const LympocyteContours = data.results[2].contours;
-          const PlasmaContours = data.results[3].contours;
-          const EosinohilContours = data.results[4].contours;
-          const ConnectiveContours = data.results[5].contours;
-    const { x: left, y: top, width, height } = getViewportBounds(viewer);
-    const neutrophile = neutrophilContours?.flat().map((coords) => {
-      // Map each nested array of coordinates to a Point object
-      const points = coords.map((coord) => {
-        return {
-          x: coord[0][0] + left,
-          y: coord[0][1] + top,
-        };
-      });
-      
-      // Create and return a new fabric.js Polygon object
-      return new fabric.Polygon(points, {
-        stroke: 'black',
-        strokeWidth: 1,
-        fill: '',
-        opacity: 0.7,
-        strokeUniform: true,
-      });
-    });
-    const epithelial = EpithelialContours?.flat().map((coords) => {
-      // Map each nested array of coordinates to a Point object
-      const points = coords.map((coord) => {
-        return {
-          x: coord[0][0] + left,
-          y: coord[0][1] + top,
-        };
-      });
-      
-      // Create and return a new fabric.js Polygon object
-      return new fabric.Polygon(points, {
-        stroke: 'black',
-        strokeWidth: 1,
-        fill: '',
-        opacity: 0.7,
-        strokeUniform: true,
-      });
-    });
-    const lymphocyte = LympocyteContours?.flat().map((coords) => {
-      // Map each nested array of coordinates to a Point object
-      const points = coords.map((coord) => {
-        return {
-          x: coord[0][0] + left,
-          y: coord[0][1] + top,
-        };
-      });
-      
-      // Create and return a new fabric.js Polygon object
-      return new fabric.Polygon(points, {
-        stroke: 'black',
-        strokeWidth: 1,
-        fill: '',
-        opacity: 0.7,
-        strokeUniform: true,
-      });
-    });
-    const plasma = PlasmaContours?.flat().map((coords) => {
-      // Map each nested array of coordinates to a Point object
-      const points = coords.map((coord) => {
-        return {
-          x: coord[0][0] + left,
-          y: coord[0][1] + top,
-        };
-      });
-      
-      // Create and return a new fabric.js Polygon object
-      return new fabric.Polygon(points, {
-        stroke: 'black',
-        strokeWidth: 1,
-        fill: '',
-        opacity: 0.7,
-        strokeUniform: true,
-      });
-    });
-    const eosinoil = EosinohilContours?.flat().map((coords) => {
-      // Map each nested array of coordinates to a Point object
-      const points = coords.map((coord) => {
-        return {
-          x: coord[0][0] + left,
-          y: coord[0][1] + top,
-        };
-      });
-      
-      // Create and return a new fabric.js Polygon object
-      return new fabric.Polygon(points, {
-        stroke: 'black',
-        strokeWidth: 1,
-        fill: '',
-        opacity: 0.7,
-        strokeUniform: true,
-      });
-    });
-    const connective = ConnectiveContours?.flat().map((coords) => {
-      // Map each nested array of coordinates to a Point object
-      const points = coords.map((coord) => {
-        return {
-          x: coord[0][0] + left,
-          y: coord[0][1] + top,
-        };
-      });
-      
-      // Create and return a new fabric.js Polygon object
-      return new fabric.Polygon(points, {
-        stroke: 'black',
-        strokeWidth: 1,
-        fill: '',
-        opacity: 0.7,
-        strokeUniform: true,
-      });
-    });
-    const t = new fabric.Group(
-      [...neutrophile, ...epithelial, ...lymphocyte, ...plasma, ...eosinoil, ...connective],
-      {
-        selectable: false,
-        lockMovementX: false,
-        lockMovementY: false,
-        lockRotation: false,
-        lockScalingX: false,
-        lockScalingY: false,
-        lockUniScaling: false,
-        hoverCursor: "auto",
-        evented: false,
-        stroke: "",
-        strokeWidth: 1,
-        objectCaching: false,
-      })
-    
-    // // Add the Polygon objects to the canvas and request a render
-    // console.log(roi2);
-    canvas.add(t).bringToFront().requestRenderAll();
-    
-      }
-    }
-  },[vhutSubscriptionData])
 
   return (
     <IconButton

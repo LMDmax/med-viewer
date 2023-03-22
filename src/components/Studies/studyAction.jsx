@@ -1,19 +1,17 @@
 import React from "react";
-
 import { Box, Icon, Text, HStack, VStack, Spacer } from "@chakra-ui/react";
-// import ProgressBar from "@ramonak/react-progress-bar";
+import ProgressBar from "@ramonak/react-progress-bar";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
-
 import Loading from "../Loading/loading";
 
-function StudyAction({ projects }) {
-	return (
-		<>
-			{!projects ? (
-				<Loading />
-			) : (
-				<Box backgroundColor="#ECECEC" p="0px">
-					{/* <VStack alignItems="flex-start" ml="16px">
+const StudyAction = ({ projects }) => {
+  return (
+    <>
+      {!projects ? (
+        <Loading />
+      ) : (
+        <Box backgroundColor="#ECECEC" p="0px">
+          <VStack alignItems="flex-start" ml="16px">
             <HStack fontFamily="roboto" fontSize="14px" mt="20px" mb="10px">
               <Text>Projects</Text>
               <Icon as={MdOutlineKeyboardArrowRight} />
@@ -53,11 +51,11 @@ function StudyAction({ projects }) {
                 );
               })}
             </Box>
-          </VStack> */}
-				</Box>
-			)}
-		</>
-	);
-}
+          </VStack>
+        </Box>
+      )}
+    </>
+  );
+};
 
 export default StudyAction;

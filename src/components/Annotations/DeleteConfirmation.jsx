@@ -9,7 +9,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 
-const DeleteConfirmation = ({ isOpen, onClose, handleConfirmation, type }) => {
+const DeleteConfirmation = ({ isOpen, onClose, handleConfirmation }) => {
   return (
     <Modal
       isOpen={isOpen}
@@ -22,7 +22,7 @@ const DeleteConfirmation = ({ isOpen, onClose, handleConfirmation, type }) => {
           Confirmation
         </ModalHeader>
         <ModalBody>
-          <Text>{`Are you sure you want to delete all ${type}?`}</Text>
+          <Text>Are you sure you want to delete all annotations?</Text>
         </ModalBody>
         <ModalFooter>
           <Button

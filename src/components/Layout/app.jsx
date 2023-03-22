@@ -1,22 +1,18 @@
-import React, { useState, useEffect, useRef } from "react";
-
-import { Box, Flex, useMediaQuery } from "@chakra-ui/react";
+import React, { useState, useEffect } from "react";
+import { Flex, useMediaQuery } from "@chakra-ui/react";
 import PropTypes from "prop-types";
-
 import AdjustmentBar from "../AdjustmentBar/adjustmentBar";
-import ChatFeed from "../Feed/ChatFeed";
-import SlideFeed from "../Feed/feed";
-import TILFeedBar from "../Feed/TILFeedBar";
-import ProgressBar from "../Loading/ProgressBar";
-import Navigator from "../Navigator/navigator";
-import ViewerFactory from "../Viewer/viewerFactory";
 import LayoutAppBody from "./body";
 import LayoutInnerBody from "./innerbody";
 import LayoutOuterBody from "./outerbody";
 import LayoutAppSidebar from "./sidebar";
-import FunctionsMenu from "../Menu/menu";
+import ViewerFactory from "../Viewer/viewerFactory";
+import Navigator from "../Navigator/navigator";
+import SlideFeed from "../Feed/feed";
+import ChatFeed from "../Feed/ChatFeed";
+import TILFeedBar from "../Feed/TILFeedBar";
 
-function LayoutApp({
+const LayoutApp = ({
   userInfo,
   caseInfo,
   slides,
@@ -24,7 +20,6 @@ function LayoutApp({
   questionnaire,
   report,
   application,
-  hitTil,
   annotations,
   enableAI,
   enableFilters,
@@ -46,44 +41,26 @@ function LayoutApp({
   mentionUsers,
   Environment,
   updateSynopticReport,
-  addUsersToCase,
-  accessToken,
-}) {
+}) => {
   // const { handleEvent } = useKeyboardEvents();
 
   const [sidebar, setSidebar] = useState(false);
   const [isNavigatorActive, setIsNavigatorActive] = useState(false);
   const [isMultiview, setIsMultiview] = useState(false);
-  const [newHilData, setNewHilData] = useState(false);
-  const [refreshHil, setRefreshHil] = useState(0);
-  const [hideModification, setHideModification] = useState(false);
   const [totalCells, setTotalCells] = useState(0);
-  const [tilScore, setTilScore] = useState();
-  const [tumorArea, setTumorArea] = useState();
-  const [stromaArea, setStromaArea] = useState();
-  const [lymphocyteCount, setLymphocyteCount] = useState();
-
   const [ifBiggerScreen] = useMediaQuery("(min-width:1920px)");
   const [currentViewer, setCurrentViewer] = useState(
     viewerIds?.[0]?._id || viewerIds?.[0]?.slideId
   );
-  // console.log('slideInfo',refreshHil);
+  // console.log('slideInfo',slideInfo);
   const [showAnnotationsBar, setShowAnnotationsBar] = useState(false);
   const [showFeedBar, setShowFeedBar] = useState(false);
   const [chatFeedBar, setChatFeedBar] = useState(false);
   const [tILFedBar, setTILFedBar] = useState(false);
   const [showReport, setShowReport] = useState(false);
   const [feedTab, setFeedBar] = useState(0);
-  const [pathStroma, setPathStroma] = useState(null);
   const [synopticType, setSynopticType] = useState("");
   const [chatHover, setChatHover] = useState(false);
-  const [hideTumor, setHideTumor] = useState(false);
-  const [hideStroma, setHideStroma] = useState(false);
-  const [hideLymphocyte, setHideLymphocyte] = useState(false);
-
-  // xml annotations check
-  const [isXmlAnnotations, setIsXmlAnnotations] = useState(false);
-  const [loadUI, setLoadUI] = useState(true);
 
   const showSidebar = () => {
     setSidebar(!sidebar);
@@ -115,40 +92,27 @@ function LayoutApp({
   const handleAnnotationBar = () => {
     setShowAnnotationsBar(!showAnnotationsBar);
     setShowFeedBar(true);
+
     setFeedBar(1);
   };
+
   return (
     <Flex
       h={ifBiggerScreen ? "calc(100vh - 5.5vh)" : "calc(100vh - 44px)"}
       direction="column"
     >
       <LayoutOuterBody>
-        {!loadUI === true ? <ProgressBar /> : null}
         <AdjustmentBar
           userInfo={userInfo}
-          hideStroma={hideStroma}
-          hideTumor={hideTumor}
-          hideLymphocyte={hideLymphocyte}
           caseInfo={caseInfo}
-          loadUI={loadUI}
-          setLoadUI={setLoadUI}
-          refreshHil={refreshHil}
-          pathStroma={pathStroma}
-          hitTil={hitTil}
-          setTumorArea={setTumorArea}
-          setTilScore={setTilScore}
-          setStromaArea={setStromaArea}
-          setLymphocyteCount={setLymphocyteCount}
           slide={viewerIds?.[0]}
           slides={slides}
           annotations={annotations}
-          hideModification={hideModification}
           report={report}
           enableAI={enableAI}
           enableFilters={enableFilters}
           application={application}
           tILFedBar={tILFedBar}
-          setNewHilData={setNewHilData}
           setChatHover={setChatHover}
           chatHover={chatHover}
           currentViewer={currentViewer}
@@ -182,7 +146,6 @@ function LayoutApp({
           questionnaireResponse={questionnaireResponse}
           getSynopticReport={getSynopticReport}
           updateSynopticReport={updateSynopticReport}
-          isXmlAnnotations={isXmlAnnotations}
         />
 
         {isNavigatorActive && (
@@ -228,7 +191,6 @@ function LayoutApp({
               showReport={showReport}
               feedTab={feedTab}
               synopticType={synopticType}
-              isXmlAnnotations={isXmlAnnotations}
             />
           ) : null}
           {chatFeedBar ? (
@@ -247,34 +209,15 @@ function LayoutApp({
               client2={client2}
               mentionUsers={mentionUsers}
               Environment={Environment}
-              addUsersToCase={addUsersToCase}
             />
           ) : null}
           {tILFedBar ? (
             <TILFeedBar
               viewerId={currentViewer}
-              hideTumor={hideTumor}
-              setHideTumor={setHideTumor}
-              hideLymphocyte={hideLymphocyte}
-              setHideLymphocyte={setHideLymphocyte}
-              setHideStroma={setHideStroma}
-              hideStroma={hideStroma}
               chatFeedBar={chatFeedBar}
-              setHideModification={setHideModification}
-              hideModification={hideModification}
               handleFeedBarClose={handleFeedBarClose}
               showReport={showReport}
-              setRefreshHil={setRefreshHil}
-              setLoadUI={setLoadUI}
-              refreshHil={refreshHil}
-              tumorArea={tumorArea}
-              stromaArea={stromaArea}
-              tilScore={tilScore}
-              lymphocyteCount={lymphocyteCount}
               feedTab={feedTab}
-              newHilData={newHilData}
-              setPathStroma={setPathStroma}
-              pathStroma={pathStroma}
               userInfo={userInfo}
               caseInfo={caseInfo}
               synopticType={synopticType}
@@ -297,20 +240,14 @@ function LayoutApp({
               slides={slides}
               setCurrentViewer={setCurrentViewer}
               client2={client2}
-              setLoadUI={setLoadUI}
               mentionUsers={mentionUsers}
-              addUsersToCase={addUsersToCase}
-              Environment={Environment}
-              accessToken={accessToken}
-              setIsXmlAnnotations={setIsXmlAnnotations}
             />
           </LayoutAppBody>
-          <FunctionsMenu />
         </LayoutInnerBody>
       </LayoutOuterBody>
     </Flex>
   );
-}
+};
 
 LayoutApp.propTypes = {
   finalSubmitHandler: PropTypes.func,

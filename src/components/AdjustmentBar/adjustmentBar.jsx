@@ -1,40 +1,30 @@
-import React, { memo, useEffect, useState } from "react";
-
+import React, { memo } from "react";
 import { Flex, Text, useMediaQuery } from "@chakra-ui/react";
-import axios from "axios";
 import { GiHamburgerMenu } from "react-icons/gi";
-
-import { useFabricOverlayState } from "../../state/store";
-import { getFileBucketFolder, getScaleFactor } from "../../utility";
-import ChangeSlide from "../Case/changeSlide";
 import Move from "../Move/move";
-import SlideNavigatorIcon from "../Navigator/slideNavigatorIcon";
 import ActionTools from "../Toolbar/ActionTools";
 import ScreenTools from "../Toolbar/ScreenTools";
 import "../../styles/viewer.css";
 import ToolbarButton from "../ViewerToolbar/button";
 import IconSize from "../ViewerToolbar/IconSize";
+import SlideNavigatorIcon from "../Navigator/slideNavigatorIcon";
+import ChangeSlide from "../Case/changeSlide";
+import { useFabricOverlayState } from "../../state/store";
 import TooltipLabel from "./ToolTipLabel";
+import { useEffect } from "react";
+import axios from "axios";
+import { getFileBucketFolder, getScaleFactor } from "../../utility";
+import { useState } from "react";
 
-function AdjustmentBar({
+const AdjustmentBar = ({
   userInfo,
   caseInfo,
   slides,
   slide,
-  refreshHil,
-  setTumorArea,
-  setStromaArea,
-  setTilScore,
-  setLymphocyteCount,
-  hitTil,
   report,
-  setLoadUI,
-  setNewHilData,
   application,
   viewerIds,
   enableAI,
-  hideStroma,
-  hideTumor,
   enableFilters,
   currentViewer,
   annotations,
@@ -48,10 +38,8 @@ function AdjustmentBar({
   handleAnnotationBar,
   saveReport,
   saveSynopticReport,
-  pathStroma,
   handleTILFeedBar,
   mediaUpload,
-  hideLymphocyte,
   setChatHover,
   slideInfo,
   handleFeedBar,
@@ -60,7 +48,6 @@ function AdjustmentBar({
   setShowReport,
   clinicalStudy,
   questions,
-  hideModification,
   app,
   setSlideId,
   responseHandler,
@@ -72,17 +59,40 @@ function AdjustmentBar({
   handleChatFeedBarClose,
   updateSynopticReport,
   chatHover,
-  isXmlAnnotations,
-}) {
+}) => {
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
   const { fabricOverlayState } = useFabricOverlayState();
   const { viewerWindow, isAnnotationLoading } = fabricOverlayState;
   const { tile } = viewerWindow[currentViewer];
   const [mongoId, setMongoId] = useState("");
-  
+
+  const getMongoDbId = async () => {
+    try {
+      const resp = await axios.post(
+        "https://backup-quantize-vhut.prr.ai/TILS",
+        {
+          key: `${getFileBucketFolder(viewerIds[0].originalFileUrl)}`,
+          bucket_name: "med-ai-image-processor",
+          notifyHook: `https://development-api.viewer.prr.ai/notify_til`,
+          slideId: `${slide?._id}`,
+        }
+      );
+      // console.log(resp.data.mongodb_id);
+      setMongoId(resp.data.mongodb_id);
+      // console.log(slide._id);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getMongoDbId();
+  }, [slide?._id]);
+
   const handleSidebar = () => {
     showSidebar();
   };
+  // console.log(mongoId);
   return (
     <Flex
       className="adjustmentbar"
@@ -104,13 +114,7 @@ function AdjustmentBar({
             label={<TooltipLabel heading="Case Info" />}
           />
         ) : null}
-        <Text
-          color="#151C25"
-          ml="12px"
-          fontSize="14px"
-          fontFamily="inter"
-          fontWeight={600}
-        >
+        <Text color="#151C25" ml="12px" fontSize="14px" fontFamily="inter">
           {caseInfo?.caseName || caseInfo?.name}
         </Text>
       </Flex>
@@ -127,13 +131,9 @@ function AdjustmentBar({
             slides={slides}
             viewerId={currentViewer}
             slideUrl={tile}
-            setIsMultiview={setIsMultiview}
-            setIsNavigatorActive={setIsNavigatorActive}
-            isAnnotationLoading={isAnnotationLoading}
-            isNavigatorActive={isNavigatorActive}
           />
         )}
-        {/* <ToolbarButton
+        <ToolbarButton
           icon={<SlideNavigatorIcon isNavigatorActive={isNavigatorActive} />}
           label={
             <TooltipLabel
@@ -150,39 +150,25 @@ function AdjustmentBar({
             setIsMultiview(false);
             setIsNavigatorActive((state) => !state);
           }}
-        /> */}
+        />
       </Flex>
       <Move
         application={application}
         userInfo={userInfo}
         sidebar={sidebar}
-        hideTumor={hideTumor}
-        hideStroma={hideStroma}
-        hideLymphocyte={hideLymphocyte}
         slide={slide}
         mongoId={mongoId}
-        refreshHil={refreshHil}
-        hideModification={hideModification}
         handleTILFeedBar={handleTILFeedBar}
         annotations={annotations}
         enableAI={enableAI}
-        setLoadUI={setLoadUI}
         enableFilters={enableFilters}
-        pathStroma={pathStroma}
-        setTumorArea={setTumorArea}
-        setStromaArea={setStromaArea}
-        setTilScore={setTilScore}
-        setLymphocyteCount={setLymphocyteCount}
         viewerId={currentViewer}
-        hitTil={hitTil}
-        setNewHilData={setNewHilData}
         viewerIds={viewerIds}
         isMultiview={isMultiview}
         setIsMultiview={setIsMultiview}
         isNavigatorActive={isNavigatorActive}
         setIsNavigatorActive={setIsNavigatorActive}
         setTotalCells={setTotalCells}
-        isXmlAnnotations={isXmlAnnotations}
       />
       <ActionTools viewerId={currentViewer} />
       <ScreenTools
@@ -219,6 +205,6 @@ function AdjustmentBar({
       />
     </Flex>
   );
-}
+};
 
 export default memo(AdjustmentBar);

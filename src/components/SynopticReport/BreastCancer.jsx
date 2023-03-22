@@ -125,7 +125,6 @@ const BreastCancer = ({
     {
       title: "SPECIMEN WEIGHT",
       inputName: "specimenWeight",
-      type: "number",
     },
     {
       title: "ELLIPSE OF SKIN",
@@ -388,8 +387,6 @@ const BreastCancer = ({
                 : inputData.macroscopicDistance
             }
             name="macroscopicDistance"
-            type="number"
-            onWheel={(e) => e.target.blur()}
             onChange={handleInput}
           />{" "}
           MARGIN
@@ -429,8 +426,6 @@ const BreastCancer = ({
                 synopticReportData?.invasiveTumourSize ||
                 inputData.invasiveTumourSize
               }
-              type="number"
-              onWheel={(e) => e.target.blur()}
               onChange={handleInput}
             />
             MM
@@ -444,8 +439,6 @@ const BreastCancer = ({
               defaultValue={
                 synopticReportData?.wholeTumourSize || inputData.wholeTumourSize
               }
-              type="number"
-              onWheel={(e) => e.target.blur()}
               onChange={handleInput}
             />{" "}
             MM
@@ -485,8 +478,6 @@ const BreastCancer = ({
             defaultValue={
               synopticReportData?.pureDcisSize || inputData.pureDcisSize
             }
-            type="number"
-            onWheel={(e) => e.target.blur()}
           />{" "}
           MM IN MAXIMUM EXTENT
         </Text>

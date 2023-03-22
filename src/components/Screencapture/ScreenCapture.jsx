@@ -136,7 +136,7 @@ export default class ScreenCapture extends Component {
   handleMouseDown = (e) => {
     const startX = e.clientX;
     const startY = e.clientY;
-    // console.log(e)
+    console.log(e)
 
     this.setState((prevState) => ({
       startX,

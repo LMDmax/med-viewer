@@ -119,7 +119,6 @@ const ProstateCancer = ({
     {
       title: "LENGHTS(S)",
       inputName: "leftBaseLength",
-      type: "number",
     },
     {
       title: "HISTOLOGICAL TUMOUR TYPE",
@@ -137,7 +136,6 @@ const ProstateCancer = ({
     {
       title: "LENGHTS(S)",
       inputName: "leftMidLength",
-      type: "number",
     },
     {
       title: "HISTOLOGICAL TUMOUR TYPE",
@@ -146,12 +144,10 @@ const ProstateCancer = ({
     {
       title: "GLEASON SCORE",
       inputName: "leftMidGleasonScore",
-      type: "number",
     },
     {
       title: "ISUP GRADE",
       inputName: "isUpGrade",
-      type: "number",
     },
     {
       title: "GLEASON PATTERN",
@@ -195,7 +191,6 @@ const ProstateCancer = ({
     {
       title: "LENGHTS(S)",
       inputName: "leftApexLength",
-      type: "number",
     },
     {
       title: "PERINEURAL INVASION",
@@ -235,7 +230,6 @@ const ProstateCancer = ({
     {
       title: "LENGHTS(S)",
       inputName: "rightBaseLength",
-      type: "number",
     },
     {
       title: "NUMBER OF CORES",
@@ -245,7 +239,6 @@ const ProstateCancer = ({
     {
       title: "LENGHTS(S)",
       inputName: "rightMidLength",
-      type: "number",
     },
     {
       title: "NUMBER OF CORES",
@@ -255,7 +248,6 @@ const ProstateCancer = ({
     {
       title: "LENGHTS(S)",
       inputName: "rightApexLength",
-      type: "number",
     },
   ];
 
@@ -486,8 +478,6 @@ const ProstateCancer = ({
               defaultValue={synopticReportData?.rightBaseLength}
               name="rightBaseLength"
               onChange={handleInput}
-              type="number"
-              onWheel={(e) => e.target.blur()}
             />
           </VStack>
         </HStack>
@@ -527,8 +517,6 @@ const ProstateCancer = ({
               defaultValue={synopticReportData?.rightMidLength}
               name="rightMidLength"
               onChange={handleInput}
-              type="number"
-              onWheel={(e) => e.target.blur()}
             />
           </VStack>
         </HStack>
@@ -568,8 +556,6 @@ const ProstateCancer = ({
               defaultValue={synopticReportData?.rightApexLength}
               name="rightApexLength"
               onChange={handleInput}
-              type="number"
-              onWheel={(e) => e.target.blur()}
             />
           </VStack>
         </HStack>

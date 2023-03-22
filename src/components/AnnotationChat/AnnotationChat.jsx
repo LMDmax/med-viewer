@@ -32,9 +32,8 @@ const AnnotationChat = ({
   client,
   chatId,
   mentionUsers,
-  addUsersToCase,
-  annotationObject,
 }) => {
+  console.log(chatId, client, userInfo);
   const [groupMessages, setGroupMessages] = useState([]);
   const [messageInput, setMessageInput] = useState({
     mentionedText: "",
@@ -42,19 +41,14 @@ const AnnotationChat = ({
     mentionedUsers: [],
   });
   const messageRef = useRef(null);
+
   const [sendNewMessage, { error: newMessageError }] = useMutation(
     SEND_MESSAGE,
     { client }
   );
 
   const sendMessage = async (e) => {
-    onClose();
     e.preventDefault();
-    const ids = messageInput?.mentionedUsers?.map((item) => item.toId);
-    const newIds = [...new Set(ids)];
-    const userIds = mentionUsers
-      ?.filter((user) => newIds.includes(user?.id))
-      .map((user) => user.userId);
     const newMessage = messageInput.text.trim();
     if (!newMessage) return;
     setGroupMessages([
@@ -63,11 +57,15 @@ const AnnotationChat = ({
         from: userInfo?._id,
         createdAt: moment(),
         payload: { body: newMessage },
-        mentionedUsers: messageInput.mentionedUsers,
-        fromName: `${userInfo.firstName} ${userInfo.lastName}`,
       },
     ]);
 
+    e.target.reset();
+    setMessageInput({
+      mentionedText: "",
+      text: "",
+      mentionedUsers: [],
+    });
     const { data } = await sendNewMessage({
       variables: {
         body: {
@@ -81,36 +79,18 @@ const AnnotationChat = ({
           to: chatId,
           toName: "",
           fromImage: "",
-          fromName: `${userInfo.firstName} ${userInfo.lastName}`,
+          fromName: `${userInfo.firstName}`,
           mentionedUsers: messageInput.mentionedUsers,
-          annotation: {
-            left: annotationObject?.left,
-            width: annotationObject?.width,
-            top: annotationObject?.top,
-            height: annotationObject?.height,
-            zoomLevel: annotationObject?.zoomLevel,
-          },
         },
       },
     });
-    if (messageInput?.mentionedUsers?.length > 0) {
-      addUsersToCase({
-        caseId: chatId,
-        userIds,
-      });
-    }
-    e.target.reset();
-    setMessageInput({
-      mentionedText: "",
-      text: "",
-      mentionedUsers: [],
-    });
+    onClose();
   };
   const handleInputChange = (e, mentionedText, text, mentions) => {
     const mentionedUsers = mentions.map((mention) => ({
       toId: mention.id,
       toName: mention.display,
-      message: messageInput?.text,
+      message: mentionedText,
     }));
     setMessageInput({
       mentionedText,

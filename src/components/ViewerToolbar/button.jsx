@@ -6,7 +6,6 @@ import {
   Box,
   Text,
   useMediaQuery,
-  Flex,
 } from "@chakra-ui/react";
 import { useWindowHeight } from "@react-hook/window-size";
 import { isMobile, isTablet } from "react-device-detect";
@@ -36,7 +35,7 @@ const ToolbarButton = ({
   }
 
   return (
-    <Flex w="35px" display="flex" flexDirection="column" alignItems="center">
+    <Box>
       <Tooltip
         label={label}
         aria-label={label}
@@ -75,7 +74,7 @@ const ToolbarButton = ({
       {/* <Text color="white" align="center" fontSize="0.6rem">
         {label}
       </Text> */}
-    </Flex>
+    </Box>
   );
 };
 
