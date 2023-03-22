@@ -24,6 +24,7 @@ function SlideFeed({
 	feedTab,
 	synopticType,
 	isXmlAnnotations,
+	annotationObject,
 }) {
 	const { fabricOverlayState } = useFabricOverlayState();
 	const { viewerWindow } = fabricOverlayState;
@@ -97,6 +98,7 @@ function SlideFeed({
 							viewerId={viewerId}
 							showFeedBar={showFeedBar}
 							isXmlAnnotations={isXmlAnnotations}
+							activeObject={annotationObject}
 						/>
 					</TabPanel>
 					<TabPanel p="0">

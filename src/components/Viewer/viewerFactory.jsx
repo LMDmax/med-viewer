@@ -21,6 +21,7 @@ function ViewerFactory({
 	Environment,
 	accessToken,
 	setIsXmlAnnotations,
+	handleAnnotationClick,
 }) {
 	const { fabricOverlayState } = useFabricOverlayState();
 	const { viewerWindow, sync } = fabricOverlayState;
@@ -93,6 +94,7 @@ function ViewerFactory({
 						Environment={Environment}
 						accessToken={accessToken}
 						setIsXmlAnnotations={setIsXmlAnnotations}
+						handleAnnotationClick={handleAnnotationClick}
 					/>
 				</Flex>
 			))}
