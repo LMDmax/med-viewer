@@ -270,7 +270,7 @@ export const createAnnotation = (annotation) => {
           annotation.Points[1][1],
         ],
         {
-          stroke: annotation?.color ? annotation?.color : "#55eb34",
+          stroke: annotation?.color ? annotation?.color : "#00ff00",
           strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         }
       );
@@ -281,9 +281,9 @@ export const createAnnotation = (annotation) => {
           { x: -100, y: 50 },
         ],
         {
-          stroke: annotation?.color ? annotation?.color : "#55eb34",
+          stroke: annotation?.color ? annotation?.color : "#00ff00",
           strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
-          fill: annotation?.color ? annotation?.color : "#55eb34",
+          fill: annotation?.color ? annotation?.color : "#00ff00",
           top: annotation.Points[0][1],
           left: annotation.Points[0][0],
           originX: "center",
@@ -320,7 +320,7 @@ export const createAnnotation = (annotation) => {
           annotation.Points[0][1] - 150,
         ],
         {
-          stroke: annotation?.color ? annotation?.color : "#55eb34",
+          stroke: annotation?.color ? annotation?.color : "#00ff00",
           strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         }
       );
@@ -332,7 +332,7 @@ export const createAnnotation = (annotation) => {
           annotation.Points[0][1] + 150,
         ],
         {
-          stroke: annotation?.color ? annotation?.color : "#55eb34",
+          stroke: annotation?.color ? annotation?.color : "#00ff00",
           strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         }
       );
@@ -344,7 +344,7 @@ export const createAnnotation = (annotation) => {
           annotation.Points[0][1] - 10,
         ],
         {
-          stroke: annotation?.color ? annotation?.color : "#55eb34",
+          stroke: annotation?.color ? annotation?.color : "#00ff00",
           strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         }
       );
@@ -356,15 +356,16 @@ export const createAnnotation = (annotation) => {
           annotation.Points[0][1] - 10,
         ],
         {
-          stroke: annotation?.color ? annotation?.color : "#55eb34",
+          stroke: annotation?.color ? annotation?.color : "#00ff00",
           strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         }
       );
       const Id = new fabric.Textbox(`${annotation.localId}`, {
         left: annotation.Points[0][0] - 150,
         top: annotation.Points[0][1] - 200,
-        color: annotation?.color ? annotation?.color : "#55eb34",
+        color: annotation?.color ? annotation?.color : "#00ff00",
         backgroundColor: "rgba(0,0,0,0.6)",
+        fill: annotation?.color ? annotation?.color : "#00ff00",
       });
       var objs = annotation.localId
         ? [line1, line2, line3, line4, Id]
@@ -423,44 +424,24 @@ export const addAnnotationsToCanvas = ({
     const shape = createAnnotation(annotation);
     canvas.on("mouse:over", function (e) {
       const zoomLevel = viewer.viewport.getZoom();
-      const textboxWidth =
-        zoomLevel <= 1.5
-          ? 3400
-          : zoomLevel <= 2.5
-          ? 2800
-          : zoomLevel <= 5
-          ? 600
-          : zoomLevel <= 10
-          ? 500
-          : 350;
-      const fontSize =
-        zoomLevel <= 1.5
-          ? 560
-          : zoomLevel <= 2.5
-          ? 480
-          : zoomLevel <= 5
-          ? 150
-          : zoomLevel <= 10
-          ? 100
-          : 70;
+      const fontSize = zoomLevel <= 1 ? 500 : 500 / zoomLevel;
       const textHeight = e?.target?.height / 2; //height of target
-      const text = new fabric.Text(`${e?.target?.text}`, {
+      const title = new fabric.Text(`${e?.target?.title}`, {
         left: e?.target?.left + e?.target?.width + 20, // positining text
         top: e?.target?.top + textHeight,
         backgroundColor: "rgba(0,0,0,0.6)",
-        fill: e?.taget?.color ? e?.taget?.color : "#55eb34",
+        fill: e?.taget?.color ? e?.taget?.color : "#00ff00",
         selectable: false,
         textAlign: "center",
         fontWeight: 600,
         fontFamily: "inter",
       });
-      if (e?.target === shape && e?.target?.text) {
-        if (shape && shape.type !== "viewport") canvas.add(text);
-        text.width = textboxWidth;
-        text.fontSize = fontSize;
+      if (e?.target === shape && e?.target?.title) {
+        if (shape && shape.type !== "viewport") canvas.add(title);
+        title.fontSize = fontSize;
       }
       canvas.on("mouse:out", function (e) {
-        canvas.remove(text).requestRenderAll();
+        canvas.remove(title).requestRenderAll();
       });
     });
 
