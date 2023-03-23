@@ -313,6 +313,9 @@ function LayoutApp({
             setIsNavigatorActive={setIsNavigatorActive}
             isNavigatorActive={isNavigatorActive}
             isMultiview={isMultiview}
+            slide={viewerIds?.[0]}
+            userInfo={userInfo}
+            isXmlAnnotations={isXmlAnnotations}
           />
         </LayoutInnerBody>
       </LayoutOuterBody>

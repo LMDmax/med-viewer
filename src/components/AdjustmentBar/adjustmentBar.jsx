@@ -79,7 +79,7 @@ function AdjustmentBar({
   const { viewerWindow, isAnnotationLoading } = fabricOverlayState;
   const { tile } = viewerWindow[currentViewer];
   const [mongoId, setMongoId] = useState("");
-  
+
   const handleSidebar = () => {
     showSidebar();
   };
@@ -95,7 +95,7 @@ function AdjustmentBar({
       zIndex={2}
     >
       <Flex alignItems="center" ml="18px" mr="20px" minW="150px">
-        {application === "hospital" ? (
+        {/* {application === "hospital" ? (
           <ToolbarButton
             onClick={handleSidebar}
             backgroundColor={sidebar ? "#E4E5E8" : ""}
@@ -103,7 +103,7 @@ function AdjustmentBar({
             icon={<GiHamburgerMenu size={IconSize()} color="#151C25" />}
             label={<TooltipLabel heading="Case Info" />}
           />
-        ) : null}
+        ) : null} */}
         <Text
           color="#151C25"
           ml="12px"

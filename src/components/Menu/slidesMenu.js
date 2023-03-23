@@ -4,7 +4,6 @@ import Scrollbars from "react-custom-scrollbars";
 import { useFabricOverlayState } from "../../state/store";
 import { getSlideUrl } from "../../utility/utility";
 import {
-  addViewerWindow,
   changeTile,
   updateTool,
 } from "../../state/actions/fabricOverlayActions";

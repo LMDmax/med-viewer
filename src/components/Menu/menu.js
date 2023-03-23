@@ -26,19 +26,22 @@ import {
 } from "../Icons/CustomIcons";
 import SlidesMenu from "./slidesMenu";
 import { useFabricOverlayState } from "../../state/store";
+import Studies from "../Sidebar/studies";
+import ActivityFeed from "../Feed/activityFeed";
+import CommentFeed from "../Feed/CommentFeed";
 
 const FunctionsMenu = ({
   caseInfo,
   slides,
   viewerId,
-  setIsMultiview,
   setIsNavigatorActive,
-  isNavigatorActive,
-  isMultiview,
+  slide,
+  userInfo,
+  isXmlAnnotations,
 }) => {
-  const { getButtonProps, isOpen } = useDisclosure();
+  const [isOpen, setIsOpen] = useState(false);
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
-  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedOption, setSelectedOption] = useState("slides");
   const { fabricOverlayState } = useFabricOverlayState();
   const { viewerWindow } = fabricOverlayState;
   const { tile } = viewerWindow[viewerId];
@@ -52,9 +55,8 @@ const FunctionsMenu = ({
       h={ifWidthLessthan1920 ? "calc(100vh - 92px)" : "calc(100vh - 10.033vh)"}
     >
       <motion.div
-        // 383px
         animate={{
-          width: isOpen ? (ifWidthLessthan1920 ? "310px" : "35vh") : "70px",
+          width: isOpen ? (ifWidthLessthan1920 ? "350px" : "35vh") : "70px",
         }}
         style={{
           background: "rgba(217, 217, 217, 0.5)",
@@ -69,7 +71,7 @@ const FunctionsMenu = ({
         <Flex>
           <Flex direction="column">
             <Button
-              {...getButtonProps()}
+              onClick={() => setIsOpen(!isOpen)}
               w="70px"
               borderRadius={0}
               background="rgba(246, 246, 246,0.5)"
@@ -85,7 +87,10 @@ const FunctionsMenu = ({
                 borderRadius={0}
                 background="#F6F6F6"
                 box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-                onClick={() => setSelectedOption("slides")}
+                onClick={() => {
+                  setSelectedOption("slides");
+                  setIsOpen(true);
+                }}
               >
                 <VStack>
                   {selectedOption === "slides" ? (
@@ -254,7 +259,7 @@ const FunctionsMenu = ({
             </Tooltip>
           </Flex>
           <Flex
-            w={ifWidthLessthan1920 ? "310px" : "35vh"}
+            w={ifWidthLessthan1920 ? "410px" : "35vh"}
             h={
               ifWidthLessthan1920
                 ? "calc(100vh - 92px)"
@@ -269,6 +274,18 @@ const FunctionsMenu = ({
                 tile={tile}
                 setIsNavigatorActive={setIsNavigatorActive}
               />
+            ) : selectedOption === "information" ? (
+              <Flex w="100%" bg="#FCFCFC">
+                <Studies caseInfo={caseInfo} slideInfo={slide} />
+              </Flex>
+            ) : selectedOption === "annotations" ? (
+              <ActivityFeed
+                userInfo={userInfo}
+                isXmlAnnotations={isXmlAnnotations}
+                viewerId={viewerId}
+              />
+            ) : selectedOption === "comments" ? (
+              <CommentFeed viewerId={viewerId} />
             ) : null}
           </Flex>
         </Flex>
