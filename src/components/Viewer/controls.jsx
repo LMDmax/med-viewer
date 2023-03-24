@@ -52,6 +52,7 @@ import ToolbarButton from "../ViewerToolbar/button";
 import IconSize from "../ViewerToolbar/IconSize";
 import ZoomButton from "../ZoomButton/ZoomButton";
 import ZoomSlider from "../ZoomSlider/slider";
+import Draggable from "react-draggable";
 
 function ViewerControls({
   viewerId,
@@ -60,6 +61,8 @@ function ViewerControls({
   slide,
   application,
   setLoadUI,
+  zoomValue,
+  setZoomValue,
   client2,
   mentionUsers,
   caseInfo,
@@ -242,6 +245,7 @@ function ViewerControls({
         variables: { body: { ...body } },
       });
       setLoadUI(false);
+      localStorage.setItem("ModelName", "Morphometry")
       // toast({
       //   title: resp.data.message,
       //   status: "success",
@@ -404,6 +408,7 @@ function ViewerControls({
             annotation.set({ isAnalysed: true, analysedROI });
           }
           setLoadUI(true);
+          localStorage.removeItem("ModelName");
         }
         // console.log(vhutSubscriptionData.analysisStatus);
         toast({
@@ -540,7 +545,7 @@ function ViewerControls({
           }
 
           canvas.requestRenderAll();
-          console.log(annotatedData);
+          // console.log(annotatedData);
           if (annotatedData?.length > 0) {
             toast({
               title: "Annotation loaded",
@@ -585,13 +590,14 @@ function ViewerControls({
       pixelsPerMeter: getPPMfromMPP(slide?.metadata?.mpp),
       minWidth: "75px",
       maxWidth: "75px",
-      location: 4,
+      location: 0,
       xOffset: 5,
       yOffset: 10,
       color: "white",
       fontColor: "white",
       backgroundColor: "black",
       fontSize: "14px",
+      display:"none",
       barThickness: 2,
       stayInsideImage: false,
     });
@@ -756,14 +762,14 @@ function ViewerControls({
         notifyHook: `${Environment.VIEWER_URL}/notify_KI67`,
         annotationId: "",
       };
-      console.log("body", originalBody);
+      // console.log("body", originalBody);
       try {
         // const resp = await onVhutAnalysis(body);
         const resp = await axios.post(
           "https://backup-quantize-vhut.prr.ai/ki_six_seven_predict",
           originalBody
         );
-        console.log("resp", resp);
+        // console.log("resp", resp);
         //   setLoadUI(false);
         // toast({
         //   title: resp.data.message,
@@ -832,7 +838,7 @@ function ViewerControls({
             proliferation_score: data?.kiResults?.proliferation_score,
           },
         });
-        console.log(feedMessage);
+        // console.log(feedMessage);
         if (feedMessage?.object) {
           // remove enclosing annotation and add new one to canvas
           // console.log(feedMessage);
@@ -853,70 +859,84 @@ function ViewerControls({
         <Loading position="absolute" w="100%" zIndex="3" h="79vh" />
       ) : null}
       <Box position="absolute" left="2vw" top="5vh">
-        <Flex
-          direction="column"
-          gap="1.3vh"
-          alignItems="end"
-          mt="8px"
-          mr="23px"
-        >
-          <VStack
-            // w="fit-content"
-            backgroundColor="#F8F8F5"
-            border="1px solid #00153F"
-            // borderRadius="5px"
-            py={2}
-            px={1.5}
-            zIndex="1"
+        <Flex direction="column" alignItems="end" mr="23px" cursor="move">
+          <Draggable
+            bounds={{
+              top: 0,
+              left: 0,
+              right: 90 * (window.screen.width / 100),
+              bottom: 60 * (window.screen.height / 100),
+            }}
           >
-            <FullScreen viewerId={viewerId} />
-          </VStack>
-          <VStack
-            // w="fit-content"
-            backgroundColor="#F8F8F5"
-            border="1px solid #00153F"
-            // borderRadius="5px"
-            py={2}
-            px={1.5}
-            zIndex="1"
-          >
-            <ToolbarButton
-              icon={<AiOutlinePlus color="#00153F" size={iconSize} />}
-              // border="1px solid #3965C6"
-              backgroundColor="#E4E5E8"
-              onClick={handleZoomIn}
-              label="Zoom In"
-              mr="0px"
-              _hover={{ bgColor: "#ECECEC" }}
-              _active={{
-                outline: "none",
-              }}
-            />
-            <ZoomSlider viewerId={viewerId} />
-            <ToolbarButton
-              icon={<AiOutlineMinus color="#00153F" size={iconSize} />}
-              // border="1px solid #3965C6"
-              backgroundColor="#E4E5E8"
-              onClick={handleZoomOut}
-              label="Zoom Out"
-              mr="0px"
-              _hover={{ bgColor: "#ECECEC" }}
-              _active={{
-                outline: "none",
-              }}
-            />
-          </VStack>
-          <VStack
-            // w="fit-content"
-            backgroundColor="#F8F8F5"
-            border="1px solid #00153F"
-            // borderRadius="5px"
-            py={2}
-            px={1.5}
-            zIndex="1"
-          >
-            <ZoomButton viewerId={viewerId} />
-          </VStack>
+            <Flex
+              direction="column"
+              boxShadow="1px 1px 2px rgba(176, 200, 214, 0.5)"
+              zIndex="1"
+            >
+              <VStack bgColor="rgba(236, 236, 238, 1)" h="10px" />
+              <VStack
+                // w="fit-content"
+                backgroundColor="#F8F8F5"
+                border="1px solid #00153F"
+                // borderRadius="5px"
+                py={2}
+                px={1.5}
+                zIndex="1"
+              >
+                <FullScreen viewerId={viewerId} />
+              </VStack>
+              <VStack
+                // w="fit-content"
+                backgroundColor="#F8F8F5"
+                border="1px solid #00153F"
+                // borderRadius="5px"
+                py={2}
+                px={1.5}
+                zIndex="1"
+              >
+                <ToolbarButton
+                  icon={<AiOutlinePlus color="#00153F" size={iconSize} />}
+                  // border="1px solid #3965C6"
+                  backgroundColor="#E4E5E8"
+                  onClick={handleZoomIn}
+                  label="Zoom In"
+                  mr="0px"
+                  _hover={{ bgColor: "#ECECEC" }}
+                  _active={{
+                    outline: "none",
+                  }}
+                />
+                <ZoomSlider
+                  setZoomValue={setZoomValue}
+                  zoomValue={zoomValue}
+                  viewerId={viewerId}
+                />
+                <ToolbarButton
+                  icon={<AiOutlineMinus color="#00153F" size={iconSize} />}
+                  // border="1px solid #3965C6"
+                  backgroundColor="#E4E5E8"
+                  onClick={handleZoomOut}
+                  label="Zoom Out"
+                  mr="0px"
+                  _hover={{ bgColor: "#ECECEC" }}
+                  _active={{
+                    outline: "none",
+                  }}
+                />
+              </VStack>
+              <VStack
+                // w="fit-content"
+                backgroundColor="#F8F8F5"
+                border="1px solid #00153F"
+                // borderRadius="5px"
+                py={2}
+                px={1.5}
+                zIndex="1"
+              >
+                <ZoomButton viewerId={viewerId} />
+              </VStack>
+            </Flex>
+          </Draggable>
           <CustomMenu
             isMenuOpen={isOpen}
             closeMenu={closeMenu}

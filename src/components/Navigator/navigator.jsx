@@ -39,6 +39,7 @@ const Navigator = ({
   slides,
   isActive,
   isMultiview,
+  setToolSelected,
   clickHandler,
   viewerId,
   setIsMultiview,
@@ -90,6 +91,7 @@ const Navigator = ({
           ])
         );
       }
+      setToolSelected("MultiviewSlideChoosed")
       setIsMultiview(false);
     } else {
       setFabricOverlayState(
@@ -106,6 +108,7 @@ const Navigator = ({
       // clear canvas (remove all annotations)
       fabricOverlay.fabricCanvas().clear();
       setIsNavigatorActive(false);
+
     }
     setFabricOverlayState(updateTool({ tool: "Move" }));
   };

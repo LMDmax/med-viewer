@@ -46,6 +46,7 @@ const ToolbarButton = ({
         color="rgba(89, 89, 89, 1)"
         fontSize="14px"
         fontFamily="inter"
+        zIndex={202}
         hasArrow
         borderRadius="0px"
         size="20px"

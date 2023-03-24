@@ -51,6 +51,8 @@ function Viewer({
   tile,
   userInfo,
   enableAI,
+  zoomValue,
+  setZoomValue,
   slide,
   application,
   setLoadUI,
@@ -136,6 +138,8 @@ function Viewer({
           slide={slide}
           setLoadUI={setLoadUI}
           client2={client2}
+          setZoomValue={setZoomValue}
+          zoomValue={zoomValue}
           mentionUsers={mentionUsers}
           caseInfo={caseInfo}
           addUsersToCase={addUsersToCase}

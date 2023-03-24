@@ -26,6 +26,7 @@ const Til = ({
   viewerId,
   viewerIds,
   setNewHilData,
+  setToolSelected,
   setStromaArea,
   setTumorArea,
   setTilScore,
@@ -97,17 +98,17 @@ const Til = ({
   // ------------- To show the notification Toast when TIL is plotted
   // ------------------
 
-  useEffect(() => {
-    if (Tilloading === false) {
-      toast({
-        title: "TIL can be run now",
-        description: "",
-        status: "success",
-        duration: 1500,
-        isClosable: true,
-      });
-    }
-  }, [Tilloading]);
+  // useEffect(() => {
+  //   if (Tilloading === false) {
+  //     // toast({
+  //     //   title: "TIL can be run now",
+  //     //   description: "",
+  //     //   status: "success",
+  //     //   duration: 1500,
+  //     //   isClosable: true,
+  //     // });
+  //   }
+  // }, [Tilloading]);
 
   // ------------------------------
   // ------------- updating state if data found,if hideModification button clicked,if hook data recived
@@ -177,13 +178,13 @@ const Til = ({
     if (tilSubscriptionData?.tilStatus?.message === "Hil is completed") {
       const canvas = fabricOverlay?.fabricCanvas();
       canvas.isDrawingMode = false;
-      toast({
-        title: "HIL is processed",
-        description: "",
-        status: "success",
-        duration: 1500,
-        isClosable: true,
-      });
+      // toast({
+      //   title: "HIL is processed",
+      //   description: "",
+      //   status: "success",
+      //   duration: 1500,
+      //   isClosable: true,
+      // });
       client.resetStore();
       refetch();
       setNewHilData(false);
@@ -194,6 +195,7 @@ const Til = ({
           // canvas.isDrawingMode = true;
           setTimeout(() => {
             setLoadUI(true);
+      localStorage.removeItem("ModelName");
           }, 7000);
           setNewHilData(true);
         }, 2000);
@@ -214,6 +216,7 @@ const Til = ({
       setLymphocyteCount(data?.getTils?.data?.lymphocyte_count);
       const canvas = fabricOverlay?.fabricCanvas();
       setLoadUI(false);
+      localStorage.setItem("ModelName", "TIL")
       canvas?.remove(cords)?.requestRenderAll();
       canvas?.remove(originalTil)?.requestRenderAll();
       allPathStroma?.forEach((obj) => {
@@ -287,6 +290,8 @@ const Til = ({
           console.log("Task completed by requestAnimationFrame");
           setTimeout(() => {
             setLoadUI(true);
+      localStorage.removeItem("ModelName")
+
           }, 4000);
         });
       }, 1000);
@@ -345,6 +350,7 @@ const Til = ({
       setLymphocyteCount(data1?.getTils?.data?.lymphocyte_count);
       const canvas = fabricOverlay.fabricCanvas();
       setLoadUI(false);
+      localStorage.setItem("ModelName", "TIL")
       const color = "#2Aff00";
       const roi = data1?.getTils?.data?.lymphocyte_cords
         ?.flat(2)
@@ -415,6 +421,8 @@ const Til = ({
           console.log("Task completed by requestAnimationFrame");
           setTimeout(() => {
             setLoadUI(true);
+      localStorage.removeItem("ModelName");
+
           }, 4000);
         });
       }, 1000);
@@ -429,6 +437,7 @@ const Til = ({
         tilCords?.length > 0
       ) {
         setLoadUI(false);
+      localStorage.setItem("ModelName", "TIL")
         localStorage.setItem("til", "til");
         const canvas = fabricOverlay.fabricCanvas();
         const color = "#2Aff00";
@@ -493,19 +502,21 @@ const Til = ({
           canvas.add(t);
         }, 1000);
         if (TilHover === false) {
-          toast({
-            title: "TIL Process Done",
-            description: "",
-            status: "success",
-            duration: 1500,
-            isClosable: true,
-          });
+        //  toast ({
+        //     title: "TIL Process Done",
+        //     description: "",
+        //     status: "success",
+        //     duration: 1500,
+        //     isClosable: true,
+        //   });
         }
         setTimeout(() => {
           requestAnimationFrame(() => {
             console.log("Task completed by requestAnimationFrame");
             setTimeout(() => {
               setLoadUI(true);
+      localStorage.removeItem("ModelName");
+
             }, 4000);
           });
         }, 1000);
@@ -516,6 +527,8 @@ const Til = ({
       ) {
         // console.log("til is setting in canvas");
         setLoadUI(false);
+        localStorage.setItem("ModelName", "TIL")
+
         localStorage.setItem("til", "til");
         const canvas = fabricOverlay.fabricCanvas();
         const color = "#2Aff00";
@@ -592,6 +605,8 @@ const Til = ({
             console.log("Task completed by requestAnimationFrame");
             setTimeout(() => {
               setLoadUI(true);
+              localStorage.removeItem("ModelName");
+
             }, 4000);
           });
         }, 1000);
@@ -617,6 +632,8 @@ const Til = ({
         canvas?.remove(obj);
       });
       localStorage.removeItem("til", "til");
+      localStorage.removeItem("ModelName");
+      setToolSelected("");
     }
   }, [TilHover, pathStroma]);
 
@@ -632,6 +649,8 @@ const Til = ({
         tilCords?.length > 0
       ) {
         setLoadUI(false);
+        localStorage.setItem("ModelName", "TIL")
+
         localStorage.setItem("til", "til");
         const canvas = fabricOverlay.fabricCanvas();
         const color = "#2Aff00";
@@ -699,19 +718,21 @@ const Til = ({
           canvas.add(t);
         }, 1000);
         if (TilHover === false) {
-          toast({
-            title: "TIL Process Done",
-            description: "",
-            status: "success",
-            duration: 1500,
-            isClosable: true,
-          });
+          // toast({
+          //   title: "TIL Process Done",
+          //   description: "",
+          //   status: "success",
+          //   duration: 1500,
+          //   isClosable: true,
+          // });
         }
         setTimeout(() => {
           requestAnimationFrame(() => {
             console.log("Task completed by requestAnimationFrame");
             setTimeout(() => {
               setLoadUI(true);
+              localStorage.removeItem("ModelName");
+
             }, 4000);
           });
         }, 1000);
@@ -723,6 +744,8 @@ const Til = ({
         // console.log("til is setting in canvas");
         localStorage.setItem("til", "til");
         setLoadUI(false);
+        localStorage.setItem("ModelName", "TIL")
+
         const canvas = fabricOverlay.fabricCanvas();
         const color = "#2Aff00";
         const roi = tilSubscriptionData?.tilStatus?.data?.lymphocyte_cords
@@ -795,9 +818,11 @@ const Til = ({
         }, 1000);
         setTimeout(() => {
           requestAnimationFrame(() => {
-            console.log("Task completed by requestAnimationFrame");
+            // console.log("Task completed by requestAnimationFrame");
             setTimeout(() => {
               setLoadUI(true);
+              localStorage.removeItem("ModelName");
+
             }, 4000);
           });
         }, 1000);
@@ -820,6 +845,8 @@ const Til = ({
         // console.log("s");
         const canvas = fabricOverlay.fabricCanvas();
         setLoadUI(false);
+        localStorage.setItem("ModelName", "TIL")
+
         const color = "#2Aff00";
         const roi = tilCords.flat(2).map((TIL_cord) => {
           return new fabric.Rect({
@@ -875,6 +902,8 @@ const Til = ({
             console.log("Task completed by requestAnimationFrame");
             setTimeout(() => {
               setLoadUI(true);
+              localStorage.removeItem("ModelName");
+
             }, 4000);
           });
         }, 1000);
@@ -888,6 +917,8 @@ const Til = ({
         // console.log("s");
         const canvas = fabricOverlay.fabricCanvas();
         setLoadUI(false);
+        localStorage.setItem("ModelName", "TIL")
+
         const color = "#2Aff00";
         const roi = tilCords.flat(2).map((TIL_cord) => {
           return new fabric.Rect({
@@ -944,6 +975,8 @@ const Til = ({
             console.log("Task completed by requestAnimationFrame");
             setTimeout(() => {
               setLoadUI(true);
+              localStorage.removeItem("ModelName");
+
             }, 4000);
           });
         }, 1000);
@@ -957,6 +990,8 @@ const Til = ({
         // console.log("s");
         const canvas = fabricOverlay.fabricCanvas();
         setLoadUI(false);
+        localStorage.setItem("ModelName", "TIL")
+
         const color = "#2Aff00";
         const roi2 = tumorCords?.map((tumor_cord) => {
           // console.log(tumor_cord);
@@ -1011,6 +1046,8 @@ const Til = ({
             console.log("Task completed by requestAnimationFrame");
             setTimeout(() => {
               setLoadUI(true);
+              localStorage.removeItem("ModelName");
+
             }, 4000);
           });
         }, 1000);
@@ -1028,6 +1065,8 @@ const Til = ({
       ) {
         const canvas = fabricOverlay.fabricCanvas();
         setLoadUI(false);
+        localStorage.setItem("ModelName", "TIL")
+
         const color = "#2Aff00";
         const roi = tilCords.flat(2).map((TIL_cord) => {
           return new fabric.Rect({
@@ -1097,6 +1136,8 @@ const Til = ({
             console.log("Task completed by requestAnimationFrame");
             setTimeout(() => {
               setLoadUI(true);
+              localStorage.removeItem("ModelName");
+
             }, 4000);
           });
         }, 1000);
@@ -1114,6 +1155,8 @@ const Til = ({
         // console.log("s");
         const canvas = fabricOverlay.fabricCanvas();
         setLoadUI(false);
+        localStorage.setItem("ModelName", "TIL")
+
         const color = "#2Aff00";
         const roi = tilSubscriptionData?.tilStatus?.data?.lymphocyte_cords
           .flat(2)
@@ -1173,6 +1216,8 @@ const Til = ({
             console.log("Task completed by requestAnimationFrame");
             setTimeout(() => {
               setLoadUI(true);
+              localStorage.removeItem("ModelName");
+
             }, 4000);
           });
         }, 1000);
@@ -1187,6 +1232,8 @@ const Til = ({
         // console.log("s");
         const canvas = fabricOverlay.fabricCanvas();
         setLoadUI(false);
+        localStorage.setItem("ModelName", "TIL")
+
         const color = "#2Aff00";
         const roi = tilSubscriptionData?.tilStatus?.data?.lymphocyte_cords
           .flat(2)
@@ -1247,6 +1294,8 @@ const Til = ({
             console.log("Task completed by requestAnimationFrame");
             setTimeout(() => {
               setLoadUI(true);
+              localStorage.removeItem("ModelName");
+
             }, 4000);
           });
         }, 1000);
@@ -1261,6 +1310,7 @@ const Til = ({
         // console.log("s");
         const canvas = fabricOverlay.fabricCanvas();
         setLoadUI(false);
+        localStorage.setItem("ModelName", "TIL")
         const color = "#2Aff00";
         const roi2 = tilSubscriptionData?.tilStatus?.data?.tumor_cords?.map(
           (tumor_cord) => {
@@ -1319,6 +1369,8 @@ const Til = ({
             console.log("Task completed by requestAnimationFrame");
             setTimeout(() => {
               setLoadUI(true);
+              localStorage.removeItem("ModelName");
+
             }, 4000);
           });
         }, 1000);
@@ -1335,6 +1387,8 @@ const Til = ({
       ) {
         const canvas = fabricOverlay.fabricCanvas();
         setLoadUI(false);
+        localStorage.setItem("ModelName", "TIL")
+
         const color = "#2Aff00";
         const roi = tilSubscriptionData?.tilStatus?.data?.lymphocyte_cords
           .flat(2)
@@ -1410,6 +1464,8 @@ const Til = ({
             console.log("Task completed by requestAnimationFrame");
             setTimeout(() => {
               setLoadUI(true);
+              localStorage.removeItem("ModelName");
+
             }, 4000);
           });
         }, 1000);
@@ -1486,6 +1542,7 @@ const Til = ({
           }
           onClick={() => {
             handleTIL();
+            setToolSelected("TIL");
             setTilHover(!TilHover);
           }}
           _hover={{ bgColor: "rgba(228, 229, 232, 1)" }}

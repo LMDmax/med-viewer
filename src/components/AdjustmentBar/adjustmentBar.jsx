@@ -24,6 +24,7 @@ function AdjustmentBar({
   refreshHil,
   setTumorArea,
   setStromaArea,
+  setToolSelected,
   setTilScore,
   setLymphocyteCount,
   hitTil,
@@ -43,6 +44,7 @@ function AdjustmentBar({
   isNavigatorActive,
   setIsNavigatorActive,
   isMultiview,
+  toolSelected,
   setIsMultiview,
   setTotalCells,
   handleAnnotationBar,
@@ -79,7 +81,7 @@ function AdjustmentBar({
   const { viewerWindow, isAnnotationLoading } = fabricOverlayState;
   const { tile } = viewerWindow[currentViewer];
   const [mongoId, setMongoId] = useState("");
-  
+
   const handleSidebar = () => {
     showSidebar();
   };
@@ -94,7 +96,9 @@ function AdjustmentBar({
       fontWeight="500"
       zIndex={2}
     >
-      <Flex alignItems="center" ml="18px" mr="20px" minW="150px">
+      <Flex
+        borderRight="2px solid #E4E5E8"
+        alignItems="center" ml="18px" mr="20px" minW="150px">
         {application === "hospital" ? (
           <ToolbarButton
             onClick={handleSidebar}
@@ -114,50 +118,13 @@ function AdjustmentBar({
           {caseInfo?.caseName || caseInfo?.name}
         </Text>
       </Flex>
-
-      <Flex
-        borderLeft="2px solid #E4E5E8"
-        borderRight="2px solid #E4E5E8"
-        px="18px"
-        align="center"
-      >
-        {Object.keys(viewerWindow).length === 1 && (
-          <ChangeSlide
-            caseInfo={caseInfo}
-            slides={slides}
-            viewerId={currentViewer}
-            slideUrl={tile}
-            setIsMultiview={setIsMultiview}
-            setIsNavigatorActive={setIsNavigatorActive}
-            isAnnotationLoading={isAnnotationLoading}
-            isNavigatorActive={isNavigatorActive}
-          />
-        )}
-        {/* <ToolbarButton
-          icon={<SlideNavigatorIcon isNavigatorActive={isNavigatorActive} />}
-          label={
-            <TooltipLabel
-              heading="Slide Navigation"
-              paragraph="Navigate any slide in this case"
-            />
-          }
-          ml="8px"
-          pl={0}
-          pt={0}
-          isDisabled={isAnnotationLoading}
-          isActive={isNavigatorActive}
-          onClick={() => {
-            setIsMultiview(false);
-            setIsNavigatorActive((state) => !state);
-          }}
-        /> */}
-      </Flex>
       <Move
         application={application}
         userInfo={userInfo}
         sidebar={sidebar}
         hideTumor={hideTumor}
         hideStroma={hideStroma}
+        toolSelected={toolSelected}
         hideLymphocyte={hideLymphocyte}
         slide={slide}
         mongoId={mongoId}
@@ -166,6 +133,7 @@ function AdjustmentBar({
         handleTILFeedBar={handleTILFeedBar}
         annotations={annotations}
         enableAI={enableAI}
+        setToolSelected={setToolSelected}
         setLoadUI={setLoadUI}
         enableFilters={enableFilters}
         pathStroma={pathStroma}
@@ -184,7 +152,7 @@ function AdjustmentBar({
         setTotalCells={setTotalCells}
         isXmlAnnotations={isXmlAnnotations}
       />
-      <ActionTools viewerId={currentViewer} />
+      <ActionTools setToolSelected={setToolSelected} viewerId={currentViewer} />
       <ScreenTools
         viewerId={currentViewer}
         report={report}
@@ -192,7 +160,9 @@ function AdjustmentBar({
         handleAnnotationBar={handleAnnotationBar}
         caseInfo={caseInfo}
         slide={slide}
+        setToolSelected={setToolSelected}
         setChatHover={setChatHover}
+        toolSelected={toolSelected}
         saveReport={saveReport}
         saveSynopticReport={saveSynopticReport}
         mediaUpload={mediaUpload}

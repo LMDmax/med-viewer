@@ -4,7 +4,7 @@ import useCanvasHelpers from "../../hooks/use-fabric-helpers";
 import ToolbarButton from "../ViewerToolbar/button";
 import TooltipLabel from "../AdjustmentBar/ToolTipLabel";
 
-const ToggleAnnotations = ({ viewerId }) => {
+const ToggleAnnotations = ({ viewerId, setToolSelected }) => {
   const { toggleAnnotationVisibility } = useCanvasHelpers(viewerId);
   const [visible, setVisible] = useState(true);
 
@@ -12,6 +12,16 @@ const ToggleAnnotations = ({ viewerId }) => {
     toggleAnnotationVisibility(!visible);
     setVisible((state) => !state);
   };
+
+  useEffect(()=>{
+    if(!visible){
+      setToolSelected("HideAnnotation");
+    }
+    else{
+      setToolSelected(" ");
+
+    }
+  },[visible])
 
   return (
     <ToolbarButton

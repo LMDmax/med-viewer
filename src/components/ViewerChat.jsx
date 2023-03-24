@@ -8,6 +8,7 @@ const ViewerChat = ({
   handleChatFeedbar,
   handleChatFeedBarClose,
   setChatHover,
+  setToolSelected,
   chatHover,
 }) => {
 
@@ -15,6 +16,10 @@ const ViewerChat = ({
   useEffect(() => {
     if (chatHover === false) {
       handleChatFeedBarClose();
+      setToolSelected("");
+    }
+    else{
+      setToolSelected("Chat");
     }
   }, [chatHover]);
   return (

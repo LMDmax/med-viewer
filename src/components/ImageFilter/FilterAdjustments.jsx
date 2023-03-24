@@ -27,7 +27,7 @@ const getFilters = (sliderInputs) => {
   return filters;
 };
 
-const FilterAdjustments = ({ viewerId }) => {
+const FilterAdjustments = ({ viewerId, setToolSelected }) => {
   const { fabricOverlayState } = useFabricOverlayState();
   const { viewerWindow } = fabricOverlayState;
   const { viewer } = viewerWindow[viewerId];
@@ -42,6 +42,15 @@ const FilterAdjustments = ({ viewerId }) => {
     gamma: 1,
     exposure: 0,
   });
+
+  useEffect(()=>{
+    if(isActive){
+      setToolSelected("Filter");
+    }
+    else{
+      setToolSelected("")
+    }
+  },[isActive])
 
   const sliderStateRef = useRef(sliderInputs);
   const modalRef = useRef(null);

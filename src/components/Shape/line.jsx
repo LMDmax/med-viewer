@@ -18,7 +18,7 @@ import {
   saveAnnotationToDB,
 } from "../../utility";
 
-const Line = ({ viewerId, onSaveAnnotation }) => {
+const Line = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { activeTool, viewerWindow, color } = fabricOverlayState;
   const { fabricOverlay, viewer, slideId } = viewerWindow[viewerId];
@@ -258,6 +258,7 @@ const Line = ({ viewerId, onSaveAnnotation }) => {
       icon={<BsSlash size={40} color={isActive ? "#3B5D7C" : "#000"} />}
       onClick={() => {
         handleClick();
+        setToolSelected("LineTool");
         toast({
           title: "Line annotation tool selected",
           status: "success",
