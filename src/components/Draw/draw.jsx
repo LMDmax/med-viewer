@@ -40,7 +40,7 @@ const createFreeDrawingCursor = (brushWidth, brushColor) => {
   }, crosshair`;
 };
 
-const Draw = ({ viewerId, onSaveAnnotation }) => {
+const Draw = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
   const toast = useToast();
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { color, viewerWindow, activeTool } = fabricOverlayState;
@@ -131,7 +131,7 @@ const Draw = ({ viewerId, onSaveAnnotation }) => {
   // first remove both from canvas then group them and then add group to canvas
   useEffect(() => {
     if (!path) return;
-
+    setToolSelected("RunRoi");
     const addToFeed = async () => {
       const message = createAnnotationMessage({ slideId, shape: path, viewer, type:"path" });
 
@@ -190,6 +190,7 @@ const Draw = ({ viewerId, onSaveAnnotation }) => {
       icon={<BsPencil size={20} color={isActive ? "#3B5D7C" : "#000"} />}
       onClick={() => {
         handleToolbarClick();
+        setToolSelected("FreeHand");
         toast({
           title: "Free hand annotation draw tool selected",
           status: "success",

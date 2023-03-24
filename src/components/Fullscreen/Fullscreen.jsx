@@ -30,6 +30,7 @@ const Fullscreen = ({ viewerId }) => {
       mr="0px"
       label="Full screen"
       onClick={handleFullScreen}
+      zIndex={500}
     />
   );
 };

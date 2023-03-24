@@ -19,7 +19,7 @@ import IconSize from "./ViewerToolbar/IconSize";
 import { ScreenshotIcon, ScreenshotSelectedIcon } from "./Icons/CustomIcons";
 import TooltipLabel from "./AdjustmentBar/ToolTipLabel";
 
-const DownloadImage = () => {
+const DownloadImage = ({setToolSelected}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [img, setImg] = useState();
   const [screenshotHover, setScreenshotHover] = useState(false);
@@ -109,6 +109,7 @@ const DownloadImage = () => {
               href={img}
               download="my-speculative-annotation"
               fontFamily="ocr-a-std"
+              onClick={()=>setToolSelected("Downloaded")}
             >
               Save
             </Button>

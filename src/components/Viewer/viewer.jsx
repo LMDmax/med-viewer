@@ -29,7 +29,7 @@ const osdOptions = {
   },
   showNavigator: true,
   showNavigationControl: false,
-  navigatorPosition: "BOTTOM_RIGHT",
+  navigatorPosition: "BOTTOM_LEFT",
   navigatorHeight: "30vh",
   navigatorWidth: "20vw",
   navigatorAutoFade: false,
@@ -48,21 +48,23 @@ const osdOptions = {
 };
 
 function Viewer({
-	viewerId,
-	tile,
-	userInfo,
-	enableAI,
-	slide,
-	application,
-	setLoadUI,
-	caseInfo,
-	client2,
-	mentionUsers,
-	addUsersToCase,
-	Environment,
-	accessToken,
-	setIsXmlAnnotations,
-	handleAnnotationClick,
+  viewerId,
+  tile,
+  userInfo,
+  enableAI,
+  zoomValue,
+  setZoomValue,
+  slide,
+  application,
+  setLoadUI,
+  caseInfo,
+  client2,
+  mentionUsers,
+  addUsersToCase,
+  Environment,
+  accessToken,
+  setIsXmlAnnotations,
+  handleAnnotationClick,
 }) {
 	const { setFabricOverlayState } = useFabricOverlayState();
 	const [viewer, setViewer] = useState(null);
@@ -111,45 +113,47 @@ function Viewer({
 			})
 		);
 
-		return () => {
-			setFabricOverlayState(
-				updateOverlay({
-					id: viewerId,
-					fabricOverlay: null,
-					viewer: null,
-				})
-			);
-		};
-	}, [viewer]);
-	return (
-		<Box
-			ref={boxRef}
-			id={`viewer${viewerId}`}
-			position="relative"
-			w="100%"
-			h="100%"
-		>
-			{isBrowser && (
-				<ViewerControls
-					application={application}
-					viewerId={viewerId}
-					userInfo={userInfo}
-					enableAI={enableAI}
-					slide={slide}
-					setLoadUI={setLoadUI}
-					client2={client2}
-					mentionUsers={mentionUsers}
-					caseInfo={caseInfo}
-					addUsersToCase={addUsersToCase}
-					Environment={Environment}
-					accessToken={accessToken}
-					setIsXmlAnnotations={setIsXmlAnnotations}
-					handleAnnotationClick={handleAnnotationClick}
-				/>
-			)}
-			{/* <Button onClick={selection}>Select</Button> */}
-		</Box>
-	);
+    return () => {
+      setFabricOverlayState(
+        updateOverlay({
+          id: viewerId,
+          fabricOverlay: null,
+          viewer: null,
+        })
+      );
+    };
+  }, [viewer]);
+  return (
+    <Box
+      ref={boxRef}
+      id={`viewer${viewerId}`}
+      position="relative"
+      w="100%"
+      h="100%"
+    >
+      {isBrowser && (
+        <ViewerControls
+          application={application}
+          viewerId={viewerId}
+          userInfo={userInfo}
+          enableAI={enableAI}
+          slide={slide}
+          setLoadUI={setLoadUI}
+          client2={client2}
+          setZoomValue={setZoomValue}
+          zoomValue={zoomValue}
+          mentionUsers={mentionUsers}
+          caseInfo={caseInfo}
+          addUsersToCase={addUsersToCase}
+          Environment={Environment}
+          accessToken={accessToken}
+          setIsXmlAnnotations={setIsXmlAnnotations}
+		  handleAnnotationClick={handleAnnotationClick}
+        />
+      )}
+      {/* <Button onClick={selection}>Select</Button> */}
+    </Box>
+  );
 }
 
 Viewer.propTypes = {

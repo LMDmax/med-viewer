@@ -28,6 +28,7 @@ function Move({
 	setStromaArea,
 	setLoadUI,
 	setTumorArea,
+	setToolSelected,
 	setTilScore,
 	setLymphocyteCount,
 	pathStroma,
@@ -47,6 +48,7 @@ function Move({
 	handleTILFeedBar,
 	slide,
 	mongoId,
+	toolSelected,
 	isXmlAnnotations,
 }) {
 	const [ifBiggerScreen] = useMediaQuery("(min-width:2000px)");
@@ -58,6 +60,15 @@ function Move({
 	const { fabricOverlay } = viewerWindow[viewerId];
 	const isActive = activeTool === "Move";
 	const [activeAnnotations, setActiveAnnotations] = useState(false);
+
+	useEffect(()=>{
+		if(typeToolsToggle){
+			setToolSelected("Annotation");
+		}
+		else{
+			setToolSelected("");
+		}
+	},[typeToolsToggle])
 
 	const handleClick = () => {
 		setFabricOverlayState(updateTool({ tool: "Move" }));
@@ -118,10 +129,11 @@ function Move({
 					onClick={handleClick}
 					_hover={{ bgColor: "rgba(228, 229, 232, 1)" }}
 				/>
-				<Rotate viewerId={viewerId} />
+				<Rotate setToolSelected={setToolSelected} viewerId={viewerId} />
 				<Multiview
 					viewerId={viewerId}
 					isMultiview={isMultiview}
+					setToolSelected={setToolSelected}
 					setIsMultiview={setIsMultiview}
 					setIsNavigatorActive={setIsNavigatorActive}
 				/>
@@ -181,7 +193,8 @@ function Move({
 					</Tooltip>
 				) : null}
 
-				{enableFilters ? <FilterAdjustments viewerId={viewerId} /> : null}
+					
+				{enableFilters ? <FilterAdjustments  setToolSelected={setToolSelected} viewerId={viewerId} /> : null}
 				{slide.isBreastCancer ? <Til
 					hideLymphocyte={hideLymphocyte}
 					hideStroma={hideStroma}
@@ -191,6 +204,7 @@ function Move({
 					hideModification={hideModification}
 					slide={slide}
 					hitTil={hitTil}
+					setToolSelected={setToolSelected}
 					mongoId={mongoId}
 					setLoadUI={setLoadUI}
 					setNewHilData={setNewHilData}
@@ -205,6 +219,7 @@ function Move({
 				<CommentBox
 					userInfo={userInfo}
 					viewerId={viewerId}
+					setToolSelected={setToolSelected}
 					application={application}
 				/>
 			</Flex>
@@ -226,6 +241,8 @@ function Move({
 					<TypeTools
 						application={application}
 						enableAI={enableAI}
+						toolSelected={toolSelected}
+						setToolSelected={setToolSelected}
 						userInfo={userInfo}
 						viewerId={viewerId}
 						setTotalCells={setTotalCells}

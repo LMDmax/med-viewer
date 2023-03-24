@@ -39,8 +39,7 @@ function ChangeSlide({
 		slides?.[currentIndex + 1]?.awsImageBucketUrl === "";
 
 	const title =
-		slides?.[currentIndex]?.slideName ||
-		slides?.[currentIndex]?.originalName?.split(".")?.[0] ||
+		
 		`${caseInfo?.caseName}-${currentIndex + 1}`;
 
 	const clickHandler = (position) => {

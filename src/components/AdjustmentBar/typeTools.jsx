@@ -22,7 +22,9 @@ function TypeTools({
 	enableAI,
 	userInfo,
 	viewerId,
+	setToolSelected,
 	setTotalCells,
+	toolSelected,
 	application,
 }) {
 	// save annotation in db
@@ -82,24 +84,27 @@ function TypeTools({
 			<Flex
 				direction="column"
 				pos="fixed"
+				zIndex="999"
 				boxShadow="1px 1px 2px rgba(176, 200, 214, 0.5)"
 				bgColor="#FCFCFC"
 			>
 				<Flex h="12px" bgColor="rgba(236, 236, 236, 1)" cursor="crosshair" />
-				<SimpleGrid columns={2} px="8px" bgColor="#fff" py="8px" spacing={2}>
-					<Line viewerId={viewerId} onSaveAnnotation={onSaveAnnotation} />
+				<SimpleGrid columns={2} px="8px" py="8px" spacing={2}>
+					<Line setToolSelected={setToolSelected} viewerId={viewerId} onSaveAnnotation={onSaveAnnotation} />
 					{enableAI ? (
 						<MagicWandTool
 							userInfo={userInfo}
+							toolSelected={toolSelected}
 							viewerId={viewerId}
+							setToolSelected={setToolSelected}
 							setTotalCells={setTotalCells}
 							onSaveAnnotation={onSaveAnnotation}
 						/>
 					) : null}
-					<Square viewerId={viewerId} onSaveAnnotation={onSaveAnnotation} />
-					<Circle viewerId={viewerId} onSaveAnnotation={onSaveAnnotation} />
-					<Polygon viewerId={viewerId} onSaveAnnotation={onSaveAnnotation} />
-					<Draw viewerId={viewerId} onSaveAnnotation={onSaveAnnotation} />
+					<Square setToolSelected={setToolSelected} viewerId={viewerId} onSaveAnnotation={onSaveAnnotation} />
+					<Circle setToolSelected={setToolSelected} viewerId={viewerId} onSaveAnnotation={onSaveAnnotation} />
+					<Polygon setToolSelected={setToolSelected} viewerId={viewerId} onSaveAnnotation={onSaveAnnotation} />
+					<Draw setToolSelected={setToolSelected} viewerId={viewerId} onSaveAnnotation={onSaveAnnotation} />
 					<RemoveObject
 						viewerId={viewerId}
 						onDeleteAnnotation={onDeleteAnnotation}

@@ -21,7 +21,7 @@ import TooltipLabel from "../AdjustmentBar/ToolTipLabel";
 import ToolbarButton from "../ViewerToolbar/button";
 import IconSize from "../ViewerToolbar/IconSize";
 
-function CommentBox({ userInfo, viewerId, application }) {
+function CommentBox({ userInfo, viewerId, application, setToolSelected }) {
   const [addComments, setAddComments] = useState(false);
   const iconSize = IconSize();
   const toast = useToast();
@@ -147,6 +147,8 @@ function CommentBox({ userInfo, viewerId, application }) {
       if (currShape.type === "textbox") {
         if (currShape.originX === "right") left -= width;
         if (currShape.originY === "bottom") height = 0;
+    setToolSelected("SelectedComment");
+
       }
 
       setMyState({
@@ -154,6 +156,7 @@ function CommentBox({ userInfo, viewerId, application }) {
         currentDragShape: null,
         isMouseDown: false,
       });
+
     }
 
     // Add click handlers
@@ -163,6 +166,34 @@ function CommentBox({ userInfo, viewerId, application }) {
       canvas.off("mouse:down", handleMouseDown);
     };
   }, [addComments, fabricOverlay, isActive]);
+
+  useEffect(() => {
+    const canvas = fabricOverlay?.fabricCanvas();
+  
+    const checkActiveObject = () => {
+      const activeObject = canvas?.getActiveObject();
+  
+      if (activeObject && activeObject.type === 'textbox') {
+        // set the tool selected to "SelectedComment"
+        setToolSelected("SelectedComment");
+        // console.log("select");
+      } else {
+        // set the tool selected to an empty string
+        setToolSelected("");
+        // console.log("object");
+      }
+    };
+  
+    // Check the active object when the component mounts
+    checkActiveObject();
+  
+    // Add a click listener to the canvas
+    canvas?.on('mouse:down', checkActiveObject);
+  
+    // Remove the click listener when the component unmounts
+    return () => canvas?.off('mouse:down', checkActiveObject);
+  }, [fabricOverlay]);
+  
 
   // group shape and textbox together
   // first remove both from canvas then group them and then add group to canvas
@@ -201,6 +232,7 @@ function CommentBox({ userInfo, viewerId, application }) {
 
   useEffect(() => {
     if (addComments) {
+      setToolSelected("AddComment");
       toast({
         title: "Comments can be added now",
         description: "",

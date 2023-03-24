@@ -24,47 +24,40 @@ const ProgressBar = () => {
 
   return (
     <Box
-      w="100vw"
-      h="100vh"
-      position="fixed"
-      top="0"
-      left="0"
+      w="700px"
+      h="15px"
+      border="1px solid black" // Add black border
+      overflow="hidden" // Hide overflowing progress
       zIndex="9999"
       display="flex"
       justifyContent="center"
       alignItems="center"
     >
-      <Box
-        position="relative"
-        w="80%"
-        h="25px"
-        border="1px solid black"
-        borderRadius="sm"
-        overflow="hidden"
-        transition="width 0.3s ease"
-      >
+      <Box w="100%" h="100%" background="#f0f0f0" position="relative">
         <Box
-          w={progressWidth}
-          h="100%"
-          backgroundColor="#3b5d7c"
-        >
-          <Text color="white" fontWeight="bold" textAlign="center">
-            {progress}%
-          </Text>
-        </Box>
+          position="absolute"
+          top="0"
+          left="0"
+          bottom="0"
+          width={progressWidth}
+          background="#3b5d7c"
+          transition="width 0.5s ease-out" // Add transition for width
+        />
       </Box>
       <Box
         position="absolute"
         top="0"
         left="0"
+        bottom="30px"
         w="100%"
-        h="100%"
+        // h="100vh"
         zIndex="-1"
-        backdropFilter="blur(4px)"
-        opacity="0.6"
-        backgroundColor="rgba(255, 255, 255)"
-        >
-      </Box>
+        backdropFilter="blur(1px)"
+        backgroundColor="rgba(255, 255, 255, 0.15)"
+        // boxShadow="0 8px 32px 0 rgba(31, 38, 135, 0.37)"
+        borderRadius="10px"
+        border="1px solid rgba(255, 255, 255, 0.18)"
+      ></Box>
     </Box>
   );
 };

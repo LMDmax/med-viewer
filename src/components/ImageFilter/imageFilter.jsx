@@ -6,7 +6,7 @@ import "./openseadragon-filtering";
 import { useFabricOverlayState } from "../../state/store";
 import TooltipLabel from "../AdjustmentBar/ToolTipLabel";
 
-const ImageFilter = ({ viewerId }) => {
+const ImageFilter = ({ viewerId, setToolSelected }) => {
   const { fabricOverlayState } = useFabricOverlayState();
   const { viewerWindow } = fabricOverlayState;
   const { viewer, fabricOverlay } = viewerWindow[viewerId];
@@ -86,10 +86,12 @@ const ImageFilter = ({ viewerId }) => {
   const handleClick = () => {
     if (!viewer) return;
     if (isActive) {
+      setToolSelected("Normalisation");
       viewer.setFilterOptions(null);
       viewer.viewport.zoomBy(1.01);
       setIsActive(false);
     } else {
+      setToolSelected("Normalisation");
       viewer.setFilterOptions({
         filters: {
           processors: reinhardFilter,

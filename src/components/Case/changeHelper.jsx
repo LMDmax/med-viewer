@@ -54,7 +54,21 @@ const ChangeHelper = ({
           />
         </Tooltip>
 
-        <Text
+       <Tooltip
+        label={
+          <TooltipLabel heading="Slide Title" paragraph="" />
+        }
+        placement="bottom"
+        openDelay={0}
+        bg="#E4E5E8"
+        color="rgba(89, 89, 89, 1)"
+        fontSize="14px"
+        fontFamily="inter"
+        hasArrow
+        borderRadius="0px"
+        size="20px"
+       >
+       <Text
           mr="24px"
           fontWeight="400"
           fontSize="14px"
@@ -63,17 +77,17 @@ const ChangeHelper = ({
           fontFamily="Inter"
           wordBreak="break-word"
           noOfLines={1}
-          _hover={{ bgColor: "#ECECEC" }}
           cursor="pointer"
           isDisabled={isAnnotationLoading}
           isActive={isNavigatorActive}
-          onClick={() => {
-            setIsMultiview(false);
-            setIsNavigatorActive((state) => !state);
-          }}
+          // onClick={() => {
+          //   setIsMultiview(false);
+          //   setIsNavigatorActive((state) => !state);
+          // }}
         >
           {title}
         </Text>
+       </Tooltip>
         <Tooltip
           label={
             <TooltipLabel heading="Navigator" paragraph="For next WSI image" />

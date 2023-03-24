@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Box } from "@chakra-ui/react";
 import { useFabricOverlayState } from "../../state/store";
 import {
-	getScaleFactor,
-	getZoomValue,
-	zoomToLevel,
+  getScaleFactor,
+  getZoomValue,
+  zoomToLevel,
 } from "../../utility/utility";
 
 const ZoomButton = ({ viewerId }) => {

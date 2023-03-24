@@ -23,7 +23,7 @@ import {
 } from "../../utility";
 import { CircleIcon, CircleIconFilled } from "../Icons/CustomIcons";
 
-function Circle({ viewerId, onSaveAnnotation }) {
+function Circle({ viewerId, onSaveAnnotation, setToolSelected }) {
 	const toast = useToast();
 	const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
 	const { color, viewerWindow, activeTool } = fabricOverlayState;
@@ -279,7 +279,7 @@ function Circle({ viewerId, onSaveAnnotation }) {
 	useEffect(() => {
 		const addToFeed = async () => {
 			if (!shape) return;
-
+            setToolSelected("RunRoi");
 			const message = createAnnotationMessage({
 				slideId,
 				shape,
@@ -337,6 +337,7 @@ function Circle({ viewerId, onSaveAnnotation }) {
 			icon={isActive ? <CircleIconFilled /> : <CircleIcon />}
 			onClick={() => {
 				handleClick();
+				setToolSelected("CircleTool");
 				toast({
 					title: "Circle annotation tool selected",
 					status: "success",

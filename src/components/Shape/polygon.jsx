@@ -16,7 +16,7 @@ import { PolygonIcon, PolygonIconFilled } from "../Icons/CustomIcons";
 const MAX = 999999;
 const MIN = 99;
 
-const Polygon = ({ viewerId, onSaveAnnotation }) => {
+const Polygon = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
   const toast = useToast();
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { color, viewerWindow, activeTool } = fabricOverlayState;
@@ -258,6 +258,7 @@ const Polygon = ({ viewerId, onSaveAnnotation }) => {
 
   useEffect(() => {
     if (!shape) return;
+    setToolSelected("RunRoi");
 
     const addToFeed = async () => {
       const message = createAnnotationMessage({ slideId, shape, viewer, type:"polygon" });
@@ -301,6 +302,7 @@ const Polygon = ({ viewerId, onSaveAnnotation }) => {
       icon={isActive ? <PolygonIconFilled /> : <PolygonIcon />}
       onClick={() => {
         handleClick();
+				setToolSelected("PolygonTool");
         toast({
           title: "Polygon annotation tool selected",
           status: "success",

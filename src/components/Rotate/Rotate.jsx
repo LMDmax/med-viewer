@@ -23,7 +23,7 @@ import {
 } from "@chakra-ui/react";
 import { BiRotateLeft, BiRotateRight } from "react-icons/bi";
 
-const Rotate = ({ viewerId }) => {
+const Rotate = ({ viewerId, setToolSelected }) => {
   const { fabricOverlayState } = useFabricOverlayState();
   const { viewer } = fabricOverlayState?.viewerWindow[viewerId];
   const [sliderToggle, setSliderToggle] = useState(false);
@@ -39,6 +39,14 @@ const Rotate = ({ viewerId }) => {
       console.error("Error handling rotate button click", e);
     }
   }, [rotationValue]);
+
+  useEffect(() => {
+    if (sliderToggle) {
+      setToolSelected("Rotate");
+    } else {
+      setToolSelected("");
+    }
+  }, [sliderToggle]);
 
   return (
     <>
