@@ -33,14 +33,14 @@ import {
 } from "../../state/actions/fabricOverlayActions";
 import { useFabricOverlayState } from "../../state/store";
 import {
-  convertToZoomValue,
-  getFileBucketFolder,
-  groupAnnotationAndCells,
-  loadAnnotationsFromDB,
-  zoomToLevel,
-  getViewportBounds,
-  getVhutAnalysisData,
-  getPPMfromMPP,
+	convertToZoomValue,
+	getFileBucketFolder,
+	groupAnnotationAndCells,
+	loadAnnotationsFromDB,
+	zoomToLevel,
+	getViewportBounds,
+	getVhutAnalysisData,
+	getPPMfromMPP,
 } from "../../utility";
 import AnnotationChat from "../AnnotationChat/AnnotationChat";
 import ShowMetric from "../Annotations/ShowMetric";
@@ -70,6 +70,8 @@ function ViewerControls({
   Environment,
   accessToken,
   setIsXmlAnnotations,
+	handleAnnotationClick,
+
 }) {
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { viewerWindow, isViewportAnalysing } = fabricOverlayState;
@@ -110,11 +112,11 @@ function ViewerControls({
     onClose: closeEdit,
   } = useDisclosure();
 
-  const {
-    isOpen: isKI67Open,
-    onOpen: isKI67,
-    onClose: isKI67Close,
-  } = useDisclosure();
+	const {
+		isOpen: isKI67Open,
+		onOpen: isKI67,
+		onClose: isKI67Close,
+	} = useDisclosure();
 
   // ############### LOAD_ANNOTATION ####################
   const [getAnnotation, { data: annotationData, loading, error }] =
@@ -276,16 +278,16 @@ function ViewerControls({
         top,
       });
 
-      // group enclosing annotation and cells
-      const feedMessage = groupAnnotationAndCells({
-        enclosingAnnotation: annotationObject,
-        cells,
-        optionalData: {
-          data: analysedData,
-          totalCells,
-          roiType: "morphometry",
-        },
-      });
+			// group enclosing annotation and cells
+			const feedMessage = groupAnnotationAndCells({
+				enclosingAnnotation: annotationObject,
+				cells,
+				optionalData: {
+					data: analysedData,
+					totalCells,
+					roiType: "morphometry",
+				},
+			});
 
       // remove enclosing annotation
       // and group to canvas
@@ -404,29 +406,28 @@ function ViewerControls({
           const { hash, analysedROI } = data;
           const annotation = canvas.getObjectByHash(hash);
 
-          if (annotation) {
-            annotation.set({ isAnalysed: true, analysedROI });
-          }
-          setLoadUI(true);
-          localStorage.removeItem("ModelName");
-        }
-        // console.log(vhutSubscriptionData.analysisStatus);
-        toast({
-          title: message,
-          status: "success",
-          duration: 1500,
-          isClosable: true,
-        });
-      } else if (type === "KI67_ANALYSIS") {
-        toast({
-          title: message,
-          status: "success",
-          duration: 1500,
-          isClosable: true,
-        });
-      } else if (type === "VIEWPORT_ANALYSIS") {
-        if (data && data.isAnalysed)
-          setFabricOverlayState(updateIsViewportAnalysing(false));
+					if (annotation) {
+						annotation.set({ isAnalysed: true, analysedROI });
+					}
+					setLoadUI(true);
+				}
+				// console.log(vhutSubscriptionData.analysisStatus);
+				toast({
+					title: message,
+					status: "success",
+					duration: 1500,
+					isClosable: true,
+				});
+			} else if (type === "KI67_ANALYSIS") {
+				toast({
+					title: message,
+					status: "success",
+					duration: 1500,
+					isClosable: true,
+				});
+			} else if (type === "VIEWPORT_ANALYSIS") {
+				if (data && data.isAnalysed)
+					setFabricOverlayState(updateIsViewportAnalysing(false));
 
         toast({
           title: message || "ViewPort Ready",
@@ -512,62 +513,53 @@ function ViewerControls({
     }
   }, [xmlAnnotationData, annotationData]);
 
-  useEffect(() => {
-    if (!fabricOverlay) return;
-    const canvas = fabricOverlay.fabricCanvas();
-    const data = [
-      {
-        type: "arrow",
-        points: [
-          [32025, 39905],
-          [32225, 39496],
-        ],
-      },
-    ];
-    const loadAnnotations = async () => {
-      // check if the annotations is already loaded
-      if (canvas.toJSON().objects.length === 0 && annotatedData) {
-        const { feed, status, error } = await loadAnnotationsFromDB({
-          slideId,
-          canvas,
-          viewer,
-          // onLoadAnnotations,
-          data: annotatedData,
-          success: annotatedData,
-          userInfo,
-        });
-        if (status === "success") {
-          if (feed) {
-            setFabricOverlayState(
-              updateActivityFeed({ id: viewerId, fullFeed: feed })
-            );
-            setActiveFeed(feed);
-          }
+	useEffect(() => {
+		if (!fabricOverlay) return;
+		const canvas = fabricOverlay.fabricCanvas();
+		const loadAnnotations = async () => {
+			// check if the annotations is already loaded
+			if (canvas.toJSON().objects.length === 0 && annotatedData) {
+				const { feed, status, error } = await loadAnnotationsFromDB({
+					slideId,
+					canvas,
+					viewer,
+					// onLoadAnnotations,
+					data: annotatedData,
+					success: annotatedData,
+					userInfo,
+				});
+				if (status === "success") {
+					if (feed) {
+						setFabricOverlayState(
+							updateActivityFeed({ id: viewerId, fullFeed: feed })
+						);
+						setActiveFeed(feed);
+					}
 
-          canvas.requestRenderAll();
-          // console.log(annotatedData);
-          if (annotatedData?.length > 0) {
-            toast({
-              title: "Annotation loaded",
-              status: "success",
-              duration: 1000,
-              isClosable: true,
-            });
-          }
-        } else {
-          setFabricOverlayState(
-            updateActivityFeed({ id: viewerId, fullFeed: [] })
-          );
-          canvas.requestRenderAll();
-          toast({
-            title: "Annotation load failed",
-            description: "Please try again",
-            status: "error",
-            duration: 1500,
-            isClosable: true,
-          });
-        }
-      }
+					canvas.requestRenderAll();
+					console.log(annotatedData);
+					if (annotatedData?.length > 0) {
+						toast({
+							title: "Annotation loaded",
+							status: "success",
+							duration: 1000,
+							isClosable: true,
+						});
+					}
+				} else {
+					setFabricOverlayState(
+						updateActivityFeed({ id: viewerId, fullFeed: [] })
+					);
+					canvas.requestRenderAll();
+					toast({
+						title: "Annotation load failed",
+						description: "Please try again",
+						status: "error",
+						duration: 1500,
+						isClosable: true,
+					});
+				}
+			}
 
       setIsAnnotationLoaded(true);
     };
@@ -608,29 +600,32 @@ function ViewerControls({
     if (!viewer || !fabricOverlay) return;
     const canvas = fabricOverlay.fabricCanvas();
 
-    const handleMouseDown = (event) => {
-      // if not right click
-      if (event.button !== 3) {
-        closeMenu();
-        return;
-      }
+		const handleMouseDown = (event) => {
+			const annotation = canvas.getActiveObject();
 
-      const annotation = canvas.getActiveObject();
+			// if not right click
+			if (event.button !== 3) {
+				if (annotation) {
+					handleAnnotationClick(annotation);
+				}
+				closeMenu();
+				return;
+			}
 
-      // set annotationObject if right click is on annotation
-      if (annotation) {
-        setAnnotationObject(annotation);
-        const zoomValue = convertToZoomValue({
-          level: annotation.zoomLevel,
-          viewer,
-        });
-        setIsMorphometryDisabled(
-          annotation.type === "line" || !(zoomValue >= 20)
-        );
-      } else {
-        setAnnotationObject(null);
-        setIsMorphometryDisabled(true);
-      }
+			// set annotationObject if right click is on annotation
+			if (annotation) {
+				setAnnotationObject(annotation);
+				const zoomValue = convertToZoomValue({
+					level: annotation.zoomLevel,
+					viewer,
+				});
+				setIsMorphometryDisabled(
+					annotation.type === "line" || !(zoomValue >= 20)
+				);
+			} else {
+				setAnnotationObject(null);
+				setIsMorphometryDisabled(true);
+			}
 
       setMenuPosition({ left: event.pointer.x, top: event.pointer.y });
       openMenu();
@@ -642,219 +637,289 @@ function ViewerControls({
     };
   }, [viewer, fabricOverlay]);
 
-  useEffect(() => {
-    if (!viewer || !fabricOverlay) return;
-    const canvas = fabricOverlay.fabricCanvas();
+	// useEffect(() => {
+	// 	if (!viewer || !fabricOverlay) return;
+	// 	const canvas = fabricOverlay.fabricCanvas();
+	// 	const ctx = canvas.getContext("2d");
+	// 	const cw = canvas.width;
+	// 	const ch = canvas.height;
+	// 	let offsetX;
+	// 	let offsetY;
 
-    const handleMouseDown = (event) => {
-      const annotation = canvas.getActiveObject();
+	// 	const annotation = canvas.getActiveObject();
+	// 	function reOffset() {
+	// 		const BB = canvas.getBoundingClientRect();
+	// 		offsetX = BB.left;
+	// 		offsetY = BB.top;
+	// 	}
+	// 	reOffset();
+	// 	window.onscroll = function (e) {
+	// 		reOffset();
+	// 	};
+	// 	window.onresize = function (e) {
+	// 		reOffset();
+	// 	};
+	// 	ctx.font = "14px verdana";
+	// 	const shapes = [];
+	// 	function drawAll() {
+	// 		for (let i = 0; i < shapes.length; i++) {
+	// 			const s = shapes[i];
+	// 			defineShape(s.points);
+	// 			ctx.fillStyle = s.drawcolor;
+	// 			ctx.fill();
+	// 			ctx.stroke();
+	// 			if (s.color !== s.drawcolor) {
+	// 				ctx.fillStyle = "black";
+	// 				ctx.fillText(s.name, s.points[0].x, s.points[0].y);
+	// 			}
+	// 		}
+	// 	}
+	// 	drawAll();
+	// 	function defineShape(s) {
+	// 		ctx.beginPath();
+	// 		ctx.moveTo(s[0].x, s[0].y);
+	// 		for (let i = 1; i < s.length; ++i) {
+	// 			ctx.lineTo(s[i].x, s[i].y);
+	// 		}
+	// 		ctx.closePath();
+	// 	}
+	// 	const handleMouseDown = (e) => {
+	// 		e.preventDefault();
+	// 		e.stopPropagation();
 
-      if (annotation && annotation.type === "textbox") {
-        setAnnotationText(annotation.text);
-        setAnnotationShape("textbox");
-      }
-    };
+	// 		const mouseX = parseInt(e.clientX - offsetX, 10);
+	// 		const mouseY = parseInt(e.clientY - offsetY, 10);
 
-    canvas.requestRenderAll();
+	// 		// clear the canvas
+	// 		ctx.clearRect(0, 0, cw, ch);
 
-    canvas.on("mouse:move", handleMouseDown);
-    return () => {
-      canvas.on("mouse:move", handleMouseDown);
-    };
-  }, [viewer, fabricOverlay]);
+	// 		for (let i = 0; i < shapes.length; i++) {
+	// 			const s = shapes[i];
 
-  useEffect(() => {
-    updateAnnotation({
-      text: annotationText,
-      title: `${userInfo.firstName} ${userInfo.lastName}`,
-      onUpdateAnnotation,
-    });
-  }, [annotationText]);
+	// 			// define the shape path we want to test against the mouse position
+	// 			defineShape(s.points);
+	// 			// is the mouse insied the defined shape?
+	// 			if (ctx.isPointInPath(mouseX, mouseY)) {
+	// 				// if yes, fill the shape in red
+	// 				s.drawcolor = "red";
+	// 			} else {
+	// 				// if no, fill the shape with blue
+	// 				s.drawcolor = s.color;
+	// 			}
+	// 		}
+	// 	};
 
-  useEffect(() => {
-    updateAnnotation({
-      text: annotationText,
-      title: `${userInfo.firstName} ${userInfo.lastName}`,
-      onUpdateAnnotation,
-    });
-  }, [annotationText]);
+	// 	canvas.requestRenderAll();
 
-  // ######################## RUN KI67 ###############################################
-  // ######################## RUN KI67 ###############################################
-  const groupAnnotationAndCellsKI67 = ({
-    cells,
-    enclosingAnnotation,
-    optionalData,
-  }) => {
-    if (!cells || !enclosingAnnotation) return null;
-    const { slide, hash, title, text, zoomLevel, points, timeStamp, path } =
-      enclosingAnnotation;
-    enclosingAnnotation.set({ fill: "" });
-    const group = new fabric.Group([enclosingAnnotation, ...cells]).set({
-      slide,
-      hash,
-      title,
-      text,
-      zoomLevel,
-      points,
-      path,
-      timeStamp,
-      isKI67Analysed: true,
-      fill: "",
-    });
+	// 	canvas.on("mouse:move", handleMouseDown);
+	// 	return () => {
+	// 		canvas.on("mouse:move", handleMouseDown);
+	// 	};
+	// }, [viewer, fabricOverlay]);
+	useEffect(() => {
+		if (!viewer || !fabricOverlay) return;
+		const canvas = fabricOverlay.fabricCanvas();
 
-    // check if optionalData is available and also is not empty
-    if (optionalData && Object.keys(optionalData).length > 0) {
-      group.set({ analysedData: optionalData, roiType: optionalData.roiType });
-    }
+		const handleMouseDown = (event) => {
+			const annotation = canvas.getActiveObject();
 
-    const message = {
-      username: "",
-      object: group,
-      image: null,
-    };
+			if (annotation && annotation.type === "textbox") {
+				setAnnotationText(annotation.text);
+				setAnnotationShape("textbox");
+			}
+		};
 
-    return message;
-  };
+		canvas.requestRenderAll();
 
-  const runKI67 = async () => {
-    if (!fabricOverlay || !annotationObject) return;
-    else {
-      // get s3 folder key from the originalFileUrl
-      const key = getFileBucketFolder(originalFileUrl);
-      const { left, top, width, height, type } = annotationObject;
-      let body = {
-        key,
-        type,
-        left,
-        top,
-        width,
-        height,
-        slideId,
-        hash: annotationObject.hash,
-      };
+		canvas.on("mouse:move", handleMouseDown);
+		return () => {
+			canvas.on("mouse:move", handleMouseDown);
+		};
+	}, [viewer, fabricOverlay]);
 
-      // if annoatation is a freehand, send the coordinates of the path
-      // otherwise, send the coordinates of the rectangle
-      if (annotationObject.type === "path") {
-        body = { ...body, path: annotationObject.path };
+	useEffect(() => {
+		updateAnnotation({
+			text: annotationText,
+			title: `${userInfo.firstName} ${userInfo.lastName}`,
+			onUpdateAnnotation,
+		});
+	}, [annotationText]);
 
-        if (slide?.isIHC === false) {
-          isKI67Open();
-          F;
-        }
-      } else if (annotationObject.type === "ellipse") {
-        body = {
-          ...body,
-          cx: annotationObject.cx,
-          cy: annotationObject.cy,
-          rx: annotationObject.rx,
-          ry: annotationObject.ry,
-          type: "ellipse",
-        };
-      } else if (annotationObject.type === "polygon") {
-        body = { ...body, points: annotationObject.points };
-      }
-      // console.log("slideID", slideId);
-      // console.log("body....", body);
-      const originalBody = {
-        ...body,
-        notifyHook: `${Environment.VIEWER_URL}/notify_KI67`,
-        annotationId: "",
-      };
-      // console.log("body", originalBody);
-      try {
-        // const resp = await onVhutAnalysis(body);
-        const resp = await axios.post(
-          "https://backup-quantize-vhut.prr.ai/ki_six_seven_predict",
-          originalBody
-        );
-        // console.log("resp", resp);
-        //   setLoadUI(false);
-        // toast({
-        //   title: resp.data.message,
-        //   status: "success",
-        //   duration: 1500,
-        //   isClosable: true,
-        // });
-      } catch (err) {
-        toast({
-          title: "Server Unavailable",
-          description: err.message,
-          status: "error",
-          duration: 1500,
-          isClosable: true,
-        });
-      }
-    }
-  };
+	// ######################## RUN KI67 ###############################################
+	// ######################## RUN KI67 ###############################################
+	const groupAnnotationAndCellsKI67 = ({
+		cells,
+		enclosingAnnotation,
+		optionalData,
+	}) => {
+		if (!cells || !enclosingAnnotation) return null;
+		const { slide, hash, title, text, zoomLevel, points, timeStamp, path } =
+			enclosingAnnotation;
+		enclosingAnnotation.set({ fill: "" });
+		const group = new fabric.Group([enclosingAnnotation, ...cells]).set({
+			slide,
+			hash,
+			title,
+			text,
+			zoomLevel,
+			points,
+			path,
+			timeStamp,
+			isKI67Analysed: true,
+			fill: "",
+		});
 
-  useEffect(() => {
-    if (vhutSubscriptionData) {
-      // console.log("subscribed", vhutSubscriptionData);
-      const {
-        data,
-        status,
-        message,
-        analysisType: type,
-      } = vhutSubscriptionData.analysisStatus;
+		// check if optionalData is available and also is not empty
+		if (optionalData && Object.keys(optionalData).length > 0) {
+			group.set({ analysedData: optionalData, roiType: optionalData.roiType });
+		}
 
-      if (type === "KI67_ANALYSIS") {
-        const posContours = data.kiResults.pos_contours;
-        const negContours = data.kiResults.neg_contours;
-        const canvas = fabricOverlay.fabricCanvas();
-        const { left, top } = annotationObject;
-        const circles = posContours.map((coord) => {
-          const circle = new fabric.Circle({
-            left: coord[0] + left,
-            top: coord[1] + top,
-            radius: 3,
-            fill: "#BB4139",
-            stroke: "#BB4139",
-            strokeWidth: 2,
-          });
-          return circle;
-        });
-        const circlesNegative = negContours.map((coord) => {
-          const circle = new fabric.Circle({
-            left: coord[0] + left,
-            top: coord[1] + top,
-            radius: 3,
-            fill: "#17478D",
-            stroke: "#17478D",
-            strokeWidth: 2,
-          });
-          return circle;
-        });
-        const cells = [...circles, ...circlesNegative];
-        const feedMessage = groupAnnotationAndCellsKI67({
-          enclosingAnnotation: annotationObject,
-          cells,
-          optionalData: {
-            data: "",
-            roiType: "KI67",
-            num_positive: data?.kiResults?.num_positive,
-            num_negative: data?.kiResults?.num_negative,
-            proliferation_score: data?.kiResults?.proliferation_score,
-          },
-        });
-        // console.log(feedMessage);
-        if (feedMessage?.object) {
-          // remove enclosing annotation and add new one to canvas
-          // console.log(feedMessage);
-          canvas.remove(annotationObject);
-          canvas.add(feedMessage.object).requestRenderAll();
+		const message = {
+			username: "",
+			object: group,
+			image: null,
+		};
 
-          setFabricOverlayState(
-            updateFeedInAnnotationFeed({ id: viewerId, feed: feedMessage })
-          );
-        }
-      }
-    }
-  }, [vhutSubscriptionData]);
+		return message;
+	};
 
-  return (
-    <>
+	const runKI67 = async () => {
+		if (!fabricOverlay || !annotationObject) return;
+
+		// get s3 folder key from the originalFileUrl
+		const key = getFileBucketFolder(originalFileUrl);
+		const { left, top, width, height, type } = annotationObject;
+		let body = {
+			key,
+			type,
+			left,
+			top,
+			width,
+			height,
+			slideId,
+			hash: annotationObject.hash,
+		};
+
+		// if annoatation is a freehand, send the coordinates of the path
+		// otherwise, send the coordinates of the rectangle
+		if (annotationObject.type === "path") {
+			body = { ...body, path: annotationObject.path };
+
+			if (slide?.isIHC === false) {
+				isKI67Open();
+				F;
+			}
+		} else if (annotationObject.type === "ellipse") {
+			body = {
+				...body,
+				cx: annotationObject.cx,
+				cy: annotationObject.cy,
+				rx: annotationObject.rx,
+				ry: annotationObject.ry,
+				type: "ellipse",
+			};
+		} else if (annotationObject.type === "polygon") {
+			body = { ...body, points: annotationObject.points };
+		}
+		// console.log("slideID", slideId);
+		// console.log("body....", body);
+		const originalBody = {
+			...body,
+			notifyHook: `${Environment.VIEWER_URL}/notify_KI67`,
+			annotationId: "",
+		};
+		console.log("body", originalBody);
+		try {
+			// const resp = await onVhutAnalysis(body);
+			const resp = await axios.post(
+				"https://backup-quantize-vhut.prr.ai/ki_six_seven_predict",
+				originalBody
+			);
+			console.log("resp", resp);
+			//   setLoadUI(false);
+			// toast({
+			//   title: resp.data.message,
+			//   status: "success",
+			//   duration: 1500,
+			//   isClosable: true,
+			// });
+		} catch (err) {
+			toast({
+				title: "Server Unavailable",
+				description: err.message,
+				status: "error",
+				duration: 1500,
+				isClosable: true,
+			});
+		}
+	};
+
+	useEffect(() => {
+		if (vhutSubscriptionData) {
+			// console.log("subscribed", vhutSubscriptionData);
+			const {
+				data,
+				status,
+				message,
+				analysisType: type,
+			} = vhutSubscriptionData.analysisStatus;
+
+			if (type === "KI67_ANALYSIS") {
+				const posContours = data.kiResults.pos_contours;
+				const negContours = data.kiResults.neg_contours;
+				const canvas = fabricOverlay.fabricCanvas();
+				const { left, top } = annotationObject;
+				const circles = posContours.map((coord) => {
+					const circle = new fabric.Circle({
+						left: coord[0] + left,
+						top: coord[1] + top,
+						radius: 3,
+						fill: "#BB4139",
+						stroke: "#BB4139",
+						strokeWidth: 2,
+					});
+					return circle;
+				});
+				const circlesNegative = negContours.map((coord) => {
+					const circle = new fabric.Circle({
+						left: coord[0] + left,
+						top: coord[1] + top,
+						radius: 3,
+						fill: "#17478D",
+						stroke: "#17478D",
+						strokeWidth: 2,
+					});
+					return circle;
+				});
+				const cells = [...circles, ...circlesNegative];
+				const feedMessage = groupAnnotationAndCellsKI67({
+					enclosingAnnotation: annotationObject,
+					cells,
+					optionalData: {
+						data: "",
+						roiType: "KI67",
+						num_positive: data?.kiResults?.num_positive,
+						num_negative: data?.kiResults?.num_negative,
+						proliferation_score: data?.kiResults?.proliferation_score,
+					},
+				});
+				console.log(feedMessage);
+				if (feedMessage?.object) {
+					// remove enclosing annotation and add new one to canvas
+					// console.log(feedMessage);
+					canvas.remove(annotationObject);
+					canvas.add(feedMessage.object).requestRenderAll();
+
+					setFabricOverlayState(
+						updateFeedInAnnotationFeed({ id: viewerId, feed: feedMessage })
+					);
+				}
+			}
+		}
+	}, [vhutSubscriptionData]);
+
+	return (
+		<>
       {!isAnnotationLoaded || isViewportAnalysing ? (
         <Loading position="absolute" w="100%" zIndex="3" h="79vh" />
       ) : null}
@@ -1013,7 +1078,7 @@ function ViewerControls({
         ""
       )}
     </>
-  );
+	);
 }
 
 export default ViewerControls;

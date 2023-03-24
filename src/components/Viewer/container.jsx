@@ -13,29 +13,30 @@ import { useFabricOverlayState } from "../../state/store";
 import Viewer from "./viewer";
 
 function ViewerContainer({
-  viewerId,
-  slideName,
-  userInfo,
-  enableAI,
-  slide,
+	viewerId,
+	slideName,
+	userInfo,
+	enableAI,
+	slide,
   zoomValue,
   setZoomValue,
-  onLoadAnnotations,
-  onSaveAnnotation,
-  onDeleteAnnotation,
-  onUpdateAnnotation,
-  setLoadUI,
-  onVhutAnalysis,
-  onGetVhutAnalysis,
-  onMessageListener,
-  application,
-  client2,
-  mentionUsers,
-  caseInfo,
-  addUsersToCase,
-  Environment,
-  accessToken,
-  setIsXmlAnnotations,
+	onLoadAnnotations,
+	onSaveAnnotation,
+	onDeleteAnnotation,
+	onUpdateAnnotation,
+	setLoadUI,
+	onVhutAnalysis,
+	onGetVhutAnalysis,
+	onMessageListener,
+	application,
+	client2,
+	mentionUsers,
+	caseInfo,
+	addUsersToCase,
+	Environment,
+	accessToken,
+	setIsXmlAnnotations,
+	handleAnnotationClick,
 }) {
   const location = useLocation();
 
@@ -83,26 +84,27 @@ function ViewerContainer({
   // Success
   // return <Viewer tile={tileSource} />;
 
-  return (
-    <Viewer
-      application={application}
-      viewerId={viewerId}
-      tile={tile}
-      enableAI={enableAI}
-      slide={slide}
+	return (
+		<Viewer
+			application={application}
+			viewerId={viewerId}
+			tile={tile}
+			enableAI={enableAI}
+			slide={slide}
       setZoomValue={setZoomValue}
       zoomValue={zoomValue}
-      userInfo={userInfo}
-      client2={client2}
-      setLoadUI={setLoadUI}
-      mentionUsers={mentionUsers}
-      caseInfo={caseInfo}
-      addUsersToCase={addUsersToCase}
-      Environment={Environment}
-      accessToken={accessToken}
-      setIsXmlAnnotations={setIsXmlAnnotations}
-    />
-  );
+			userInfo={userInfo}
+			client2={client2}
+			setLoadUI={setLoadUI}
+			mentionUsers={mentionUsers}
+			caseInfo={caseInfo}
+			addUsersToCase={addUsersToCase}
+			Environment={Environment}
+			accessToken={accessToken}
+			setIsXmlAnnotations={setIsXmlAnnotations}
+			handleAnnotationClick={handleAnnotationClick}
+		/>
+	);
 }
 
 export default ViewerContainer;

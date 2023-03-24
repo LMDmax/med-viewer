@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { RiFullscreenFill } from "react-icons/ri";
 import ToolbarButton from "../ViewerToolbar/button";
 import IconSize from "../ViewerToolbar/IconSize";
@@ -7,13 +7,16 @@ import { useFabricOverlayState } from "../../state/store";
 const Fullscreen = ({ viewerId }) => {
   const { fabricOverlayState } = useFabricOverlayState();
   const { viewer } = fabricOverlayState?.viewerWindow[viewerId];
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const handleFullScreen = () => {
-    if (viewer.isFullPage() && !viewer.isFullScreen()) {
-      // Is fullPage but not fullScreen
-      viewer.setFullPage(false);
+    if (!isFullscreen) {
+      // viewer.setControlsEnabled(true);
+      setIsFullscreen(true);
+      document.body.requestFullscreen();
     } else {
-      viewer.setFullScreen(!viewer.isFullPage());
+      setIsFullscreen(false);
+      document.exitFullscreen();
     }
   };
   return (

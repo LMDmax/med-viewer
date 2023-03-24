@@ -32,39 +32,39 @@ import ChangeSlide from "../Case/changeSlide";
 import { useFabricOverlayState } from "../../state/store";
 
 function LayoutApp({
-  userInfo,
-  caseInfo,
-  slides,
-  viewerIds,
-  questionnaire,
-  report,
-  application,
-  hitTil,
-  annotations,
-  enableAI,
-  enableFilters,
-  userIdToQuery,
-  response,
-  finalSubmitHandler,
-  saveReport,
-  saveSynopticReport,
-  mediaUpload,
-  slideInfo,
-  clinicalStudy,
-  questions,
-  setSlideId,
-  responseHandler,
-  questionnaireResponse,
-  getSynopticReport,
-  client2,
-  users,
-  mentionUsers,
-  Environment,
-  updateSynopticReport,
-  addUsersToCase,
-  accessToken,
+	userInfo,
+	caseInfo,
+	slides,
+	viewerIds,
+	questionnaire,
+	report,
+	application,
+	hitTil,
+	annotations,
+	enableAI,
+	enableFilters,
+	userIdToQuery,
+	response,
+	finalSubmitHandler,
+	saveReport,
+	saveSynopticReport,
+	mediaUpload,
+	slideInfo,
+	clinicalStudy,
+	questions,
+	setSlideId,
+	responseHandler,
+	questionnaireResponse,
+	getSynopticReport,
+	client2,
+	users,
+	mentionUsers,
+	Environment,
+	updateSynopticReport,
+	addUsersToCase,
+	accessToken,
 }) {
-  // const { handleEvent } = useKeyboardEvents();
+	// const { handleEvent } = useKeyboardEvents();
 
   const [sidebar, setSidebar] = useState(false);
   const [zoomValue, setZoomValue] = useState(1);
@@ -99,6 +99,7 @@ function LayoutApp({
   const [hideTumor, setHideTumor] = useState(false);
   const [hideStroma, setHideStroma] = useState(false);
   const [hideLymphocyte, setHideLymphocyte] = useState(false);
+	const [annotationObject, setAnnotationObject] = useState("");
   const [toolSelected, setToolSelected] = useState("");
 
   // xml annotations check
@@ -190,9 +191,9 @@ function LayoutApp({
       break;
   }
 
-  const showSidebar = () => {
-    setSidebar(!sidebar);
-  };
+	const showSidebar = () => {
+		setSidebar(!sidebar);
+	};
 
   const handleFeedBar = () => {
     setShowFeedBar(true);
@@ -222,6 +223,11 @@ function LayoutApp({
     setShowFeedBar(true);
     setFeedBar(1);
   };
+  const handleAnnotationClick = (annotation) => {
+		setAnnotationObject(annotation);
+		setShowFeedBar(true);
+		setFeedBar(1);
+	};
 
   return (
     <Flex
@@ -337,6 +343,7 @@ function LayoutApp({
               feedTab={feedTab}
               synopticType={synopticType}
               isXmlAnnotations={isXmlAnnotations}
+              annotationObject={annotationObject}
             />
           ) : null}
           {chatFeedBar ? (
@@ -413,6 +420,7 @@ function LayoutApp({
               Environment={Environment}
               accessToken={accessToken}
               setIsXmlAnnotations={setIsXmlAnnotations}
+							handleAnnotationClick={handleAnnotationClick}
             />
           </LayoutAppBody>
           <FunctionsMenu />
@@ -464,7 +472,7 @@ function LayoutApp({
 }
 
 LayoutApp.propTypes = {
-  finalSubmitHandler: PropTypes.func,
+	finalSubmitHandler: PropTypes.func,
 };
 
 export default LayoutApp;

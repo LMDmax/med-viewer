@@ -12,6 +12,7 @@ import ViewerControls from "./controls";
 import "../../utility/fabricUtility";
 
 const osdOptions = {
+  maxZoomLevel: 6.0,
   constrainDuringPan: !!isBrowser,
   debugMode: false,
   gestureSettingsMouse: {
@@ -63,53 +64,54 @@ function Viewer({
   Environment,
   accessToken,
   setIsXmlAnnotations,
+  handleAnnotationClick,
 }) {
-  const { setFabricOverlayState } = useFabricOverlayState();
-  const [viewer, setViewer] = useState(null);
-  const boxRef = useRef();
+	const { setFabricOverlayState } = useFabricOverlayState();
+	const [viewer, setViewer] = useState(null);
+	const boxRef = useRef();
 
-  // Customize Fabric selection handles
-  fabric.Object.prototype.set({
-    borderColor: "#22a2f8",
-    borderScaleFactor: 2, // selection stroke width
-    cornerColor: "white",
-    cornerSize: 10,
-    transparentCorners: false,
-    hasControls: true,
-    evented: true,
-  });
+	// Customize Fabric selection handles
+	fabric.Object.prototype.set({
+		borderColor: "#22a2f8",
+		borderScaleFactor: 2, // selection stroke width
+		cornerColor: "white",
+		cornerSize: 10,
+		transparentCorners: false,
+		hasControls: true,
+		evented: true,
+	});
 
-  useEffect(() => {
-    // Initialize OpenSeadragon instance and set to viewer
-    if (viewer) viewer.destroy();
+	useEffect(() => {
+		// Initialize OpenSeadragon instance and set to viewer
+		if (viewer) viewer.destroy();
 
-    setViewer(
-      OpenSeadragon({
-        ...osdOptions,
-        tileSources: tile,
-        id: `viewer${viewerId}`,
-      })
-    );
-    initFabricJSOverlay(OpenSeadragon, fabric);
-    return () => {
-      if (viewer) viewer.destroy();
-    };
-  }, []);
+		setViewer(
+			OpenSeadragon({
+				...osdOptions,
+				tileSources: tile,
+				id: `viewer${viewerId}`,
+			})
+		);
+		initFabricJSOverlay(OpenSeadragon, fabric);
+		return () => {
+			if (viewer) viewer.destroy();
+		};
+	}, []);
 
-  // Show the results.
-  useEffect(() => {
-    if (!viewer) return;
+	// Show the results.
+	useEffect(() => {
+		if (!viewer) return;
 
-    // Create the fabric.js overlay, and set it on a sharable context
-    // viewer.open(tile.source);
+		// Create the fabric.js overlay, and set it on a sharable context
+		// viewer.open(tile.source);
 
-    setFabricOverlayState(
-      updateOverlay({
-        id: viewerId,
-        fabricOverlay: viewer.fabricjsOverlay({ scale: 1 }),
-        viewer,
-      })
-    );
+		setFabricOverlayState(
+			updateOverlay({
+				id: viewerId,
+				fabricOverlay: viewer.fabricjsOverlay({ scale: 1 }),
+				viewer,
+			})
+		);
 
     return () => {
       setFabricOverlayState(
@@ -146,6 +148,7 @@ function Viewer({
           Environment={Environment}
           accessToken={accessToken}
           setIsXmlAnnotations={setIsXmlAnnotations}
+		  handleAnnotationClick={handleAnnotationClick}
         />
       )}
       {/* <Button onClick={selection}>Select</Button> */}
@@ -154,8 +157,8 @@ function Viewer({
 }
 
 Viewer.propTypes = {
-  tile: PropTypes.string,
-  viewerId: PropTypes.string,
+	tile: PropTypes.string,
+	viewerId: PropTypes.string,
 };
 
 export default Viewer;

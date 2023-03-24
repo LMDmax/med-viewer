@@ -128,6 +128,7 @@ function ActivityFeed({
 	popup,
 	showFeedBar,
 	isXmlAnnotations,
+	activeObject,
 }) {
 	// const onUpdateAnnotation = (data) => {
 	//   console.log("activityfeed", data);
@@ -203,18 +204,18 @@ function ActivityFeed({
 	}, [tile]);
 
 	const handleClick = (feed) => {
-		if (feed.object.roiType === "KI67") {
+		if (feed?.object?.roiType === "KI67") {
 			setKi67Feed(feed);
 			console.log(ki67Feed);
 		}
-		if (feed.object.roiType !== "KI67") {
+		if (feed?.object?.roiType !== "KI67") {
 			setKi67Feed({});
 		}
-		if (!feed.object || !feed.object?.visible) return;
+		if (!feed?.object || !feed?.object?.visible) return;
 		const canvas = fabricOverlay.fabricCanvas();
 
-		if (feed.object.type !== "viewport") {
-			canvas.setActiveObject(feed.object);
+		if (feed?.object?.type !== "viewport") {
+			canvas.setActiveObject(feed?.object);
 		}
 
 		// change position to annotation object location
@@ -238,7 +239,10 @@ function ActivityFeed({
 		canvas.requestRenderAll();
 		setAnnotationsDetails(feed.object);
 	};
-	console.log(ki67Feed);
+	// on annotation click
+	useEffect(() => {
+		setAnnotationsDetails(activeObject);
+	}, [activeObject]);
 
 	const handleSave = ({ text, title }) => {
 		annotationObject.text = text;
@@ -328,7 +332,7 @@ function ActivityFeed({
 						{activityFeed.map((feed, index) => {
 							return feed?.object && feed?.object?.type !== "textbox" ? (
 								<Flex
-									key={feed.object.hash}
+									key={feed.object.hash ? feed.object.hash : `${index + 1}`}
 									pb="0.5vh"
 									borderBottom="1px solid #F6F6F6"
 									cursor="pointer"
@@ -346,7 +350,12 @@ function ActivityFeed({
 										) : (
 											<BsSlash color="#E23636" />
 										)}
-										<Text ml="0.8vw">
+										<Text
+											ml="0.8vw"
+											fontWeight={
+												annotationDetails === feed?.object ? "600" : "400"
+											}
+										>
 											{feed.object?.title
 												? feed.object.title
 												: feed.object?.roiType === "morphometry"
