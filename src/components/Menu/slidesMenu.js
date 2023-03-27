@@ -93,9 +93,9 @@ const SlidesMenu = ({
                   >
                     <Image
                       w="100%"
-                      h="110px"
-                      px="8px"
-                      py="26px"
+                      h="115px"
+                      px="10px"
+                      py="10px"
                       src={url}
                       alt="wsi slide"
                       fit="cover"

@@ -540,7 +540,6 @@ function ViewerControls({
           }
 
           canvas.requestRenderAll();
-          console.log(annotatedData);
           if (annotatedData?.length > 0) {
             toast({
               title: "Annotation loaded",

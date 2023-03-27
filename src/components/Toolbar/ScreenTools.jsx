@@ -72,7 +72,7 @@ function ScreenTools({
         />
       )}
       <Divider orientation="vertical" ml="5px" border="1px solid gray" />
-      {report ? (
+      {/* {report ? (
         <ShowReport
           caseInfo={caseInfo}
           application={application}
@@ -95,7 +95,7 @@ function ScreenTools({
           getSynopticReport={getSynopticReport}
           updateSynopticReport={updateSynopticReport}
         />
-      ) : null}
+      ) : null} */}
       {/* <Flex borderLeft="2px solid #E4E5E8" ml="18px" pl="15px">
 				<Menu zIndex="5">
 					<MenuButton

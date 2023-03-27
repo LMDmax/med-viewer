@@ -8,6 +8,7 @@ import {
   useMediaQuery,
   VStack,
   Text,
+  HStack,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import {
@@ -20,7 +21,7 @@ import {
   CommentsSelected,
   Information,
   InformationSelected,
-  Report,
+  ReportIcon,
   ReportSelected,
   SlidesIconSelected,
 } from "../Icons/CustomIcons";
@@ -29,22 +30,69 @@ import { useFabricOverlayState } from "../../state/store";
 import Studies from "../Sidebar/studies";
 import ActivityFeed from "../Feed/activityFeed";
 import CommentFeed from "../Feed/CommentFeed";
+import ShowReport from "../Toolbar/ShowReport";
+import SynopticReport from "../SynopticReport/SynopticReport";
+import Report from "../Report/Report";
+import Timeline from "./timeline";
 
 const FunctionsMenu = ({
   caseInfo,
   slides,
   viewerId,
+  setIsMultiview,
   setIsNavigatorActive,
+  isNavigatorActive,
+  isMultiview,
   slide,
   userInfo,
   isXmlAnnotations,
+  application,
+  saveReport,
+  saveSynopticReport,
+  mediaUpload,
+  slideInfo,
+  handleReport,
+  showReport,
+  setShowReport,
+  questions,
+  app,
+  setSlideId,
+  responseHandler,
+  questionnaireResponse,
+  synopticType,
+  setSynopticType,
+  getSynopticReport,
+  updateSynopticReport,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
   const [selectedOption, setSelectedOption] = useState("slides");
   const { fabricOverlayState } = useFabricOverlayState();
   const { viewerWindow } = fabricOverlayState;
-  const { tile } = viewerWindow[viewerId];
+  const { tile, slideId } = viewerWindow[viewerId];
+  const [reportData, setReportData] = useState({
+    clinicalStudy: "",
+    grossDescription: "",
+    microscopicDescription: "",
+    impression: "",
+    advice: "",
+    annotedSlides: "",
+  });
+  const handleReportData = (input) => (e) => {
+    const { value } = e.target;
+    setReportData((prevState) => ({
+      ...prevState,
+      [input]: value,
+    }));
+  };
+  const handleUpload = (e) => {
+    const { files } = e.target;
+    const filesArray = Array.from(files);
+    const imagesArray = filesArray.map((file) => file);
+    setAnnotedSlideImages(imagesArray);
+  };
+  const [annotedSlideImages, setAnnotedSlideImages] = useState([]);
+  const [slideData, setSlideData] = useState(null);
 
   return (
     <Box
@@ -56,7 +104,15 @@ const FunctionsMenu = ({
     >
       <motion.div
         animate={{
-          width: isOpen ? (ifWidthLessthan1920 ? "350px" : "35vh") : "70px",
+          width: isOpen
+            ? ifWidthLessthan1920
+              ? selectedOption === "report"
+                ? "35vw"
+                : "350px"
+              : selectedOption === "report"
+              ? "40vw"
+              : "18vw"
+            : "70px",
         }}
         style={{
           background: "rgba(217, 217, 217, 0.5)",
@@ -241,7 +297,7 @@ const FunctionsMenu = ({
                   {selectedOption === "report" ? (
                     <ReportSelected />
                   ) : (
-                    <Report />
+                    <ReportIcon />
                   )}
                   <Text
                     fontFamily="Inter"
@@ -259,7 +315,7 @@ const FunctionsMenu = ({
             </Tooltip>
           </Flex>
           <Flex
-            w={ifWidthLessthan1920 ? "410px" : "35vh"}
+            w="100%"
             h={
               ifWidthLessthan1920
                 ? "calc(100vh - 92px)"
@@ -286,7 +342,75 @@ const FunctionsMenu = ({
               />
             ) : selectedOption === "comments" ? (
               <CommentFeed viewerId={viewerId} />
-            ) : null}
+            ) : selectedOption === "report" ? (
+              <Flex w="100%" h="100%" direction="column" bgColor="#FCFCFC">
+                <Flex w="100%" direction="row" p="5px 5px 0px 20px">
+                  <Text fontFamily="Inter" color="#3B5D7C" mr="60%">
+                    Report
+                  </Text>
+                  <ShowReport
+                    caseInfo={caseInfo}
+                    application={application}
+                    saveReport={saveReport}
+                    saveSynopticReport={saveSynopticReport}
+                    viewerId={viewerId}
+                    mediaUpload={mediaUpload}
+                    slideInfo={slideInfo}
+                    handleReport={handleReport}
+                    showReport={showReport}
+                    setShowReport={setShowReport}
+                    userInfo={userInfo}
+                    questions={questions}
+                    app={app}
+                    setSlideId={setSlideId}
+                    responseHandler={responseHandler}
+                    questionnaireResponse={questionnaireResponse}
+                    synopticType={synopticType}
+                    setSynopticType={setSynopticType}
+                    getSynopticReport={getSynopticReport}
+                    updateSynopticReport={updateSynopticReport}
+                    reportData={reportData}
+                    setReportData={setReportData}
+                    handleReportData={handleReportData}
+                    handleUpload={handleUpload}
+                    annotedSlideImages={annotedSlideImages}
+                    setAnnotedSlideImages={setAnnotedSlideImages}
+                    slideData={slideData}
+                    setSlideData={setSlideData}
+                  />
+                </Flex>
+                <Flex>
+                  {showReport ? (
+                    <Report
+                      userInfo={userInfo}
+                      handleReport={handleReport}
+                      report={showReport}
+                      reportData={reportData}
+                      handleReportData={handleReportData}
+                      caseInfo={caseInfo}
+                      handleUpload={handleUpload}
+                      annotedSlideImages={annotedSlideImages}
+                      reportedData={slideData}
+                    />
+                  ) : synopticType !== "" ? (
+                    <SynopticReport
+                      userInfo={userInfo}
+                      saveSynopticReport={saveSynopticReport}
+                      getSynopticReport={getSynopticReport}
+                      synopticType={synopticType}
+                      caseInfo={caseInfo}
+                      setSynopticType={setSynopticType}
+                      slideId={slideId}
+                      updateSynopticReport={updateSynopticReport}
+                    />
+                  ) : null}
+                </Flex>
+              </Flex>
+            ) : (
+              <Flex w="100%" h="100%" bgColor="#FCFCFC" p="5px">
+                <Timeline />
+              </Flex>
+            )}
           </Flex>
         </Flex>
       </motion.div>

@@ -26,6 +26,7 @@ import BreastCancer from "../SynopticReport/BreastCancer";
 import ProstateCancer from "../SynopticReport/ProstateCancer";
 import Lymphoma from "../SynopticReport/Lymphoma";
 import SynopticReport from "../SynopticReport/SynopticReport";
+import { BsChevronCompactDown } from "react-icons/bs";
 
 const ShowReport = ({ showReport, openReport }) => {
   return showReport ? (
@@ -81,19 +82,20 @@ const OpenReportButton = ({ openReport }) => {
     >
       <Button
         variant="solid"
-        h="32px"
+        h="25px"
         ml="15px"
-        borderRadius="0px"
-        backgroundColor="#00153F"
+        border="1px solid #8F8F8F"
+        borderRadius={0}
+        backgroundColor="#FCFCFC"
         _hover={{}}
         _focus={{
           border: "none",
         }}
-        color="#fff"
+        color="#000"
         fontFamily="inter"
-        fontSize="14px"
+        fontSize="12px"
         fontWeight="500"
-        onClick={openReport}
+        onClick={() => openReport()}
       >
         Report
       </Button>
@@ -160,11 +162,18 @@ const ReportHelper = ({
   setSynopticType,
   getSynopticReport,
   updateSynopticReport,
+  reportData,
+  setReportData,
+  handleReportData,
+  handleUpload,
+  annotedSlideImages,
+  setAnnotedSlideImages,
+  slideData,
+  setSlideData,
 }) => {
   const { fabricOverlayState } = useFabricOverlayState();
   const { viewerWindow } = fabricOverlayState;
   const { slideId } = viewerWindow[viewerId];
-  const [slideData, setSlideData] = useState(null);
 
   const toast = useToast();
 
@@ -178,35 +187,14 @@ const ReportHelper = ({
     fetchData();
   }, [slideId, caseInfo, slideInfo]);
 
-  const [annotedSlideImages, setAnnotedSlideImages] = useState([]);
-  const [reportData, setReportData] = useState({
-    clinicalStudy: "",
-    grossDescription: "",
-    microscopicDescription: "",
-    impression: "",
-    advice: "",
-    annotedSlides: "",
-  });
-  const handleReportData = (input) => (e) => {
-    const { value } = e.target;
-    setReportData((prevState) => ({
-      ...prevState,
-      [input]: value,
-    }));
-  };
-
   const openReport = () => {
     setSynopticType("");
     setShowReport(true);
+    console.log("clicked");
   };
   // form
   const annotedSlidesForm = new FormData();
-  const handleUpload = (e) => {
-    const { files } = e.target;
-    const filesArray = Array.from(files);
-    const imagesArray = filesArray.map((file) => file);
-    setAnnotedSlideImages(imagesArray);
-  };
+
   // clear values of textarea and file upload
   const clearValues = () => {
     Array.from(document.querySelectorAll("Textarea")).forEach((input) => {
@@ -341,31 +329,6 @@ const ReportHelper = ({
           handleReportsubmit={handleReportsubmit}
         />
       )}
-
-      {showReport ? (
-        <Report
-          userInfo={userInfo}
-          handleReport={handleReport}
-          report={showReport}
-          reportData={reportData}
-          handleReportData={handleReportData}
-          caseInfo={caseInfo}
-          handleUpload={handleUpload}
-          annotedSlideImages={annotedSlideImages}
-          reportedData={slideData}
-        />
-      ) : synopticType !== "" ? (
-        <SynopticReport
-          userInfo={userInfo}
-          saveSynopticReport={saveSynopticReport}
-          getSynopticReport={getSynopticReport}
-          synopticType={synopticType}
-          caseInfo={caseInfo}
-          setSynopticType={setSynopticType}
-          slideId={slideId}
-          updateSynopticReport={updateSynopticReport}
-        />
-      ) : null}
     </>
   );
 };

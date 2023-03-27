@@ -316,6 +316,23 @@ function LayoutApp({
             slide={viewerIds?.[0]}
             userInfo={userInfo}
             isXmlAnnotations={isXmlAnnotations}
+            application={application}
+            saveReport={saveReport}
+            saveSynopticReport={saveSynopticReport}
+            mediaUpload={mediaUpload}
+            slideInfo={slideInfo}
+            handleReport={handleReport}
+            showReport={showReport}
+            setShowReport={setShowReport}
+            questions={questions}
+            app={application}
+            setSlideId={setSlideId}
+            responseHandler={responseHandler}
+            questionnaireResponse={questionnaireResponse}
+            synopticType={synopticType}
+            setSynopticType={setSynopticType}
+            getSynopticReport={getSynopticReport}
+            updateSynopticReport={updateSynopticReport}
           />
         </LayoutInnerBody>
       </LayoutOuterBody>
