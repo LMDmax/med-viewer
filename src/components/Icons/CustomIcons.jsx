@@ -758,7 +758,7 @@ export const InformationSelected = () => {
   );
 };
 
-export const Report = () => {
+export const ReportIcon = () => {
   return (
     <svg
       width="30"
