@@ -37,6 +37,7 @@ const Til = ({
   hideTumor,
   hideStroma,
   loadUI,
+  modelName,
   setLoadUI,
   hideModification,
   pathStroma,
@@ -287,7 +288,7 @@ const Til = ({
       }, 1000);
       setTimeout(() => {
         requestAnimationFrame(() => {
-          console.log("Task completed by requestAnimationFrame");
+          // console.log("Task completed by requestAnimationFrame");
           setTimeout(() => {
             setLoadUI(true);
       localStorage.removeItem("ModelName")
@@ -418,7 +419,7 @@ const Til = ({
       }, 1000);
       setTimeout(() => {
         requestAnimationFrame(() => {
-          console.log("Task completed by requestAnimationFrame");
+          // console.log("Task completed by requestAnimationFrame");
           setTimeout(() => {
             setLoadUI(true);
       localStorage.removeItem("ModelName");
@@ -512,7 +513,7 @@ const Til = ({
         }
         setTimeout(() => {
           requestAnimationFrame(() => {
-            console.log("Task completed by requestAnimationFrame");
+            // console.log("Task completed by requestAnimationFrame");
             setTimeout(() => {
               setLoadUI(true);
       localStorage.removeItem("ModelName");
@@ -602,7 +603,7 @@ const Til = ({
         }, 1000);
         setTimeout(() => {
           requestAnimationFrame(() => {
-            console.log("Task completed by requestAnimationFrame");
+            // console.log("Task completed by requestAnimationFrame");
             setTimeout(() => {
               setLoadUI(true);
               localStorage.removeItem("ModelName");
@@ -669,8 +670,8 @@ const Til = ({
             })
         );
         const roi2 = tumorCords?.map((tumor_cord) => {
-          console.log(tumor_cord);
-          console.log(tumorCords);
+          // console.log(tumor_cord);
+          // console.log(tumorCords);
           const points2 = tumor_cord.map((point2) => ({
             x: point2[0][0],
             y: point2[0][1],
@@ -728,7 +729,7 @@ const Til = ({
         }
         setTimeout(() => {
           requestAnimationFrame(() => {
-            console.log("Task completed by requestAnimationFrame");
+            // console.log("Task completed by requestAnimationFrame");
             setTimeout(() => {
               setLoadUI(true);
               localStorage.removeItem("ModelName");
@@ -899,7 +900,7 @@ const Til = ({
         }, 1000);
         setTimeout(() => {
           requestAnimationFrame(() => {
-            console.log("Task completed by requestAnimationFrame");
+            // console.log("Task completed by requestAnimationFrame");
             setTimeout(() => {
               setLoadUI(true);
               localStorage.removeItem("ModelName");
@@ -972,7 +973,7 @@ const Til = ({
         }, 1000);
         setTimeout(() => {
           requestAnimationFrame(() => {
-            console.log("Task completed by requestAnimationFrame");
+            // console.log("Task completed by requestAnimationFrame");
             setTimeout(() => {
               setLoadUI(true);
               localStorage.removeItem("ModelName");
@@ -1043,7 +1044,7 @@ const Til = ({
         }, 1000);
         setTimeout(() => {
           requestAnimationFrame(() => {
-            console.log("Task completed by requestAnimationFrame");
+            // console.log("Task completed by requestAnimationFrame");
             setTimeout(() => {
               setLoadUI(true);
               localStorage.removeItem("ModelName");
@@ -1133,7 +1134,7 @@ const Til = ({
         }, 1000);
         setTimeout(() => {
           requestAnimationFrame(() => {
-            console.log("Task completed by requestAnimationFrame");
+            // console.log("Task completed by requestAnimationFrame");
             setTimeout(() => {
               setLoadUI(true);
               localStorage.removeItem("ModelName");
@@ -1213,7 +1214,7 @@ const Til = ({
         }, 1000);
         setTimeout(() => {
           requestAnimationFrame(() => {
-            console.log("Task completed by requestAnimationFrame");
+            // console.log("Task completed by requestAnimationFrame");
             setTimeout(() => {
               setLoadUI(true);
               localStorage.removeItem("ModelName");
@@ -1291,7 +1292,7 @@ const Til = ({
         }, 1000);
         setTimeout(() => {
           requestAnimationFrame(() => {
-            console.log("Task completed by requestAnimationFrame");
+            // console.log("Task completed by requestAnimationFrame");
             setTimeout(() => {
               setLoadUI(true);
               localStorage.removeItem("ModelName");
@@ -1366,7 +1367,7 @@ const Til = ({
         }, 1000);
         setTimeout(() => {
           requestAnimationFrame(() => {
-            console.log("Task completed by requestAnimationFrame");
+            // console.log("Task completed by requestAnimationFrame");
             setTimeout(() => {
               setLoadUI(true);
               localStorage.removeItem("ModelName");
@@ -1461,7 +1462,7 @@ const Til = ({
         }, 1000);
         setTimeout(() => {
           requestAnimationFrame(() => {
-            console.log("Task completed by requestAnimationFrame");
+            // console.log("Task completed by requestAnimationFrame");
             setTimeout(() => {
               setLoadUI(true);
               localStorage.removeItem("ModelName");
@@ -1483,71 +1484,34 @@ const Til = ({
     if (!loadUI) {
       // localStorage.setItem("loading","loading");
       setTimeout(() => {
-        console.log("ui is busy");
+        // console.log("ui is busy");
       }, 2000);
     }
 
     if (prevLoadUIRef.current === false && loadUI === true) {
-      console.log("LoadUI is done now!");
+      // console.log("LoadUI is done now!");
       // localStorage.removeItem("loading","loading");
     }
 
     prevLoadUIRef.current = loadUI;
   }, [loadUI]);
 
+  useEffect(()=>{
+if(modelName === "TIL"){
+  handleTIL();
+  setToolSelected("TIL");
+  setTilHover(!TilHover);
+}
+if(modelName === "TILClear"){
+  handleTIL();
+  setToolSelected("TIL");
+  setTilHover(!TilHover);
+}
+  },[modelName])
+
   return (
     <>
-      <Tooltip
-        label={<TooltipLabel heading="TIL" />}
-        aria-label="TIL"
-        placement="bottom"
-        openDelay={0}
-        bg="#E4E5E8"
-        color="rgba(89, 89, 89, 1)"
-        fontSize="14px"
-        fontFamily="inter"
-        hasArrow
-        borderRadius="0px"
-        size="20px"
-      >
-        <IconButton
-          width={ifScreenlessthan1536px ? "30px" : "40px"}
-          size={ifScreenlessthan1536px ? 60 : 0}
-          height={ifScreenlessthan1536px ? "26px" : "34px"}
-          icon={
-            !TilHover ? (
-              <BiTargetLock size={IconSize()} color="#151C25" />
-            ) : (
-              <ImTarget size={IconSize()} color="#3b5d7c" />
-            )
-          }
-          _active={{
-            bgColor: "rgba(228, 229, 232, 1)",
-            outline: "0.5px solid rgba(0, 21, 63, 1)",
-          }}
-          outline={TilHover ? " 0.5px solid rgba(0, 21, 63, 1)" : ""}
-          _focus={{
-            border: "none",
-          }}
-          backgroundColor={!TilHover ? "#F8F8F5" : "#E4E5E8"}
-          mr="7px"
-          borderRadius={0}
-          disabled={
-            stromaCords?.length > 0 ||
-            tumorCords?.length > 0 ||
-            tilCords?.length > 0 ||
-            tilSubscriptionData?.tilStatus?.message === "Til is completed"
-              ? false
-              : true
-          }
-          onClick={() => {
-            handleTIL();
-            setToolSelected("TIL");
-            setTilHover(!TilHover);
-          }}
-          _hover={{ bgColor: "rgba(228, 229, 232, 1)" }}
-        />
-      </Tooltip>
+   
     </>
   );
 };

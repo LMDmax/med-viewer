@@ -9,7 +9,9 @@ import ViewerHeader from "./viewerHeader";
 function ViewerFactory({
   enableAI,
   caseInfo,
+  runAiModel,
   userInfo,
+  setToolSelected,
   slide,
   slides,
   setCurrentViewer,
@@ -20,6 +22,7 @@ function ViewerFactory({
   client2,
   mentionUsers,
   addUsersToCase,
+  setModelname,
   Environment,
   accessToken,
   setIsXmlAnnotations,
@@ -88,14 +91,17 @@ function ViewerFactory({
             userInfo={userInfo}
             enableAI={enableAI}
             slide={slide}
+            setToolSelected={setToolSelected}
             setZoomValue={setZoomValue}
             zoomValue={zoomValue}
             setLoadUI={setLoadUI}
             client2={client2}
             mentionUsers={mentionUsers}
             caseInfo={caseInfo}
+            runAiModel={runAiModel}
             addUsersToCase={addUsersToCase}
             Environment={Environment}
+            setModelname={setModelname}
             accessToken={accessToken}
             setIsXmlAnnotations={setIsXmlAnnotations}
             handleAnnotationClick={handleAnnotationClick}
