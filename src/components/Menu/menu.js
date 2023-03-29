@@ -8,7 +8,6 @@ import {
   useMediaQuery,
   VStack,
   Text,
-  HStack,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import {
@@ -21,7 +20,7 @@ import {
   CommentsSelected,
   Information,
   InformationSelected,
-  ReportIcon,
+  Report,
   ReportSelected,
   SlidesIconSelected,
   MessagesIcon,

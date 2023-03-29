@@ -107,6 +107,8 @@ function LayoutApp({
   const [loadUI, setLoadUI] = useState(true);
   const [unit, setUnit] = useState();
 
+  const [modelName, setModelname] = useState("");
+
   const { tile, viewer } = viewerWindow[currentViewer];
   const value = getZoomValue(viewer);
   // console.log(value);
@@ -116,11 +118,31 @@ function LayoutApp({
     setUnit(UnitStore);
   });
 
+  // console.log(modelName);
+
+  let runAiModel;
+  switch (modelName) {
+    case "":
+      runAiModel = "";
+      break;
+    case "KI67":
+      runAiModel ="KI67";
+      break;
+      case "TIL":
+        runAiModel ="TIL";
+        break;
+    default:
+      runAiModel = "Morphometry";
+      break;
+  }
+
+  // console.log(runAiModel);
+
   let returnText;
 
   switch (toolSelected) {
     case "":
-      returnText = "Please select a tool.";
+      returnText = "Select a Tool to work on the slide";
       break;
     case "Rotate":
       returnText =
@@ -186,10 +208,32 @@ function LayoutApp({
     case "Chat":
       returnText = "Chat Feed is open.";
       break;
+      case "MorphometryError":
+      returnText = "Please select a annotation to run ROI analysis";
+      break;
+      case "ZoomError":
+        returnText = "ROI analysis can be run on 40X zoom";
+        break;
+        case "TILError":
+          returnText = "TIL analysis can only be run on H&E slides.";
+          break;
+          case "KI67Error":
+            returnText = "KI67 analysis can only be run on IHC slides.";
+            break;
+            case "MorphometrySlideIssue":
+              returnText = "Morphometry analysis can only be run on H&E slides.";
+              break;
+      case "MorphometryAnalysed":
+      returnText = "Morphometry done on selected annotation";
+      break;
+      case "KI67Analysed":
+        returnText = "KI67 analysis done on selected annotation";
+        break;
     default:
       returnText = "";
       break;
   }
+
 
   const showSidebar = () => {
     setSidebar(!sidebar);
@@ -247,6 +291,7 @@ function LayoutApp({
           refreshHil={refreshHil}
           pathStroma={pathStroma}
           hitTil={hitTil}
+          zoomValue={zoomValue}
           setTumorArea={setTumorArea}
           setTilScore={setTilScore}
           setStromaArea={setStromaArea}
@@ -257,6 +302,8 @@ function LayoutApp({
           hideModification={hideModification}
           report={report}
           enableAI={enableAI}
+          modelName={modelName}
+          setModelname={setModelname}
           enableFilters={enableFilters}
           application={application}
           tILFedBar={tILFedBar}
@@ -414,6 +461,9 @@ function LayoutApp({
               setZoomValue={setZoomValue}
               zoomValue={zoomValue}
               setLoadUI={setLoadUI}
+              setModelname={setModelname}
+              runAiModel={runAiModel}
+              setToolSelected={setToolSelected}
               mentionUsers={mentionUsers}
               addUsersToCase={addUsersToCase}
               Environment={Environment}

@@ -17,6 +17,8 @@ import ImageDetails from "../ImageDetails/ImageDetails";
 import ImageFilter from "../ImageFilter/imageFilter";
 import ViewerChat from "../ViewerChat";
 import ShowReport from "./ShowReport";
+import Crop from "../Crop/Crop";
+import Share from "../Sidebar/Share";
 
 function ScreenTools({
   viewerId,
@@ -64,7 +66,7 @@ function ScreenTools({
   } = useDisclosure();
 
   return (
-    <Flex px="20px" height="18px" alignItems="center">
+    <Flex px="20px"  flex="1" height="18px" alignItems="center" justifyContent="flex-end">
       <ImageFilter setToolSelected={setToolSelected} viewerId={viewerId} />
       <DownloadImage setToolSelected={setToolSelected} />
       {application === "hospital" && (
@@ -77,7 +79,7 @@ function ScreenTools({
           handleChatFeedbar={handleChatFeedbar}
         />
       )}
-      <Divider orientation="vertical" ml="5px" border="1px solid gray" />
+      {/* <Divider orientation="vertical" ml="5px" border="1px solid gray" /> */}
       {/* {report ? (
         <ShowReport
           caseInfo={caseInfo}
@@ -102,7 +104,9 @@ function ScreenTools({
           updateSynopticReport={updateSynopticReport}
         />
       ) : null} */}
-      {/* <Flex borderLeft="2px solid #E4E5E8" ml="18px" pl="15px">
+      {/* <Crop /> */}
+      {/* <Share /> */}
+      <Flex borderLeft="2px solid #E4E5E8" ml="18px" pl="15px">
         <Menu zIndex="5">
           <MenuButton
             as={Button}
@@ -135,7 +139,7 @@ function ScreenTools({
             ) : null}
           </MenuList>
         </Menu>
-      </Flex> */}
+      </Flex>
       <ImageDetails
         caseInfo={caseInfo}
         slideInfo={slide}
