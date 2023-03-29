@@ -131,6 +131,7 @@ function ActivityFeed({
   // const onUpdateAnnotation = (data) => {
   //   console.log("activityfeed", data);
   // };
+  const [selectedItemIndex, setSelectedItemIndex] = useState(null);
   const [
     modifyAnnotation,
     { data: updatedData, error: updateError, loading: updateLoading },
@@ -201,10 +202,11 @@ function ActivityFeed({
     setAnnotationsDetails(null);
   }, [tile]);
 
-  const handleClick = (feed) => {
+  const handleClick = (feed, index) => {
+    setSelectedItemIndex(index);
     if (feed.object.roiType === "KI67") {
       setKi67Feed(feed);
-      console.log(ki67Feed);
+      // console.log(ki67Feed);
     }
     if (feed.object.roiType !== "KI67") {
       setKi67Feed({});
@@ -310,9 +312,10 @@ function ActivityFeed({
                   pb="0.5vh"
                   borderBottom="1px solid #F6F6F6"
                   cursor="pointer"
-                  onClick={() => handleClick(feed)}
+                  onClick={() => handleClick(feed,index)}
                   justify="space-between"
                   align="center"
+                  style={{ fontWeight: selectedItemIndex === index ? "bold" : "normal" }}
                 >
                   <Flex align="center">
                     {feed.object?.type === "rect" ? (

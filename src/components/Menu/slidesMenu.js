@@ -42,7 +42,7 @@ const SlidesMenu = ({
   };
 
   return (
-    <Flex bgColor="#fff" w="100%" p={2} direction="column">
+    <Flex bgColor="#fff" w="100%" p={5} direction="column">
       <Text
         fontFamily="Inter"
         fontStyle="normal"

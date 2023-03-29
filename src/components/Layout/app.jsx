@@ -200,8 +200,7 @@ function LayoutApp({
     setFeedBar(0);
   };
   const handleChatFeedbar = () => {
-    setChatFeedBar(true);
-    setChatHover(!chatHover);
+    setChatFeedBar(!chatFeedBar);
   };
   const handleTILFeedBar = () => {
     setTILFedBar(true);
@@ -225,7 +224,6 @@ function LayoutApp({
   };
   const handleAnnotationClick = (annotation) => {
     setAnnotationObject(annotation);
-    setShowFeedBar(true);
     setFeedBar(1);
   };
 
@@ -240,6 +238,7 @@ function LayoutApp({
           hideStroma={hideStroma}
           hideTumor={hideTumor}
           hideLymphocyte={hideLymphocyte}
+          chatFeedBar={chatFeedBar}
           caseInfo={caseInfo}
           loadUI={loadUI}
           setLoadUI={setLoadUI}
@@ -334,7 +333,7 @@ function LayoutApp({
               setSidebar={setSidebar}
             />
           ) : null}
-          {showFeedBar ? (
+          {/* {showFeedBar ? (
             <SlideFeed
               viewerId={currentViewer}
               showFeedBar={showFeedBar}
@@ -345,8 +344,8 @@ function LayoutApp({
               isXmlAnnotations={isXmlAnnotations}
               annotationObject={annotationObject}
             />
-          ) : null}
-          {chatFeedBar ? (
+          ) : null} */}
+          {/* {chatFeedBar ? (
             <ChatFeed
               viewerId={currentViewer}
               chatFeedBar={chatFeedBar}
@@ -364,7 +363,7 @@ function LayoutApp({
               Environment={Environment}
               addUsersToCase={addUsersToCase}
             />
-          ) : null}
+          ) : null} */}
           {tILFedBar ? (
             <TILFeedBar
               viewerId={currentViewer}
@@ -451,6 +450,15 @@ function LayoutApp({
             setSynopticType={setSynopticType}
             getSynopticReport={getSynopticReport}
             updateSynopticReport={updateSynopticReport}
+            chatFeedBar={chatFeedBar}
+            handleChatFeedBarClose={handleChatFeedBarClose}
+            setChatFeedBar={setChatFeedBar}
+            feedTab={feedTab}
+            users={users}
+            client2={client2}
+            mentionUsers={mentionUsers}
+            Environment={Environment}
+            addUsersToCase={addUsersToCase}
           />
         </LayoutInnerBody>
         <Flex bg="#F0F0F0" pl="30px" w="100%" zIndex={99} h="30px">

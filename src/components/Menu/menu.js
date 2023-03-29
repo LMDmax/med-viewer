@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -24,6 +24,7 @@ import {
   ReportIcon,
   ReportSelected,
   SlidesIconSelected,
+  MessagesIcon,
 } from "../Icons/CustomIcons";
 import SlidesMenu from "./slidesMenu";
 import { useFabricOverlayState } from "../../state/store";
@@ -34,6 +35,7 @@ import ShowReport from "../Toolbar/ShowReport";
 import SynopticReport from "../SynopticReport/SynopticReport";
 import Report from "../Report/Report";
 import Timeline from "./timeline";
+import ChatFeed from "../Feed/ChatFeed";
 
 const FunctionsMenu = ({
   caseInfo,
@@ -51,6 +53,15 @@ const FunctionsMenu = ({
   saveSynopticReport,
   mediaUpload,
   slideInfo,
+  chatFeedBar,
+  handleChatFeedBarClose,
+  feedTab,
+  users,
+  client2,
+  mentionUsers,
+  Environment,
+  setChatFeedBar,
+  addUsersToCase,
   handleReport,
   showReport,
   setShowReport,
@@ -94,6 +105,17 @@ const FunctionsMenu = ({
   const [annotedSlideImages, setAnnotedSlideImages] = useState([]);
   const [slideData, setSlideData] = useState(null);
 
+  useEffect(() => {
+    if(!chatFeedBar){
+      setSelectedOption("slides")
+    }
+    if(chatFeedBar){
+      setSelectedOption("messages");
+      setIsOpen(true);
+    }
+   
+  }, [chatFeedBar]);
+
   return (
     <Box
       pos="absolute"
@@ -108,7 +130,7 @@ const FunctionsMenu = ({
             ? ifWidthLessthan1920
               ? selectedOption === "report"
                 ? "40vw"
-                : "350px"
+                : "450px"
               : selectedOption === "report"
               ? "40vw"
               : "18vw"
@@ -313,6 +335,37 @@ const FunctionsMenu = ({
                 </VStack>
               </Button>
             </Tooltip>
+            {chatFeedBar ? (
+              <Tooltip label="Report slide">
+                <Button
+                  height="73px"
+                  w="73px"
+                  borderRadius={0}
+                  background="#F6F6F6"
+                  box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
+                  onClick={() => setSelectedOption("messages")}
+                >
+                  <VStack>
+                    {selectedOption === "messages" ? (
+                      <MessagesIcon />
+                    ) : (
+                      <MessagesIcon />
+                    )}
+                    <Text
+                      fontFamily="Inter"
+                      fontStyle="normal"
+                      fontWeight="400"
+                      fontSize="10px"
+                      lineHeight="12px"
+                      letterSpacing="0.0025em"
+                      color={selectedOption === "report" ? "#3B5D7C" : "fff"}
+                    >
+                      Report
+                    </Text>
+                  </VStack>
+                </Button>
+              </Tooltip>
+            ) : null}
           </Flex>
           <Flex
             w="100%"
@@ -406,6 +459,25 @@ const FunctionsMenu = ({
                   ) : null}
                 </Flex>
               </Flex>
+            ) : selectedOption === "messages" ? (
+              <ChatFeed
+                viewerId={viewerId}
+                chatFeedBar={chatFeedBar}
+                handleChatFeedBarClose={handleChatFeedBarClose}
+                showReport={showReport}
+                feedTab={feedTab}
+                setChatFeedBar={setChatFeedBar}
+                userInfo={userInfo}
+                caseInfo={caseInfo}
+                synopticType={synopticType}
+                application={application}
+                app={application}
+                users={users}
+                client2={client2}
+                mentionUsers={mentionUsers}
+                Environment={Environment}
+                addUsersToCase={addUsersToCase}
+              />
             ) : (
               <Flex w="100%" h="100%" bgColor="#FCFCFC" p="5px">
                 <Timeline />
