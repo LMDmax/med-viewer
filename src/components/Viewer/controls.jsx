@@ -56,7 +56,10 @@ import Draggable from "react-draggable";
 
 function ViewerControls({
   viewerId,
+  setModelname,
   userInfo,
+  runAiModel,
+  setToolSelected,
   enableAI,
   slide,
   application,
@@ -247,7 +250,7 @@ function ViewerControls({
         variables: { body: { ...body } },
       });
       setLoadUI(false);
-      localStorage.setItem("ModelName", "Morphometry")
+      localStorage.setItem("ModelName", "Morphometry");
       // toast({
       //   title: resp.data.message,
       //   status: "success",
@@ -352,6 +355,9 @@ function ViewerControls({
     //     );
     //   }
     // }
+  setLoadUI(true);
+  localStorage.removeItem("ModelName")
+  // setToolSelected("MorphometryAnalysed");
   };
 
   // update Annotation in db
@@ -402,6 +408,7 @@ function ViewerControls({
 
       if (type === "VHUT_ANALYSIS") {
         if (data && data.hash) {
+          // console.log(data);
           const canvas = fabricOverlay.fabricCanvas();
           const { hash, analysedROI } = data;
           const annotation = canvas.getObjectByHash(hash);
@@ -409,7 +416,6 @@ function ViewerControls({
 					if (annotation) {
 						annotation.set({ isAnalysed: true, analysedROI });
 					}
-					setLoadUI(true);
 				}
 				// console.log(vhutSubscriptionData.analysisStatus);
 				toast({
@@ -537,7 +543,7 @@ function ViewerControls({
 					}
 
 					canvas.requestRenderAll();
-					console.log(annotatedData);
+					// console.log(annotatedData);
 					if (annotatedData?.length > 0) {
 						toast({
 							title: "Annotation loaded",
@@ -585,11 +591,10 @@ function ViewerControls({
       location: 0,
       xOffset: 5,
       yOffset: 10,
-      color: "white",
+      color: "black",
       fontColor: "white",
       backgroundColor: "black",
       fontSize: "14px",
-      display:"none",
       barThickness: 2,
       stayInsideImage: false,
     });
@@ -607,6 +612,9 @@ function ViewerControls({
 			if (event.button !== 3) {
 				if (annotation) {
 					handleAnnotationClick(annotation);
+				setAnnotationObject(annotation);
+
+          // console.log(annotation);
 				}
 				closeMenu();
 				return;
@@ -614,7 +622,9 @@ function ViewerControls({
 
 			// set annotationObject if right click is on annotation
 			if (annotation) {
+        // console.log(annotation);
 				setAnnotationObject(annotation);
+        // console.log(annotationObject);
 				const zoomValue = convertToZoomValue({
 					level: annotation.zoomLevel,
 					viewer,
@@ -807,7 +817,6 @@ function ViewerControls({
 
 			if (slide?.isIHC === false) {
 				isKI67Open();
-				F;
 			}
 		} else if (annotationObject.type === "ellipse") {
 			body = {
@@ -828,14 +837,14 @@ function ViewerControls({
 			notifyHook: `${Environment.VIEWER_URL}/notify_KI67`,
 			annotationId: "",
 		};
-		console.log("body", originalBody);
+		// console.log("body", originalBody);
 		try {
 			// const resp = await onVhutAnalysis(body);
 			const resp = await axios.post(
 				"https://backup-quantize-vhut.prr.ai/ki_six_seven_predict",
 				originalBody
 			);
-			console.log("resp", resp);
+			// console.log("resp", resp);
 			//   setLoadUI(false);
 			// toast({
 			//   title: resp.data.message,
@@ -903,7 +912,7 @@ function ViewerControls({
 						proliferation_score: data?.kiResults?.proliferation_score,
 					},
 				});
-				console.log(feedMessage);
+				// console.log(feedMessage);
 				if (feedMessage?.object) {
 					// remove enclosing annotation and add new one to canvas
 					// console.log(feedMessage);
@@ -917,6 +926,57 @@ function ViewerControls({
 			}
 		}
 	}, [vhutSubscriptionData]);
+
+  // console.log(annotationObject);
+
+
+
+
+useEffect(()=>{
+  if(!annotationObject && runAiModel === "KI67"){
+    setToolSelected("MorphometryError");
+    setModelname("");
+       }
+  if(runAiModel === "KI67" && annotationObject){
+   runKI67();
+   setToolSelected("KI67Analysed");
+  //  setModelname("");
+  //  setModelname("");
+  }
+   if(runAiModel === "Morphometry" && annotationObject){  //first time run morphometry
+    if(!annotationObject?.isAnalysed){
+      handleVhutAnalysis();
+   setToolSelected("MorphometryAnalysed");
+   setModelname("");
+  //  setAnnotationObject(null);
+  // console.log("iiiiiammmmm");
+    }
+    if(!annotationObject?.analysedData && annotationObject?.isAnalysed  && annotationObject){
+      handleShowAnalysis(); // second time run to show only analysis
+  //  setToolSelected("MorphometryAnalysed");
+   setModelname("");
+  // console.log("sssssssss");
+    }
+  }
+  if(runAiModel === "Morphometry" && !annotationObject){
+    setToolSelected("MorphometryError");
+    // console.log("jjjjjjjjjjjjmm");
+  }
+  setModelname("");
+  // setAnnotationObject(null);
+},[runAiModel])
+
+useEffect(() => {
+  const timer = setTimeout(() => {
+    handleShowAnalysis();
+    // setToolSelected("MorphometryAnalysed");
+  }, 4000); 
+  return () => {
+    clearTimeout(timer);
+    setModelname("");
+   } // Clear the timer on unmounting the component
+}, [analysis_data]);
+
 
 	return (
 		<>

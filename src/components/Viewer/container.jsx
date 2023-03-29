@@ -19,6 +19,8 @@ function ViewerContainer({
 	enableAI,
 	slide,
   zoomValue,
+  runAiModel,
+  setModelname,
   setZoomValue,
 	onLoadAnnotations,
 	onSaveAnnotation,
@@ -26,6 +28,7 @@ function ViewerContainer({
 	onUpdateAnnotation,
 	setLoadUI,
 	onVhutAnalysis,
+  setToolSelected,
 	onGetVhutAnalysis,
 	onMessageListener,
 	application,
@@ -93,9 +96,12 @@ function ViewerContainer({
 			slide={slide}
       setZoomValue={setZoomValue}
       zoomValue={zoomValue}
+      setModelname={setModelname}
 			userInfo={userInfo}
 			client2={client2}
+      runAiModel={runAiModel}
 			setLoadUI={setLoadUI}
+      setToolSelected={setToolSelected}
 			mentionUsers={mentionUsers}
 			caseInfo={caseInfo}
 			addUsersToCase={addUsersToCase}

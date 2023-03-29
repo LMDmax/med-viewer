@@ -36,18 +36,18 @@ const UndoRedo = ({ viewerId }) => {
   };
 
   return (
-    <Flex ml="18px">
+    <Flex mx="10px">
       <ToolbarButton
         icon={<RiArrowGoBackFill size={IconSize()} color="#151C25" />}
         onClick={handleUndo}
         label={<TooltipLabel heading="Undo" />}
-        mr="8px"
+        mr="0px"
       />
       <ToolbarButton
         icon={<RiArrowGoForwardLine size={IconSize()} color="#151C25" />}
         onClick={handleRedo}
         label={<TooltipLabel heading="Redo" />}
-        mr="8px"
+        ml="10px"
       />
     </Flex>
   );

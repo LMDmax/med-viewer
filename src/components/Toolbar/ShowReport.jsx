@@ -23,14 +23,6 @@ const ShowReport = ({
   setSynopticType,
   getSynopticReport,
   updateSynopticReport,
-  reportData,
-  setReportData,
-  handleReportData,
-  handleUpload,
-  annotedSlideImages,
-  setAnnotedSlideImages,
-  slideData,
-  setSlideData,
 }) => {
   if (application === "hospital")
     return (
@@ -49,14 +41,6 @@ const ShowReport = ({
         setSynopticType={setSynopticType}
         getSynopticReport={getSynopticReport}
         updateSynopticReport={updateSynopticReport}
-        reportData={reportData}
-        setReportData={setReportData}
-        handleReportData={handleReportData}
-        handleUpload={handleUpload}
-        annotedSlideImages={annotedSlideImages}
-        setAnnotedSlideImages={setAnnotedSlideImages}
-        slideData={slideData}
-        setSlideData={setSlideData}
       />
     );
 

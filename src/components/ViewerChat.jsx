@@ -8,7 +8,6 @@ const ViewerChat = ({
   handleChatFeedbar,
   handleChatFeedBarClose,
   setChatHover,
-  chatFeedBar,
   setToolSelected,
   chatHover,
 }) => {
@@ -43,7 +42,7 @@ const ViewerChat = ({
           size={ifScreenlessthan1536px ? 60 : 0}
           height={ifScreenlessthan1536px ? "26px" : "34px"}
           icon={
-            chatFeedBar  ? (
+            chatHover ? (
               <BsFillChatRightTextFill size={IconSize()} color="#3b5d7c" />
             ) : (
               <BsChatRightText size={IconSize()} color="#151C25" />

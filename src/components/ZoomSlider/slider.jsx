@@ -83,7 +83,7 @@ const ZoomSlider = ({ viewerId, zoomValue, setZoomValue }) => {
     setZoomValue(value);
   };
 
-  console.log(zoomValue);
+  // console.log(zoomValue);
 
   useEffect(() => {
     if (!viewer) return;
