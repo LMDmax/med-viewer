@@ -31,7 +31,7 @@ import FunctionsMenu from "../Menu/menu";
 import ChangeSlide from "../Case/changeSlide";
 import { useFabricOverlayState } from "../../state/store";
 
-function LayoutApp({
+const LayoutApp = ({
   userInfo,
   caseInfo,
   slides,
@@ -63,7 +63,8 @@ function LayoutApp({
   updateSynopticReport,
   addUsersToCase,
   accessToken,
-}) {
+  searchSelectedData,
+}) => {
   // const { handleEvent } = useKeyboardEvents();
 
   const [sidebar, setSidebar] = useState(false);
@@ -126,11 +127,11 @@ function LayoutApp({
       runAiModel = "";
       break;
     case "KI67":
-      runAiModel ="KI67";
+      runAiModel = "KI67";
       break;
-      case "TIL":
-        runAiModel ="TIL";
-        break;
+    case "TIL":
+      runAiModel = "TIL";
+      break;
     default:
       runAiModel = "Morphometry";
       break;
@@ -208,32 +209,31 @@ function LayoutApp({
     case "Chat":
       returnText = "Chat Feed is open.";
       break;
-      case "MorphometryError":
+    case "MorphometryError":
       returnText = "Please select a annotation to run ROI analysis";
       break;
-      case "ZoomError":
-        returnText = "ROI analysis can be run on 40X zoom";
-        break;
-        case "TILError":
-          returnText = "TIL analysis can only be run on H&E slides.";
-          break;
-          case "KI67Error":
-            returnText = "KI67 analysis can only be run on IHC slides.";
-            break;
-            case "MorphometrySlideIssue":
-              returnText = "Morphometry analysis can only be run on H&E slides.";
-              break;
-      case "MorphometryAnalysed":
+    case "ZoomError":
+      returnText = "ROI analysis can be run on 40X zoom";
+      break;
+    case "TILError":
+      returnText = "TIL analysis can only be run on H&E slides.";
+      break;
+    case "KI67Error":
+      returnText = "KI67 analysis can only be run on IHC slides.";
+      break;
+    case "MorphometrySlideIssue":
+      returnText = "Morphometry analysis can only be run on H&E slides.";
+      break;
+    case "MorphometryAnalysed":
       returnText = "Morphometry done on selected annotation";
       break;
-      case "KI67Analysed":
-        returnText = "KI67 analysis done on selected annotation";
-        break;
+    case "KI67Analysed":
+      returnText = "KI67 analysis done on selected annotation";
+      break;
     default:
       returnText = "";
       break;
   }
-
 
   const showSidebar = () => {
     setSidebar(!sidebar);
@@ -509,6 +509,7 @@ function LayoutApp({
             mentionUsers={mentionUsers}
             Environment={Environment}
             addUsersToCase={addUsersToCase}
+            searchSelectedData={searchSelectedData}
           />
         </LayoutInnerBody>
         <Flex bg="#F0F0F0" pl="30px" w="100%" zIndex={99} h="30px">
@@ -558,7 +559,7 @@ function LayoutApp({
       </LayoutOuterBody>
     </Flex>
   );
-}
+};
 
 LayoutApp.propTypes = {
   finalSubmitHandler: PropTypes.func,

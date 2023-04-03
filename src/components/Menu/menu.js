@@ -73,6 +73,7 @@ const FunctionsMenu = ({
   setSynopticType,
   getSynopticReport,
   updateSynopticReport,
+  searchSelectedData,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
@@ -105,16 +106,25 @@ const FunctionsMenu = ({
   const [slideData, setSlideData] = useState(null);
 
   useEffect(() => {
-    if(!chatFeedBar){
-      setSelectedOption("slides")
+    if (!chatFeedBar) {
+      setSelectedOption("slides");
     }
-    if(chatFeedBar){
+    if (chatFeedBar) {
       setSelectedOption("messages");
       setIsOpen(true);
     }
-   
   }, [chatFeedBar]);
-
+  useEffect(() => {
+    if (searchSelectedData) {
+      if (searchSelectedData.type !== "textBox") {
+        setIsOpen(true);
+        setSelectedOption("annotations");
+      } else {
+        setIsOpen(true);
+        setSelectedOption("comments");
+      }
+    }
+  }, [searchSelectedData]);
   return (
     <Box
       pos="absolute"
@@ -391,9 +401,13 @@ const FunctionsMenu = ({
                 userInfo={userInfo}
                 isXmlAnnotations={isXmlAnnotations}
                 viewerId={viewerId}
+                searchSelectedData={searchSelectedData}
               />
             ) : selectedOption === "comments" ? (
-              <CommentFeed viewerId={viewerId} />
+              <CommentFeed
+                viewerId={viewerId}
+                searchSelectedData={searchSelectedData}
+              />
             ) : selectedOption === "report" ? (
               <Flex w="100%" h="100%" direction="column" bgColor="#FCFCFC">
                 <Flex w="100%" direction="row" p="5px 5px 0px 20px">
