@@ -31,7 +31,7 @@ import FunctionsMenu from "../Menu/menu";
 import ChangeSlide from "../Case/changeSlide";
 import { useFabricOverlayState } from "../../state/store";
 
-function LayoutApp({
+const LayoutApp = ({
   userInfo,
   caseInfo,
   slides,
@@ -63,7 +63,8 @@ function LayoutApp({
   updateSynopticReport,
   addUsersToCase,
   accessToken,
-}) {
+  searchSelectedData,
+}) => {
   // const { handleEvent } = useKeyboardEvents();
 
   const [sidebar, setSidebar] = useState(false);
@@ -220,6 +221,7 @@ function LayoutApp({
       case "TILLoading":
       returnText = "TIL will enable after sometime.";
       break;
+
     case "KI67Error":
       returnText = "KI67 analysis can only be run on IHC slides.";
       break;
@@ -235,6 +237,7 @@ function LayoutApp({
       case "FilterSaved":
         returnText = "Adjusment saved successfully ";
         break;
+
     default:
       returnText = "";
       break;
@@ -526,6 +529,7 @@ function LayoutApp({
             client2={client2}
             mentionUsers={mentionUsers}
             addUsersToCase={addUsersToCase}
+            searchSelectedData={searchSelectedData}
           />
         </LayoutInnerBody>
         <Flex bg="#F0F0F0" pl="30px" w="100%" zIndex={99} h="30px">
@@ -575,7 +579,7 @@ function LayoutApp({
       </LayoutOuterBody>
     </Flex>
   );
-}
+};
 
 LayoutApp.propTypes = {
   finalSubmitHandler: PropTypes.func,

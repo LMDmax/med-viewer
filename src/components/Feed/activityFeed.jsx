@@ -46,7 +46,7 @@ import DeleteConfirmation from "../Annotations/DeleteConfirmation";
 import ScrollBar from "../ScrollBar";
 import EditText from "./editText";
 
-function EditTextButton({ feed, handleEditClick, ...restProps }) {
+const EditTextButton = ({ feed, handleEditClick, ...restProps }) => {
   return (
     <Icon
       as={MdModeEditOutline}
@@ -55,9 +55,8 @@ function EditTextButton({ feed, handleEditClick, ...restProps }) {
       {...restProps}
     />
   );
-}
-
-function CardDetailsRow({ title, value, ...restProps }) {
+};
+const CardDetailsRow = ({ title, value, ...restProps }) => {
   return (
     <HStack
       py="8px"
@@ -70,9 +69,8 @@ function CardDetailsRow({ title, value, ...restProps }) {
       <Text>{value}</Text>
     </HStack>
   );
-}
-
-function CustomTab({ title, ...props }) {
+};
+const CustomTab = ({ title, ...props }) => {
   return (
     <Tab
       {...props}
@@ -96,9 +94,15 @@ function CustomTab({ title, ...props }) {
       {title}
     </Tab>
   );
-}
+};
 
-function CustomTabPanel({ children, title, annotation, totalCells, ...props }) {
+const CustomTabPanel = ({
+  children,
+  title,
+  annotation,
+  totalCells,
+  ...props
+}) => {
   return (
     <TabPanel {...props} px={0} py="8px">
       <Text
@@ -146,6 +150,7 @@ function ActivityFeed({
   tilScore,
   isXmlAnnotations,
   activeObject,
+  searchSelectedData,
 }) {
   // const onUpdateAnnotation = (data) => {
   //   console.log("activityfeed", data);
@@ -192,7 +197,6 @@ function ActivityFeed({
   const { activeTool, viewerWindow } = fabricOverlayState;
   const { fabricOverlay, activityFeed, viewer, tile, slideId } =
     viewerWindow[viewerId];
-  console.log(activityFeed);
   const { deleteAllAnnotations } = useCanvasHelpers(viewerId);
 
   const scrollbar = useRef(null);
@@ -222,6 +226,7 @@ function ActivityFeed({
   }, [isTILBoxVisible, annotationDetails]);
 
   useEffect(() => {
+
     return () => {
       setAnnotationObject(null);
       setAnnotationsDetails(null);
@@ -251,7 +256,6 @@ function ActivityFeed({
     if (feed?.object?.type !== "viewport") {
       canvas.setActiveObject(feed?.object);
     }
-
     // change position to annotation object location
     // except for when MagicWand tool is activated
     if (activeTool !== "MagicWand") {
@@ -275,8 +279,12 @@ function ActivityFeed({
   };
   // on annotation click
   useEffect(() => {
-    setAnnotationsDetails(activeObject);
-  }, [activeObject]);
+    if (searchSelectedData) {
+      setAnnotationsDetails(searchSelectedData);
+    } else {
+      setAnnotationsDetails(activeObject);
+    }
+  }, [activeObject, searchSelectedData]);
 
   const handleSave = ({ text, title }) => {
     annotationObject.text = text;
@@ -309,6 +317,7 @@ function ActivityFeed({
     }
   }, [isTILBoxVisible, annotationDetails]);
 
+
   return (
     <Flex
       as="section"
@@ -319,25 +328,96 @@ function ActivityFeed({
       margin={0}
       right="0"
       zIndex={2}
+      background="#FCFCFC"
       boxShadow="-1px 0px 2px rgba(176, 200, 214, 0.3)"
       direction="column"
-      bg="whitesmoke"
       pr="2px"
     >
       <Flex
         direction="column"
-        marginStart="0"
+        marginStart="0.8vw"
         pt="2px"
         overflowY="auto"
         flex="1"
       >
-        <HStack
-          justify="space-between"
-          alignItems="center"
-          mb="7px"
-        >
+        <HStack justify="space-between" alignItems="center" mb="7px">
           <Text fontSize="14px" color="#3B5D7C" fontWeight={500}>
             Annotations
+          </Text>
+          {!isXmlAnnotations && (
+            <IconButton
+              icon={<MdDelete size={18} />}
+              size="sm"
+              variant="unstyled"
+              cursor="pointer"
+              isDisabled={activityFeed.length === 0}
+              _focus={{ border: "none", outline: "none" }}
+              onClick={onDeleteConfirmationOpen}
+            />
+          )}
+        </HStack>
+        <ScrollBar>
+          <Flex direction="column">
+            {activityFeed.map((feed, index) => {
+              return feed?.object && feed?.object?.type !== "textbox" ? (
+                <Flex
+                  key={feed.object.hash}
+                  pb="0.5vh"
+                  borderBottom="1px solid #F6F6F6"
+                  cursor="pointer"
+                  onClick={() => handleClick(feed, index)}
+                  justify="space-between"
+                  align="center"
+                  style={{
+                    fontWeight: selectedItemIndex === index ? "bold" : "normal",
+                  }}
+                >
+                  <Flex align="center">
+                    {feed.object?.type === "rect" ? (
+                      <BiRectangle color="#E23636" />
+                    ) : feed.object?.type === "polygon" ? (
+                      <FaDrawPolygon color="#E23636" />
+                    ) : feed.object?.type === "ellipse" ? (
+                      <BsCircle color="#E23636" />
+                    ) : (
+                      <BsSlash color="#E23636" />
+                    )}
+                    <Text ml="0.8vw">
+                      {feed.object?.title
+                        ? feed.object.title
+                        : feed.object?.roiType === "morphometry"
+                        ? "ROI"
+                        : feed.object?.roiType === "KI67"
+                        ? "KI-67"
+                        : feed.object?.type === "viewport"
+                        ? `Viewport ${index + 1}`
+                        : `Annotation ${index + 1}`}
+                    </Text>
+                  </Flex>
+                  {!isXmlAnnotations && (
+                    <EditTextButton
+                      feed={feed}
+                      handleEditClick={handleEditClick}
+                      mr={2}
+                    />
+                  )}
+                </Flex>
+              ) : null;
+            })}
+          </Flex>
+        </ScrollBar>
+      </Flex>
+
+      <Flex
+        direction="column"
+        marginStart="0.8vw"
+        pt="2px"
+        overflowY="auto"
+        flex="1"
+      >
+        <HStack justify="space-between">
+          <Text fontSize="1rem" pb="3px">
+            Annotation List
           </Text>
           {!isXmlAnnotations && (
             <IconButton
@@ -823,6 +903,7 @@ function ActivityFeed({
         </ScrollBar>
       </Flex>
 
+
       <EditText
         isOpen={isOpen}
         onClose={onClose}
@@ -839,6 +920,6 @@ function ActivityFeed({
       />
     </Flex>
   );
-}
+};
 
 export default ActivityFeed;

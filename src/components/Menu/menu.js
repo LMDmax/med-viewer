@@ -88,6 +88,7 @@ const FunctionsMenu = ({
   setSynopticType,
   getSynopticReport,
   updateSynopticReport,
+  searchSelectedData,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
@@ -119,7 +120,6 @@ const FunctionsMenu = ({
   const [annotedSlideImages, setAnnotedSlideImages] = useState([]);
   const [slideData, setSlideData] = useState(null);
   const [timelineData, setTimeLineData] = useState([]);
-  console.log(slide);
   useEffect(() => {
     if (!chatFeedBar) {
       setSelectedOption("slides");
@@ -129,7 +129,6 @@ const FunctionsMenu = ({
       setIsOpen(true);
     }
   }, [chatFeedBar]);
-
   useEffect(()=>{
     if(toolSelected !== "Filter"){
       setSelectedOption("slides");
@@ -158,6 +157,17 @@ const FunctionsMenu = ({
     // console.log("clicccccccccccccccccccccccccccccck");
   },[selectedOption])
 
+  useEffect(() => {
+    if (searchSelectedData) {
+      if (searchSelectedData.type !== "textBox") {
+        setIsOpen(true);
+        setSelectedOption("annotations");
+      } else {
+        setIsOpen(true);
+        setSelectedOption("comments");
+      }
+    }
+  }, [searchSelectedData]);
   return (
     <Box
       pos="absolute"
@@ -408,7 +418,6 @@ const FunctionsMenu = ({
                 </Button>
               </Tooltip>
             ) : null}
-
             {toolSelected === "Filter" ? 
              <Tooltip label=" Adjustments">
              <Button
@@ -439,7 +448,6 @@ const FunctionsMenu = ({
                </VStack>
              </Button>
            </Tooltip> : null}
-            
           </Flex>
           <Flex
             w="100%"
@@ -476,9 +484,13 @@ const FunctionsMenu = ({
                 stromaArea={stromaArea}
                 lymphocyteCount={lymphocyteCount}
                 tilScore={tilScore}
+                searchSelectedData={searchSelectedData}
               />
             ) : selectedOption === "comments" ? (
-              <CommentFeed viewerId={viewerId} />
+              <CommentFeed
+                viewerId={viewerId}
+                searchSelectedData={searchSelectedData}
+              />
             ) : selectedOption === "report" ? (
               <Flex w="100%" h="100%" direction="column" bgColor="#FCFCFC">
                 <Flex w="100%" direction="row" p="5px 5px 0px 20px">
