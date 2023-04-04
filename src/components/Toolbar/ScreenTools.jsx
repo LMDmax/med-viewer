@@ -17,11 +17,14 @@ import ImageDetails from "../ImageDetails/ImageDetails";
 import ImageFilter from "../ImageFilter/imageFilter";
 import ViewerChat from "../ViewerChat";
 import ShowReport from "./ShowReport";
+import Crop from "../Crop/Crop";
+import Share from "../Sidebar/Share";
 
 function ScreenTools({
   viewerId,
   report,
   toolSelected,
+  chatFeedBar,
   application,
   handleAnnotationBar,
   caseInfo,
@@ -63,20 +66,21 @@ function ScreenTools({
   } = useDisclosure();
 
   return (
-    <Flex px="20px" height="18px" alignItems="center">
+    <Flex px="20px"  flex="1" height="18px" alignItems="center" justifyContent="flex-end">
       <ImageFilter setToolSelected={setToolSelected} viewerId={viewerId} />
       <DownloadImage setToolSelected={setToolSelected} />
       {application === "hospital" && (
         <ViewerChat
           chatHover={chatHover}
           setChatHover={setChatHover}
-		  setToolSelected={setToolSelected}
+          setToolSelected={setToolSelected}
+          chatFeedBar={chatFeedBar}
           handleChatFeedBarClose={handleChatFeedBarClose}
           handleChatFeedbar={handleChatFeedbar}
         />
       )}
-      <Divider orientation="vertical" ml="5px" border="1px solid gray" />
-      {report ? (
+      {/* <Divider orientation="vertical" ml="5px" border="1px solid gray" /> */}
+      {/* {report ? (
         <ShowReport
           caseInfo={caseInfo}
           application={application}
@@ -99,7 +103,9 @@ function ScreenTools({
           getSynopticReport={getSynopticReport}
           updateSynopticReport={updateSynopticReport}
         />
-      ) : null}
+      ) : null} */}
+      {/* <Crop /> */}
+      {/* <Share /> */}
       <Flex borderLeft="2px solid #E4E5E8" ml="18px" pl="15px">
         <Menu zIndex="5">
           <MenuButton

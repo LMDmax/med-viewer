@@ -19,25 +19,28 @@ const ViewerContainer = ({
   enableAI,
   slide,
   zoomValue,
+  runAiModel,
+  setModelname,
   setZoomValue,
-  onLoadAnnotations,
-  onSaveAnnotation,
-  onDeleteAnnotation,
-  onUpdateAnnotation,
-  setLoadUI,
-  onVhutAnalysis,
-  onGetVhutAnalysis,
-  onMessageListener,
-  application,
-  client2,
-  mentionUsers,
-  caseInfo,
-  addUsersToCase,
-  Environment,
-  accessToken,
-  setIsXmlAnnotations,
-  handleAnnotationClick,
-}) => {
+	onLoadAnnotations,
+	onSaveAnnotation,
+	onDeleteAnnotation,
+	onUpdateAnnotation,
+	setLoadUI,
+	onVhutAnalysis,
+  setToolSelected,
+	onGetVhutAnalysis,
+	onMessageListener,
+	application,
+	client2,
+	mentionUsers,
+	caseInfo,
+	addUsersToCase,
+	Environment,
+	accessToken,
+	setIsXmlAnnotations,
+	handleAnnotationClick,
+}) {
   const location = useLocation();
 
   const { fabricOverlayState } = useFabricOverlayState();
@@ -93,18 +96,22 @@ const ViewerContainer = ({
       slide={slide}
       setZoomValue={setZoomValue}
       zoomValue={zoomValue}
-      userInfo={userInfo}
-      client2={client2}
-      setLoadUI={setLoadUI}
-      mentionUsers={mentionUsers}
-      caseInfo={caseInfo}
-      addUsersToCase={addUsersToCase}
-      Environment={Environment}
-      accessToken={accessToken}
-      setIsXmlAnnotations={setIsXmlAnnotations}
-      handleAnnotationClick={handleAnnotationClick}
-    />
-  );
-};
+      setModelname={setModelname}
+			userInfo={userInfo}
+			client2={client2}
+      runAiModel={runAiModel}
+			setLoadUI={setLoadUI}
+      setToolSelected={setToolSelected}
+			mentionUsers={mentionUsers}
+			caseInfo={caseInfo}
+			addUsersToCase={addUsersToCase}
+			Environment={Environment}
+			accessToken={accessToken}
+			setIsXmlAnnotations={setIsXmlAnnotations}
+			handleAnnotationClick={handleAnnotationClick}
+		/>
+	);
+}
+
 
 export default ViewerContainer;

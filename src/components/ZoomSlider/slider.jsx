@@ -82,7 +82,6 @@ const ZoomSlider = ({ viewerId }) => {
     const value = getZoomValue(viewer);
     setZoomValue(value);
   };
-
   useEffect(() => {
     if (!viewer) return;
     const adjustAnnotations = () => {

@@ -50,6 +50,7 @@ const osdOptions = {
 function Viewer({
   viewerId,
   tile,
+  runAiModel,
   userInfo,
   enableAI,
   zoomValue,
@@ -58,7 +59,9 @@ function Viewer({
   application,
   setLoadUI,
   caseInfo,
+  setToolSelected,
   client2,
+  setModelname,
   mentionUsers,
   addUsersToCase,
   Environment,
@@ -138,10 +141,13 @@ function Viewer({
           userInfo={userInfo}
           enableAI={enableAI}
           slide={slide}
+          runAiModel={runAiModel}
           setLoadUI={setLoadUI}
           client2={client2}
+          setModelname={setModelname}
           setZoomValue={setZoomValue}
           zoomValue={zoomValue}
+          setToolSelected={setToolSelected}
           mentionUsers={mentionUsers}
           caseInfo={caseInfo}
           addUsersToCase={addUsersToCase}
