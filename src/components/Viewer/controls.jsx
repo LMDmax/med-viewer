@@ -60,6 +60,7 @@ const ViewerControls = ({
   userInfo,
   runAiModel,
   setToolSelected,
+  setBottomZoomValue,
   enableAI,
   slide,
   application,
@@ -114,7 +115,7 @@ const ViewerControls = ({
     onOpen: openEdit,
     onClose: closeEdit,
   } = useDisclosure();
-
+  // console.log("sadddddddddddddd");
   const {
     isOpen: isKI67Open,
     onOpen: isKI67,
@@ -1026,7 +1027,7 @@ useEffect(() => {
                     outline: "none",
                   }}
                 />
-                <ZoomSlider viewerId={viewerId} />
+                <ZoomSlider setBottomZoomValue={setBottomZoomValue} viewerId={viewerId} />
                 <ToolbarButton
                   icon={<AiOutlineMinus color="#00153F" size={iconSize} />}
                   // border="1px solid #3965C6"

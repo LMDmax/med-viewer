@@ -14,6 +14,7 @@ function ViewerFactory({
   setToolSelected,
   slide,
   slides,
+  setBottomZoomValue,
   setCurrentViewer,
   application,
   setLoadUI,
@@ -96,6 +97,7 @@ function ViewerFactory({
             zoomValue={zoomValue}
             setLoadUI={setLoadUI}
             client2={client2}
+            setBottomZoomValue={setBottomZoomValue}
             mentionUsers={mentionUsers}
             caseInfo={caseInfo}
             runAiModel={runAiModel}

@@ -200,7 +200,7 @@ const FunctionsMenu = ({
           whiteSpace: "nowrap",
           position: "absolute",
           right: "0",
-          height: "100%",
+          height: "95%",
           top: "0",
         }}
       >
@@ -454,11 +454,11 @@ const FunctionsMenu = ({
                   //  <adjustmentIconSelected />
                   // <MessagesIconSelected />
                   // <HiOutlineAdjustmentsHorizontal />
-                  <BsSliders w="20px" h="30px" color="#3B5D7C"/>
+                  <BsSliders style={{width:"40px", height:"30px"}} color="#3B5D7C"/>
 
                    ) : (
                     // <adjustmentIconSelected />
-                    <BsSliders w="20px" h="30px" color="black"/>
+                    <BsSliders style={{width:"40px", height:"30px"}} color="black"/>
                  )}
                  <Text
                    fontFamily="Inter"
@@ -601,10 +601,10 @@ const FunctionsMenu = ({
                 addUsersToCase={addUsersToCase}
               />
             ) : selectedOption === "adjustments" ? (
-              <Adjustments setToolSelected={setToolSelected} viewer={viewer} setIsOpen={setIsOpen} />
+              <Adjustments setSelectedOption={setSelectedOption} setToolSelected={setToolSelected} viewer={viewer} setIsOpen={setIsOpen} />
             ) : (
               <Flex w="100%" h="95%" pb="25px" bgColor="#FCFCFC" p="5px">
-                <Timeline timelineData={timelineData} />
+                <Timeline viewerId={viewerId} timelineData={timelineData} />
               </Flex>
             )}
           </Flex>

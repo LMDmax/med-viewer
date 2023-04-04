@@ -41,7 +41,7 @@ const AiModels = ({ slide, setToolSelected, setModelname, zoomValue }) => {
 
   const handleMorphometry = () => {
     // console.log("2");
-if(!slide?.isIHC && zoomValue === 40){
+if(!slide?.isIHC && zoomValue >= 40){
     setModelname("Morphometry");
 }
 if(slide?.isIHC){
@@ -49,6 +49,7 @@ if(slide?.isIHC){
 }
 if(zoomValue < 40){
   setToolSelected("ZoomError");
+  console.log(zoomValue);
 
   }
   };
@@ -62,11 +63,11 @@ if(zoomValue < 40){
         else{
             setModelname("TILClear")
         }
-        // console.log("object");
+        console.log("object");
     }
     else{
         setToolSelected("TILError");
-        // console.log("object2");
+        console.log("object2");
 
     }
   },[TilActiveState])

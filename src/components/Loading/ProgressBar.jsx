@@ -24,7 +24,7 @@ const ProgressBar = () => {
 
   return (
     <Box
-      w="700px"
+      w="300px"
       h="15px"
       border="1px solid black" // Add black border
       overflow="hidden" // Hide overflowing progress

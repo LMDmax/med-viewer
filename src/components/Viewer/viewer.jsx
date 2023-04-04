@@ -56,6 +56,7 @@ function Viewer({
   zoomValue,
   setZoomValue,
   slide,
+  setBottomZoomValue,
   application,
   setLoadUI,
   caseInfo,
@@ -147,6 +148,7 @@ function Viewer({
           setModelname={setModelname}
           setZoomValue={setZoomValue}
           zoomValue={zoomValue}
+          setBottomZoomValue={setBottomZoomValue}
           setToolSelected={setToolSelected}
           mentionUsers={mentionUsers}
           caseInfo={caseInfo}

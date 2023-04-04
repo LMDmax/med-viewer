@@ -18,6 +18,7 @@ const ViewerContainer = ({
   userInfo,
   enableAI,
   slide,
+  setBottomZoomValue,
   zoomValue,
   runAiModel,
   setModelname,
@@ -99,6 +100,7 @@ const ViewerContainer = ({
       setModelname={setModelname}
 			userInfo={userInfo}
 			client2={client2}
+      setBottomZoomValue={setBottomZoomValue}
       runAiModel={runAiModel}
 			setLoadUI={setLoadUI}
       setToolSelected={setToolSelected}

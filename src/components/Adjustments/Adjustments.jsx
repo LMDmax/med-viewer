@@ -12,7 +12,7 @@ const getFilters = (sliderInputs) => {
   return filters;
 };
 
-const Adjustments = ({ setIsOpen, viewer, setToolSelected }) => {
+const Adjustments = ({ setIsOpen, viewer, setToolSelected, setSelectedOption }) => {
   const [sliderInputs, setSliderInputs] = useState({
     contrast: 1,
     brightness: 0,
@@ -29,10 +29,11 @@ const Adjustments = ({ setIsOpen, viewer, setToolSelected }) => {
 
   const handleOnClose = () => {
     // setIsActive(false);
-    setIsOpen(false);
-    if (sliderStateRef.current) setSliderInputs(sliderStateRef.current);
+    // setIsOpen(false);
+    // if (sliderStateRef.current) setSliderInputs(sliderStateRef.current);
     // onClose();
-    setToolSelected("");
+    // setToolSelected("");
+    setSelectedOption("slides");
   };
 
   const handleSave = () => {
