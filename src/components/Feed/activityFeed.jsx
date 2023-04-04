@@ -226,7 +226,6 @@ function ActivityFeed({
   }, [isTILBoxVisible, annotationDetails]);
 
   useEffect(() => {
-
     return () => {
       setAnnotationObject(null);
       setAnnotationsDetails(null);
@@ -252,7 +251,6 @@ function ActivityFeed({
     }
     if (!feed.object || !feed.object?.visible) return;
     const canvas = fabricOverlay.fabricCanvas();
-
     if (feed?.object?.type !== "viewport") {
       canvas.setActiveObject(feed?.object);
     }
@@ -902,8 +900,6 @@ function ActivityFeed({
           </Flex>
         </ScrollBar>
       </Flex>
-
-
       <EditText
         isOpen={isOpen}
         onClose={onClose}

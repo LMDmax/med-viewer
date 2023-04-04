@@ -86,7 +86,6 @@ function AdjustmentBar({
   const { tile } = viewerWindow[currentViewer];
   const [mongoId, setMongoId] = useState("");
   const navigate = useNavigate();
-
   const handleSidebar = () => {
     // showSidebar();
     navigate("/dashboard/cases");
@@ -113,7 +112,7 @@ function AdjustmentBar({
             icon={<GoChevronLeft size={IconSize()} color="#151C25" />}
             label={<TooltipLabel heading="Back" />}
           />
-        ) : null}
+        ) : null} */}
         <Text
           color="#151C25"
           ml="12px"

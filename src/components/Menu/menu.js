@@ -8,6 +8,7 @@ import {
   useMediaQuery,
   VStack,
   Text,
+  HStack,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import axios from "axios";
@@ -181,8 +182,6 @@ const FunctionsMenu = ({
           width: isOpen
             ? ifWidthLessthan1920
               ? selectedOption === "report"
-                ? "40vw"
-                : "450px"
               : selectedOption === "report"
               ? "40vw"
               : "18vw"
@@ -448,6 +447,7 @@ const FunctionsMenu = ({
                </VStack>
              </Button>
            </Tooltip> : null}
+
           </Flex>
           <Flex
             w="100%"

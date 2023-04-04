@@ -518,7 +518,6 @@ function ViewerControls({
       );
     }
   }, [xmlAnnotationData, annotationData]);
-
 	useEffect(() => {
 		if (!fabricOverlay) return;
 		const canvas = fabricOverlay.fabricCanvas();

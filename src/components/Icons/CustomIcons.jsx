@@ -759,7 +759,6 @@ export const InformationSelected = () => {
     </svg>
   );
 };
-
 export const MessagesIcon =() =>{
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="73" height="73" viewBox="0 0 73 73" fill="none">
@@ -779,7 +778,6 @@ export const GroupTil = () => {
 </svg>
   )
 };
-
 
 export const ReportIcon = () => {
   return (

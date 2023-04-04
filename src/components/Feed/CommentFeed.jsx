@@ -240,7 +240,7 @@ const CommentFeed = ({
       padding={0}
       margin={0}
       background="#FCFCFC"
-      boxShadow={showFeedBar ? "" : "-1px 0px 2px rgba(176, 200, 214, 0.3)"}
+      boxShadow="-1px 0px 2px rgba(176, 200, 214, 0.3)"
       direction="column"
       pr="2px"
     >
@@ -251,9 +251,9 @@ const CommentFeed = ({
         overflowY="auto"
         flex="1"
       >
-        <HStack justify="space-between">
-          <Text fontSize="1rem" pb="3px">
-            Comments List
+        <HStack justify="space-between" mb="7px">
+          <Text fontSize="1rem" color="#3B5D7C">
+            Comments
           </Text>
           <IconButton
             icon={<MdDelete size={18} />}

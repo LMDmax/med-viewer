@@ -31,29 +31,12 @@ const Report = ({
     <Flex
       fontSize="12px"
       fontFamily="inter"
-      minW="400px"
-      width="33.281vw"
+      w="100%"
       height="100%"
-      top={ifwidthLessthan1920 ? "90px" : "9.999vh"}
-      pos="fixed"
-      right="0px"
       bg="#FCFCFC"
       flexDirection="column"
       display="flex"
     >
-      <Flex
-        py="0.5px"
-        justifyContent="flex-end"
-        alignItems="center"
-        background="#F6F6F6"
-      >
-        <GrFormClose
-          size={16}
-          cursor="pointer"
-          onClick={handleReportClose}
-          _hover={{ cursor: "pointer" }}
-        />
-      </Flex>
       <Flex
         bg="#fff"
         minH="32px"
