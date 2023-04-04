@@ -98,6 +98,7 @@ import OpenSeadragon from "openseadragon";
     this.viewer.container.appendChild(this.divElt);
     this.divElt.style.position = "relative";
     this.divElt.style.margin = "0";
+    this.divElt.style.visibility = "hidden";
     this.divElt.style.pointerEvents = "none";
 
     this.setMinWidth(options.minWidth || "150px");
@@ -570,19 +571,21 @@ import OpenSeadragon from "openseadragon";
   }
 
   function getWithUnit(value, unitSuffix) {
+    let result = "";
     if (value < 0.000001) {
-      return `${value * 1000000000} n${unitSuffix}`;
+      result = `${value * 1000000000} n${unitSuffix}`;
+    } else if (value < 0.001) {
+      result = `${value * 1000000} μ${unitSuffix}`;
+    } else if (value < 1) {
+      result = `${value * 1000} m${unitSuffix}`;
+    } else if (value >= 1000) {
+      result = `${value / 1000} k${unitSuffix}`;
+    } else {
+      result = `${value} ${unitSuffix}`;
     }
-    if (value < 0.001) {
-      return `${value * 1000000} μ${unitSuffix}`;
-    }
-    if (value < 1) {
-      return `${value * 1000} m${unitSuffix}`;
-    }
-    if (value >= 1000) {
-      return `${value / 1000} k${unitSuffix}`;
-    }
-    return `${value} ${unitSuffix}`;
+  
+    localStorage.setItem("unit", result);
+    return result;
   }
 
   function isDefined(variable) {

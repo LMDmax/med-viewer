@@ -5,10 +5,12 @@ import IconSize from "../ViewerToolbar/IconSize";
 import { useFabricOverlayState } from "../../state/store";
 import { MultiviewIcon, MultiviewSelectedIcon } from "../Icons/CustomIcons";
 import TooltipLabel from "../AdjustmentBar/ToolTipLabel";
+import { useEffect } from "react";
 
 const Multiview = ({
   viewerId,
   isMultiview,
+  setToolSelected,
   setIsMultiview,
   setIsNavigatorActive,
 }) => {
@@ -16,11 +18,23 @@ const Multiview = ({
   const { fabricOverlayState } = useFabricOverlayState();
   const { viewerWindow, isAnnotationLoading } = fabricOverlayState;
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
+  const [state, setState] = useState(false);
 
   const handleClick = () => {
     setIsNavigatorActive(false);
     setIsMultiview((state) => !state);
   };
+
+  useEffect((()=>{
+    if(state){
+      // console.log("sdsds");
+      setToolSelected("Multiview");
+    }
+    else{
+      setToolSelected("");
+
+    }
+  }),[state])
 
   return (
     <Tooltip
@@ -58,6 +72,7 @@ const Multiview = ({
         outline={isMultiview ? " 0.5px solid rgba(0, 21, 63, 1)" : ""}
         onClick={() => {
           handleClick();
+          setState(!state);
         }}
         mr="7px"
         boxShadow={

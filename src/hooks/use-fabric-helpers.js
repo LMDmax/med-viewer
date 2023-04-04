@@ -80,7 +80,7 @@ const useCanvasHelpers = (viewerId) => {
         duration: 1000,
         isClosable: true,
       });
-      console.log("comments");
+      // console.log("comments");
     } else {
       toast({
         title: "Annotations deleted",

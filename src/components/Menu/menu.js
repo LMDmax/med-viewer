@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -11,6 +11,8 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
+import axios from "axios";
+
 import {
   SlidesIcon,
   TimelineIcon,
@@ -24,6 +26,7 @@ import {
   ReportIcon,
   ReportSelected,
   SlidesIconSelected,
+  MessagesIcon,
 } from "../Icons/CustomIcons";
 import SlidesMenu from "./slidesMenu";
 import { useFabricOverlayState } from "../../state/store";
@@ -33,15 +36,29 @@ import CommentFeed from "../Feed/CommentFeed";
 import ShowReport from "../Toolbar/ShowReport";
 import SynopticReport from "../SynopticReport/SynopticReport";
 import Report from "../Report/Report";
-import Timeline from "./timeline";
+import Timeline from "../Timeline/Timeline";
+import ChatFeed from "../Feed/ChatFeed";
+import Adjustments from "../Adjustments/Adjustments";
 
 const FunctionsMenu = ({
   caseInfo,
   slides,
   viewerId,
   setIsMultiview,
+  hideTumor,
+  setHideTumor,
+  hideLymphocyte,
+  setHideLymphocyte,
+  setToolSelected,
+  setHideStroma,
+  hideStroma,
   setIsNavigatorActive,
+  toolSelected,
+  tumorArea,
+  stromaArea,
+  lymphocyteCount,
   isNavigatorActive,
+  tilScore,
   isMultiview,
   slide,
   userInfo,
@@ -51,6 +68,15 @@ const FunctionsMenu = ({
   saveSynopticReport,
   mediaUpload,
   slideInfo,
+  chatFeedBar,
+  handleChatFeedBarClose,
+  feedTab,
+  users,
+  client2,
+  mentionUsers,
+  Environment,
+  setChatFeedBar,
+  addUsersToCase,
   handleReport,
   showReport,
   setShowReport,
@@ -63,13 +89,14 @@ const FunctionsMenu = ({
   setSynopticType,
   getSynopticReport,
   updateSynopticReport,
+  searchSelectedData,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
   const [selectedOption, setSelectedOption] = useState("slides");
   const { fabricOverlayState } = useFabricOverlayState();
   const { viewerWindow } = fabricOverlayState;
-  const { tile, slideId } = viewerWindow[viewerId];
+  const { tile, slideId, viewer } = viewerWindow[viewerId];
   const [reportData, setReportData] = useState({
     clinicalStudy: "",
     grossDescription: "",
@@ -93,7 +120,55 @@ const FunctionsMenu = ({
   };
   const [annotedSlideImages, setAnnotedSlideImages] = useState([]);
   const [slideData, setSlideData] = useState(null);
+  const [timelineData, setTimeLineData] = useState([]);
+  useEffect(() => {
+    if (!chatFeedBar) {
+      setSelectedOption("slides");
+    }
+    if (chatFeedBar) {
+      setSelectedOption("messages");
+      setIsOpen(true);
+    }
+  }, [chatFeedBar]);
+  useEffect(()=>{
+    if(toolSelected !== "Filter"){
+      setSelectedOption("slides");
+    }
+    if(toolSelected === "Filter"){
+      setSelectedOption("adjustments");
+      setIsOpen(true);
+    }
+  },[toolSelected])
 
+  useEffect(async()=>{
+    if(selectedOption === "timeline"){
+      // console.log("timeeeeeeeeeeeeeeeeeeeeeee");
+      const resp = await axios.post(
+        `${Environment.USER_URL}/slide_timeline`,
+        {
+          slideId: slide?._id,
+          caseId: caseInfo?._id
+        }
+      );
+      if(resp){
+        const sortedDataByTime = resp.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        setTimeLineData(sortedDataByTime)
+      }
+    }
+    // console.log("clicccccccccccccccccccccccccccccck");
+  },[selectedOption])
+
+  useEffect(() => {
+    if (searchSelectedData) {
+      if (searchSelectedData.type !== "textBox") {
+        setIsOpen(true);
+        setSelectedOption("annotations");
+      } else {
+        setIsOpen(true);
+        setSelectedOption("comments");
+      }
+    }
+  }, [searchSelectedData]);
   return (
     <Box
       pos="absolute"
@@ -107,8 +182,6 @@ const FunctionsMenu = ({
           width: isOpen
             ? ifWidthLessthan1920
               ? selectedOption === "report"
-                ? "35vw"
-                : "350px"
               : selectedOption === "report"
               ? "40vw"
               : "18vw"
@@ -313,6 +386,68 @@ const FunctionsMenu = ({
                 </VStack>
               </Button>
             </Tooltip>
+            {chatFeedBar ? (
+              <Tooltip label=" View Conversation">
+                <Button
+                  height="73px"
+                  w="73px"
+                  borderRadius={0}
+                  background="#F6F6F6"
+                  box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
+                  onClick={() => setSelectedOption("messages")}
+                >
+                  <VStack>
+                    {selectedOption === "messages" ? (
+                      <MessagesIcon />
+                    ) : (
+                      <MessagesIcon />
+                    )}
+                    <Text
+                      fontFamily="Inter"
+                      fontStyle="normal"
+                      fontWeight="400"
+                      fontSize="10px"
+                      lineHeight="12px"
+                      letterSpacing="0.0025em"
+                      color={selectedOption === "report" ? "#3B5D7C" : "fff"}
+                    >
+                      Messages
+                    </Text>
+                  </VStack>
+                </Button>
+              </Tooltip>
+            ) : null}
+            {toolSelected === "Filter" ? 
+             <Tooltip label=" Adjustments">
+             <Button
+               height="73px"
+               w="73px"
+               borderRadius={0}
+               background="#F6F6F6"
+               box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
+               onClick={() => setSelectedOption("adjustments")}
+             >
+               <VStack>
+                 {selectedOption === "adjustments" ? (
+                   <MessagesIcon />
+                 ) : (
+                   <MessagesIcon />
+                 )}
+                 <Text
+                   fontFamily="Inter"
+                   fontStyle="normal"
+                   fontWeight="400"
+                   fontSize="10px"
+                   lineHeight="12px"
+                   letterSpacing="0.0025em"
+                   color={selectedOption === "report" ? "#3B5D7C" : "fff"}
+                 >
+                   Adjustments
+                 </Text>
+               </VStack>
+             </Button>
+           </Tooltip> : null}
+
           </Flex>
           <Flex
             w="100%"
@@ -339,9 +474,23 @@ const FunctionsMenu = ({
                 userInfo={userInfo}
                 isXmlAnnotations={isXmlAnnotations}
                 viewerId={viewerId}
+                tumorArea={tumorArea}
+                hideTumor={hideTumor}
+                setHideTumor={setHideTumor}
+                hideLymphocyte={hideLymphocyte}
+                setHideLymphocyte={setHideLymphocyte}
+                setHideStroma={setHideStroma}
+                hideStroma={hideStroma}
+                stromaArea={stromaArea}
+                lymphocyteCount={lymphocyteCount}
+                tilScore={tilScore}
+                searchSelectedData={searchSelectedData}
               />
             ) : selectedOption === "comments" ? (
-              <CommentFeed viewerId={viewerId} />
+              <CommentFeed
+                viewerId={viewerId}
+                searchSelectedData={searchSelectedData}
+              />
             ) : selectedOption === "report" ? (
               <Flex w="100%" h="100%" direction="column" bgColor="#FCFCFC">
                 <Flex w="100%" direction="row" p="5px 5px 0px 20px">
@@ -406,9 +555,30 @@ const FunctionsMenu = ({
                   ) : null}
                 </Flex>
               </Flex>
+            ) : selectedOption === "messages" ? (
+              <ChatFeed
+                viewerId={viewerId}
+                chatFeedBar={chatFeedBar}
+                handleChatFeedBarClose={handleChatFeedBarClose}
+                showReport={showReport}
+                feedTab={feedTab}
+                setChatFeedBar={setChatFeedBar}
+                userInfo={userInfo}
+                caseInfo={caseInfo}
+                synopticType={synopticType}
+                application={application}
+                app={application}
+                users={users}
+                client2={client2}
+                mentionUsers={mentionUsers}
+                Environment={Environment}
+                addUsersToCase={addUsersToCase}
+              />
+            ) : selectedOption === "adjustments" ? (
+              <Adjustments setToolSelected={setToolSelected} viewer={viewer} setIsOpen={setIsOpen} />
             ) : (
-              <Flex w="100%" h="100%" bgColor="#FCFCFC" p="5px">
-                <Timeline />
+              <Flex w="100%" h="95%" pb="25px" bgColor="#FCFCFC" p="5px">
+                <Timeline timelineData={timelineData} />
               </Flex>
             )}
           </Flex>

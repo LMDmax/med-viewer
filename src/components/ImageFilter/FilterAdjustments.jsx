@@ -27,7 +27,7 @@ const getFilters = (sliderInputs) => {
   return filters;
 };
 
-const FilterAdjustments = ({ viewerId }) => {
+const FilterAdjustments = ({ viewerId, setToolSelected }) => {
   const { fabricOverlayState } = useFabricOverlayState();
   const { viewerWindow } = fabricOverlayState;
   const { viewer } = viewerWindow[viewerId];
@@ -43,13 +43,21 @@ const FilterAdjustments = ({ viewerId }) => {
     exposure: 0,
   });
 
+  useEffect(()=>{
+    if(isActive){
+      setToolSelected("Filter");
+    }
+    else{
+      setToolSelected("")
+    }
+  },[isActive])
+
   const sliderStateRef = useRef(sliderInputs);
   const modalRef = useRef(null);
 
   const toast = useToast();
 
   const handleClick = () => {
-    if (!isActive) onOpen();
     setIsActive((state) => !state);
   };
 
@@ -101,7 +109,7 @@ const FilterAdjustments = ({ viewerId }) => {
     <>
       <ToolbarButton
         icon={<HiAdjustments color={!isActive ? "black" : "#3B5D7C"} size={IconSize()} />}
-        label={<TooltipLabel heading="Filters" />}
+        label={<TooltipLabel heading="Adjustments" />}
         backgroundColor={!isActive ? "" : "#E4E5E8"}
         outline={isActive ? " 0.5px solid rgba(0, 21, 63, 1)" : ""}
         boxShadow={

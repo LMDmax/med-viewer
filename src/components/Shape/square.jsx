@@ -20,19 +20,20 @@ import {
 } from "../../state/actions/fabricOverlayActions";
 import { SquareIcon, SquareIconSelected } from "../Icons/CustomIcons";
 
-const Square = ({ viewerId, onSaveAnnotation }) => {
+const Square = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { color, viewerWindow, activeTool } = fabricOverlayState;
-
+  
   const { fabricOverlay, viewer, slideId } = viewerWindow[viewerId];
-
+  
   const { deselectAll } = useCanvasHelpers(viewerId);
   const isActive = activeTool === "Square";
-
+  const [toolState, setToolState]  = useState(false);
+  
   const [shape, setShape] = useState(null);
   const [textbox, setTextbox] = useState(false);
   const toast = useToast();
-
+  
   const [myState, setState] = useState({
     activeShape: null, // active shape in event Panel
     color: null,
@@ -48,7 +49,7 @@ const Square = ({ viewerId, onSaveAnnotation }) => {
     setState((state) => ({ ...state, ...data }));
   };
   const { isOpen, onClose, onOpen } = useDisclosure();
-
+  
   const screenSize = useMediaQuery([
     "(max-width: 1280px)",
     "(max-width: 1440px)",
@@ -246,8 +247,12 @@ const Square = ({ viewerId, onSaveAnnotation }) => {
   // first remove both from canvas then group them and then add group to canvas
   useEffect(() => {
     if (!shape) return;
+            setToolSelected("RunRoi");
 
     const addToFeed = async () => {
+      // console.log("added");
+      console.log(shape);
+      console.log(viewer);
       const message = createAnnotationMessage({ slideId, shape, viewer, type:"rect" });
 
       saveAnnotationToDB({
@@ -300,8 +305,9 @@ const Square = ({ viewerId, onSaveAnnotation }) => {
       icon={isActive ? <SquareIconSelected /> : <SquareIcon />}
       onClick={() => {
         handleClick();
+        setToolSelected("RectangleTool")
         toast({
-          title: "Square annotation tool selected",
+          title: "Rectangle annotation tool selected",
           status: "success",
           duration: 1500,
           isClosable: true,

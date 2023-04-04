@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
-
+import { motion } from "framer-motion";
 import { useMutation, useSubscription } from "@apollo/client";
+import { BsEye } from "react-icons/bs";
+import { BsEyeSlash } from "react-icons/bs";
 import {
   Box,
   Flex,
@@ -28,6 +30,9 @@ import { FaDrawPolygon } from "react-icons/fa";
 import { GrFormClose } from "react-icons/gr";
 import { MdModeEditOutline, MdDelete, MdTextsms } from "react-icons/md";
 import { v4 as uuidv4 } from "uuid";
+import { GroupTil } from "../Icons/CustomIcons";
+import { AiFillCaretRight, AiFillCaretDown } from "react-icons/ai";
+import { RiCheckboxBlankLine, RiCheckboxBlankFill } from "react-icons/ri";
 
 import {
   DELETE_ANNOTATION,
@@ -41,7 +46,7 @@ import DeleteConfirmation from "../Annotations/DeleteConfirmation";
 import ScrollBar from "../ScrollBar";
 import EditText from "./editText";
 
-function EditTextButton({ feed, handleEditClick, ...restProps }) {
+const EditTextButton = ({ feed, handleEditClick, ...restProps }) => {
   return (
     <Icon
       as={MdModeEditOutline}
@@ -50,9 +55,8 @@ function EditTextButton({ feed, handleEditClick, ...restProps }) {
       {...restProps}
     />
   );
-}
-
-function CardDetailsRow({ title, value, ...restProps }) {
+};
+const CardDetailsRow = ({ title, value, ...restProps }) => {
   return (
     <HStack
       py="8px"
@@ -65,9 +69,8 @@ function CardDetailsRow({ title, value, ...restProps }) {
       <Text>{value}</Text>
     </HStack>
   );
-}
-
-function CustomTab({ title, ...props }) {
+};
+const CustomTab = ({ title, ...props }) => {
   return (
     <Tab
       {...props}
@@ -91,9 +94,15 @@ function CustomTab({ title, ...props }) {
       {title}
     </Tab>
   );
-}
+};
 
-function CustomTabPanel({ children, title, annotation, totalCells, ...props }) {
+const CustomTabPanel = ({
+  children,
+  title,
+  annotation,
+  totalCells,
+  ...props
+}) => {
   return (
     <TabPanel {...props} px={0} py="8px">
       <Text
@@ -108,7 +117,7 @@ function CustomTabPanel({ children, title, annotation, totalCells, ...props }) {
         {title}
       </Text>
       {children ? (
-        <Flex flexDir="column" minH="0px" h="42vh">
+        <Flex flexDir="column" minH="0px" h="fit-content">
           <ScrollBar>
             <Flex flexDir="column" pb="85px">
               {children}
@@ -120,17 +129,38 @@ function CustomTabPanel({ children, title, annotation, totalCells, ...props }) {
   );
 }
 
+const MotionBox = motion(Box);
+
 function ActivityFeed({
   userInfo,
   viewerId,
   totalCells,
+  hideTumor,
+  setHideTumor,
+  hideLymphocyte,
+  setHideLymphocyte,
+  setHideStroma,
+  hideStroma,
   handlePopup,
   popup,
+  tumorArea,
+  stromaArea,
+  lymphocyteCount,
+  showFeedBar,
+  tilScore,
   isXmlAnnotations,
+  activeObject,
+  searchSelectedData,
 }) {
   // const onUpdateAnnotation = (data) => {
   //   console.log("activityfeed", data);
   // };
+  const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
+  const [isTILBoxVisible, setIsTilBoxVisible] = useState(false);
+  const [visibleTumor, setVisibleTumor] = useState(true);
+  const [visibleStroma, setVisibleStroma] = useState(true);
+  const [visibleLymphocyte, setVisibleLymphocyte] = useState(true);
+  const [selectedItemIndex, setSelectedItemIndex] = useState(null);
   const [
     modifyAnnotation,
     { data: updatedData, error: updateError, loading: updateLoading },
@@ -167,7 +197,6 @@ function ActivityFeed({
   const { activeTool, viewerWindow } = fabricOverlayState;
   const { fabricOverlay, activityFeed, viewer, tile, slideId } =
     viewerWindow[viewerId];
-
   const { deleteAllAnnotations } = useCanvasHelpers(viewerId);
 
   const scrollbar = useRef(null);
@@ -190,6 +219,13 @@ function ActivityFeed({
   }, [activityFeed]);
 
   useEffect(() => {
+    if (isTILBoxVisible) {
+    }
+    if (annotationDetails) {
+    }
+  }, [isTILBoxVisible, annotationDetails]);
+
+  useEffect(() => {
     return () => {
       setAnnotationObject(null);
       setAnnotationsDetails(null);
@@ -201,21 +237,23 @@ function ActivityFeed({
     setAnnotationsDetails(null);
   }, [tile]);
 
-  const handleClick = (feed) => {
+  const handleClick = (feed, index) => {
+    setSelectedItemIndex(index);
+	if(selectedItemIndex === index){
+		setSelectedItemIndex("");
+	}
     if (feed.object.roiType === "KI67") {
       setKi67Feed(feed);
-      console.log(ki67Feed);
+      // console.log(ki67Feed);
     }
     if (feed.object.roiType !== "KI67") {
       setKi67Feed({});
     }
     if (!feed.object || !feed.object?.visible) return;
     const canvas = fabricOverlay.fabricCanvas();
-
-    if (feed.object.type !== "viewport") {
-      canvas.setActiveObject(feed.object);
+    if (feed?.object?.type !== "viewport") {
+      canvas.setActiveObject(feed?.object);
     }
-
     // change position to annotation object location
     // except for when MagicWand tool is activated
     if (activeTool !== "MagicWand") {
@@ -237,7 +275,14 @@ function ActivityFeed({
     canvas.requestRenderAll();
     setAnnotationsDetails(feed.object);
   };
-  console.log(ki67Feed);
+  // on annotation click
+  useEffect(() => {
+    if (searchSelectedData) {
+      setAnnotationsDetails(searchSelectedData);
+    } else {
+      setAnnotationsDetails(activeObject);
+    }
+  }, [activeObject, searchSelectedData]);
 
   const handleSave = ({ text, title }) => {
     annotationObject.text = text;
@@ -263,6 +308,14 @@ function ActivityFeed({
     onDeleteConfirmationClose();
   };
 
+  useEffect(() => {
+    if (isTILBoxVisible) {
+    //   setAnnotationsDetails(null);
+      setSelectedItemIndex("til");
+    }
+  }, [isTILBoxVisible, annotationDetails]);
+
+
   return (
     <Flex
       as="section"
@@ -286,7 +339,7 @@ function ActivityFeed({
         flex="1"
       >
         <HStack justify="space-between" alignItems="center" mb="7px">
-          <Text fontSize="1rem" color="#3B5D7C" fontWeight={500}>
+          <Text fontSize="14px" color="#3B5D7C" fontWeight={500}>
             Annotations
           </Text>
           {!isXmlAnnotations && (
@@ -310,9 +363,12 @@ function ActivityFeed({
                   pb="0.5vh"
                   borderBottom="1px solid #F6F6F6"
                   cursor="pointer"
-                  onClick={() => handleClick(feed)}
+                  onClick={() => handleClick(feed, index)}
                   justify="space-between"
                   align="center"
+                  style={{
+                    fontWeight: selectedItemIndex === index ? "bold" : "normal",
+                  }}
                 >
                   <Flex align="center">
                     {feed.object?.type === "rect" ? (
@@ -350,7 +406,94 @@ function ActivityFeed({
         </ScrollBar>
       </Flex>
 
-      {annotationDetails ? (
+      <Flex
+        direction="column"
+        marginStart="0.8vw"
+        pt="2px"
+        overflowY="auto"
+        flex="1"
+      >
+        <HStack justify="space-between">
+          <Text fontSize="1rem" pb="3px">
+            Annotation List
+          </Text>
+          {!isXmlAnnotations && (
+            <IconButton
+              icon={<MdDelete size={18} />}
+              size="sm"
+              variant="unstyled"
+              cursor="pointer"
+              isDisabled={activityFeed.length === 0}
+              _focus={{ border: "none", outline: "none" }}
+              onClick={onDeleteConfirmationOpen}
+            />
+          )}
+        </HStack>
+        <ScrollBar>
+          <Flex direction="column"  h="80vh">
+          <Accordion allowMultiple>
+  {activityFeed.map((feed, index) => {
+    return feed?.object && feed?.object?.type !== "textbox" ? (
+      <AccordionItem key={feed.object.hash} onClick={() => handleClick(feed, index)}>
+        <h2>
+          <AccordionButton
+            pl="0"
+            _focus={{ outline: "none" }}
+            style={{
+              fontWeight:
+                selectedItemIndex === index ? "bold" : "normal",
+            }}
+
+          >
+            <Flex w="100%" alignItems="center" justifyContent="space-between" >
+            <Flex>
+			<Box mr="1.2vw" mt="2px">
+			{selectedItemIndex === index ? (
+                      <AiFillCaretDown color="#3B5D7C" />
+                    ) : (
+                      <AiFillCaretRight color="gray" />
+                    )}
+              </Box>
+             <Box>
+			<Flex alignItems="center"  justifyContent="space-between" >
+			{feed.object?.type === "rect" ? (
+                <BiRectangle color="#E23636" />
+              ) : feed.object?.type === "polygon" ? (
+                <FaDrawPolygon color="#E23636" />
+              ) : feed.object?.type === "ellipse" ? (
+                <BsCircle color="#E23636" />
+              ) : (
+                <BsSlash color="#E23636" />
+              )}
+              <Text ml="0.8vw">
+                {feed.object?.title
+                  ? feed.object.title
+                  : feed.object?.roiType === "morphometry"
+                  ? `ROI ${index + 1}`
+                  : feed.object?.roiType === "KI67"
+                  ? `KI-67 ${index + 1}`
+                  : feed.object?.type === "viewport"
+                  ? `Viewport ${index + 1}`
+                  : `Annotation ${index + 1}`}
+              </Text>
+			</Flex>
+			 </Box>
+			</Flex>
+			 {!isXmlAnnotations && (
+              <EditTextButton
+                feed={feed}
+                handleEditClick={handleEditClick}
+                mr={2}
+              />
+            )}
+            </Flex>
+			
+          </AccordionButton>
+		  
+        </h2>
+		
+        <AccordionPanel pb={2}>
+		{annotationDetails ? (
         <Flex fontSize="14px" flexDir="column" background="#FCFCFC">
           <Box h="6px" background="#F6F6F6" w="100%" />
           <Tabs variant="unstyled" defaultIndex={0}>
@@ -550,6 +693,213 @@ function ActivityFeed({
           </Tabs>
         </Flex>
       ) : null}
+        </AccordionPanel>
+      </AccordionItem>
+    ) : null;
+  })}
+</Accordion>
+
+            {localStorage.getItem("til") ? (
+              <Box my="0px" cursor="pointer">
+                <Flex
+                  w="40%"
+                  onClick={() => setIsTilBoxVisible(!isTILBoxVisible)}
+                  justifyContent="flex-start"
+                  alignItems="center"
+                >
+                  <Box mr="6px">
+                    {isTILBoxVisible ? (
+                      <AiFillCaretDown color="#3B5D7C" />
+                    ) : (
+                      <AiFillCaretRight color="gray" />
+                    )}
+                  </Box>
+                  <Box ml="18px">
+                    <GroupTil />
+                  </Box>
+                  <Text
+                    ml="0.8vw"
+                    style={{
+                      fontWeight:
+                        selectedItemIndex === "til" ? "bold" : "normal",
+                    }}
+                  >
+                    TIL Analysis
+                  </Text>
+                </Flex>
+                {isTILBoxVisible && (
+                  <MotionBox
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.5 }}
+                    h="fit-content"
+                    w="100%"
+                    mt={2}
+                    //   onClick={handleBoxClick}
+                  >
+                    <Flex
+                      borderBottom="1px solid lightgray"
+                      my="0"
+                      ml="50px"
+                      alignItems="center"
+                    >
+                      <RiCheckboxBlankFill color="#cce6cc" />
+                      <Text ml="5px">Tumor</Text>
+                      <Flex
+                        alignItems="flex-end"
+                        justifyContent="flex-end"
+                        w="100%"
+                      >
+                        <IconButton
+                          width={ifScreenlessthan1536px ? "30px" : "40px"}
+                          size={ifScreenlessthan1536px ? 60 : 0}
+                          height={ifScreenlessthan1536px ? "26px" : "34px"}
+                          icon={
+                            !visibleTumor ? (
+                              <BsEyeSlash color="#151C25" />
+                            ) : (
+                              <BsEye color="#3b5d7c" />
+                            )
+                          }
+                          _active={{
+                            bgColor: "none",
+                            outline: "none",
+                          }}
+                          _focus={{
+                            border: "none",
+                          }}
+                          _hover={{ bgColor: "none" }}
+                          bg="transparent"
+                          borderRadius={0}
+                          onClick={() => {
+                            setHideTumor(!hideTumor);
+                            setHideStroma(false);
+                            setHideLymphocyte(false);
+                            setVisibleTumor(!visibleTumor);
+                            setVisibleStroma(true);
+                            setVisibleLymphocyte(true);
+                          }}
+                        />
+                      </Flex>
+                    </Flex>
+                    <Flex
+                      borderBottom="1px solid lightgray"
+                      my="0"
+                      ml="50px"
+                      alignItems="center"
+                    >
+                      <RiCheckboxBlankFill color="#f7d66e" />
+                      <Text ml="5px">Stroma</Text>
+                      <Flex
+                        alignItems="flex-end"
+                        justifyContent="flex-end"
+                        w="100%"
+                      >
+                        <IconButton
+                          width={ifScreenlessthan1536px ? "30px" : "40px"}
+                          size={ifScreenlessthan1536px ? 60 : 0}
+                          height={ifScreenlessthan1536px ? "26px" : "34px"}
+                          icon={
+                            !visibleStroma ? (
+                              <BsEyeSlash color="#151C25" />
+                            ) : (
+                              <BsEye color="#3b5d7c" />
+                            )
+                          }
+                          _active={{
+                            bgColor: "none",
+                            outline: "none",
+                          }}
+                          _focus={{
+                            border: "none",
+                          }}
+                          _hover={{ bgColor: "none" }}
+                          backgroundColor="transparent"
+                          borderRadius={0}
+                          onClick={() => {
+                            setHideStroma(!hideStroma);
+                            setHideLymphocyte(false);
+                            setHideTumor(false);
+                            setVisibleStroma(!visibleStroma);
+                            setVisibleLymphocyte(true);
+                            setVisibleTumor(true);
+                          }}
+                        />
+                      </Flex>
+                    </Flex>
+                    <Flex my="0" ml="50px" alignItems="center">
+                      <RiCheckboxBlankLine color="red" />
+                      <Text ml="5px">Lymphocytes</Text>
+                      <Flex
+                        alignItems="flex-end"
+                        justifyContent="flex-end"
+                        w="100%"
+                      >
+                        <IconButton
+                          width={ifScreenlessthan1536px ? "30px" : "40px"}
+                          size={ifScreenlessthan1536px ? 60 : 0}
+                          height={ifScreenlessthan1536px ? "26px" : "34px"}
+                          icon={
+                            !visibleLymphocyte ? (
+                              <BsEyeSlash color="#151C25" />
+                            ) : (
+                              <BsEye color="#3b5d7c" />
+                            )
+                          }
+                          _active={{
+                            bgColor: "none",
+                            outline: "none",
+                          }}
+                          _focus={{
+                            border: "none",
+                          }}
+                          _hover={{ bgColor: "none" }}
+                          bg="transparent"
+                          borderRadius={0}
+                          onClick={() => {
+                            setHideLymphocyte(!hideLymphocyte);
+                            setHideStroma(false);
+                            setHideTumor(false);
+                            setVisibleLymphocyte(!visibleLymphocyte);
+                            setVisibleTumor(true);
+                            setVisibleStroma(true);
+                          }}
+                        />
+                      </Flex>
+                    </Flex>
+                    <Box w="100%" mx="25px" my="10px" textAlign="left">
+                      <Text color="#3B5D7C">TIL Values</Text>
+                    </Box>
+                    <Box px="25px">
+                      <Text mb="10px" borderBottom="1px solid lightgray">
+                        TIL Score : {tilScore}
+                      </Text>
+                      <Text mb="10px">
+                        TIL Formula : <br /> (Lymphocyte Area / Stroma Area) *
+                        100
+                      </Text>
+                      <Text
+                        mb="10px"
+                        borderTop="1px solid lightgray"
+                        borderBottom="1px solid lightgray"
+                      >
+                        Tumor Area : {tumorArea}
+                      </Text>
+                      <Text mb="10px" borderBottom="1px solid lightgray">
+                        Stroma Area : {stromaArea}
+                      </Text>
+                      <Text borderBottom="1px solid lightgray">
+                        Lymphocytes Count : {lymphocyteCount}
+                      </Text>
+                    </Box>
+                  </MotionBox>
+                )}
+              </Box>
+            ) : null}
+          </Flex>
+        </ScrollBar>
+      </Flex>
       <EditText
         isOpen={isOpen}
         onClose={onClose}
@@ -566,6 +916,6 @@ function ActivityFeed({
       />
     </Flex>
   );
-}
+};
 
 export default ActivityFeed;

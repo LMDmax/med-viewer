@@ -32,6 +32,8 @@ const MagicWandTool = ({
   userInfo,
   viewerId,
   onSaveAnnotation,
+  toolSelected,
+  setToolSelected,
   setTotalCells,
 }) => {
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
@@ -129,7 +131,7 @@ const MagicWandTool = ({
         "https://backup-quantize-vhut.prr.ai/vhut/click/xy",
         body
       );
-        console.log(body);
+        // console.log(body);
       // if the click positon is a cell, create annotation
       // also add it the annotation feed
       if (resp && typeof resp.data === "object") {
@@ -218,8 +220,8 @@ const MagicWandTool = ({
 
   useEffect(()=>{
     if (vhutSubscriptionData) {
-      console.log("subscribed", vhutSubscriptionData);
-      console.log("subscribedError", vhutSubscription_error);
+      // console.log("subscribed", vhutSubscriptionData);
+      // console.log("subscribedError", vhutSubscription_error);
       const {
         data,
         status,
@@ -228,7 +230,7 @@ const MagicWandTool = ({
       } = vhutSubscriptionData.analysisStatus;
 
       if (type === "VIEWPORT_ANALYSIS" && data.results !== null){
-          console.log(data.results[0]);
+          // console.log(data.results[0]);
     const canvas = fabricOverlay.fabricCanvas();
           const neutrophilContours = data.results[0].contours;
           const EpithelialContours = data.results[1].contours;
@@ -364,8 +366,8 @@ const MagicWandTool = ({
     
     // // Add the Polygon objects to the canvas and request a render
     // console.log(roi2);
+    setToolSelected("MagicWand");
     canvas.add(t).bringToFront().requestRenderAll();
-    
       }
     }
   },[vhutSubscriptionData])
