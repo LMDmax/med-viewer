@@ -40,7 +40,7 @@ const ViewerContainer = ({
 	accessToken,
 	setIsXmlAnnotations,
 	handleAnnotationClick,
-}) {
+}) => {
   const location = useLocation();
 
   const { fabricOverlayState } = useFabricOverlayState();

@@ -255,7 +255,11 @@ const FunctionsMenu = ({
                 borderRadius={0}
                 background="#F6F6F6"
                 box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-                onClick={() => setSelectedOption("timeline")}
+                onClick={() =>{
+                 setSelectedOption("timeline")
+                 setIsOpen(true);
+                }
+              }
               >
                 <VStack>
                   {selectedOption === "timeline" ? (
@@ -284,7 +288,11 @@ const FunctionsMenu = ({
                 borderRadius={0}
                 background="#F6F6F6"
                 box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-                onClick={() => setSelectedOption("annotations")}
+                onClick={() => {
+                  setSelectedOption("annotations")
+                  setIsOpen(true);
+    
+                }}
               >
                 <VStack>
                   {selectedOption === "annotations" ? (
@@ -342,7 +350,10 @@ const FunctionsMenu = ({
                 borderRadius={0}
                 background="#F6F6F6"
                 box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-                onClick={() => setSelectedOption("information")}
+                onClick={() => {
+                  setSelectedOption("information");
+                  setIsOpen(true);
+                }}
               >
                 <VStack>
                   {selectedOption === "information" ? (
@@ -371,7 +382,11 @@ const FunctionsMenu = ({
                 borderRadius={0}
                 background="#F6F6F6"
                 box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-                onClick={() => setSelectedOption("report")}
+                onClick={() =>{
+                  setSelectedOption("report");
+                  setIsOpen(true);
+
+                }}
               >
                 <VStack>
                   {selectedOption === "report" ? (
@@ -478,8 +493,8 @@ const FunctionsMenu = ({
               />
             ) : selectedOption === "information" ? (
               <Flex w="100%" bg="#FCFCFC">
-                <Studies caseInfo={caseInfo} slideInfo={slide} />
-              </Flex>
+              <Studies caseInfo={caseInfo} slideInfo={slide} />
+            </Flex>
             ) : selectedOption === "annotations" ? (
               <ActivityFeed
                 userInfo={userInfo}
