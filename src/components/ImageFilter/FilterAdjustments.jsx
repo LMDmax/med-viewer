@@ -58,7 +58,6 @@ const FilterAdjustments = ({ viewerId, setToolSelected }) => {
   const toast = useToast();
 
   const handleClick = () => {
-    if (!isActive) onOpen();
     setIsActive((state) => !state);
   };
 
@@ -110,7 +109,7 @@ const FilterAdjustments = ({ viewerId, setToolSelected }) => {
     <>
       <ToolbarButton
         icon={<HiAdjustments color={!isActive ? "black" : "#3B5D7C"} size={IconSize()} />}
-        label={<TooltipLabel heading="Filters" />}
+        label={<TooltipLabel heading="Adjustments" />}
         backgroundColor={!isActive ? "" : "#E4E5E8"}
         outline={isActive ? " 0.5px solid rgba(0, 21, 63, 1)" : ""}
         boxShadow={

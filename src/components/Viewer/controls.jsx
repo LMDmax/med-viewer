@@ -977,9 +977,9 @@ useEffect(() => {
    } // Clear the timer on unmounting the component
 }, [analysis_data]);
 
-
+  console.log(caseInfo);
 	return (
-		<>
+		<Box>
       {!isAnnotationLoaded || isViewportAnalysing ? (
         <Loading position="absolute" w="100%" zIndex="3" h="79vh" />
       ) : null}
@@ -1072,6 +1072,7 @@ useEffect(() => {
             setZoom={handleZoomLevel}
             slide={slide}
             enableAI={enableAI}
+            setModelname={setModelname}
             isMorphometryDisabled={isMorphometryDisabled}
             isAnnotationSelected={annotationObject}
             isAnalysed={annotationObject?.isAnalysed}
@@ -1137,7 +1138,7 @@ useEffect(() => {
       ) : (
         ""
       )}
-    </>
+    </Box>
 	);
 }
 

@@ -24,6 +24,7 @@ function ScreenTools({
   viewerId,
   report,
   toolSelected,
+  chatFeedBar,
   application,
   handleAnnotationBar,
   caseInfo,
@@ -72,7 +73,8 @@ function ScreenTools({
         <ViewerChat
           chatHover={chatHover}
           setChatHover={setChatHover}
-		  setToolSelected={setToolSelected}
+          setToolSelected={setToolSelected}
+          chatFeedBar={chatFeedBar}
           handleChatFeedBarClose={handleChatFeedBarClose}
           handleChatFeedbar={handleChatFeedbar}
         />

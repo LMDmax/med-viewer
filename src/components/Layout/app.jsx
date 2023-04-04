@@ -126,11 +126,11 @@ function LayoutApp({
       runAiModel = "";
       break;
     case "KI67":
-      runAiModel ="KI67";
+      runAiModel = "KI67";
       break;
-      case "TIL":
-        runAiModel ="TIL";
-        break;
+    case "TIL":
+      runAiModel = "TIL";
+      break;
     default:
       runAiModel = "Morphometry";
       break;
@@ -208,32 +208,37 @@ function LayoutApp({
     case "Chat":
       returnText = "Chat Feed is open.";
       break;
-      case "MorphometryError":
+    case "MorphometryError":
       returnText = "Please select a annotation to run ROI analysis";
       break;
-      case "ZoomError":
-        returnText = "ROI analysis can be run on 40X zoom";
-        break;
-        case "TILError":
-          returnText = "TIL analysis can only be run on H&E slides.";
-          break;
-          case "KI67Error":
-            returnText = "KI67 analysis can only be run on IHC slides.";
-            break;
-            case "MorphometrySlideIssue":
-              returnText = "Morphometry analysis can only be run on H&E slides.";
-              break;
-      case "MorphometryAnalysed":
+    case "ZoomError":
+      returnText = "ROI analysis can be run on 40X zoom";
+      break;
+    case "TILError":
+      returnText = "TIL analysis can only be run on H&E slides.";
+      break;
+      case "TILLoading":
+      returnText = "TIL will enable after sometime.";
+      break;
+    case "KI67Error":
+      returnText = "KI67 analysis can only be run on IHC slides.";
+      break;
+    case "MorphometrySlideIssue":
+      returnText = "Morphometry analysis can only be run on H&E slides.";
+      break;
+    case "MorphometryAnalysed":
       returnText = "Morphometry done on selected annotation";
       break;
-      case "KI67Analysed":
-        returnText = "KI67 analysis done on selected annotation";
+    case "KI67Analysed":
+      returnText = "KI67 analysis done on selected annotation";
+      break;
+      case "FilterSaved":
+        returnText = "Adjusment saved successfully ";
         break;
     default:
       returnText = "";
       break;
   }
-
 
   const showSidebar = () => {
     setSidebar(!sidebar);
@@ -244,8 +249,7 @@ function LayoutApp({
     setFeedBar(0);
   };
   const handleChatFeedbar = () => {
-    setChatFeedBar(true);
-    setChatHover(!chatHover);
+    setChatFeedBar(!chatFeedBar);
   };
   const handleTILFeedBar = () => {
     setTILFedBar(true);
@@ -269,7 +273,6 @@ function LayoutApp({
   };
   const handleAnnotationClick = (annotation) => {
     setAnnotationObject(annotation);
-    setShowFeedBar(true);
     setFeedBar(1);
   };
 
@@ -284,6 +287,7 @@ function LayoutApp({
           hideStroma={hideStroma}
           hideTumor={hideTumor}
           hideLymphocyte={hideLymphocyte}
+          chatFeedBar={chatFeedBar}
           caseInfo={caseInfo}
           loadUI={loadUI}
           setLoadUI={setLoadUI}
@@ -381,7 +385,7 @@ function LayoutApp({
               setSidebar={setSidebar}
             />
           ) : null}
-          {showFeedBar ? (
+          {/* {showFeedBar ? (
             <SlideFeed
               viewerId={currentViewer}
               showFeedBar={showFeedBar}
@@ -392,8 +396,8 @@ function LayoutApp({
               isXmlAnnotations={isXmlAnnotations}
               annotationObject={annotationObject}
             />
-          ) : null}
-          {chatFeedBar ? (
+          ) : null} */}
+          {/* {chatFeedBar ? (
             <ChatFeed
               viewerId={currentViewer}
               chatFeedBar={chatFeedBar}
@@ -411,8 +415,8 @@ function LayoutApp({
               Environment={Environment}
               addUsersToCase={addUsersToCase}
             />
-          ) : null}
-          {tILFedBar ? (
+          ) : null} */}
+          {/* {tILFedBar ? (
             <TILFeedBar
               viewerId={currentViewer}
               hideTumor={hideTumor}
@@ -448,7 +452,7 @@ function LayoutApp({
               mentionUsers={mentionUsers}
               Environment={Environment}
             />
-          ) : null}
+          ) : null} */}
           <LayoutAppBody>
             <ViewerFactory
               application={application}
@@ -473,7 +477,56 @@ function LayoutApp({
               handleAnnotationClick={handleAnnotationClick}
             />
           </LayoutAppBody>
-          <FunctionsMenu />
+          <FunctionsMenu
+            caseInfo={caseInfo}
+            slides={slides}
+            viewerId={currentViewer}
+            setIsMultiview={setIsMultiview}
+            setIsNavigatorActive={setIsNavigatorActive}
+            isNavigatorActive={isNavigatorActive}
+            isMultiview={isMultiview}
+            slide={viewerIds?.[0]}
+            hideTumor={hideTumor}
+            setHideTumor={setHideTumor}
+            setToolSelected={setToolSelected}
+            hideLymphocyte={hideLymphocyte}
+            setHideLymphocyte={setHideLymphocyte}
+            setHideStroma={setHideStroma}
+            hideStroma={hideStroma}
+            Environment={Environment}
+            tilScore={tilScore}
+            userInfo={userInfo}
+            toolSelected={toolSelected}
+            isXmlAnnotations={isXmlAnnotations}
+            application={application}
+            saveReport={saveReport}
+            saveSynopticReport={saveSynopticReport}
+            tumorArea={tumorArea}
+            stromaArea={stromaArea}
+            lymphocyteCount={lymphocyteCount}
+            mediaUpload={mediaUpload}
+            slideInfo={slideInfo}
+            handleReport={handleReport}
+            showReport={showReport}
+            setShowReport={setShowReport}
+            questions={questions}
+            app={application}
+            setSlideId={setSlideId}
+            responseHandler={responseHandler}
+            questionnaireResponse={questionnaireResponse}
+            synopticType={synopticType}
+            setSynopticType={setSynopticType}
+            getSynopticReport={getSynopticReport}
+            updateSynopticReport={updateSynopticReport}
+            chatFeedBar={chatFeedBar}
+            handleChatFeedBarClose={handleChatFeedBarClose}
+            setChatFeedBar={setChatFeedBar}
+            feedTab={feedTab}
+            users={users}
+            client2={client2}
+            mentionUsers={mentionUsers}
+            addUsersToCase={addUsersToCase}
+          />
         </LayoutInnerBody>
         <Flex bg="#F0F0F0" pl="30px" w="100%" zIndex={99} h="30px">
           <Flex justifyContent="space-between" alignItems="center">

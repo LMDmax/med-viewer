@@ -34,6 +34,7 @@ function AdjustmentBar({
   application,
   viewerIds,
   enableAI,
+  chatFeedBar,
   hideStroma,
   hideTumor,
   enableFilters,
@@ -176,6 +177,7 @@ function AdjustmentBar({
         mediaUpload={mediaUpload}
         slideInfo={slideInfo}
         chatHover={chatHover}
+        chatFeedBar={chatFeedBar}
         handleFeedBar={handleFeedBar}
         handleChatFeedbar={handleChatFeedbar}
         handleChatFeedBarClose={handleChatFeedBarClose}
