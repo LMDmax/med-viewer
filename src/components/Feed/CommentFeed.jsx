@@ -234,38 +234,16 @@ const CommentFeed = ({
     <Flex
       as="section"
       w="100%"
-      position={showFeedBar ? "unset" : "absolute"}
+      // position={showFeedBar ? "unset" : "absolute"}
       // h={ifScreenlessthan1660px ? "calc(100% - 90px)" : "90%"}
-      h={
-        showFeedBar
-          ? "90vh"
-          : !showFeedBar && ifScreenlessthan1660px
-          ? "calc(100% - 90px)"
-          : "90%"
-      }
+      h="96%"
       padding={0}
       margin={0}
-      right="0"
-      zIndex={2}
       background="#FCFCFC"
       boxShadow={showFeedBar ? "" : "-1px 0px 2px rgba(176, 200, 214, 0.3)"}
       direction="column"
       pr="2px"
     >
-      <Flex
-        py="0.5px"
-        justifyContent="flex-end"
-        alignItems="center"
-        background="#F6F6F6"
-        display={showFeedBar ? "none" : "flex"}
-      >
-        <GrFormClose
-          size={16}
-          onClick={() => handlePopup(!popup)}
-          _hover={{ cursor: "pointer" }}
-        />
-      </Flex>
-
       <Flex
         direction="column"
         marginStart="0.8vw"

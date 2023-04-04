@@ -53,20 +53,23 @@ if(zoomValue < 40){
   }
   };
 
+// console.log(slide);
+  useEffect(()=>{
+    if(slide.isBreastCancer){
+        if(TilActiveState / 2 !== 0){
+            setModelname("TIL")
+        }
+        else{
+            setModelname("TILClear")
+        }
+        // console.log("object");
+    }
+    else{
+        setToolSelected("TILError");
+        // console.log("object2");
 
-  // useEffect(()=>{
-  //   if(!slide?.isIHC){
-  //       if(TilActiveState / 2 !== 0){
-  //           setModelname("TIL")
-  //       }
-  //       else{
-  //           setModelname("TILClear")
-  //       }
-  //   }
-  //   else{
-  //       setToolSelected("TILError");
-  //   }
-  // },[TilActiveState])
+    }
+  },[TilActiveState])
 
   return (
     <Box

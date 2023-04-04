@@ -10,6 +10,8 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
+import axios from "axios";
+
 import {
   SlidesIcon,
   TimelineIcon,
@@ -20,7 +22,7 @@ import {
   CommentsSelected,
   Information,
   InformationSelected,
-  Report,
+  ReportIcon,
   ReportSelected,
   SlidesIconSelected,
   MessagesIcon,
@@ -33,16 +35,29 @@ import CommentFeed from "../Feed/CommentFeed";
 import ShowReport from "../Toolbar/ShowReport";
 import SynopticReport from "../SynopticReport/SynopticReport";
 import Report from "../Report/Report";
-import Timeline from "./timeline";
+import Timeline from "../Timeline/Timeline";
 import ChatFeed from "../Feed/ChatFeed";
+import Adjustments from "../Adjustments/Adjustments";
 
 const FunctionsMenu = ({
   caseInfo,
   slides,
   viewerId,
   setIsMultiview,
+  hideTumor,
+  setHideTumor,
+  hideLymphocyte,
+  setHideLymphocyte,
+  setToolSelected,
+  setHideStroma,
+  hideStroma,
   setIsNavigatorActive,
+  toolSelected,
+  tumorArea,
+  stromaArea,
+  lymphocyteCount,
   isNavigatorActive,
+  tilScore,
   isMultiview,
   slide,
   userInfo,
@@ -80,7 +95,7 @@ const FunctionsMenu = ({
   const [selectedOption, setSelectedOption] = useState("slides");
   const { fabricOverlayState } = useFabricOverlayState();
   const { viewerWindow } = fabricOverlayState;
-  const { tile, slideId } = viewerWindow[viewerId];
+  const { tile, slideId, viewer } = viewerWindow[viewerId];
   const [reportData, setReportData] = useState({
     clinicalStudy: "",
     grossDescription: "",
@@ -104,7 +119,7 @@ const FunctionsMenu = ({
   };
   const [annotedSlideImages, setAnnotedSlideImages] = useState([]);
   const [slideData, setSlideData] = useState(null);
-
+  const [timelineData, setTimeLineData] = useState([]);
   useEffect(() => {
     if (!chatFeedBar) {
       setSelectedOption("slides");
@@ -114,6 +129,34 @@ const FunctionsMenu = ({
       setIsOpen(true);
     }
   }, [chatFeedBar]);
+  useEffect(()=>{
+    if(toolSelected !== "Filter"){
+      setSelectedOption("slides");
+    }
+    if(toolSelected === "Filter"){
+      setSelectedOption("adjustments");
+      setIsOpen(true);
+    }
+  },[toolSelected])
+
+  useEffect(async()=>{
+    if(selectedOption === "timeline"){
+      // console.log("timeeeeeeeeeeeeeeeeeeeeeee");
+      const resp = await axios.post(
+        `${Environment.USER_URL}/slide_timeline`,
+        {
+          slideId: slide?._id,
+          caseId: caseInfo?._id
+        }
+      );
+      if(resp){
+        const sortedDataByTime = resp.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        setTimeLineData(sortedDataByTime)
+      }
+    }
+    // console.log("clicccccccccccccccccccccccccccccck");
+  },[selectedOption])
+
   useEffect(() => {
     if (searchSelectedData) {
       if (searchSelectedData.type !== "textBox") {
@@ -345,7 +388,7 @@ const FunctionsMenu = ({
               </Button>
             </Tooltip>
             {chatFeedBar ? (
-              <Tooltip label="Report slide">
+              <Tooltip label=" View Conversation">
                 <Button
                   height="73px"
                   w="73px"
@@ -369,12 +412,42 @@ const FunctionsMenu = ({
                       letterSpacing="0.0025em"
                       color={selectedOption === "report" ? "#3B5D7C" : "fff"}
                     >
-                      Report
+                      Messages
                     </Text>
                   </VStack>
                 </Button>
               </Tooltip>
             ) : null}
+            {toolSelected === "Filter" ? 
+             <Tooltip label=" Adjustments">
+             <Button
+               height="73px"
+               w="73px"
+               borderRadius={0}
+               background="#F6F6F6"
+               box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
+               onClick={() => setSelectedOption("adjustments")}
+             >
+               <VStack>
+                 {selectedOption === "adjustments" ? (
+                   <MessagesIcon />
+                 ) : (
+                   <MessagesIcon />
+                 )}
+                 <Text
+                   fontFamily="Inter"
+                   fontStyle="normal"
+                   fontWeight="400"
+                   fontSize="10px"
+                   lineHeight="12px"
+                   letterSpacing="0.0025em"
+                   color={selectedOption === "report" ? "#3B5D7C" : "fff"}
+                 >
+                   Adjustments
+                 </Text>
+               </VStack>
+             </Button>
+           </Tooltip> : null}
           </Flex>
           <Flex
             w="100%"
@@ -401,6 +474,16 @@ const FunctionsMenu = ({
                 userInfo={userInfo}
                 isXmlAnnotations={isXmlAnnotations}
                 viewerId={viewerId}
+                tumorArea={tumorArea}
+                hideTumor={hideTumor}
+                setHideTumor={setHideTumor}
+                hideLymphocyte={hideLymphocyte}
+                setHideLymphocyte={setHideLymphocyte}
+                setHideStroma={setHideStroma}
+                hideStroma={hideStroma}
+                stromaArea={stromaArea}
+                lymphocyteCount={lymphocyteCount}
+                tilScore={tilScore}
                 searchSelectedData={searchSelectedData}
               />
             ) : selectedOption === "comments" ? (
@@ -491,9 +574,11 @@ const FunctionsMenu = ({
                 Environment={Environment}
                 addUsersToCase={addUsersToCase}
               />
+            ) : selectedOption === "adjustments" ? (
+              <Adjustments setToolSelected={setToolSelected} viewer={viewer} setIsOpen={setIsOpen} />
             ) : (
-              <Flex w="100%" h="100%" bgColor="#FCFCFC" p="5px">
-                <Timeline />
+              <Flex w="100%" h="95%" pb="25px" bgColor="#FCFCFC" p="5px">
+                <Timeline timelineData={timelineData} />
               </Flex>
             )}
           </Flex>

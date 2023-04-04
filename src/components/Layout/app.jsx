@@ -218,6 +218,10 @@ const LayoutApp = ({
     case "TILError":
       returnText = "TIL analysis can only be run on H&E slides.";
       break;
+      case "TILLoading":
+      returnText = "TIL will enable after sometime.";
+      break;
+
     case "KI67Error":
       returnText = "KI67 analysis can only be run on IHC slides.";
       break;
@@ -230,6 +234,10 @@ const LayoutApp = ({
     case "KI67Analysed":
       returnText = "KI67 analysis done on selected annotation";
       break;
+      case "FilterSaved":
+        returnText = "Adjusment saved successfully ";
+        break;
+
     default:
       returnText = "";
       break;
@@ -411,7 +419,7 @@ const LayoutApp = ({
               addUsersToCase={addUsersToCase}
             />
           ) : null} */}
-          {tILFedBar ? (
+          {/* {tILFedBar ? (
             <TILFeedBar
               viewerId={currentViewer}
               hideTumor={hideTumor}
@@ -447,7 +455,7 @@ const LayoutApp = ({
               mentionUsers={mentionUsers}
               Environment={Environment}
             />
-          ) : null}
+          ) : null} */}
           <LayoutAppBody>
             <ViewerFactory
               application={application}
@@ -481,11 +489,24 @@ const LayoutApp = ({
             isNavigatorActive={isNavigatorActive}
             isMultiview={isMultiview}
             slide={viewerIds?.[0]}
+            hideTumor={hideTumor}
+            setHideTumor={setHideTumor}
+            setToolSelected={setToolSelected}
+            hideLymphocyte={hideLymphocyte}
+            setHideLymphocyte={setHideLymphocyte}
+            setHideStroma={setHideStroma}
+            hideStroma={hideStroma}
+            Environment={Environment}
+            tilScore={tilScore}
             userInfo={userInfo}
+            toolSelected={toolSelected}
             isXmlAnnotations={isXmlAnnotations}
             application={application}
             saveReport={saveReport}
             saveSynopticReport={saveSynopticReport}
+            tumorArea={tumorArea}
+            stromaArea={stromaArea}
+            lymphocyteCount={lymphocyteCount}
             mediaUpload={mediaUpload}
             slideInfo={slideInfo}
             handleReport={handleReport}
@@ -507,7 +528,6 @@ const LayoutApp = ({
             users={users}
             client2={client2}
             mentionUsers={mentionUsers}
-            Environment={Environment}
             addUsersToCase={addUsersToCase}
             searchSelectedData={searchSelectedData}
           />

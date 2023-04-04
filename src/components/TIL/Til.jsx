@@ -1497,15 +1497,24 @@ const Til = ({
   }, [loadUI]);
 
   useEffect(()=>{
-if(modelName === "TIL"){
-  handleTIL();
-  setToolSelected("TIL");
-  setTilHover(!TilHover);
-}
-if(modelName === "TILClear"){
-  handleTIL();
-  setToolSelected("TIL");
-  setTilHover(!TilHover);
+    if(stromaCords?.length > 0 ||
+      tumorCords?.length > 0 ||
+      tilCords?.length > 0 ||
+      tilSubscriptionData?.tilStatus?.message === "Til is completed" && modelName === "TIL"){
+  if(modelName === "TIL"){
+    handleTIL();
+    setToolSelected("TIL");
+    setTilHover(!TilHover);
+  }
+  if(modelName === "TILClear"){
+    handleTIL();
+    setToolSelected("TIL");
+    setTilHover(!TilHover);
+  }
+      }
+     
+else{
+  setToolSelected("TILLoading");
 }
   },[modelName])
 

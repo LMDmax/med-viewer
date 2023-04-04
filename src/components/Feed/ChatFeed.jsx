@@ -101,7 +101,7 @@ function ChatFeed({
           w="fit-content"
           fontSize="13px"
           css={{
-            fontWeight: "900",
+            fontWeight: "500",
           }}
           color="#3B5D7C"
         >
