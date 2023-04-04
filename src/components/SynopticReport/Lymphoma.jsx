@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Flex, HStack, Input, Text, useToast, VStack } from "@chakra-ui/react";
+import { Flex, HStack, Input, Text, useToast } from "@chakra-ui/react";
 import SRHelper from "./SRHelper";
 import Loading from "../Loading/loading";
 import SubmitHelper from "./SubmitHelper";
@@ -312,7 +312,7 @@ const Lymphoma = ({
         })}
       </Flex>
       <Flex direction="column">
-        <VStack flex="1" alignItems="flex-start">
+        <HStack flex="1" alignItems="flex-start">
           <Text fontWeight="600" minW="49%">
             CLINICAL OR DIFFERENT DIAGNOSIS
           </Text>
@@ -329,7 +329,7 @@ const Lymphoma = ({
             />{" "}
             MM
           </Text>
-        </VStack>
+        </HStack>
         <Flex w="100%" flex="1" flexWrap="wrap" justifyContent="space-between">
           {reportData.slice(6, 11).map((inputField, index) => {
             return (

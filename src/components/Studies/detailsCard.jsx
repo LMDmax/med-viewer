@@ -1,63 +1,45 @@
 import React from "react";
-import {
-  Flex,
-  Text,
-  VStack,
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon,
-  Box,
-  useMediaQuery,
-} from "@chakra-ui/react";
+import { Flex, Text, VStack } from "@chakra-ui/react";
 
 const DetailsCard = ({ cardTitle, details = [], ...restProps }) => {
-  const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
+
+  // console.log(details);
   return (
-    <Accordion
-      defaultIndex={[0, 1]}
-      allowMultiple
+    <Flex
+      bg="#FFFFFF"
       direction="column"
-      pl="4px"
+      pl="18px"
       pr="16px"
-      pt="5px"
-      pb="5px"
+      pt="12px"
+      pb="18px"
       {...restProps}
-      fontFamily="Inter"
     >
-      <AccordionItem border="none">
-        <h2>
-          <AccordionButton>
-            <Box as="span" flex="1" textAlign="left" fontWeight={500}>
-              {cardTitle}
-            </Box>
-            <AccordionIcon />
-          </AccordionButton>
-        </h2>
-        <AccordionPanel pb={4}>
-          <VStack align="flex-start" mt="10px">
-            {Object.keys(details).map((title) => (
-              <Flex
-                key={title}
-                fontWeight="400"
-                fontSize={ifWidthLessthan1920 ? "12px" : "14px"}
-                lineHeight="17px"
-                letterSpacing="0.0025em"
-                w="100%"
-                pb="8px"
-                borderBottom="1px solid #DEDEDE"
-              >
-                <Text flex={1}>{title}:</Text>
-                <Text textTransform="capitalize" flex={1} whiteSpace="initial">
-                  {details[title]}
-                </Text>
-              </Flex>
-            ))}
-          </VStack>
-        </AccordionPanel>
-      </AccordionItem>
-    </Accordion>
+      <Text
+        fontWeight="600"
+        fontSize="14px"
+        lineHeight="17px"
+        letterSpacing="0.0025em"
+      >
+        {cardTitle}
+      </Text>
+      <VStack align="flex-start" mt="20px">
+        {Object.keys(details).map((title) => (
+          <Flex
+            key={title}
+            fontWeight="400"
+            fontSize="14px"
+            lineHeight="17px"
+            letterSpacing="0.0025em"
+            w="100%"
+            pb="8px"
+            borderBottom="1px solid #DEDEDE"
+          >
+            <Text flex={1}>{title}:</Text>
+            <Text textTransform="capitalize" flex={1}>{details[title]}</Text>
+          </Flex>
+        ))}
+      </VStack>
+    </Flex>
   );
 };
 

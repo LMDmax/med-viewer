@@ -8,7 +8,6 @@ import {
   useMediaQuery,
   VStack,
   Text,
-  HStack,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import axios from "axios";
@@ -27,6 +26,9 @@ import {
   ReportSelected,
   SlidesIconSelected,
   MessagesIcon,
+  MessagesIconSelected,
+  adjustmentIcon,
+  adjustmentIconSelected,
 } from "../Icons/CustomIcons";
 import SlidesMenu from "./slidesMenu";
 import { useFabricOverlayState } from "../../state/store";
@@ -39,6 +41,9 @@ import Report from "../Report/Report";
 import Timeline from "../Timeline/Timeline";
 import ChatFeed from "../Feed/ChatFeed";
 import Adjustments from "../Adjustments/Adjustments";
+
+import {BsSliders} from "react-icons/bs"
+import IconSize from "../ViewerToolbar/IconSize";
 
 const FunctionsMenu = ({
   caseInfo,
@@ -182,6 +187,8 @@ const FunctionsMenu = ({
           width: isOpen
             ? ifWidthLessthan1920
               ? selectedOption === "report"
+                ? "40vw"
+                : "450px"
               : selectedOption === "report"
               ? "40vw"
               : "18vw"
@@ -398,7 +405,7 @@ const FunctionsMenu = ({
                 >
                   <VStack>
                     {selectedOption === "messages" ? (
-                      <MessagesIcon />
+                      <MessagesIconSelected />
                     ) : (
                       <MessagesIcon />
                     )}
@@ -429,9 +436,14 @@ const FunctionsMenu = ({
              >
                <VStack>
                  {selectedOption === "adjustments" ? (
-                   <MessagesIcon />
-                 ) : (
-                   <MessagesIcon />
+                  //  <adjustmentIconSelected />
+                  // <MessagesIconSelected />
+                  // <HiOutlineAdjustmentsHorizontal />
+                  <BsSliders w="20px" h="30px" color="#3B5D7C"/>
+
+                   ) : (
+                    // <adjustmentIconSelected />
+                    <BsSliders w="20px" h="30px" color="black"/>
                  )}
                  <Text
                    fontFamily="Inter"
@@ -447,7 +459,6 @@ const FunctionsMenu = ({
                </VStack>
              </Button>
            </Tooltip> : null}
-
           </Flex>
           <Flex
             w="100%"

@@ -28,12 +28,19 @@ const SynopticReport = ({
   return (
     <Flex
       fontSize={ifwidthLessthan1920 ? "14px" : "0.729vw"}
-      fontFamily="Calibri"
-      width="100%"
-      height="90vh"
+      fontFamily="
+      Calibri"
+      minW="510px"
+      width="40vw"
+      height="100%"
+      top={ifwidthLessthan1920 ? "90px" : "9.999vh"}
+      pos="fixed"
+      right="0px"
       bg="#fff"
       flexDirection="column"
       display="flex"
+      h="90vh"
+      pb="2vh"
       overflow="auto"
       css={{
         "&::-webkit-scrollbar": {
@@ -46,8 +53,20 @@ const SynopticReport = ({
           background: "#C4C4C4",
         },
       }}
-      pb="8vh"
     >
+      <Flex
+        py="0.5px"
+        justifyContent="flex-end"
+        alignItems="center"
+        background="#F6F6F6"
+      >
+        <GrFormClose
+          size={16}
+          cursor="pointer"
+          onClick={() => setSynopticType("")}
+          _hover={{ cursor: "pointer" }}
+        />
+      </Flex>
       <Flex
         alignItems="center"
         px="0.8vw"
