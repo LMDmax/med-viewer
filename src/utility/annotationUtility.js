@@ -296,12 +296,10 @@ export const createAnnotation = (annotation) => {
         } else if (pointerY > startPointY) {
           arrowHead.angle = 360 - angle;
         }
-      } else {
-        if (pointerY <= startPointY) {
-          arrowHead.angle = angle;
-        } else if (pointerY > startPointY) {
-          arrowHead.angle = angle;
-        }
+      } else if (pointerY <= startPointY) {
+        arrowHead.angle = angle;
+      } else if (pointerY > startPointY) {
+        arrowHead.angle = angle;
       }
       var objs = [line, arrowHead];
       shape = new fabric.Group(objs, {
@@ -424,8 +422,8 @@ export const addAnnotationsToCanvas = ({
     const shape = createAnnotation(annotation);
     canvas.on("mouse:over", function (e) {
       const zoomLevel = viewer.viewport.getZoom();
-      const fontSize = zoomLevel <= 1 ? 500 : 500 / zoomLevel;
-      const textHeight = e?.target?.height / 2; //height of target
+      const fontSize = zoomLevel <= 1 ? 300 : 300 / zoomLevel;
+      const textHeight = e?.target?.height / 2; // height of target
       const title = new fabric.Text(`${e?.target?.title}`, {
         left: e?.target?.left + e?.target?.width + 20, // positining text
         top: e?.target?.top + textHeight,
@@ -758,7 +756,10 @@ export const getAnnotationMetric = (annotation, mpp) => {
   let metric = { type: "", value: "", unit: "μm" };
 
   if (annotation.type === "line") {
-    let x1, y1, x2, y2;
+    let x1;
+    let y1;
+    let x2;
+    let y2;
     if (annotation.cords) {
       [x1, y1, x2, y2] = annotation.cords;
     } else {

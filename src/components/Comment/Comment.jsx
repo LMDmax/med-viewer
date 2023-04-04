@@ -21,13 +21,23 @@ import TooltipLabel from "../AdjustmentBar/ToolTipLabel";
 import ToolbarButton from "../ViewerToolbar/button";
 import IconSize from "../ViewerToolbar/IconSize";
 
-function CommentBox({ userInfo, viewerId, application, setToolSelected }) {
+const CommentBox = ({ userInfo, viewerId, application, setToolSelected }) => {
   const [addComments, setAddComments] = useState(false);
   const iconSize = IconSize();
   const toast = useToast();
-
+  const caseData = JSON.parse(localStorage.getItem("caseData"));
+  const caseId = caseData?._id;
   const onSaveAnnotation = (data) => {
-    createAnnotation({ variables: { body: { ...data, app: application } } });
+    createAnnotation({
+      variables: {
+        body: {
+          ...data,
+          app: application,
+          createdBy: `${userInfo?.firstName} ${userInfo?.lastName}`,
+          caseId,
+        },
+      },
+    });
   };
   const [createAnnotation, { data, error, loading }] =
     useMutation(SAVE_ANNOTATION);
@@ -108,7 +118,7 @@ function CommentBox({ userInfo, viewerId, application, setToolSelected }) {
 
       // Stroke fill
 
-      var text = new fabric.Textbox("Comment", {
+      const text = new fabric.Textbox("Comment", {
         width: 100,
         left: origX,
         top: origY,
@@ -147,8 +157,7 @@ function CommentBox({ userInfo, viewerId, application, setToolSelected }) {
       if (currShape.type === "textbox") {
         if (currShape.originX === "right") left -= width;
         if (currShape.originY === "bottom") height = 0;
-    setToolSelected("SelectedComment");
-
+        setToolSelected("SelectedComment");
       }
 
       setMyState({
@@ -156,7 +165,6 @@ function CommentBox({ userInfo, viewerId, application, setToolSelected }) {
         currentDragShape: null,
         isMouseDown: false,
       });
-
     }
 
     // Add click handlers
@@ -169,11 +177,11 @@ function CommentBox({ userInfo, viewerId, application, setToolSelected }) {
 
   useEffect(() => {
     const canvas = fabricOverlay?.fabricCanvas();
-  
+
     const checkActiveObject = () => {
       const activeObject = canvas?.getActiveObject();
-  
-      if (activeObject && activeObject.type === 'textbox') {
+
+      if (activeObject && activeObject.type === "textbox") {
         // set the tool selected to "SelectedComment"
         setToolSelected("SelectedComment");
         // console.log("select");
@@ -183,17 +191,16 @@ function CommentBox({ userInfo, viewerId, application, setToolSelected }) {
         // console.log("object");
       }
     };
-  
+
     // Check the active object when the component mounts
     checkActiveObject();
-  
+
     // Add a click listener to the canvas
-    canvas?.on('mouse:down', checkActiveObject);
-  
+    canvas?.on("mouse:down", checkActiveObject);
+
     // Remove the click listener when the component unmounts
-    return () => canvas?.off('mouse:down', checkActiveObject);
+    return () => canvas?.off("mouse:down", checkActiveObject);
   }, [fabricOverlay]);
-  
 
   // group shape and textbox together
   // first remove both from canvas then group them and then add group to canvas
@@ -280,6 +287,6 @@ function CommentBox({ userInfo, viewerId, application, setToolSelected }) {
       />
     </Tooltip>
   );
-}
+};
 
 export default CommentBox;

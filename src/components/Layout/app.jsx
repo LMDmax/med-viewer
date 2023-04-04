@@ -276,6 +276,7 @@ const LayoutApp = ({
   };
   const handleAnnotationClick = (annotation) => {
     setAnnotationObject(annotation);
+    setShowFeedBar(true);
     setFeedBar(1);
   };
 

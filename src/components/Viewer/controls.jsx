@@ -14,6 +14,7 @@ import {
 import axios from "axios";
 import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 
+import Draggable from "react-draggable";
 import {
   ANNOTATIONS_SUBSCRIPTION,
   DELETE_ANNOTATION,
@@ -33,14 +34,14 @@ import {
 } from "../../state/actions/fabricOverlayActions";
 import { useFabricOverlayState } from "../../state/store";
 import {
-	convertToZoomValue,
-	getFileBucketFolder,
-	groupAnnotationAndCells,
-	loadAnnotationsFromDB,
-	zoomToLevel,
-	getViewportBounds,
-	getVhutAnalysisData,
-	getPPMfromMPP,
+  convertToZoomValue,
+  getFileBucketFolder,
+  groupAnnotationAndCells,
+  loadAnnotationsFromDB,
+  zoomToLevel,
+  getViewportBounds,
+  getVhutAnalysisData,
+  getPPMfromMPP,
 } from "../../utility";
 import AnnotationChat from "../AnnotationChat/AnnotationChat";
 import ShowMetric from "../Annotations/ShowMetric";
@@ -52,9 +53,8 @@ import ToolbarButton from "../ViewerToolbar/button";
 import IconSize from "../ViewerToolbar/IconSize";
 import ZoomButton from "../ZoomButton/ZoomButton";
 import ZoomSlider from "../ZoomSlider/slider";
-import Draggable from "react-draggable";
 
-function ViewerControls({
+const ViewerControls = ({
   viewerId,
   setModelname,
   userInfo,
@@ -73,13 +73,13 @@ function ViewerControls({
   Environment,
   accessToken,
   setIsXmlAnnotations,
-	handleAnnotationClick,
-
-}) {
+  handleAnnotationClick,
+}) => {
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { viewerWindow, isViewportAnalysing } = fabricOverlayState;
   const { viewer, fabricOverlay, slideId, originalFileUrl, tile } =
     viewerWindow[viewerId];
+  localStorage.setItem("slide", slideId);
   const {
     updateAnnotation,
     deleteAnnotation,
@@ -115,11 +115,11 @@ function ViewerControls({
     onClose: closeEdit,
   } = useDisclosure();
 
-	const {
-		isOpen: isKI67Open,
-		onOpen: isKI67,
-		onClose: isKI67Close,
-	} = useDisclosure();
+  const {
+    isOpen: isKI67Open,
+    onOpen: isKI67,
+    onClose: isKI67Close,
+  } = useDisclosure();
 
   // ############### LOAD_ANNOTATION ####################
   const [getAnnotation, { data: annotationData, loading, error }] =
@@ -281,16 +281,16 @@ function ViewerControls({
         top,
       });
 
-			// group enclosing annotation and cells
-			const feedMessage = groupAnnotationAndCells({
-				enclosingAnnotation: annotationObject,
-				cells,
-				optionalData: {
-					data: analysedData,
-					totalCells,
-					roiType: "morphometry",
-				},
-			});
+      // group enclosing annotation and cells
+      const feedMessage = groupAnnotationAndCells({
+        enclosingAnnotation: annotationObject,
+        cells,
+        optionalData: {
+          data: analysedData,
+          totalCells,
+          roiType: "morphometry",
+        },
+      });
 
       // remove enclosing annotation
       // and group to canvas
@@ -412,7 +412,6 @@ function ViewerControls({
           const canvas = fabricOverlay.fabricCanvas();
           const { hash, analysedROI } = data;
           const annotation = canvas.getObjectByHash(hash);
-
 					if (annotation) {
 						annotation.set({ isAnalysed: true, analysedROI });
 					}
@@ -434,7 +433,6 @@ function ViewerControls({
 			} else if (type === "VIEWPORT_ANALYSIS") {
 				if (data && data.isAnalysed)
 					setFabricOverlayState(updateIsViewportAnalysing(false));
-
         toast({
           title: message || "ViewPort Ready",
           status: "success",
@@ -518,7 +516,6 @@ function ViewerControls({
       );
     }
   }, [xmlAnnotationData, annotationData]);
-
 	useEffect(() => {
 		if (!fabricOverlay) return;
 		const canvas = fabricOverlay.fabricCanvas();
@@ -595,6 +592,7 @@ function ViewerControls({
       fontColor: "white",
       backgroundColor: "black",
       fontSize: "14px",
+      display: "none",
       barThickness: 2,
       stayInsideImage: false,
     });
@@ -604,7 +602,6 @@ function ViewerControls({
   useEffect(() => {
     if (!viewer || !fabricOverlay) return;
     const canvas = fabricOverlay.fabricCanvas();
-
 		const handleMouseDown = (event) => {
 			const annotation = canvas.getActiveObject();
 
@@ -636,7 +633,6 @@ function ViewerControls({
 				setAnnotationObject(null);
 				setIsMorphometryDisabled(true);
 			}
-
       setMenuPosition({ left: event.pointer.x, top: event.pointer.y });
       openMenu();
     };
@@ -646,7 +642,6 @@ function ViewerControls({
       canvas.on("mouse:down", handleMouseDown);
     };
   }, [viewer, fabricOverlay]);
-
 	// useEffect(() => {
 	// 	if (!viewer || !fabricOverlay) return;
 	// 	const canvas = fabricOverlay.fabricCanvas();
@@ -1031,11 +1026,7 @@ useEffect(() => {
                     outline: "none",
                   }}
                 />
-                <ZoomSlider
-                  setZoomValue={setZoomValue}
-                  zoomValue={zoomValue}
-                  viewerId={viewerId}
-                />
+                <ZoomSlider viewerId={viewerId} />
                 <ToolbarButton
                   icon={<AiOutlineMinus color="#00153F" size={iconSize} />}
                   // border="1px solid #3965C6"
@@ -1141,5 +1132,6 @@ useEffect(() => {
     </Box>
 	);
 }
+
 
 export default ViewerControls;

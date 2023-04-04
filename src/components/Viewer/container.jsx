@@ -12,12 +12,12 @@ import { useLocation } from "react-router-dom";
 import { useFabricOverlayState } from "../../state/store";
 import Viewer from "./viewer";
 
-function ViewerContainer({
-	viewerId,
-	slideName,
-	userInfo,
-	enableAI,
-	slide,
+const ViewerContainer = ({
+  viewerId,
+  slideName,
+  userInfo,
+  enableAI,
+  slide,
   zoomValue,
   runAiModel,
   setModelname,
@@ -87,13 +87,13 @@ function ViewerContainer({
   // Success
   // return <Viewer tile={tileSource} />;
 
-	return (
-		<Viewer
-			application={application}
-			viewerId={viewerId}
-			tile={tile}
-			enableAI={enableAI}
-			slide={slide}
+  return (
+    <Viewer
+      application={application}
+      viewerId={viewerId}
+      tile={tile}
+      enableAI={enableAI}
+      slide={slide}
       setZoomValue={setZoomValue}
       zoomValue={zoomValue}
       setModelname={setModelname}
@@ -112,5 +112,6 @@ function ViewerContainer({
 		/>
 	);
 }
+
 
 export default ViewerContainer;
