@@ -118,12 +118,10 @@ const LayoutApp = ({
   useEffect(() => {
     const UnitStore = localStorage.getItem("unit");
     setUnit(UnitStore);
-    const value = getZoomValue(viewer);
-  setZoomValue(value);
-});
+},[bottomZoomValue]);
 
 
-  console.log(modelName);
+  // console.log(modelName);
 
   let runAiModel;
   switch (modelName) {
@@ -469,7 +467,7 @@ const LayoutApp = ({
               userInfo={userInfo}
               slide={viewerIds?.[0]}
               slides={slides}
-              setBottomZoomValue={setZoomValue}
+              setBottomZoomValue={setBottomZoomValue}
               setCurrentViewer={setCurrentViewer}
               client2={client2}
               setZoomValue={setZoomValue}
@@ -572,7 +570,7 @@ const LayoutApp = ({
             </Flex>
             <Box pos="absolute" right="0" me="30px">
               <Flex>
-                <Text  mr="5px">{value}X</Text>
+                <Text  mr="5px">{bottomZoomValue}X</Text>
                 <Image
                   src="https://i.ibb.co/7CtYTC2/bottom-Bar.png"
                   alt="Bottom Bar"
