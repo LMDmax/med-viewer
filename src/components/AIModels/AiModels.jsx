@@ -12,7 +12,7 @@ import { BiTargetLock } from "react-icons/bi";
 import { ImTarget } from "react-icons/im";
 import IconSize from "../ViewerToolbar/IconSize";
 
-const AiModels = ({ slide, setToolSelected, setModelname, zoomValue }) => {
+const AiModels = ({ slide, setToolSelected, setModelname, bottomZoomValue,bottombottomZoomValue }) => {
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
   const [TilHover, setTilHover] = useState(false);
   const [TilActiveState, setTilActiveState] = useState(0);
@@ -25,7 +25,7 @@ const AiModels = ({ slide, setToolSelected, setModelname, zoomValue }) => {
   })
 
   const handleKI67 = () => {
-    if (slide?.isIHC && zoomValue === 40) {
+    if (slide?.isIHC && bottomZoomValue > 39) {
       // console.log("1");
 
       setModelname("KI67");
@@ -33,7 +33,7 @@ const AiModels = ({ slide, setToolSelected, setModelname, zoomValue }) => {
     if(!slide?.isIHC){
         setToolSelected("KI67Error");
     }
-    if(zoomValue < 40){
+    if(bottomZoomValue < 39){
     setToolSelected("ZoomError");
 
     }
@@ -41,15 +41,15 @@ const AiModels = ({ slide, setToolSelected, setModelname, zoomValue }) => {
 
   const handleMorphometry = () => {
     // console.log("2");
-if(!slide?.isIHC && zoomValue >= 40){
+if(!slide?.isIHC && bottomZoomValue >= 40){
     setModelname("Morphometry");
 }
 if(slide?.isIHC){
   setToolSelected("MorphometrySlideIssue");
 }
-if(zoomValue < 40){
+if(bottomZoomValue < 40){
   setToolSelected("ZoomError");
-  console.log(zoomValue);
+  console.log(bottomZoomValue);
 
   }
   };

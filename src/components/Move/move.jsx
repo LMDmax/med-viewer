@@ -38,6 +38,7 @@ function Move({
   setStromaArea,
   setLoadUI,
   setTumorArea,
+  bottomZoomValue,
   setToolSelected,
   setTilScore,
   setLymphocyteCount,
@@ -243,7 +244,7 @@ function Move({
             setLymphocyteCount={setLymphocyteCount}
             pathStroma={pathStroma}
           />
-        <AiModels zoomValue={zoomValue} setModelname={setModelname} slide={slide} setToolSelected={setToolSelected} />
+        <AiModels      bottomZoomValue={bottomZoomValue} zoomValue={zoomValue} setModelname={setModelname} slide={slide} setToolSelected={setToolSelected} />
         {/* <Mode /> */}
       </Flex>
       <Flex

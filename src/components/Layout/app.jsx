@@ -340,6 +340,7 @@ const LayoutApp = ({
           handleTILFeedBar={handleTILFeedBar}
           handleReport={handleReport}
           synopticType={synopticType}
+          bottomZoomValue={bottomZoomValue}
           setSynopticType={setSynopticType}
           showReport={showReport}
           setShowReport={setShowReport}
