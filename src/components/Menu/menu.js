@@ -12,6 +12,7 @@ import {
 import { motion } from "framer-motion";
 import axios from "axios";
 
+import { BsSliders } from "react-icons/bs";
 import {
   SlidesIcon,
   TimelineIcon,
@@ -42,7 +43,6 @@ import Timeline from "../Timeline/Timeline";
 import ChatFeed from "../Feed/ChatFeed";
 import Adjustments from "../Adjustments/Adjustments";
 
-import {BsSliders} from "react-icons/bs"
 import IconSize from "../ViewerToolbar/IconSize";
 
 const FunctionsMenu = ({
@@ -135,42 +135,44 @@ const FunctionsMenu = ({
       setIsOpen(true);
     }
   }, [chatFeedBar]);
-  useEffect(()=>{
-    if(toolSelected !== "Filter"){
+  useEffect(() => {
+    if (toolSelected !== "Filter") {
       setSelectedOption("slides");
     }
-    if(toolSelected === "Filter"){
+    if (toolSelected === "Filter") {
       setSelectedOption("adjustments");
       setIsOpen(true);
     }
-  },[toolSelected])
+  }, [toolSelected]);
 
-  useEffect(async()=>{
-    if(selectedOption === "timeline"){
+  useEffect(async () => {
+    if (selectedOption === "timeline") {
       // console.log("timeeeeeeeeeeeeeeeeeeeeeee");
-      const resp = await axios.post(
-        `${Environment.USER_URL}/slide_timeline`,
-        {
-          slideId: slide?._id,
-          caseId: caseInfo?._id
-        }
-      );
-      if(resp){
-        const sortedDataByTime = resp.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        setTimeLineData(sortedDataByTime)
+      const resp = await axios.post(`${Environment.USER_URL}/slide_timeline`, {
+        slideId: slide?._id,
+        caseId: caseInfo?._id,
+      });
+      if (resp) {
+        const sortedDataByTime = resp.data.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        setTimeLineData(sortedDataByTime);
       }
     }
     // console.log("clicccccccccccccccccccccccccccccck");
-  },[selectedOption])
+  }, [selectedOption]);
 
   useEffect(() => {
     if (searchSelectedData) {
-      if (searchSelectedData.type !== "textBox") {
-        setIsOpen(true);
-        setSelectedOption("annotations");
-      } else {
+      if (
+        searchSelectedData.type === "textBox" ||
+        searchSelectedData.type === "textbox"
+      ) {
         setIsOpen(true);
         setSelectedOption("comments");
+      } else {
+        setIsOpen(true);
+        setSelectedOption("annotations");
       }
     }
   }, [searchSelectedData]);
@@ -255,11 +257,10 @@ const FunctionsMenu = ({
                 borderRadius={0}
                 background="#F6F6F6"
                 box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-                onClick={() =>{
-                 setSelectedOption("timeline")
-                 setIsOpen(true);
-                }
-              }
+                onClick={() => {
+                  setSelectedOption("timeline");
+                  setIsOpen(true);
+                }}
               >
                 <VStack>
                   {selectedOption === "timeline" ? (
@@ -289,9 +290,8 @@ const FunctionsMenu = ({
                 background="#F6F6F6"
                 box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
                 onClick={() => {
-                  setSelectedOption("annotations")
+                  setSelectedOption("annotations");
                   setIsOpen(true);
-    
                 }}
               >
                 <VStack>
@@ -382,10 +382,9 @@ const FunctionsMenu = ({
                 borderRadius={0}
                 background="#F6F6F6"
                 box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-                onClick={() =>{
+                onClick={() => {
                   setSelectedOption("report");
                   setIsOpen(true);
-
                 }}
               >
                 <VStack>
@@ -439,41 +438,47 @@ const FunctionsMenu = ({
                 </Button>
               </Tooltip>
             ) : null}
-            {toolSelected === "Filter" ? 
-             <Tooltip label=" Adjustments">
-             <Button
-               height="73px"
-               w="73px"
-               borderRadius={0}
-               background="#F6F6F6"
-               box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-               onClick={() => setSelectedOption("adjustments")}
-             >
-               <VStack>
-                 {selectedOption === "adjustments" ? (
-                  //  <adjustmentIconSelected />
-                  // <MessagesIconSelected />
-                  // <HiOutlineAdjustmentsHorizontal />
-                  <BsSliders style={{width:"40px", height:"30px"}} color="#3B5D7C"/>
-
-                   ) : (
-                    // <adjustmentIconSelected />
-                    <BsSliders style={{width:"40px", height:"30px"}} color="black"/>
-                 )}
-                 <Text
-                   fontFamily="Inter"
-                   fontStyle="normal"
-                   fontWeight="400"
-                   fontSize="10px"
-                   lineHeight="12px"
-                   letterSpacing="0.0025em"
-                   color={selectedOption === "report" ? "#3B5D7C" : "fff"}
-                 >
-                   Adjustments
-                 </Text>
-               </VStack>
-             </Button>
-           </Tooltip> : null}
+            {toolSelected === "Filter" ? (
+              <Tooltip label=" Adjustments">
+                <Button
+                  height="73px"
+                  w="73px"
+                  borderRadius={0}
+                  background="#F6F6F6"
+                  box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
+                  onClick={() => setSelectedOption("adjustments")}
+                >
+                  <VStack>
+                    {selectedOption === "adjustments" ? (
+                      //  <adjustmentIconSelected />
+                      // <MessagesIconSelected />
+                      // <HiOutlineAdjustmentsHorizontal />
+                      <BsSliders
+                        style={{ width: "40px", height: "30px" }}
+                        color="#3B5D7C"
+                      />
+                    ) : (
+                      // <adjustmentIconSelected />
+                      <BsSliders
+                        style={{ width: "40px", height: "30px" }}
+                        color="black"
+                      />
+                    )}
+                    <Text
+                      fontFamily="Inter"
+                      fontStyle="normal"
+                      fontWeight="400"
+                      fontSize="10px"
+                      lineHeight="12px"
+                      letterSpacing="0.0025em"
+                      color={selectedOption === "report" ? "#3B5D7C" : "fff"}
+                    >
+                      Adjustments
+                    </Text>
+                  </VStack>
+                </Button>
+              </Tooltip>
+            ) : null}
           </Flex>
           <Flex
             w="100%"
@@ -493,8 +498,8 @@ const FunctionsMenu = ({
               />
             ) : selectedOption === "information" ? (
               <Flex w="100%" bg="#FCFCFC">
-              <Studies caseInfo={caseInfo} slideInfo={slide} />
-            </Flex>
+                <Studies caseInfo={caseInfo} slideInfo={slide} />
+              </Flex>
             ) : selectedOption === "annotations" ? (
               <ActivityFeed
                 userInfo={userInfo}
@@ -601,7 +606,12 @@ const FunctionsMenu = ({
                 addUsersToCase={addUsersToCase}
               />
             ) : selectedOption === "adjustments" ? (
-              <Adjustments setSelectedOption={setSelectedOption} setToolSelected={setToolSelected} viewer={viewer} setIsOpen={setIsOpen} />
+              <Adjustments
+                setSelectedOption={setSelectedOption}
+                setToolSelected={setToolSelected}
+                viewer={viewer}
+                setIsOpen={setIsOpen}
+              />
             ) : (
               <Flex w="100%" h="95%" pb="25px" bgColor="#FCFCFC" p="5px">
                 <Timeline viewerId={viewerId} timelineData={timelineData} />

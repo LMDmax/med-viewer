@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useMutation, useSubscription } from "@apollo/client";
-import { BsEye } from "react-icons/bs";
-import { BsEyeSlash } from "react-icons/bs";
+import { BsEye, BsEyeSlash, BsCircle, BsSlash } from "react-icons/bs";
+
 import {
   Box,
   Flex,
@@ -25,14 +25,14 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { BiRectangle } from "react-icons/bi";
-import { BsCircle, BsSlash } from "react-icons/bs";
+
 import { FaDrawPolygon } from "react-icons/fa";
 import { GrFormClose } from "react-icons/gr";
 import { MdModeEditOutline, MdDelete, MdTextsms } from "react-icons/md";
 import { v4 as uuidv4 } from "uuid";
-import { GroupTil } from "../Icons/CustomIcons";
 import { AiFillCaretRight, AiFillCaretDown } from "react-icons/ai";
 import { RiCheckboxBlankLine, RiCheckboxBlankFill } from "react-icons/ri";
+import { GroupTil } from "../Icons/CustomIcons";
 
 import {
   DELETE_ANNOTATION,
@@ -127,11 +127,11 @@ const CustomTabPanel = ({
       ) : null}
     </TabPanel>
   );
-}
+};
 
 const MotionBox = motion(Box);
 
-function ActivityFeed({
+const ActivityFeed = ({
   userInfo,
   viewerId,
   totalCells,
@@ -151,7 +151,7 @@ function ActivityFeed({
   isXmlAnnotations,
   activeObject,
   searchSelectedData,
-}) {
+}) => {
   // const onUpdateAnnotation = (data) => {
   //   console.log("activityfeed", data);
   // };
@@ -226,7 +226,6 @@ function ActivityFeed({
   }, [isTILBoxVisible, annotationDetails]);
 
   useEffect(() => {
-
     return () => {
       setAnnotationObject(null);
       setAnnotationsDetails(null);
@@ -240,9 +239,9 @@ function ActivityFeed({
 
   const handleClick = (feed, index) => {
     setSelectedItemIndex(index);
-	if(selectedItemIndex === index){
-		setSelectedItemIndex("");
-	}
+    if (selectedItemIndex === index) {
+      setSelectedItemIndex("");
+    }
     if (feed.object.roiType === "KI67") {
       setKi67Feed(feed);
       // console.log(ki67Feed);
@@ -312,11 +311,10 @@ function ActivityFeed({
 
   useEffect(() => {
     if (isTILBoxVisible) {
-    //   setAnnotationsDetails(null);
+      //   setAnnotationsDetails(null);
       setSelectedItemIndex("til");
     }
   }, [isTILBoxVisible, annotationDetails]);
-
 
   return (
     <Flex
@@ -333,7 +331,6 @@ function ActivityFeed({
       direction="column"
       pr="2px"
     >
-
       <Flex
         direction="column"
         marginStart="0.8vw"
@@ -358,108 +355,127 @@ function ActivityFeed({
           )}
         </HStack>
         <ScrollBar>
-          <Flex direction="column"  h="80vh">
-          <Accordion allowMultiple>
-  {activityFeed.map((feed, index) => {
-    return feed?.object && feed?.object?.type !== "textbox" ? (
-      <AccordionItem key={feed.object.hash} onClick={() => handleClick(feed, index)}>
-        <h2>
-          <AccordionButton
-            pl="0"
-            _focus={{ outline: "none" }}
-            style={{
-              fontWeight:
-                selectedItemIndex === index ? "bold" : "normal",
-            }}
+          <Flex direction="column" h="80vh">
+            <Accordion allowMultiple>
+              {activityFeed.map((feed, index) => {
+                return feed?.object && feed?.object?.type !== "textbox" ? (
+                  <AccordionItem
+                    key={feed.object.hash}
+                    onClick={() => handleClick(feed, index)}
+                  >
+                    <h2>
+                      <AccordionButton
+                        pl="0"
+                        _focus={{ outline: "none" }}
+                        style={{
+                          fontWeight:
+                            selectedItemIndex === index ? "bold" : "normal",
+                        }}
+                      >
+                        <Flex
+                          w="100%"
+                          alignItems="center"
+                          justifyContent="space-between"
+                        >
+                          <Flex>
+                            <Box mr="1.2vw" mt="2px">
+                              {selectedItemIndex === index ? (
+                                <AiFillCaretDown color="#3B5D7C" />
+                              ) : (
+                                <AiFillCaretRight color="gray" />
+                              )}
+                            </Box>
+                            <Box>
+                              <Flex
+                                alignItems="center"
+                                justifyContent="space-between"
+                              >
+                                {feed.object?.type === "rect" ? (
+                                  <BiRectangle color="#E23636" />
+                                ) : feed.object?.type === "polygon" ? (
+                                  <FaDrawPolygon color="#E23636" />
+                                ) : feed.object?.type === "ellipse" ? (
+                                  <BsCircle color="#E23636" />
+                                ) : (
+                                  <BsSlash color="#E23636" />
+                                )}
+                                <Text ml="0.8vw">
+                                  {feed.object?.title
+                                    ? feed.object.title
+                                    : feed.object?.roiType === "morphometry"
+                                    ? `ROI ${index + 1}`
+                                    : feed.object?.roiType === "KI67"
+                                    ? `KI-67 ${index + 1}`
+                                    : feed.object?.type === "viewport"
+                                    ? `Viewport ${index + 1}`
+                                    : `Annotation ${index + 1}`}
+                                </Text>
+                              </Flex>
+                            </Box>
+                          </Flex>
+                          {!isXmlAnnotations && (
+                            <EditTextButton
+                              feed={feed}
+                              handleEditClick={handleEditClick}
+                              mr={2}
+                            />
+                          )}
+                        </Flex>
+                      </AccordionButton>
+                    </h2>
 
-          >
-            <Flex w="100%" alignItems="center" justifyContent="space-between" >
-            <Flex>
-			<Box mr="1.2vw" mt="2px">
-			{selectedItemIndex === index ? (
-                      <AiFillCaretDown color="#3B5D7C" />
-                    ) : (
-                      <AiFillCaretRight color="gray" />
-                    )}
-              </Box>
-             <Box>
-			<Flex alignItems="center"  justifyContent="space-between" >
-			{feed.object?.type === "rect" ? (
-                <BiRectangle color="#E23636" />
-              ) : feed.object?.type === "polygon" ? (
-                <FaDrawPolygon color="#E23636" />
-              ) : feed.object?.type === "ellipse" ? (
-                <BsCircle color="#E23636" />
-              ) : (
-                <BsSlash color="#E23636" />
-              )}
-              <Text ml="0.8vw">
-                {feed.object?.title
-                  ? feed.object.title
-                  : feed.object?.roiType === "morphometry"
-                  ? `ROI ${index + 1}`
-                  : feed.object?.roiType === "KI67"
-                  ? `KI-67 ${index + 1}`
-                  : feed.object?.type === "viewport"
-                  ? `Viewport ${index + 1}`
-                  : `Annotation ${index + 1}`}
-              </Text>
-			</Flex>
-			 </Box>
-			</Flex>
-			 {!isXmlAnnotations && (
-              <EditTextButton
-                feed={feed}
-                handleEditClick={handleEditClick}
-                mr={2}
-              />
-            )}
-            </Flex>
-			
-          </AccordionButton>
-		  
-        </h2>
-		
-        <AccordionPanel pb={2}>
-		{annotationDetails ? (
-        <Flex fontSize="14px" flexDir="column" background="#FCFCFC">
-          <Box h="6px" background="#F6F6F6" w="100%" />
-          <Tabs variant="unstyled" defaultIndex={0}>
-            <TabList>
-              <CustomTab title="Annotation Values" />
-              <CustomTab
-                isDisabled={!annotationDetails?.analysedData}
-                title={
-                  ki67Feed?.object ? "KI - 67 Analysis" : "Morphometry values"
-                }
-                onClick={(e) => {
-                  e.preventDefault();
-                  setActiveTab(
-                    ki67Feed?.object ? "KI67 Values" : "Morphometry Values"
-                  );
-                }}
-              />
-            </TabList>
-            <TabPanels px={0}>
-              <CustomTabPanel title="Annotation Values">
-                {annotationDetails ? (
-                  <>
-                    <CardDetailsRow
-                      title="Annotation"
-                      value={
-                        annotationDetails?.type ? annotationDetails.type : "-"
-                      }
-                    />
-                    <CardDetailsRow
-                      title="Description"
-                      value={
-                        annotationDetails?.text ? annotationDetails.text : "-"
-                      }
-                    />
+                    <AccordionPanel pb={2}>
+                      {annotationDetails ? (
+                        <Flex
+                          fontSize="14px"
+                          flexDir="column"
+                          background="#FCFCFC"
+                        >
+                          <Box h="6px" background="#F6F6F6" w="100%" />
+                          <Tabs variant="unstyled" defaultIndex={0}>
+                            <TabList>
+                              <CustomTab title="Annotation Values" />
+                              <CustomTab
+                                isDisabled={!annotationDetails?.analysedData}
+                                title={
+                                  ki67Feed?.object
+                                    ? "KI - 67 Analysis"
+                                    : "Morphometry values"
+                                }
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  setActiveTab(
+                                    ki67Feed?.object
+                                      ? "KI67 Values"
+                                      : "Morphometry Values"
+                                  );
+                                }}
+                              />
+                            </TabList>
+                            <TabPanels px={0}>
+                              <CustomTabPanel title="Annotation Values">
+                                {annotationDetails ? (
+                                  <>
+                                    <CardDetailsRow
+                                      title="Annotation"
+                                      value={
+                                        annotationDetails?.type
+                                          ? annotationDetails.type
+                                          : "-"
+                                      }
+                                    />
+                                    <CardDetailsRow
+                                      title="Description"
+                                      value={
+                                        annotationDetails?.text
+                                          ? annotationDetails.text
+                                          : "-"
+                                      }
+                                    />
 
-                    {annotationDetails?.area ? (
-                      <>
-                        {/* <CardDetailsRow
+                                    {annotationDetails?.area ? (
+                                      <>
+                                        {/* <CardDetailsRow
                             title="Centroid X"
                             value={
                               <>{annotationDetails.centroid?.[0][0]}</>
@@ -471,161 +487,240 @@ function ActivityFeed({
                               <>{annotationDetails.centroid?.[0][1]}</>
                             }
                           /> */}
-                        <CardDetailsRow
-                          title="Class"
-                          value={annotationDetails?.classType}
-                        />
-                        <CardDetailsRow
-                          title="Perimeter"
-                          value={<>{annotationDetails.perimeter.toFixed(2)}</>}
-                        />
-                        <CardDetailsRow
-                          title="Area"
-                          value={annotationDetails.area}
-                        />
-                        {/* <CardDetailsRow
+                                        <CardDetailsRow
+                                          title="Class"
+                                          value={annotationDetails?.classType}
+                                        />
+                                        <CardDetailsRow
+                                          title="Perimeter"
+                                          value={
+                                            <>
+                                              {annotationDetails.perimeter.toFixed(
+                                                2
+                                              )}
+                                            </>
+                                          }
+                                        />
+                                        <CardDetailsRow
+                                          title="Area"
+                                          value={annotationDetails.area}
+                                        />
+                                        {/* <CardDetailsRow
                             title="Total Cells"
                             value={totalCells || "-"}
                           /> */}
-                      </>
-                    ) : null}
-                  </>
-                ) : null}
-              </CustomTabPanel>
-              <CustomTabPanel
-                title={ki67Feed?.object ? "KI-67 Values" : "Morphometry values"}
-                activeTab={activeTab}
-              >
-                {activeTab === "Morphometry Values" ? (
-                  annotationDetails?.analysedData &&
-                  annotationDetails.analysedData.data.length > 0 ? (
-                    <Accordion allowToggle>
-                      {annotationDetails.analysedData.data.map((cell) => {
-                        return (
-                          <AccordionItem
-                            key={uuidv4()}
-                            color="black"
-                            isDisabled={cell.status !== "detected"}
-                          >
-                            <h2>
-                              <AccordionButton _focus={{ outline: "none" }}>
-                                <HStack
-                                  flex="1"
-                                  textAlign="left"
-                                  align="center"
-                                >
-                                  <Text fontSize="14px">{cell.type}</Text>
-                                  {cell.status === "detected" ? (
-                                    <Circle size="12px" bg={cell.color} />
-                                  ) : null}
-                                </HStack>
-                                <AccordionIcon />
-                              </AccordionButton>
-                            </h2>
-                            {cell.status === "detected" ? (
-                              <AccordionPanel pb={4}>
-                                {/* <CardDetailsRow
+                                      </>
+                                    ) : null}
+                                  </>
+                                ) : null}
+                              </CustomTabPanel>
+                              <CustomTabPanel
+                                title={
+                                  ki67Feed?.object
+                                    ? "KI-67 Values"
+                                    : "Morphometry values"
+                                }
+                                activeTab={activeTab}
+                              >
+                                {activeTab === "Morphometry Values" ? (
+                                  annotationDetails?.analysedData &&
+                                  annotationDetails.analysedData.data.length >
+                                    0 ? (
+                                    <Accordion allowToggle>
+                                      {annotationDetails.analysedData.data.map(
+                                        (cell) => {
+                                          return (
+                                            <AccordionItem
+                                              key={uuidv4()}
+                                              color="black"
+                                              isDisabled={
+                                                cell.status !== "detected"
+                                              }
+                                            >
+                                              <h2>
+                                                <AccordionButton
+                                                  _focus={{ outline: "none" }}
+                                                >
+                                                  <HStack
+                                                    flex="1"
+                                                    textAlign="left"
+                                                    align="center"
+                                                  >
+                                                    <Text fontSize="14px">
+                                                      {cell.type}
+                                                    </Text>
+                                                    {cell.status ===
+                                                    "detected" ? (
+                                                      <Circle
+                                                        size="12px"
+                                                        bg={cell.color}
+                                                      />
+                                                    ) : null}
+                                                  </HStack>
+                                                  <AccordionIcon />
+                                                </AccordionButton>
+                                              </h2>
+                                              {cell.status === "detected" ? (
+                                                <AccordionPanel pb={4}>
+                                                  {/* <CardDetailsRow
                                   title="Total Cells"
                                   value={
                                     annotationDetails.analysedData.totalCells
                                   }
                                 /> */}
-                                <CardDetailsRow
-                                  title="Nucleus Count"
-                                  value={cell.count}
-                                />
-                                {/* <CardDetailsRow
+                                                  <CardDetailsRow
+                                                    title="Nucleus Count"
+                                                    value={cell.count}
+                                                  />
+                                                  {/* <CardDetailsRow
                                 title="Nucleus Cytoplasm Ratio"
                                 value={cell.ratio.toFixed(2)}
                               /> */}
-                                <CardDetailsRow
-                                  title="Min. Perimeter"
-                                  value={<>{cell.min_perimeter.toFixed(2)}</>}
-                                />
-                                <CardDetailsRow
-                                  title="Max. Perimeter"
-                                  value={<>{cell.max_perimeter.toFixed(2)}</>}
-                                />
-                                <CardDetailsRow
-                                  title="Avg. Perimeter"
-                                  value={<>{cell.avg_perimeter.toFixed(2)}</>}
-                                />
-                                <CardDetailsRow
-                                  title="Min. Area"
-                                  value={<>{cell.min_area.toFixed(2)}</>}
-                                />
-                                <CardDetailsRow
-                                  title="Max. Area"
-                                  value={<>{cell.max_area.toFixed(2)}</>}
-                                />
-                                <CardDetailsRow
-                                  title="Avg. Area"
-                                  value={<>{cell.avg_area.toFixed(2)}</>}
-                                />
-                              </AccordionPanel>
-                            ) : null}
-                          </AccordionItem>
-                        );
-                      })}
-                    </Accordion>
-                  ) : null
-                ) : null}
-                {activeTab === "KI67 Values" ? (
-                  <Flex flexDir="column" h="100%">
-                    <Flex
-                      w="100%"
-                      mt="10px"
-                      h="35%"
-                      justifyContent="space-between"
-                      alignItems="flex-start"
-                      direction="column"
-                    >
-                      <Flex
-                        justifyContent="flex-start"
-                        px="18px"
-                        alignItems="center"
-                        w="100%"
-                      >
-                        <Circle size="10px" bg="#BB4139" />
-                        <Text ml="5px">Positive Cells</Text>
-                      </Flex>
-                      <Flex
-                        justifyContent="flex-start"
-                        px="18px"
-                        alignItems="center"
-                        w="100%"
-                      >
-                        <Circle size="10px" bg="#17478D" />
+                                                  <CardDetailsRow
+                                                    title="Min. Perimeter"
+                                                    value={
+                                                      <>
+                                                        {cell.min_perimeter.toFixed(
+                                                          2
+                                                        )}
+                                                      </>
+                                                    }
+                                                  />
+                                                  <CardDetailsRow
+                                                    title="Max. Perimeter"
+                                                    value={
+                                                      <>
+                                                        {cell.max_perimeter.toFixed(
+                                                          2
+                                                        )}
+                                                      </>
+                                                    }
+                                                  />
+                                                  <CardDetailsRow
+                                                    title="Avg. Perimeter"
+                                                    value={
+                                                      <>
+                                                        {cell.avg_perimeter.toFixed(
+                                                          2
+                                                        )}
+                                                      </>
+                                                    }
+                                                  />
+                                                  <CardDetailsRow
+                                                    title="Min. Area"
+                                                    value={
+                                                      <>
+                                                        {cell.min_area.toFixed(
+                                                          2
+                                                        )}
+                                                      </>
+                                                    }
+                                                  />
+                                                  <CardDetailsRow
+                                                    title="Max. Area"
+                                                    value={
+                                                      <>
+                                                        {cell.max_area.toFixed(
+                                                          2
+                                                        )}
+                                                      </>
+                                                    }
+                                                  />
+                                                  <CardDetailsRow
+                                                    title="Avg. Area"
+                                                    value={
+                                                      <>
+                                                        {cell.avg_area.toFixed(
+                                                          2
+                                                        )}
+                                                      </>
+                                                    }
+                                                  />
+                                                </AccordionPanel>
+                                              ) : null}
+                                            </AccordionItem>
+                                          );
+                                        }
+                                      )}
+                                    </Accordion>
+                                  ) : null
+                                ) : null}
+                                {activeTab === "KI67 Values" ? (
+                                  <Flex flexDir="column" h="100%">
+                                    <Flex
+                                      w="100%"
+                                      mt="10px"
+                                      h="35%"
+                                      justifyContent="space-between"
+                                      alignItems="flex-start"
+                                      direction="column"
+                                    >
+                                      <Flex
+                                        justifyContent="flex-start"
+                                        px="18px"
+                                        alignItems="center"
+                                        w="100%"
+                                      >
+                                        <Circle size="10px" bg="#BB4139" />
+                                        <Text ml="5px">Positive Cells</Text>
+                                      </Flex>
+                                      <Flex
+                                        justifyContent="flex-start"
+                                        px="18px"
+                                        alignItems="center"
+                                        w="100%"
+                                      >
+                                        <Circle size="10px" bg="#17478D" />
 
-                        <Text ml="5px">Negative Cells</Text>
-                      </Flex>
-                    </Flex>
-                    <Box w="100%" h="90px" px="18px" mt="15px">
-                      <Text borderBottom="1px solid #C0C0C0" py="5px">
-                        <span as="b">Positive Count :</span>
-                        {ki67Feed?.object?.analysedData?.num_positive}
-                      </Text>
-                      <Text borderBottom="1px solid #C0C0C0" py="5px">
-                        <span as="b">Negative Count :</span>
-                        {ki67Feed?.object?.analysedData?.num_negative}
-                      </Text>
-                      <Text borderBottom="1px solid #C0C0C0" py="5px">
-                        <span as="b">Proliferation Score :</span>
-                        {ki67Feed?.object?.analysedData?.proliferation_score}
-                      </Text>
-                    </Box>
-                  </Flex>
-                ) : null}
-              </CustomTabPanel>
-            </TabPanels>
-          </Tabs>
-        </Flex>
-      ) : null}
-        </AccordionPanel>
-      </AccordionItem>
-    ) : null;
-  })}
-</Accordion>
+                                        <Text ml="5px">Negative Cells</Text>
+                                      </Flex>
+                                    </Flex>
+                                    <Box w="100%" h="90px" px="18px" mt="15px">
+                                      <Text
+                                        borderBottom="1px solid #C0C0C0"
+                                        py="5px"
+                                      >
+                                        <span as="b">Positive Count :</span>
+                                        {
+                                          ki67Feed?.object?.analysedData
+                                            ?.num_positive
+                                        }
+                                      </Text>
+                                      <Text
+                                        borderBottom="1px solid #C0C0C0"
+                                        py="5px"
+                                      >
+                                        <span as="b">Negative Count :</span>
+                                        {
+                                          ki67Feed?.object?.analysedData
+                                            ?.num_negative
+                                        }
+                                      </Text>
+                                      <Text
+                                        borderBottom="1px solid #C0C0C0"
+                                        py="5px"
+                                      >
+                                        <span as="b">
+                                          Proliferation Score :
+                                        </span>
+                                        {
+                                          ki67Feed?.object?.analysedData
+                                            ?.proliferation_score
+                                        }
+                                      </Text>
+                                    </Box>
+                                  </Flex>
+                                ) : null}
+                              </CustomTabPanel>
+                            </TabPanels>
+                          </Tabs>
+                        </Flex>
+                      ) : null}
+                    </AccordionPanel>
+                  </AccordionItem>
+                ) : null;
+              })}
+            </Accordion>
 
             {localStorage.getItem("til") ? (
               <Box my="0px" cursor="pointer">
@@ -828,7 +923,6 @@ function ActivityFeed({
           </Flex>
         </ScrollBar>
       </Flex>
-
 
       <EditText
         isOpen={isOpen}

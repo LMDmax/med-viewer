@@ -252,6 +252,7 @@ export const createAnnotation = (annotation) => {
       });
       break;
     case "arrow":
+      // need to remove declaration in case bloack
       const pointerX = annotation.Points[1][0];
       const pointerY = annotation.Points[1][1];
       const width = Math.abs(annotation.Points[1][0] - annotation.Points[0][0]);
@@ -421,8 +422,10 @@ export const addAnnotationsToCanvas = ({
   annotations.forEach((annotation) => {
     const shape = createAnnotation(annotation);
     canvas.on("mouse:over", function (e) {
+      if (e?.target?.type === "textBox" || e?.target?.type === "textbox")
+        return;
       const zoomLevel = viewer.viewport.getZoom();
-      const fontSize = zoomLevel <= 1 ? 300 : 300 / zoomLevel;
+      const fontSize = zoomLevel <= 1 ? 250 : 250 / zoomLevel;
       const textHeight = e?.target?.height / 2; // height of target
       const title = new fabric.Text(`${e?.target?.title}`, {
         left: e?.target?.left + e?.target?.width + 20, // positining text

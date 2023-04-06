@@ -19,21 +19,22 @@ import {
   AccordionIcon,
   Circle,
   IconButton,
+  useToast,
 } from "@chakra-ui/react";
 import { BiRectangle } from "react-icons/bi";
-import { MdModeEditOutline, MdDelete } from "react-icons/md";
+import { MdModeEditOutline, MdDelete, MdTextsms } from "react-icons/md";
 import { BsCircle, BsSlash } from "react-icons/bs";
 import { GrFormClose } from "react-icons/gr";
 import { FaDrawPolygon } from "react-icons/fa";
-import { MdTextsms } from "react-icons/md";
+
 import { v4 as uuidv4 } from "uuid";
+import { useMutation } from "@apollo/client";
 import EditText from "./editText";
 import { useFabricOverlayState } from "../../state/store";
 import { updateAnnotationInDB } from "../../utility";
 import ScrollBar from "../ScrollBar";
 import useCanvasHelpers from "../../hooks/use-fabric-helpers";
 import DeleteConfirmation from "../Annotations/DeleteConfirmation";
-import { useMutation } from "@apollo/client";
 import {
   DELETE_ANNOTATION,
   UPDATE_ANNOTATION,
@@ -125,6 +126,7 @@ const CommentFeed = ({
   handlePopup,
   popup,
   showFeedBar,
+  searchSelectedData,
 }) => {
   // const onUpdateAnnotation = (data) => {
   //   console.log("activityfeed", data);
@@ -134,7 +136,7 @@ const CommentFeed = ({
     modifyAnnotation,
     { data: updatedData, error: updateError, loading: updateLoading },
   ] = useMutation(UPDATE_ANNOTATION);
-
+  const toast = useToast();
   const onUpdateAnnotation = (data) => {
     // console.log("====================================");
     // console.log("activity feed update");
@@ -200,11 +202,11 @@ const CommentFeed = ({
   }, [tile]);
 
   const handleClick = (feed) => {
-    if (!feed.object || !feed.object?.visible) return;
+    if (!feed?.object || !feed?.object?.visible) return;
     const canvas = fabricOverlay.fabricCanvas();
 
-    if (feed.object.type !== "viewport") {
-      canvas.setActiveObject(feed.object);
+    if (feed?.object?.type !== "viewport") {
+      canvas.setActiveObject(feed?.object);
     }
 
     // change position to annotation object location
@@ -225,6 +227,17 @@ const CommentFeed = ({
     setAnnotationsDetails(feed.object);
   };
 
+  useEffect(() => {
+    const comments = activityFeed?.filter(
+      (feed) => feed?.object?.type === "textbox" || "textBox"
+    );
+    const filteredComment = comments?.filter(
+      (feed) => feed?.object?.hash === searchSelectedData?.hash
+    );
+    if (filteredComment?.length > 0) {
+      handleClick(filteredComment[0]);
+    }
+  }, [searchSelectedData]);
   const deleteAnnotations = () => {
     deleteAllComments(onDeleteAnnotation);
     onDeleteConfirmationClose();
@@ -268,7 +281,7 @@ const CommentFeed = ({
         </HStack>
         <ScrollBar>
           <Flex direction="column">
-            {activityFeed.map((feed) => {
+            {activityFeed?.map((feed) => {
               return feed?.object && feed?.object?.type === "textbox" ? (
                 <Flex
                   key={feed.object.hash}
