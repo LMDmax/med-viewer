@@ -8,7 +8,6 @@ import "../../styles/scrollBar.css";
 
 const Studies = ({ caseInfo, slideInfo }) => {
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
-  console.log(slideInfo.metadata);
   const caseDetails = {
     Department: caseInfo?.departmentTo,
     Organ: caseInfo?.organs[0].organName,

@@ -44,7 +44,7 @@ const Timeline = ({ timelineData, viewerId }) => {
         <VerticalTimeline
           layout="1-column-left"
           lineColor="#DEDEDE"
-          animate={true}
+          animate
           style={{
             fontWeight: "normal",
           }}

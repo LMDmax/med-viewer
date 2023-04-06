@@ -12,6 +12,7 @@ import {
 import { motion } from "framer-motion";
 import axios from "axios";
 
+import { BsSliders } from "react-icons/bs";
 import {
   SlidesIcon,
   TimelineIcon,
@@ -135,42 +136,44 @@ const FunctionsMenu = ({
       setIsOpen(true);
     }
   }, [chatFeedBar]);
-  useEffect(()=>{
-    if(toolSelected !== "Filter"){
+  useEffect(() => {
+    if (toolSelected !== "Filter") {
       setSelectedOption("slides");
     }
-    if(toolSelected === "Filter"){
+    if (toolSelected === "Filter") {
       setSelectedOption("adjustments");
       setIsOpen(true);
     }
-  },[toolSelected])
+  }, [toolSelected]);
 
-  useEffect(async()=>{
-    if(selectedOption === "timeline"){
+  useEffect(async () => {
+    if (selectedOption === "timeline") {
       // console.log("timeeeeeeeeeeeeeeeeeeeeeee");
-      const resp = await axios.post(
-        `${Environment.USER_URL}/slide_timeline`,
-        {
-          slideId: slide?._id,
-          caseId: caseInfo?._id
-        }
-      );
-      if(resp){
-        const sortedDataByTime = resp.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        setTimeLineData(sortedDataByTime)
+      const resp = await axios.post(`${Environment.USER_URL}/slide_timeline`, {
+        slideId: slide?._id,
+        caseId: caseInfo?._id,
+      });
+      if (resp) {
+        const sortedDataByTime = resp.data.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        setTimeLineData(sortedDataByTime);
       }
     }
     // console.log("clicccccccccccccccccccccccccccccck");
-  },[selectedOption])
+  }, [selectedOption]);
 
   useEffect(() => {
     if (searchSelectedData) {
-      if (searchSelectedData.type !== "textBox") {
-        setIsOpen(true);
-        setSelectedOption("annotations");
-      } else {
+      if (
+        searchSelectedData.type === "textBox" ||
+        searchSelectedData.type === "textbox"
+      ) {
         setIsOpen(true);
         setSelectedOption("comments");
+      } else {
+        setIsOpen(true);
+        setSelectedOption("annotations");
       }
     }
   }, [searchSelectedData]);
@@ -200,7 +203,7 @@ const FunctionsMenu = ({
           whiteSpace: "nowrap",
           position: "absolute",
           right: "0",
-          height: "100%",
+          height: "95%",
           top: "0",
         }}
       >
@@ -255,7 +258,10 @@ const FunctionsMenu = ({
                 borderRadius={0}
                 background="#F6F6F6"
                 box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-                onClick={() => setSelectedOption("timeline")}
+                onClick={() => {
+                  setSelectedOption("timeline");
+                  setIsOpen(true);
+                }}
               >
                 <VStack>
                   {selectedOption === "timeline" ? (
@@ -284,7 +290,10 @@ const FunctionsMenu = ({
                 borderRadius={0}
                 background="#F6F6F6"
                 box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-                onClick={() => setSelectedOption("annotations")}
+                onClick={() => {
+                  setSelectedOption("annotations");
+                  setIsOpen(true);
+                }}
               >
                 <VStack>
                   {selectedOption === "annotations" ? (
@@ -342,7 +351,10 @@ const FunctionsMenu = ({
                 borderRadius={0}
                 background="#F6F6F6"
                 box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-                onClick={() => setSelectedOption("information")}
+                onClick={() => {
+                  setSelectedOption("information");
+                  setIsOpen(true);
+                }}
               >
                 <VStack>
                   {selectedOption === "information" ? (
@@ -371,7 +383,10 @@ const FunctionsMenu = ({
                 borderRadius={0}
                 background="#F6F6F6"
                 box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-                onClick={() => setSelectedOption("report")}
+                onClick={() => {
+                  setSelectedOption("report");
+                  setIsOpen(true);
+                }}
               >
                 <VStack>
                   {selectedOption === "report" ? (
@@ -586,7 +601,12 @@ const FunctionsMenu = ({
                 addUsersToCase={addUsersToCase}
               />
             ) : selectedOption === "adjustments" ? (
-              <Adjustments setToolSelected={setToolSelected} viewer={viewer} setIsOpen={setIsOpen} />
+              <Adjustments
+                setSelectedOption={setSelectedOption}
+                setToolSelected={setToolSelected}
+                viewer={viewer}
+                setIsOpen={setIsOpen}
+              />
             ) : (
               <Flex w="100%" h="95%" pb="25px" bgColor="#FCFCFC" p="5px">
                 <Timeline timelineData={timelineData} viewerId={viewerId} />

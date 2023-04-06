@@ -843,6 +843,31 @@ export const adjustmentIconSelected = () => {
   );
 };
 
+export const adjustmentIcon = () => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="30"
+      height="26"
+      viewBox="0 0 30 26"
+      fill="none"
+    >
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M12 0H7V1H0V3H7V5H12V0ZM14 1H30V3H14V1ZM11 23H0V25H11V26H16V21H11V23ZM18 23H30V25H18V23ZM18 12H0V14H18V16H23V10H18V12ZM25 12H30V14H25V12Z"
+        fill="#3B5D7C"
+      />
+    </svg>
+  );
+};
+export const adjustmentIconSelected = () => {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="26" viewBox="0 0 30 26" fill="none">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 0H7V1H0V3H7V5H12V0ZM14 1H30V3H14V1ZM11 23H0V25H11V26H16V21H11V23ZM18 23H30V25H18V23ZM18 12H0V14H18V16H23V10H18V12ZM25 12H30V14H25V12Z" fill="#3B5D7C"/>
+    </svg>
+  );
+};
 
 export const ReportIcon = () => {
   return (
