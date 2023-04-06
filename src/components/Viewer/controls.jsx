@@ -950,10 +950,10 @@ useEffect(()=>{
       }
     }
 
-   console.log(runAiModel);
+  //  console.log(runAiModel);
  }
  else{
-  setToolSelected("ZoomError")
+
  }
 
 
@@ -965,7 +965,6 @@ useEffect(()=>{
 useEffect(() => {
     const timer = setTimeout(() => {
       handleShowAnalysis();
-      setToolSelected("MorphometryAnalysed");
     }, 4000); 
     return () => {
       clearTimeout(timer);

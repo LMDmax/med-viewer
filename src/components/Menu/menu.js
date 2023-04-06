@@ -181,7 +181,7 @@ const FunctionsMenu = ({
       right={0}
       background="rgba(217, 217, 217, 0.3)"
       zIndex={10}
-      h={ifWidthLessthan1920 ? "calc(100vh - 92px)" : "calc(100vh - 10.033vh)"}
+      h={ifWidthLessthan1920 ? "calc(100vh - 80px)" : "calc(100vh - 10.033vh)"}
     >
       <motion.div
         animate={{

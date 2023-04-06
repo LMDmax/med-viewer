@@ -19,6 +19,8 @@ const Studies = ({ caseInfo, slideInfo }) => {
       : "-",
   };
 
+  console.log(slideInfo);
+
   const patientDetails = {
     UHID: `${caseInfo?.patient?.uhid}`,
     "Patient Name": `${caseInfo?.patient?.patientName.firstName} ${caseInfo?.patient?.patientName.lastName}`,
@@ -32,16 +34,26 @@ const Studies = ({ caseInfo, slideInfo }) => {
       : "-",
   };
 
+  const date = slideInfo?.uploadedAt
+  const localDate = new Date(date).toLocaleDateString("en-GB")
+
   const imageDetails = {
+    "Accession Id" : slideInfo?.accessionId,
     Title: slideInfo?.slideName || slideInfo?.originalName?.split(".")?.[0],
     "Case Title": caseInfo?.caseName,
+    "Case Id" : slideInfo?.case,
     Location: "My Folder/Cases/203-11-22-22-UHID/SLIDE 1",
     Type: slideInfo?.originalName?.split(".")?.[1],
+    "Orgininal Slide Name": slideInfo?.originalName,
     Size: "100 mb",
+    "Stain Type": slideInfo?.stainType,
+    "Marker Type" : slideInfo.bioMarkerTpe? slideInfo.bioMarkerTpe : "-",
     Dimension: "1280 x 720 px",
     Resolution: "148 dpi",
     Scanner: "NanoZoomer S360",
-    "Shared with": slideInfo?.metadata?.doctor || "Dr. Sharma",
+    "Uploaded At": localDate ,
+    "Uploaded By": `Dr. ${slideInfo?.uploadedBy.firstName} ${slideInfo?.uploadedBy.lastName}`,
+    "Shared With": slideInfo?.metadata?.doctor || "Dr. Sharma",
   };
 
   return caseInfo ? (
