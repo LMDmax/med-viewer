@@ -86,13 +86,13 @@ const Til = ({
   // ------------------
   useEffect(() => {
     if (!data || !tilSubscriptionData) {
-      toast({
-        title: "TIL is processing",
-        description: "",
-        status: "success",
-        duration: 1500,
-        isClosable: true,
-      });
+      // toast({
+      //   title: "TIL is processing",
+      //   description: "",
+      //   status: "success",
+      //   duration: 1500,
+      //   isClosable: true,
+      // });
     }
   }, []);
   // ------------------------------
@@ -1513,7 +1513,10 @@ const Til = ({
   }
       }
      
-else{
+if(stromaCords?.length < 0 ||
+  tumorCords?.length < 0 ||
+  tilCords?.length < 0 ||
+  tilSubscriptionData?.tilStatus?.message !== "Til is completed" && modelName === "TIL"){
   setToolSelected("TILLoading");
 }
   },[modelName])

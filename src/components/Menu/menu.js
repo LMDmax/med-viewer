@@ -26,6 +26,9 @@ import {
   ReportSelected,
   SlidesIconSelected,
   MessagesIcon,
+  MessagesIconSelected,
+  adjustmentIcon,
+  adjustmentIconSelected,
 } from "../Icons/CustomIcons";
 import SlidesMenu from "./slidesMenu";
 import { useFabricOverlayState } from "../../state/store";
@@ -38,6 +41,9 @@ import Report from "../Report/Report";
 import Timeline from "../Timeline/Timeline";
 import ChatFeed from "../Feed/ChatFeed";
 import Adjustments from "../Adjustments/Adjustments";
+
+import {BsSliders} from "react-icons/bs"
+import IconSize from "../ViewerToolbar/IconSize";
 
 const FunctionsMenu = ({
   caseInfo,
@@ -88,6 +94,7 @@ const FunctionsMenu = ({
   setSynopticType,
   getSynopticReport,
   updateSynopticReport,
+  searchSelectedData,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
@@ -119,7 +126,6 @@ const FunctionsMenu = ({
   const [annotedSlideImages, setAnnotedSlideImages] = useState([]);
   const [slideData, setSlideData] = useState(null);
   const [timelineData, setTimeLineData] = useState([]);
-  console.log(slide);
   useEffect(() => {
     if (!chatFeedBar) {
       setSelectedOption("slides");
@@ -129,7 +135,6 @@ const FunctionsMenu = ({
       setIsOpen(true);
     }
   }, [chatFeedBar]);
-
   useEffect(()=>{
     if(toolSelected !== "Filter"){
       setSelectedOption("slides");
@@ -158,6 +163,17 @@ const FunctionsMenu = ({
     // console.log("clicccccccccccccccccccccccccccccck");
   },[selectedOption])
 
+  useEffect(() => {
+    if (searchSelectedData) {
+      if (searchSelectedData.type !== "textBox") {
+        setIsOpen(true);
+        setSelectedOption("annotations");
+      } else {
+        setIsOpen(true);
+        setSelectedOption("comments");
+      }
+    }
+  }, [searchSelectedData]);
   return (
     <Box
       pos="absolute"
@@ -389,7 +405,7 @@ const FunctionsMenu = ({
                 >
                   <VStack>
                     {selectedOption === "messages" ? (
-                      <MessagesIcon />
+                      <MessagesIconSelected />
                     ) : (
                       <MessagesIcon />
                     )}
@@ -408,7 +424,6 @@ const FunctionsMenu = ({
                 </Button>
               </Tooltip>
             ) : null}
-
             {toolSelected === "Filter" ? 
              <Tooltip label=" Adjustments">
              <Button
@@ -421,9 +436,14 @@ const FunctionsMenu = ({
              >
                <VStack>
                  {selectedOption === "adjustments" ? (
-                   <MessagesIcon />
-                 ) : (
-                   <MessagesIcon />
+                  //  <adjustmentIconSelected />
+                  // <MessagesIconSelected />
+                  // <HiOutlineAdjustmentsHorizontal />
+                  <BsSliders w="20px" h="30px" color="#3B5D7C"/>
+
+                   ) : (
+                    // <adjustmentIconSelected />
+                    <BsSliders w="20px" h="30px" color="black"/>
                  )}
                  <Text
                    fontFamily="Inter"
@@ -439,7 +459,6 @@ const FunctionsMenu = ({
                </VStack>
              </Button>
            </Tooltip> : null}
-            
           </Flex>
           <Flex
             w="100%"
@@ -476,9 +495,13 @@ const FunctionsMenu = ({
                 stromaArea={stromaArea}
                 lymphocyteCount={lymphocyteCount}
                 tilScore={tilScore}
+                searchSelectedData={searchSelectedData}
               />
             ) : selectedOption === "comments" ? (
-              <CommentFeed viewerId={viewerId} />
+              <CommentFeed
+                viewerId={viewerId}
+                searchSelectedData={searchSelectedData}
+              />
             ) : selectedOption === "report" ? (
               <Flex w="100%" h="100%" direction="column" bgColor="#FCFCFC">
                 <Flex w="100%" direction="row" p="5px 5px 0px 20px">
@@ -566,7 +589,7 @@ const FunctionsMenu = ({
               <Adjustments setToolSelected={setToolSelected} viewer={viewer} setIsOpen={setIsOpen} />
             ) : (
               <Flex w="100%" h="95%" pb="25px" bgColor="#FCFCFC" p="5px">
-                <Timeline timelineData={timelineData} />
+                <Timeline timelineData={timelineData} viewerId={viewerId} />
               </Flex>
             )}
           </Flex>

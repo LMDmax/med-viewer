@@ -69,6 +69,7 @@ function AdjustmentBar({
   setModelname,
   setSlideId,
   responseHandler,
+  bottomZoomValue,
   questionnaireResponse,
   zoomValue,
   synopticType,
@@ -155,6 +156,7 @@ function AdjustmentBar({
         setNewHilData={setNewHilData}
         viewerIds={viewerIds}
         isMultiview={isMultiview}
+        bottomZoomValue={bottomZoomValue}
         setIsMultiview={setIsMultiview}
         isNavigatorActive={isNavigatorActive}
         setIsNavigatorActive={setIsNavigatorActive}

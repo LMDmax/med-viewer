@@ -12,16 +12,18 @@ import { useLocation } from "react-router-dom";
 import { useFabricOverlayState } from "../../state/store";
 import Viewer from "./viewer";
 
-function ViewerContainer({
-	viewerId,
-	slideName,
-	userInfo,
-	enableAI,
-	slide,
+const ViewerContainer = ({
+  viewerId,
+  slideName,
+  userInfo,
+  enableAI,
+  slide,
+  setBottomZoomValue,
   zoomValue,
   runAiModel,
   setModelname,
   setZoomValue,
+  bottomZoomValue,
 	onLoadAnnotations,
 	onSaveAnnotation,
 	onDeleteAnnotation,
@@ -40,7 +42,7 @@ function ViewerContainer({
 	accessToken,
 	setIsXmlAnnotations,
 	handleAnnotationClick,
-}) {
+}) => {
   const location = useLocation();
 
   const { fabricOverlayState } = useFabricOverlayState();
@@ -87,18 +89,20 @@ function ViewerContainer({
   // Success
   // return <Viewer tile={tileSource} />;
 
-	return (
-		<Viewer
-			application={application}
-			viewerId={viewerId}
-			tile={tile}
-			enableAI={enableAI}
-			slide={slide}
+  return (
+    <Viewer
+      application={application}
+      viewerId={viewerId}
+      tile={tile}
+      enableAI={enableAI}
+      slide={slide}
+      bottomZoomValue={bottomZoomValue}
       setZoomValue={setZoomValue}
       zoomValue={zoomValue}
       setModelname={setModelname}
 			userInfo={userInfo}
 			client2={client2}
+      setBottomZoomValue={setBottomZoomValue}
       runAiModel={runAiModel}
 			setLoadUI={setLoadUI}
       setToolSelected={setToolSelected}
@@ -112,5 +116,6 @@ function ViewerContainer({
 		/>
 	);
 }
+
 
 export default ViewerContainer;

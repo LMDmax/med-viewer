@@ -65,7 +65,7 @@ const SlidesMenu = ({
           )}
           autoHide
         >
-          <Flex w="100%" h="100%" bgColor="pink" flexWrap="wrap">
+          <Flex w="100%" h="100%"  bg="#F2F2F2" flexWrap="wrap">
             {slides.map((slide, index) => {
               const url = getSlideUrl(slide.awsImageBucketUrl);
               return (
@@ -109,6 +109,7 @@ const SlidesMenu = ({
                       alignSelf="center"
                       whiteSpace="initial"
                       noOfLines={1}
+                      textOverflow="ellipsis"
                     >
                       {slide.slideName ||
                         slide.originalName ||

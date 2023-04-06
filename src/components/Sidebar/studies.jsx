@@ -1,34 +1,21 @@
 import React from "react";
-import {
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon,
-  Box,
-  Flex,
-  Text,
-  HStack,
-  VStack,
-} from "@chakra-ui/react";
-import { AiOutlineExclamationCircle } from "react-icons/ai";
+import { Flex, Text, HStack, VStack, useMediaQuery } from "@chakra-ui/react";
 import moment from "moment";
 import { Scrollbars } from "react-custom-scrollbars";
-import BasicInfo from "../Studies/basicInfo";
-import StudyAction from "../Studies/studyAction";
-import ImageAction from "../Studies/imageAction";
 import Loading from "../Loading/loading";
 import DetailsCard from "../Studies/detailsCard";
 import "../../styles/scrollBar.css";
 
-const Studies = ({ project, caseInfo }) => {
+const Studies = ({ caseInfo, slideInfo }) => {
+  const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
+  console.log(slideInfo.metadata);
   const caseDetails = {
     Department: caseInfo?.departmentTo,
     Organ: caseInfo?.organs[0].organName,
     "Specimen Size": caseInfo?.organs[1].organSize,
     Hospital: caseInfo?.treatingHospitalDetails?.hospitalName,
     Clinician: `Dr. ${caseInfo?.treatingDoctor}`,
-    "Helpline No.": caseInfo?.patient?.contactNumber
+    "Clinician's No.": caseInfo?.patient?.contactNumber
       ? `+91-${caseInfo?.patient?.contactNumber}`
       : "-",
   };
@@ -46,11 +33,23 @@ const Studies = ({ project, caseInfo }) => {
       : "-",
   };
 
+  const imageDetails = {
+    Title: slideInfo?.slideName || slideInfo?.originalName?.split(".")?.[0],
+    "Case Title": caseInfo?.caseName,
+    Location: "My Folder/Cases/203-11-22-22-UHID/SLIDE 1",
+    Type: slideInfo?.originalName?.split(".")?.[1],
+    Size: "100 mb",
+    Dimension: "1280 x 720 px",
+    Resolution: "148 dpi",
+    Scanner: "NanoZoomer S360",
+    "Shared with": slideInfo?.metadata?.doctor || "Dr. Sharma",
+  };
+
   return caseInfo ? (
     <Scrollbars
       style={{
         width: "100%",
-        height: "80vh",
+        height: "100%",
         borderWidth: "0px",
       }}
       renderThumbVertical={(props) => (
@@ -62,24 +61,25 @@ const Studies = ({ project, caseInfo }) => {
         background="none"
         direction="column"
         w="100%"
-        bg="#FCFCFC"
+        h="100%"
         pb="12px"
+        pt="5px"
       >
         <HStack
           background="#FCFCFC"
           boxShadow="0px 1px 2px rgba(176, 200, 214, 0.25)"
           h="2.5em"
           align="center"
-          px="15px"
+          px="18px"
         >
-          <AiOutlineExclamationCircle size={18} />
           <Text
             fontWeight="400"
             fontSize="14px"
             lineHeight="17px"
             letterSpacing="0.0025em"
+            color="#3B5D7C"
           >
-            Case Information
+            Information
           </Text>
         </HStack>
         <VStack
@@ -93,22 +93,23 @@ const Studies = ({ project, caseInfo }) => {
           mt="0.8em"
         >
           <Text
-            fontWeight="300"
-            fontSize="12px"
-            lineHeight="15px"
-            letterSpacing="0.0025em"
-          >
-            {moment(caseInfo.caseCreationDate).format(
-              "ddd DD/MM/YYYY hh:mm:ss a"
-            )}
-          </Text>
-          <Text
             fontWeight="400"
             fontSize="16px"
             lineHeight="19px"
             letterSpacing="0.0025em"
           >
             {caseInfo.caseName}
+          </Text>
+          <Text
+            fontWeight="300"
+            fontSize="12px"
+            lineHeight="15px"
+            letterSpacing="0.0025em"
+            whiteSpace="initial"
+          >
+            {`Created on ${moment(caseInfo.caseCreationDate).format(
+              "ddd DD/MM/YYYY hh:mm a"
+            )}`}
           </Text>
         </VStack>
         <DetailsCard
@@ -120,6 +121,12 @@ const Studies = ({ project, caseInfo }) => {
           cardTitle="Patient details"
           details={patientDetails}
           mt="0.8em"
+        />
+        <DetailsCard
+          cardTitle="Image details"
+          details={imageDetails}
+          mt="0.8em"
+          pb="20px"
         />
       </Flex>
     </Scrollbars>

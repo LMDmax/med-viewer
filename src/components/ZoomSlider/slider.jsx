@@ -8,11 +8,11 @@ import {
   zoomToLevel,
 } from "../../utility/utility";
 
-const ZoomSlider = ({ viewerId, zoomValue, setZoomValue }) => {
+const ZoomSlider = ({ viewerId , setBottomZoomValue}) => {
   const { fabricOverlayState } = useFabricOverlayState();
   const { viewerWindow } = fabricOverlayState;
   const { viewer, fabricOverlay } = viewerWindow[viewerId];
-  // const [zoomValue, setZoomValue] = useState(1);
+  const [zoomValue, setZoomValue] = useState(1);
   const [alphabet, setAlphabet] = useState(false);
 
   const inputRef = useRef(null);
@@ -83,7 +83,10 @@ const ZoomSlider = ({ viewerId, zoomValue, setZoomValue }) => {
     setZoomValue(value);
   };
 
-  // console.log(zoomValue);
+useEffect(()=>{
+  setBottomZoomValue(zoomValue);
+
+},[zoomValue])
 
   useEffect(() => {
     if (!viewer) return;

@@ -31,7 +31,7 @@ import FunctionsMenu from "../Menu/menu";
 import ChangeSlide from "../Case/changeSlide";
 import { useFabricOverlayState } from "../../state/store";
 
-function LayoutApp({
+const LayoutApp = ({
   userInfo,
   caseInfo,
   slides,
@@ -63,7 +63,8 @@ function LayoutApp({
   updateSynopticReport,
   addUsersToCase,
   accessToken,
-}) {
+  searchSelectedData,
+}) => {
   // const { handleEvent } = useKeyboardEvents();
 
   const [sidebar, setSidebar] = useState(false);
@@ -101,6 +102,7 @@ function LayoutApp({
   const [hideLymphocyte, setHideLymphocyte] = useState(false);
   const [annotationObject, setAnnotationObject] = useState("");
   const [toolSelected, setToolSelected] = useState("");
+  const [bottomZoomValue, setBottomZoomValue] = useState('');
 
   // xml annotations check
   const [isXmlAnnotations, setIsXmlAnnotations] = useState(false);
@@ -116,7 +118,8 @@ function LayoutApp({
   useEffect(() => {
     const UnitStore = localStorage.getItem("unit");
     setUnit(UnitStore);
-  });
+},[bottomZoomValue]);
+
 
   // console.log(modelName);
 
@@ -131,8 +134,11 @@ function LayoutApp({
     case "TIL":
       runAiModel = "TIL";
       break;
+      case "Morphometry":
+        runAiModel = "Morphometry";
+        break;
     default:
-      runAiModel = "Morphometry";
+      runAiModel = "";
       break;
   }
 
@@ -220,8 +226,9 @@ function LayoutApp({
       case "TILLoading":
       returnText = "TIL will enable after sometime.";
       break;
+
     case "KI67Error":
-      returnText = "KI67 analysis can only be run on IHC slides.";
+      returnText = "KI67 analysis can only be run on stain type IHC and marker type must be KI67 .";
       break;
     case "MorphometrySlideIssue":
       returnText = "Morphometry analysis can only be run on H&E slides.";
@@ -235,6 +242,7 @@ function LayoutApp({
       case "FilterSaved":
         returnText = "Adjusment saved successfully ";
         break;
+
     default:
       returnText = "";
       break;
@@ -273,6 +281,7 @@ function LayoutApp({
   };
   const handleAnnotationClick = (annotation) => {
     setAnnotationObject(annotation);
+    setShowFeedBar(true);
     setFeedBar(1);
   };
 
@@ -334,6 +343,7 @@ function LayoutApp({
           handleTILFeedBar={handleTILFeedBar}
           handleReport={handleReport}
           synopticType={synopticType}
+          bottomZoomValue={bottomZoomValue}
           setSynopticType={setSynopticType}
           showReport={showReport}
           setShowReport={setShowReport}
@@ -461,6 +471,8 @@ function LayoutApp({
               userInfo={userInfo}
               slide={viewerIds?.[0]}
               slides={slides}
+              bottomZoomValue={bottomZoomValue}
+              setBottomZoomValue={setBottomZoomValue}
               setCurrentViewer={setCurrentViewer}
               client2={client2}
               setZoomValue={setZoomValue}
@@ -526,9 +538,10 @@ function LayoutApp({
             client2={client2}
             mentionUsers={mentionUsers}
             addUsersToCase={addUsersToCase}
+            searchSelectedData={searchSelectedData}
           />
         </LayoutInnerBody>
-        <Flex bg="#F0F0F0" pl="30px" w="100%" zIndex={99} h="30px">
+        <Flex bg="#F0F0F0" pl="30px" w="100%" zIndex={99} h="25px">
           <Flex justifyContent="space-between" alignItems="center">
             <Flex
               h="full"
@@ -550,24 +563,24 @@ function LayoutApp({
                 />
               )}
             </Flex>
-            <Text ml="10px">
+            <Text ml="10px" fontSize="14px">
               {" "}
               {localStorage.getItem("ModelName")
                 ? `${localStorage.getItem("ModelName")} is in process`
                 : returnText}{" "}
             </Text>
-            <Flex ml="10px" justifyContent="center" alignItems="center">
+            <Flex ml="10px" justifyContent="flex-end" alignItems="center">
               {/* <ProgressBar /> */}
               {!loadUI === true ? <ProgressBar /> : null}
             </Flex>
             <Box pos="absolute" right="0" me="30px">
               <Flex>
-                <Text mr="5px">{value}X</Text>
+                <Text  mr="5px">{bottomZoomValue}X</Text>
                 <Image
                   src="https://i.ibb.co/7CtYTC2/bottom-Bar.png"
                   alt="Bottom Bar"
                 />
-                <Text ml="5px">{unit}</Text>
+                <Text  ml="5px">{unit}</Text>
               </Flex>
             </Box>
           </Flex>
@@ -575,7 +588,7 @@ function LayoutApp({
       </LayoutOuterBody>
     </Flex>
   );
-}
+};
 
 LayoutApp.propTypes = {
   finalSubmitHandler: PropTypes.func,
