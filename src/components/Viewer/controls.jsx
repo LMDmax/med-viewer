@@ -953,7 +953,6 @@ useEffect(()=>{
    console.log(runAiModel);
  }
  else{
-  setToolSelected("ZoomError")
  }
 
 
