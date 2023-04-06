@@ -358,6 +358,81 @@ function ActivityFeed({
           )}
         </HStack>
         <ScrollBar>
+          <Flex direction="column">
+            {activityFeed.map((feed, index) => {
+              return feed?.object && feed?.object?.type !== "textbox" ? (
+                <Flex
+                  key={feed.object.hash}
+                  pb="0.5vh"
+                  borderBottom="1px solid #F6F6F6"
+                  cursor="pointer"
+                  onClick={() => handleClick(feed, index)}
+                  justify="space-between"
+                  align="center"
+                  style={{
+                    fontWeight: selectedItemIndex === index ? "bold" : "normal",
+                  }}
+                >
+                  <Flex align="center">
+                    {feed.object?.type === "rect" ? (
+                      <BiRectangle color="#E23636" />
+                    ) : feed.object?.type === "polygon" ? (
+                      <FaDrawPolygon color="#E23636" />
+                    ) : feed.object?.type === "ellipse" ? (
+                      <BsCircle color="#E23636" />
+                    ) : (
+                      <BsSlash color="#E23636" />
+                    )}
+                    <Text ml="0.8vw">
+                      {feed.object?.title
+                        ? feed.object.title
+                        : feed.object?.roiType === "morphometry"
+                        ? "ROI"
+                        : feed.object?.roiType === "KI67"
+                        ? "KI-67"
+                        : feed.object?.type === "viewport"
+                        ? `Viewport ${index + 1}`
+                        : `Annotation ${index + 1}`}
+                    </Text>
+                  </Flex>
+                  {!isXmlAnnotations && (
+                    <EditTextButton
+                      feed={feed}
+                      handleEditClick={handleEditClick}
+                      mr={2}
+                    />
+                  )}
+                </Flex>
+              ) : null;
+            })}
+          </Flex>
+        </ScrollBar>
+      </Flex>
+
+      <Flex
+        direction="column"
+        marginStart="0.8vw"
+        pt="2px"
+        overflowY="auto"
+        flex="1"
+      >
+        <HStack justify="space-between">
+          <Text fontSize="1rem" pb="3px">
+            Annotation List
+          </Text>
+          {!isXmlAnnotations && (
+            <IconButton
+              icon={<MdDelete size={18} />}
+              size="sm"
+              variant="unstyled"
+              cursor="pointer"
+              isDisabled={activityFeed.length === 0}
+              _focus={{ border: "none", outline: "none" }}
+              onClick={onDeleteConfirmationOpen}
+            />
+          )}
+        </HStack>
+        <ScrollBar>
           <Flex direction="column"  h="80vh">
           <Accordion allowMultiple>
   {activityFeed.map((feed, index) => {

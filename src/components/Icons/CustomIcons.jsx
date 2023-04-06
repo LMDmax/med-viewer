@@ -843,6 +843,7 @@ export const adjustmentIconSelected = () => {
   );
 };
 
+
 export const ReportIcon = () => {
   return (
     <svg
