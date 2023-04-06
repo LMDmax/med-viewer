@@ -11,8 +11,6 @@ import {
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import axios from "axios";
-
-import { BsSliders } from "react-icons/bs";
 import {
   SlidesIcon,
   TimelineIcon,

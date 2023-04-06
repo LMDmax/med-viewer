@@ -749,27 +749,169 @@ const ViewerControls = ({
 
   // ######################## RUN KI67 ###############################################
   // ######################## RUN KI67 ###############################################
-  const groupAnnotationAndCellsKI67 = ({
-    cells,
-    enclosingAnnotation,
-    optionalData,
-  }) => {
-    if (!cells || !enclosingAnnotation) return null;
-    const { slide, hash, title, text, zoomLevel, points, timeStamp, path } =
-      enclosingAnnotation;
-    enclosingAnnotation.set({ fill: "" });
-    const group = new fabric.Group([enclosingAnnotation, ...cells]).set({
-      slide,
-      hash,
-      title,
-      text,
-      zoomLevel,
-      points,
-      path,
-      timeStamp,
-      isKI67Analysed: true,
-      fill: "",
-    });
+	const groupAnnotationAndCellsKI67 = ({
+		cells,
+		enclosingAnnotation,
+		optionalData,
+	}) => {
+		if (!cells || !enclosingAnnotation) return null;
+		const { slide, hash, title, text, zoomLevel, points, timeStamp, path } =
+			enclosingAnnotation;
+		enclosingAnnotation.set({ fill: "" });
+		const group = new fabric.Group([enclosingAnnotation, ...cells]).set({
+			slide,
+			hash,
+			title,
+			text,
+			zoomLevel,
+			points,
+			path,
+			timeStamp,
+			isKI67Analysed: true,
+			fill: "",
+		});
+
+		// check if optionalData is available and also is not empty
+		if (optionalData && Object.keys(optionalData).length > 0) {
+			group.set({ analysedData: optionalData, roiType: optionalData.roiType });
+		}
+
+		const message = {
+			username: "",
+			object: group,
+			image: null,
+		};
+
+		return message;
+	};
+
+	const runKI67 = async () => {
+		if (!fabricOverlay || !annotationObject) return;
+
+		// get s3 folder key from the originalFileUrl
+		const key = getFileBucketFolder(originalFileUrl);
+		const { left, top, width, height, type } = annotationObject;
+		let body = {
+			key,
+			type,
+			left,
+			top,
+			width,
+			height,
+			slideId,
+			hash: annotationObject.hash,
+		};
+
+		// if annoatation is a freehand, send the coordinates of the path
+		// otherwise, send the coordinates of the rectangle
+		if (annotationObject.type === "path") {
+			body = { ...body, path: annotationObject.path };
+
+			if (slide?.isIHC === false) {
+				isKI67Open();
+			}
+		} else if (annotationObject.type === "ellipse") {
+			body = {
+				...body,
+				cx: annotationObject.cx,
+				cy: annotationObject.cy,
+				rx: annotationObject.rx,
+				ry: annotationObject.ry,
+				type: "ellipse",
+			};
+		} else if (annotationObject.type === "polygon") {
+			body = { ...body, points: annotationObject.points };
+		}
+		// console.log("slideID", slideId);
+		// console.log("body....", body);
+		const originalBody = {
+			...body,
+			notifyHook: `${Environment.VIEWER_URL}/notify_KI67`,
+			annotationId: "",
+		};
+		// console.log("body", originalBody);
+		try {
+			// const resp = await onVhutAnalysis(body);
+			const resp = await axios.post(
+				"https://backup-quantize-vhut.prr.ai/ki_six_seven_predict",
+				originalBody
+			);
+		} catch (err) {
+			toast({
+				title: "Server Unavailable",
+				description: err.message,
+				status: "error",
+				duration: 1500,
+				isClosable: true,
+			});
+		}
+	};
+
+	useEffect(() => {
+		if (vhutSubscriptionData) {
+			console.log("subscribed", vhutSubscriptionData);
+			const {
+				data,
+				status,
+				message,
+				analysisType: type,
+			} = vhutSubscriptionData.analysisStatus;
+
+			if (type === "KI67_ANALYSIS") {
+				const posContours = data.kiResults.pos_contours;
+				const negContours = data.kiResults.neg_contours;
+				const canvas = fabricOverlay.fabricCanvas();
+				const { left, top } = annotationObject;
+				const circles = posContours.map((coord) => {
+					const circle = new fabric.Circle({
+						left: coord[0] + left,
+						top: coord[1] + top,
+						radius: 3,
+						fill: "#BB4139",
+						stroke: "#BB4139",
+						strokeWidth: 2,
+					});
+					return circle;
+				});
+				const circlesNegative = negContours.map((coord) => {
+					const circle = new fabric.Circle({
+						left: coord[0] + left,
+						top: coord[1] + top,
+						radius: 3,
+						fill: "#17478D",
+						stroke: "#17478D",
+						strokeWidth: 2,
+					});
+					return circle;
+				});
+				const cells = [...circles, ...circlesNegative];
+				const feedMessage = groupAnnotationAndCellsKI67({
+					enclosingAnnotation: annotationObject,
+					cells,
+					optionalData: {
+						data: "",
+						roiType: "KI67",
+						num_positive: data?.kiResults?.num_positive,
+						num_negative: data?.kiResults?.num_negative,
+						proliferation_score: data?.kiResults?.proliferation_score,
+					},
+				});
+				// console.log(feedMessage);
+				if (feedMessage?.object) {
+					// remove enclosing annotation and add new one to canvas
+					// console.log(feedMessage);
+					canvas.remove(annotationObject);
+					canvas.add(feedMessage.object).requestRenderAll();
+
+					setFabricOverlayState(
+						updateFeedInAnnotationFeed({ id: viewerId, feed: feedMessage })
+					);
+				}
+			}
+		}
+	}, [vhutSubscriptionData]);
+
+  // console.log(annotationObject);
 useEffect(()=>{
  if(bottomZoomValue >39){
   if(runAiModel === "KI67"){ 
