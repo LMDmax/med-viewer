@@ -53,6 +53,7 @@ function Viewer({
   runAiModel,
   userInfo,
   enableAI,
+  bottomZoomValue,
   zoomValue,
   setZoomValue,
   slide,
@@ -142,6 +143,7 @@ function Viewer({
           userInfo={userInfo}
           enableAI={enableAI}
           slide={slide}
+          bottomZoomValue={bottomZoomValue}
           runAiModel={runAiModel}
           setLoadUI={setLoadUI}
           client2={client2}

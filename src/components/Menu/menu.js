@@ -43,6 +43,7 @@ import Timeline from "../Timeline/Timeline";
 import ChatFeed from "../Feed/ChatFeed";
 import Adjustments from "../Adjustments/Adjustments";
 
+import {BsSliders} from "react-icons/bs"
 import IconSize from "../ViewerToolbar/IconSize";
 
 const FunctionsMenu = ({
@@ -438,47 +439,41 @@ const FunctionsMenu = ({
                 </Button>
               </Tooltip>
             ) : null}
-            {toolSelected === "Filter" ? (
-              <Tooltip label=" Adjustments">
-                <Button
-                  height="73px"
-                  w="73px"
-                  borderRadius={0}
-                  background="#F6F6F6"
-                  box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-                  onClick={() => setSelectedOption("adjustments")}
-                >
-                  <VStack>
-                    {selectedOption === "adjustments" ? (
-                      //  <adjustmentIconSelected />
-                      // <MessagesIconSelected />
-                      // <HiOutlineAdjustmentsHorizontal />
-                      <BsSliders
-                        style={{ width: "40px", height: "30px" }}
-                        color="#3B5D7C"
-                      />
-                    ) : (
-                      // <adjustmentIconSelected />
-                      <BsSliders
-                        style={{ width: "40px", height: "30px" }}
-                        color="black"
-                      />
-                    )}
-                    <Text
-                      fontFamily="Inter"
-                      fontStyle="normal"
-                      fontWeight="400"
-                      fontSize="10px"
-                      lineHeight="12px"
-                      letterSpacing="0.0025em"
-                      color={selectedOption === "report" ? "#3B5D7C" : "fff"}
-                    >
-                      Adjustments
-                    </Text>
-                  </VStack>
-                </Button>
-              </Tooltip>
-            ) : null}
+            {toolSelected === "Filter" ? 
+             <Tooltip label=" Adjustments">
+             <Button
+               height="73px"
+               w="73px"
+               borderRadius={0}
+               background="#F6F6F6"
+               box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
+               onClick={() => setSelectedOption("adjustments")}
+             >
+               <VStack>
+                 {selectedOption === "adjustments" ? (
+                  //  <adjustmentIconSelected />
+                  // <MessagesIconSelected />
+                  // <HiOutlineAdjustmentsHorizontal />
+                  <BsSliders w="20px" h="30px" color="#3B5D7C"/>
+
+                   ) : (
+                    // <adjustmentIconSelected />
+                    <BsSliders w="20px" h="30px" color="black"/>
+                 )}
+                 <Text
+                   fontFamily="Inter"
+                   fontStyle="normal"
+                   fontWeight="400"
+                   fontSize="10px"
+                   lineHeight="12px"
+                   letterSpacing="0.0025em"
+                   color={selectedOption === "report" ? "#3B5D7C" : "fff"}
+                 >
+                   Adjustments
+                 </Text>
+               </VStack>
+             </Button>
+           </Tooltip> : null}
           </Flex>
           <Flex
             w="100%"
@@ -614,7 +609,7 @@ const FunctionsMenu = ({
               />
             ) : (
               <Flex w="100%" h="95%" pb="25px" bgColor="#FCFCFC" p="5px">
-                <Timeline viewerId={viewerId} timelineData={timelineData} />
+                <Timeline timelineData={timelineData} viewerId={viewerId} />
               </Flex>
             )}
           </Flex>

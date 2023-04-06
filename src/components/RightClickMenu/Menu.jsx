@@ -195,25 +195,28 @@ export function CustomMenu({
           <MenuItem _hover={{ bgColor: "#DEDEDE" }}>
             <DisplayMenu setZoom={setZoom} />
           </MenuItem>
-          {enableAI ? (
+          {enableAI && slide?.stainType !== "IHC" ? (
             <MenuItem
               _hover={{ bgColor: "#DEDEDE" }}
               onClick={() => {
                 setModelname("Morphometry");
+                console.log("ki67 not runnnnn");
                 closeMenu();
               }}
               closeOnSelect
-              isDisabled={isMorphometryDisabled || slide?.isIHC}
+              isDisabled={isMorphometryDisabled || slide?.stainType === "IHC"}
             >
               Run Morphometry
             </MenuItem>
           ) : null}
-          {enableAI && slide?.isIHC ? (
+          {enableAI && slide?.stainType === "IHC" && slide.bioMarkerType==="kI67" ? (
             !isKI67Analysed ? (
               <MenuItem
                 _hover={{ bgColor: "#DEDEDE" }}
                 onClick={() => {
-                  runKI67();
+                  // runKI67();
+                setModelname("KI67");
+                  console.log("ki67 runnnnn");
                   closeMenu();
                 }}
                 closeOnSelect

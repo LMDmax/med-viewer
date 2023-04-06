@@ -134,8 +134,11 @@ const LayoutApp = ({
     case "TIL":
       runAiModel = "TIL";
       break;
+      case "Morphometry":
+        runAiModel = "Morphometry";
+        break;
     default:
-      runAiModel = "Morphometry";
+      runAiModel = "";
       break;
   }
 
@@ -225,7 +228,7 @@ const LayoutApp = ({
       break;
 
     case "KI67Error":
-      returnText = "KI67 analysis can only be run on IHC slides.";
+      returnText = "KI67 analysis can only be run on stain type IHC and marker type must be KI67 .";
       break;
     case "MorphometrySlideIssue":
       returnText = "Morphometry analysis can only be run on H&E slides.";
@@ -468,6 +471,7 @@ const LayoutApp = ({
               userInfo={userInfo}
               slide={viewerIds?.[0]}
               slides={slides}
+              bottomZoomValue={bottomZoomValue}
               setBottomZoomValue={setBottomZoomValue}
               setCurrentViewer={setCurrentViewer}
               client2={client2}

@@ -102,9 +102,7 @@ const Timeline = ({ timelineData, viewerId }) => {
                     </Flex>
                     <Text className="detail">
                       Added a comment{" "}
-                      <span style={{ color: "#3f5f7e" }}>
-                        {data.text == "comment" ? "" : `"${data.text}"`}
-                      </span>
+                      <span style={{ color: "#3f5f7e" }}>{data.text == "comment" ? "" : `"${data.text}"`}</span>
                     </Text>
                   </Flex>
                 ) : (

@@ -17,6 +17,7 @@ const AiModels = ({ slide, setToolSelected, setModelname, bottomZoomValue,bottom
   const [TilHover, setTilHover] = useState(false);
   const [TilActiveState, setTilActiveState] = useState(0);
   
+  // console.log(slide);
 
   useEffect(()=>{
     if(!TilHover){
@@ -25,38 +26,44 @@ const AiModels = ({ slide, setToolSelected, setModelname, bottomZoomValue,bottom
   })
 
   const handleKI67 = () => {
-    if (slide?.isIHC && bottomZoomValue > 39) {
+    if (slide?.stainType === "IHC" && bottomZoomValue > 39 && slide?.bioMarkerType === "kI67") {
       // console.log("1");
-
       setModelname("KI67");
+      console.log("1");
     }
-    if(!slide?.isIHC){
-        setToolSelected("KI67Error");
-    }
+    if(slide?.stainType !== "IHC" || slide?.bioMarkerType !== "kI67" ){
+          setToolSelected("KI67Error");
+      // console.log("1");
+      console.log("3");
+    setModelname("");
+
+      }
     if(bottomZoomValue < 39){
     setToolSelected("ZoomError");
+    // console.log("1");
+    setModelname("");
+
 
     }
   };
 
+
   const handleMorphometry = () => {
     // console.log("2");
-if(!slide?.isIHC && bottomZoomValue >= 40){
+if(slide.stainType ==="H&E" && bottomZoomValue >= 40){
     setModelname("Morphometry");
 }
-if(slide?.isIHC){
+if(slide.stainType !=="H&E" ){
   setToolSelected("MorphometrySlideIssue");
 }
 if(bottomZoomValue < 40){
   setToolSelected("ZoomError");
-  console.log(bottomZoomValue);
-
   }
   };
 
-// console.log(slide);
+console.log(slide);
   useEffect(()=>{
-    if(slide.isBreastCancer){
+    if(slide.stainType ==="H&E"){
         if(TilActiveState / 2 !== 0){
             setModelname("TIL")
         }

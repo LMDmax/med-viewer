@@ -23,6 +23,7 @@ const ViewerContainer = ({
   runAiModel,
   setModelname,
   setZoomValue,
+  bottomZoomValue,
 	onLoadAnnotations,
 	onSaveAnnotation,
 	onDeleteAnnotation,
@@ -95,6 +96,7 @@ const ViewerContainer = ({
       tile={tile}
       enableAI={enableAI}
       slide={slide}
+      bottomZoomValue={bottomZoomValue}
       setZoomValue={setZoomValue}
       zoomValue={zoomValue}
       setModelname={setModelname}
