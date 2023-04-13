@@ -866,7 +866,7 @@ const ViewerControls = ({
 					const circle = new fabric.Circle({
 						left: coord[0] + left,
 						top: coord[1] + top,
-						radius: 9,
+						radius: 6,
 						fill: "red",
 						stroke: "red",
 						strokeWidth: 2,

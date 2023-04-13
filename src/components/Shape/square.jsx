@@ -249,8 +249,6 @@ const Square = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
 
     const addToFeed = async () => {
       // console.log("added");
-      console.log(shape);
-      console.log(viewer);
       const message = createAnnotationMessage({ slideId, shape, viewer, type:"rect" });
 
       saveAnnotationToDB({

@@ -18,7 +18,7 @@ const getDrawCursor = (brushSize, brushColor) => {
   const circle = `
 		<svg
 			height="${brushSize}"
-			fill="${brushColor}"
+			fill="black"
 			viewBox="0 0 ${brushSize * 2} ${brushSize * 2}"
 			width="${brushSize}"
 			xmlns="http://www.w3.org/2000/svg"
@@ -87,7 +87,7 @@ const Draw = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
     const scaleFactor = getScaleFactor(viewer);
     canvas.isDrawingMode = true;
     canvas.selection = true;
-    canvas.freeDrawingBrush.color = color.hex;
+    canvas.freeDrawingBrush.color = "black";
     canvas.freeDrawingBrush.width = brushWidth / scaleFactor;
     canvas.renderAll();
 
