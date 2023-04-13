@@ -20,9 +20,9 @@ import {
 
 function DisplayMenu({ setZoom }) {
   return (
-    <Menu closeOnSelect={false}>
+    <Menu closeOnSelect={true}>
       <MenuButton w="100%">
-        <Flex justifyContent="space-between" alignItems="center">
+        <Flex justifyContent="space-between"  alignItems="center">
           <Text>Display</Text>
           <ChevronRightIcon />
         </Flex>
@@ -33,10 +33,10 @@ function DisplayMenu({ setZoom }) {
           left="210px"
           bottom="39px"
           borderRadius={0}
-          zIndex="99"
+          zIndex="199"
           p={0}
         >
-          <MenuGroup title="Zoom level" fontWeight={400}>
+          <MenuGroup title="Zoom level"  zIndex="199" fontWeight={400}>
             <MenuItem
               _hover={{ bgColor: "#DEDEDE" }}
               value="40"
@@ -190,6 +190,7 @@ export function CustomMenu({
           borderRadius={0}
           bgColor="#FCFCFC"
           p={0}
+          zIndex="99"
           boxShadow="0px 2px 4px rgba(0, 0, 0, 0.15)"
         >
           <MenuItem _hover={{ bgColor: "#DEDEDE" }}>

@@ -151,7 +151,12 @@ function Move({
           onClick={handleClick}
           _hover={{ bgColor: "rgba(228, 229, 232, 1)" }}
         />
-        <Rotate setToolSelected={setToolSelected} viewerId={viewerId} />
+        <Rotate
+          setIsNavigatorActive={setIsNavigatorActive}
+          navigatorCounter={navigatorCounter}
+          setToolSelected={setToolSelected}
+          viewerId={viewerId}
+        />
         <Multiview
           viewerId={viewerId}
           isMultiview={isMultiview}

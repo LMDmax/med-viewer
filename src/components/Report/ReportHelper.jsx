@@ -262,7 +262,7 @@ const ReportHelper = ({
   // }
 
   return (
-    <>
+    <Box>
       {!showReport ? (
         <Menu autoSelect={false}>
           <MenuButton>
@@ -329,7 +329,7 @@ const ReportHelper = ({
           handleReportsubmit={handleReportsubmit}
         />
       )}
-    </>
+    </Box>
   );
 };
 

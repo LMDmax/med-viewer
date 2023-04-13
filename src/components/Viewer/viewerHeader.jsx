@@ -65,7 +65,6 @@ const ViewerHeader = ({
           icon={<BiDotsVertical />}
           variant="unstyled"
           _focus={{ border: "none" }}
-          mr="100px"
         />
         <MenuList
           fontWeight="400"

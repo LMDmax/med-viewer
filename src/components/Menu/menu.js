@@ -52,6 +52,7 @@ const FunctionsMenu = ({
   hideTumor,
   setHideTumor,
   hideLymphocyte,
+  navigatorCounter,
   setHideLymphocyte,
   setToolSelected,
   setHideStroma,
@@ -128,8 +129,8 @@ const FunctionsMenu = ({
   const [timelineData, setTimeLineData] = useState([]);
   useEffect(() => {
     if (!chatFeedBar && selectedOption !== "annotations") {
-      setSelectedOption("slides");
-      // setIsOpen(false);
+      // setSelectedOption("slides");
+      setIsOpen(false);
     }
     if (chatFeedBar) {
       setSelectedOption("messages");
@@ -138,8 +139,8 @@ const FunctionsMenu = ({
   }, [chatFeedBar]);
   useEffect(() => {
     if (toolSelected !== "Filter" && selectedOption !== "annotations") {
-      setSelectedOption("slides");
-      // setIsOpen(false);
+      // setSelectedOption("slides");
+      setIsOpen(false);
     }
     if (toolSelected === "Filter") {
       setSelectedOption("adjustments");
@@ -147,7 +148,11 @@ const FunctionsMenu = ({
     }
   }, [toolSelected]);
 
-
+  useEffect(()=>{
+    if(navigatorCounter> 0){
+      setIsOpen(false);
+    }
+  },[navigatorCounter])
 
   useEffect(async () => {
     if (selectedOption === "timeline") {

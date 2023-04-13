@@ -511,6 +511,7 @@ const LayoutApp = ({
             setHideLymphocyte={setHideLymphocyte}
             setHideStroma={setHideStroma}
             hideStroma={hideStroma}
+            navigatorCounter={navigatorCounter}
             Environment={Environment}
             tilScore={tilScore}
             userInfo={userInfo}
