@@ -12,7 +12,7 @@ import { BiTargetLock } from "react-icons/bi";
 import { ImTarget } from "react-icons/im";
 import IconSize from "../ViewerToolbar/IconSize";
 
-const AiModels = ({ slide, setToolSelected, setModelname, bottomZoomValue,bottombottomZoomValue }) => {
+const AiModels = ({ slide, setToolSelected, setModelname, bottomZoomValue,bottombottomZoomValue, navigatorCounter }) => {
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
   const [TilHover, setTilHover] = useState(false);
   const [TilActiveState, setTilActiveState] = useState(0);
@@ -25,16 +25,27 @@ const AiModels = ({ slide, setToolSelected, setModelname, bottomZoomValue,bottom
     }
   })
 
+  useEffect(()=>{
+    if(navigatorCounter>0){
+      setTilHover(false);
+      if(TilActiveState > 0){
+        setTilActiveState(0);
+      }      
+      setToolSelected("");
+      setModelname("");
+    }
+  },[navigatorCounter]);
+
   const handleKI67 = () => {
     if (slide?.stainType === "IHC" && bottomZoomValue > 39 && slide?.bioMarkerType === "kI67") {
       // console.log("1");
       setModelname("KI67");
-      console.log("1");
+      // console.log("1");
     }
     if(slide?.stainType !== "IHC" || slide?.bioMarkerType !== "kI67" ){
           setToolSelected("KI67Error");
       // console.log("1");
-      console.log("3");
+      // console.log("3");
     setModelname("");
 
       }
@@ -61,7 +72,7 @@ if(bottomZoomValue < 40){
   }
   };
 
-console.log(slide);
+// console.log(slide);
   useEffect(()=>{
     if(slide.stainType ==="H&E"){
         if(TilActiveState / 2 !== 0){

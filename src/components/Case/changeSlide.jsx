@@ -14,6 +14,7 @@ const ChangeSlide = ({
   slideUrl,
   viewerId,
   setIsMultiview,
+  setNavigatorCounter,
   setIsNavigatorActive,
   isNavigatorActive,
   ...restProps
@@ -25,6 +26,7 @@ const ChangeSlide = ({
   const currentIndex = slides?.findIndex(
     (s) => s.awsImageBucketUrl === slideUrl
   );
+  
 
   const maxIndex = slides?.length;
 
@@ -42,6 +44,7 @@ const ChangeSlide = ({
 
   const clickHandler = (position) => {
     const nextSlide = slides?.[currentIndex + position];
+    setNavigatorCounter(prev=>prev+1);
     setFabricOverlayState(updateTool({ tool: "Move" }));
     setFabricOverlayState(
       changeTile({

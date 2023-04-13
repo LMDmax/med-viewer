@@ -49,6 +49,7 @@ function ScreenTools({
   getSynopticReport,
   handleChatFeedbar,
   handleTILFeedBar,
+  navigatorCounter,
   updateSynopticReport,
   setChatHover,
   handleChatFeedBarClose,
@@ -67,7 +68,7 @@ function ScreenTools({
 
   return (
     <Flex px="20px"  flex="1" height="18px" alignItems="center" justifyContent="flex-end">
-      <ImageFilter setToolSelected={setToolSelected} viewerId={viewerId} />
+      <ImageFilter navigatorCounter={navigatorCounter} setToolSelected={setToolSelected} viewerId={viewerId} />
       <DownloadImage setToolSelected={setToolSelected} />
       {application === "hospital" && (
         <ViewerChat
@@ -77,6 +78,7 @@ function ScreenTools({
           chatFeedBar={chatFeedBar}
           handleChatFeedBarClose={handleChatFeedBarClose}
           handleChatFeedbar={handleChatFeedbar}
+          navigatorCounter={navigatorCounter}
         />
       )}
       {/* <Divider orientation="vertical" ml="5px" border="1px solid gray" /> */}
@@ -106,7 +108,7 @@ function ScreenTools({
       ) : null} */}
       {/* <Crop /> */}
       {/* <Share /> */}
-      <Flex borderLeft="2px solid #E4E5E8" ml="18px" pl="15px">
+      {/* <Flex borderLeft="2px solid #E4E5E8" ml="18px" pl="15px">
         <Menu zIndex="5">
           <MenuButton
             as={Button}
@@ -139,7 +141,7 @@ function ScreenTools({
             ) : null}
           </MenuList>
         </Menu>
-      </Flex>
+      </Flex> */}
       <ImageDetails
         caseInfo={caseInfo}
         slideInfo={slide}

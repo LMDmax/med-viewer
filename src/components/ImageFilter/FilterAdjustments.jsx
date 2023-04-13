@@ -27,7 +27,7 @@ const getFilters = (sliderInputs) => {
   return filters;
 };
 
-const FilterAdjustments = ({ viewerId, setToolSelected }) => {
+const FilterAdjustments = ({ viewerId, setToolSelected,toolSelected, navigatorCounter }) => {
   const { fabricOverlayState } = useFabricOverlayState();
   const { viewerWindow } = fabricOverlayState;
   const { viewer } = viewerWindow[viewerId];
@@ -44,6 +44,12 @@ const FilterAdjustments = ({ viewerId, setToolSelected }) => {
   });
 
   useEffect(()=>{
+    if(navigatorCounter>0){
+      setIsActive(false);
+    }
+  },[navigatorCounter])
+
+  useEffect(()=>{
     if(isActive){
       setToolSelected("Filter");
     }
@@ -51,6 +57,13 @@ const FilterAdjustments = ({ viewerId, setToolSelected }) => {
       setToolSelected("")
     }
   },[isActive])
+
+  useEffect(()=>{
+    if(toolSelected === ""){
+      setIsActive(false);
+    }
+    
+  },[toolSelected])
 
   const sliderStateRef = useRef(sliderInputs);
   const modalRef = useRef(null);
@@ -137,7 +150,7 @@ const FilterAdjustments = ({ viewerId, setToolSelected }) => {
             Adjustments
           </ModalHeader>
           <ModalCloseButton _focus={{ border: "none" }} />
-          <ModalBody>
+          <ModalBody >
             <VStack>
               <AdjustmentRow
                 label="Contrast"

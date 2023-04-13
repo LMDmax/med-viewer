@@ -42,6 +42,7 @@ import {
   getViewportBounds,
   getVhutAnalysisData,
   getPPMfromMPP,
+  getZoomValue,
 } from "../../utility";
 import AnnotationChat from "../AnnotationChat/AnnotationChat";
 import ShowMetric from "../Annotations/ShowMetric";
@@ -154,6 +155,7 @@ const ViewerControls = ({
     }
   );
 
+
   // #################### VHUT_ANALYSIS_SUBSCRIPTION ##############
   const { data: vhutSubscriptionData, error: vhutSubscription_error } =
     useSubscription(VHUT_ANALYSIS_SUBSCRIPTION, {
@@ -163,6 +165,7 @@ const ViewerControls = ({
         },
       },
     });
+
 
   const handleZoomIn = () => {
     try {
@@ -210,6 +213,9 @@ const ViewerControls = ({
     annotationChat();
     // annotationClose();
   };
+
+
+  
 
   const handleVhutAnalysis = async () => {
     if (!fabricOverlay || !annotationObject) return;
@@ -365,6 +371,7 @@ const ViewerControls = ({
   // update Annotation in db
   const onUpdateAnnotation = (data) => {
     delete data?.slideId;
+    console.log(data);
     modifyAnnotation({
       variables: { body: { ...data } },
     });
@@ -390,9 +397,9 @@ const ViewerControls = ({
 
   useEffect(() => {
     if (responseData) {
-      console.log("====================================");
-      console.log("analysis...", responseData);
-      console.log("====================================");
+      // console.log("====================================");
+      // console.log("analysis...", responseData);
+      // console.log("====================================");
 
       showAnalysisData(responseData);
     }
@@ -739,13 +746,6 @@ const ViewerControls = ({
     };
   }, [viewer, fabricOverlay]);
 
-  useEffect(() => {
-    updateAnnotation({
-      text: annotationText,
-      title: `${userInfo.firstName} ${userInfo.lastName}`,
-      onUpdateAnnotation,
-    });
-  }, [annotationText]);
 
   // ######################## RUN KI67 ###############################################
   // ######################## RUN KI67 ###############################################
@@ -849,7 +849,7 @@ const ViewerControls = ({
 
 	useEffect(() => {
 		if (vhutSubscriptionData) {
-			console.log("subscribed", vhutSubscriptionData);
+			// console.log("subscribed", vhutSubscriptionData);
 			const {
 				data,
 				status,
@@ -866,9 +866,9 @@ const ViewerControls = ({
 					const circle = new fabric.Circle({
 						left: coord[0] + left,
 						top: coord[1] + top,
-						radius: 3,
-						fill: "#BB4139",
-						stroke: "#BB4139",
+						radius: 9,
+						fill: "red",
+						stroke: "red",
 						strokeWidth: 2,
 					});
 					return circle;
@@ -877,9 +877,9 @@ const ViewerControls = ({
 					const circle = new fabric.Circle({
 						left: coord[0] + left,
 						top: coord[1] + top,
-						radius: 3,
-						fill: "#17478D",
-						stroke: "#17478D",
+						radius: 9,
+						fill: "green",
+						stroke: "green",
 						strokeWidth: 2,
 					});
 					return circle;
@@ -972,6 +972,9 @@ useEffect(() => {
      } 
 }, [analysis_data]);
 
+
+
+
   // console.log(caseInfo);
 	return (
 		<Box>
@@ -1049,7 +1052,7 @@ useEffect(() => {
                 px={1.5}
                 zIndex="1"
               >
-                <ZoomButton viewerId={viewerId} />
+                <ZoomButton setBottomZoomValue={setBottomZoomValue} viewerId={viewerId} />
               </VStack>
             </Flex>
           </Draggable>

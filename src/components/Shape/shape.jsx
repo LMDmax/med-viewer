@@ -107,6 +107,17 @@ const Shape = ({ viewerId }) => {
         return;
       }
 
+      // Define a function to update the width and height of the rectangle after it is rotated
+      function updateRectSize(rect) {
+        const angle = rect.getAngle();
+        const radians = fabric.util.degreesToRadians(angle);
+        const cos = Math.abs(Math.cos(radians));
+        const sin = Math.abs(Math.sin(radians));
+        const newWidth = rect.width * cos + rect.height * sin;
+        const newHeight = rect.width * sin + rect.height * cos;
+        rect.set({ width: newWidth, height: newHeight });
+      }
+
       const zoomLevel = viewer.viewport.getZoom();
 
       // Save starting mouse down coordinates
@@ -144,6 +155,7 @@ const Shape = ({ viewerId }) => {
             height: pointer.y - origY,
           });
           fabricOverlay.fabricCanvas().add(newShape);
+          
           break;
 
         /**

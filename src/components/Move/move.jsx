@@ -46,11 +46,13 @@ function Move({
   hideModification,
   setNewHilData,
   sidebar,
+  navigatorCounter,
   isMultiview,
   hideStroma,
   setIsMultiview,
+  setNavigatorCounter,
   hideLymphocyte,
-  modelName={modelName},
+  modelName,
   isNavigatorActive,
   setIsNavigatorActive,
   setTotalCells,
@@ -94,6 +96,13 @@ function Move({
     setPopup(!popup);
   };
   const iconSize = IconSize();
+
+  useEffect(() => {
+    if (navigatorCounter > 0) {
+      setActiveAnnotations(false);
+      setTypeToolsToggle(false);
+    }
+  }, [navigatorCounter]);
 
   useEffect(() => {
     if (!fabricOverlay || !isActive) return;
@@ -149,6 +158,7 @@ function Move({
           setToolSelected={setToolSelected}
           setIsMultiview={setIsMultiview}
           setIsNavigatorActive={setIsNavigatorActive}
+          navigatorCounter={navigatorCounter}
         />
         {annotations && !isXmlAnnotations ? (
           <Tooltip
@@ -213,38 +223,48 @@ function Move({
           viewerId={viewerId}
           setToolSelected={setToolSelected}
           application={application}
+          navigatorCounter={navigatorCounter}
         />
 
         {enableFilters ? (
           <FilterAdjustments
             setToolSelected={setToolSelected}
             viewerId={viewerId}
+            toolSelected={toolSelected}
+            navigatorCounter={navigatorCounter}
           />
         ) : null}
-        
-          <Til
-            hideLymphocyte={hideLymphocyte}
-            hideStroma={hideStroma}
-            hideTumor={hideTumor}
-            handleTILFeedBar={handleTILFeedBar}
-            viewerIds={viewerIds}
-            hideModification={hideModification}
-            slide={slide}
-            hitTil={hitTil}
-            modelName={modelName}
-            setToolSelected={setToolSelected}
-            mongoId={mongoId}
-            setLoadUI={setLoadUI}
-            setNewHilData={setNewHilData}
-            refreshHil={refreshHil}
-            viewerId={viewerId}
-            setStromaArea={setStromaArea}
-            setTumorArea={setTumorArea}
-            setTilScore={setTilScore}
-            setLymphocyteCount={setLymphocyteCount}
-            pathStroma={pathStroma}
-          />
-        <AiModels      bottomZoomValue={bottomZoomValue} zoomValue={zoomValue} setModelname={setModelname} slide={slide} setToolSelected={setToolSelected} />
+
+        <Til
+          hideLymphocyte={hideLymphocyte}
+          hideStroma={hideStroma}
+          hideTumor={hideTumor}
+          handleTILFeedBar={handleTILFeedBar}
+          viewerIds={viewerIds}
+          hideModification={hideModification}
+          slide={slide}
+          hitTil={hitTil}
+          modelName={modelName}
+          setToolSelected={setToolSelected}
+          mongoId={mongoId}
+          setLoadUI={setLoadUI}
+          setNewHilData={setNewHilData}
+          refreshHil={refreshHil}
+          viewerId={viewerId}
+          setStromaArea={setStromaArea}
+          setTumorArea={setTumorArea}
+          setTilScore={setTilScore}
+          setLymphocyteCount={setLymphocyteCount}
+          pathStroma={pathStroma}
+        />
+        <AiModels
+          bottomZoomValue={bottomZoomValue}
+          zoomValue={zoomValue}
+          setModelname={setModelname}
+          navigatorCounter={navigatorCounter}
+          slide={slide}
+          setToolSelected={setToolSelected}
+        />
         {/* <Mode /> */}
       </Flex>
       <Flex

@@ -50,8 +50,7 @@ const ViewerHeader = ({
       align="center"
       py="1px"
       justify="space-between"
-      zIndex="2"
-      bg="#FCFCFC"
+      // zIndex="2"
     >
       <ChangeSlide
         caseInfo={caseInfo}
@@ -66,6 +65,7 @@ const ViewerHeader = ({
           icon={<BiDotsVertical />}
           variant="unstyled"
           _focus={{ border: "none" }}
+          mr="100px"
         />
         <MenuList
           fontWeight="400"

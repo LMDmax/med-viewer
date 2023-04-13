@@ -518,42 +518,5 @@ import OpenSeadragon from "openseadragon";
         callback();
       };
     },
-    TINT(color) {
-      return function (context, callback) {
-        const imgData = context.getImageData(
-          0,
-          0,
-          context.canvas.width,
-          context.canvas.height
-        );
-        const pixels = imgData.data;
-        for (let i = 0; i < pixels.length; i += 4) {
-          pixels[i] += color[0];
-          pixels[i + 1] += color[1];
-          pixels[i + 2] += color[2];
-        }
-        context.putImageData(imgData, 0, 0);
-        callback();
-      };
-    },
-    SHADOW(blur) {
-      return function (context, callback) {
-        const canvas = context.canvas;
-        const imgData = context.getImageData(0, 0, canvas.width, canvas.height);
-        const pixels = imgData.data;
-        const tempCanvas = document.createElement("canvas");
-        const tempContext = tempCanvas.getContext("2d");
-        tempCanvas.width = canvas.width;
-        tempCanvas.height = canvas.height;
-        tempContext.putImageData(imgData, 0, 0);
-        tempContext.filter = `blur(${blur}px)`;
-        context.shadowColor = "rgba(0, 0, 0, 0.5)";
-        context.shadowBlur = blur;
-        context.drawImage(tempCanvas, 0, 0);
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        context.drawImage(tempCanvas, 0, 0);
-        callback();
-      };
-    },
   };
 })(OpenSeadragon);

@@ -99,8 +99,8 @@ const TypeTools = ({
         boxShadow="1px 1px 2px rgba(176, 200, 214, 0.5)"
         bgColor="#FCFCFC"
       >
-        <Flex h="12px" bgColor="rgba(236, 236, 236, 1)" cursor="crosshair" />
-        <SimpleGrid columns={2} px="8px" py="8px" spacing={2}>
+        <Flex h="12px" bgColor="rgba(236, 236, 236, 1)" cursor="move" />
+        <SimpleGrid columns={2} px="8px" py="8px" spacing={2} cursor="move">
           <Line
             setToolSelected={setToolSelected}
             viewerId={viewerId}

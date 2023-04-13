@@ -50,7 +50,9 @@ const ChangeHelper = ({
             minW={0}
             _focus={{ background: "none" }}
             disabled={disabledLeft}
-            onClick={() => clickHandler(-1)}
+            onClick={() =>{
+              clickHandler(-1)
+            }}
           />
         </Tooltip>
 
@@ -110,7 +112,9 @@ const ChangeHelper = ({
             minW={0}
             _focus={{ background: "none", border: "none" }}
             disabled={disabledRight}
-            onClick={() => clickHandler(1)}
+            onClick={() => {
+              clickHandler(1);
+            }}
           />
         </Tooltip>
       </HStack>

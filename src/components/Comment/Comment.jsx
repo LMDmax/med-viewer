@@ -21,7 +21,13 @@ import TooltipLabel from "../AdjustmentBar/ToolTipLabel";
 import ToolbarButton from "../ViewerToolbar/button";
 import IconSize from "../ViewerToolbar/IconSize";
 
-const CommentBox = ({ userInfo, viewerId, application, setToolSelected }) => {
+const CommentBox = ({
+  userInfo,
+  viewerId,
+  application,
+  setToolSelected,
+  navigatorCounter,
+}) => {
   const [addComments, setAddComments] = useState(false);
   const iconSize = IconSize();
   const toast = useToast();
@@ -249,6 +255,15 @@ const CommentBox = ({ userInfo, viewerId, application, setToolSelected }) => {
       });
     }
   }, [addComments]);
+
+  useEffect(()=>{
+if(navigatorCounter > 0) {
+setAddComments(false);
+setFabricOverlayState(updateTool({ tool: "Move" }));
+
+
+}
+  },[navigatorCounter])
 
   return (
     <Tooltip

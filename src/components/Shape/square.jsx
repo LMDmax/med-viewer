@@ -95,6 +95,7 @@ const Square = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
      * Mouse down
      */
     function handleMouseDown(event) {
+      console.log("isMouseDown");
       if (event.button !== 1 || event.target || !myStateRef.current.isActive) {
         return;
       }
@@ -146,9 +147,6 @@ const Square = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
         origX,
         origY,
       });
-
-      // Add new shape to the canvas
-      // newShape && fabricOverlay.fabricCanvas().add(newShape);
     }
 
     /**

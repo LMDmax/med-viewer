@@ -105,10 +105,11 @@ const QueryChat = ({ setQueryChat, queryChat, userInfo, client }) => {
       mb="10px"
       direction="column"
       position="absolute"
-      right="31vw"
+      right="0"
       top="25%"
       zIndex="1"
       fontSize="12px"
+      border="1px solid gray"
     >
       <Flex
         alignItems="center"

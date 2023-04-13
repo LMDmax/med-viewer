@@ -121,7 +121,6 @@ const Draw = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
     const canvas = fabricOverlay.fabricCanvas();
     const brushWidth = myState.width.pixelWidth;
     const scaleFactor = getScaleFactor(viewer);
-
     canvas.freeDrawingBrush.color = color.hex;
     canvas.freeDrawingBrush.width = brushWidth / scaleFactor;
     canvas.freeDrawingCursor = createFreeDrawingCursor(brushWidth, color.hex);
@@ -140,7 +139,6 @@ const Draw = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
         annotation: message.object,
         onSaveAnnotation,
       });
-// console.log(message);
       setFabricOverlayState(
         addToActivityFeed({
           id: viewerId,

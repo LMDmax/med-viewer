@@ -43,11 +43,11 @@ const Studies = ({ caseInfo, slideInfo }) => {
     "Case Title": caseInfo?.caseName,
     "Case Id" : slideInfo?.case,
     Location: "My Folder/Cases/203-11-22-22-UHID/SLIDE 1",
-    Type: slideInfo?.originalName?.split(".")?.[1],
+    Type: slideInfo?.originalName?.split(".")?.[1]?.toUpperCase(),
     "Orgininal Slide Name": slideInfo?.originalName,
     Size: "100 mb",
     "Stain Type": slideInfo?.stainType,
-    "Marker Type" : slideInfo.bioMarkerTpe? slideInfo.bioMarkerTpe : "-",
+    "Marker Type" : slideInfo.bioMarkerType? slideInfo.bioMarkerType : "-",
     Dimension: "1280 x 720 px",
     Resolution: "148 dpi",
     Scanner: "NanoZoomer S360",
@@ -60,7 +60,7 @@ const Studies = ({ caseInfo, slideInfo }) => {
     <Scrollbars
       style={{
         width: "100%",
-        height: "100%",
+        height: "85vh",
         borderWidth: "0px",
       }}
       renderThumbVertical={(props) => (

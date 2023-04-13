@@ -44,7 +44,7 @@ const AdjustmentRow = ({
     <HStack w="100%" justify="space-between" spacing={4}>
       <Text flex="2">{label}</Text>
       <Slider
-        flex="4"
+        flex="3"
         defaultValue={defaultValue}
         min={min}
         max={max}
@@ -61,8 +61,8 @@ const AdjustmentRow = ({
         />
       </Slider>
       <Box
-        flex="1"
-        minW="80px"
+        // flex="1"
+        minW="20px"
         bg="#F6F6F6"
         fontSize="14px"
         py={1}

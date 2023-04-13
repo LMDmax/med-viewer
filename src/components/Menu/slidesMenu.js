@@ -54,7 +54,7 @@ const SlidesMenu = ({
       >
         Slide Navigation
       </Text>
-      <Flex w="100%" h="100%" alignItems="center" direction="column">
+     <Flex w="100%" h="100vh" alignItems="center" direction="column"> 
         <Text mb="1vh" fontSize={10}>{`${curIndex + 1} of ${
           slides?.length
         } slides`}</Text>

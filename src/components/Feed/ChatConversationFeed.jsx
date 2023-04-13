@@ -486,7 +486,7 @@ const ChatConversationFeed = ({
   return (
     <>
       <ScrollBar>
-        <Box id="message" h="100%" paddingTop="40px" px="22px">
+        <Box id="message" h="72vh" paddingTop="40px" px="22px">
           {isConversationLoading && pageNumber > 1 ? (
             <Spinner />
           ) : (

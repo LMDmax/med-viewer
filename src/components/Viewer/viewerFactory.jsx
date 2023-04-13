@@ -33,6 +33,9 @@ function ViewerFactory({
   const { fabricOverlayState } = useFabricOverlayState();
   const { viewerWindow, sync } = fabricOverlayState;
 
+console.log(viewerWindow);
+
+
   useEffect(() => {
     if (!sync) return;
 

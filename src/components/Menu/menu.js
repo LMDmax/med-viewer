@@ -41,7 +41,7 @@ import Timeline from "../Timeline/Timeline";
 import ChatFeed from "../Feed/ChatFeed";
 import Adjustments from "../Adjustments/Adjustments";
 
-import {BsSliders} from "react-icons/bs"
+import { BsSliders } from "react-icons/bs";
 import IconSize from "../ViewerToolbar/IconSize";
 
 const FunctionsMenu = ({
@@ -97,10 +97,11 @@ const FunctionsMenu = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
-  const [selectedOption, setSelectedOption] = useState("slides");
   const { fabricOverlayState } = useFabricOverlayState();
   const { viewerWindow } = fabricOverlayState;
-  const { tile, slideId, viewer } = viewerWindow[viewerId];
+  const { tile, slideId, viewer, fabricOverlay } = viewerWindow[viewerId];
+  const [activeObject, setActiveObject] = useState();
+  const [selectedOption, setSelectedOption] = useState("");
   const [reportData, setReportData] = useState({
     clinicalStudy: "",
     grossDescription: "",
@@ -126,8 +127,9 @@ const FunctionsMenu = ({
   const [slideData, setSlideData] = useState(null);
   const [timelineData, setTimeLineData] = useState([]);
   useEffect(() => {
-    if (!chatFeedBar) {
+    if (!chatFeedBar && selectedOption !== "annotations") {
       setSelectedOption("slides");
+      // setIsOpen(false);
     }
     if (chatFeedBar) {
       setSelectedOption("messages");
@@ -135,14 +137,17 @@ const FunctionsMenu = ({
     }
   }, [chatFeedBar]);
   useEffect(() => {
-    if (toolSelected !== "Filter") {
+    if (toolSelected !== "Filter" && selectedOption !== "annotations") {
       setSelectedOption("slides");
+      // setIsOpen(false);
     }
     if (toolSelected === "Filter") {
       setSelectedOption("adjustments");
       setIsOpen(true);
     }
   }, [toolSelected]);
+
+
 
   useEffect(async () => {
     if (selectedOption === "timeline") {
@@ -158,7 +163,6 @@ const FunctionsMenu = ({
         setTimeLineData(sortedDataByTime);
       }
     }
-    // console.log("clicccccccccccccccccccccccccccccck");
   }, [selectedOption]);
 
   useEffect(() => {
@@ -175,13 +179,29 @@ const FunctionsMenu = ({
       }
     }
   }, [searchSelectedData]);
+
+  useEffect(() => {
+    const canvas = fabricOverlay?.fabricCanvas();
+    canvas?.on("mouse:down", (e) => {
+      const clickedObject = canvas?.findTarget(e.e);
+      setActiveObject(clickedObject); // You can access the details of the clicked object here
+    });
+  }, [fabricOverlay]);
+
+useEffect(()=>{
+  if(activeObject?.type!=="textbox" && activeObject) {
+    setIsOpen(true);
+    setSelectedOption("annotations");
+  // console.log(activeObject);
+  }
+},[activeObject])
   return (
     <Box
       pos="absolute"
       right={0}
       background="rgba(217, 217, 217, 0.3)"
       zIndex={10}
-      h={ifWidthLessthan1920 ? "calc(100vh - 80px)" : "calc(100vh - 10.033vh)"}
+      h={ifWidthLessthan1920 ? "calc(100vh - 92px)" : "calc(100vh - 10.033vh)"}
     >
       <motion.div
         animate={{
@@ -196,17 +216,18 @@ const FunctionsMenu = ({
             : "70px",
         }}
         style={{
-          background: "rgba(217, 217, 217, 0.5)",
-          overflow: "hidden",
+          background: "#FCFCFC",
+          overflowY: isOpen ? "scroll" : "hidden",
+          overflowX: "hidden",
           whiteSpace: "nowrap",
           position: "absolute",
-          right: "0",
-          height: "95%",
+          right: isOpen ? "0" : "0px",
+          height: "97%",
           top: "0",
         }}
       >
         <Flex>
-          <Flex direction="column">
+          <Flex direction="column" h="fit-content">
             <Button
               onClick={() => setIsOpen(!isOpen)}
               w="70px"
@@ -217,7 +238,7 @@ const FunctionsMenu = ({
             >
               {isOpen ? ">>" : "<<"}
             </Button>
-            <Tooltip label="View slides">
+            <Tooltip label="View slides" placement='left'>
               <Button
                 height="73px"
                 w="73px"
@@ -249,7 +270,7 @@ const FunctionsMenu = ({
                 </VStack>
               </Button>
             </Tooltip>
-            <Tooltip label="View timeline">
+            <Tooltip label="View timeline" placement='left'>
               <Button
                 height="73px"
                 w="73px"
@@ -281,7 +302,7 @@ const FunctionsMenu = ({
                 </VStack>
               </Button>
             </Tooltip>
-            <Tooltip label="View annotations">
+            <Tooltip label="View annotations" placement='left'>
               <Button
                 height="73px"
                 w="73px"
@@ -313,14 +334,17 @@ const FunctionsMenu = ({
                 </VStack>
               </Button>
             </Tooltip>
-            <Tooltip label="View comments">
+            <Tooltip label="View comments" placement='left'>
               <Button
                 height="73px"
                 w="73px"
                 borderRadius={0}
                 background="#F6F6F6"
                 box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-                onClick={() => setSelectedOption("comments")}
+                onClick={() => {
+                  setSelectedOption("comments");
+                  setIsOpen(true);
+                }}
               >
                 <VStack>
                   {selectedOption === "comments" ? (
@@ -342,7 +366,7 @@ const FunctionsMenu = ({
                 </VStack>
               </Button>
             </Tooltip>
-            <Tooltip label="View slide info">
+            <Tooltip label="View slide info" placement='left'>
               <Button
                 height="73px"
                 w="73px"
@@ -374,7 +398,7 @@ const FunctionsMenu = ({
                 </VStack>
               </Button>
             </Tooltip>
-            <Tooltip label="Report slide">
+            <Tooltip label="Report slide" placement='left'>
               <Button
                 height="73px"
                 w="73px"
@@ -407,7 +431,7 @@ const FunctionsMenu = ({
               </Button>
             </Tooltip>
             {chatFeedBar ? (
-              <Tooltip label=" View Conversation">
+              <Tooltip label=" View Conversation" placement='left'>
                 <Button
                   height="73px"
                   w="73px"
@@ -437,49 +461,46 @@ const FunctionsMenu = ({
                 </Button>
               </Tooltip>
             ) : null}
-            {toolSelected === "Filter" ? 
-             <Tooltip label=" Adjustments">
-             <Button
-               height="73px"
-               w="73px"
-               borderRadius={0}
-               background="#F6F6F6"
-               box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-               onClick={() => setSelectedOption("adjustments")}
-             >
-               <VStack>
-                 {selectedOption === "adjustments" ? (
-                  //  <adjustmentIconSelected />
-                  // <MessagesIconSelected />
-                  // <HiOutlineAdjustmentsHorizontal />
-                  <BsSliders w="20px" h="30px" color="#3B5D7C"/>
-
-                   ) : (
-                    // <adjustmentIconSelected />
-                    <BsSliders w="20px" h="30px" color="black"/>
-                 )}
-                 <Text
-                   fontFamily="Inter"
-                   fontStyle="normal"
-                   fontWeight="400"
-                   fontSize="10px"
-                   lineHeight="12px"
-                   letterSpacing="0.0025em"
-                   color={selectedOption === "report" ? "#3B5D7C" : "fff"}
-                 >
-                   Adjustments
-                 </Text>
-               </VStack>
-             </Button>
-           </Tooltip> : null}
+            {toolSelected === "Filter" ? (
+              <Tooltip label=" Adjustments" placement='left'>
+                <Button
+                  height="73px"
+                  w="73px"
+                  borderRadius={0}
+                  background="#F6F6F6"
+                  box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
+                  onClick={() => setSelectedOption("adjustments")}
+                >
+                  <VStack>
+                    {selectedOption === "adjustments" ? (
+                      //  <adjustmentIconSelected />
+                      // <MessagesIconSelected />
+                      // <HiOutlineAdjustmentsHorizontal />
+                      <BsSliders size="28px" color="#3B5D7C" />
+                    ) : (
+                      // <adjustmentIconSelected />
+                      <BsSliders size="28px" color="black" />
+                    )}
+                    <Text
+                      fontFamily="Inter"
+                      fontStyle="normal"
+                      fontWeight="400"
+                      fontSize="10px"
+                      lineHeight="12px"
+                      letterSpacing="0.0025em"
+                      color={selectedOption === "report" ? "#3B5D7C" : "fff"}
+                    >
+                      Adjustments
+                    </Text>
+                  </VStack>
+                </Button>
+              </Tooltip>
+            ) : null}
           </Flex>
           <Flex
             w="100%"
-            h={
-              ifWidthLessthan1920
-                ? "calc(100vh - 92px)"
-                : "calc(100vh - 10.033vh)"
-            }
+            position="relative"
+            h={ifWidthLessthan1920 ? "100%" : "calc(100vh - 10.033vh)"}
           >
             {selectedOption === "slides" ? (
               <SlidesMenu
@@ -499,10 +520,12 @@ const FunctionsMenu = ({
                 isXmlAnnotations={isXmlAnnotations}
                 viewerId={viewerId}
                 tumorArea={tumorArea}
+                activeObject={activeObject}
                 hideTumor={hideTumor}
                 setHideTumor={setHideTumor}
                 hideLymphocyte={hideLymphocyte}
                 setHideLymphocyte={setHideLymphocyte}
+                setSelectedOption={setSelectedOption}
                 setHideStroma={setHideStroma}
                 hideStroma={hideStroma}
                 stromaArea={stromaArea}
@@ -598,7 +621,13 @@ const FunctionsMenu = ({
                 Environment={Environment}
                 addUsersToCase={addUsersToCase}
               />
-            ) : selectedOption === "adjustments" ? (
+            ) : // <Adjustments
+            //   setSelectedOption={setSelectedOption}
+            //   setToolSelected={setToolSelected}
+            //   viewer={viewer}
+            //   setIsOpen={setIsOpen}
+            // />
+            selectedOption === "adjustments" ? (
               <Adjustments
                 setSelectedOption={setSelectedOption}
                 setToolSelected={setToolSelected}

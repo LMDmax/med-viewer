@@ -142,6 +142,7 @@ const ActivityFeed = ({
   setHideStroma,
   hideStroma,
   handlePopup,
+  setSelectedOption,
   popup,
   tumorArea,
   stromaArea,
@@ -167,9 +168,9 @@ const ActivityFeed = ({
   ] = useMutation(UPDATE_ANNOTATION);
 
   const onUpdateAnnotation = (data) => {
-    // console.log("====================================");
-    // console.log("activity feed update");
-    // console.log("====================================");
+    console.log("====================================");
+    console.log("activity feed update");
+    console.log("====================================");
     delete data?.slideId;
     modifyAnnotation({
       variables: { body: { ...data } },
@@ -206,17 +207,28 @@ const ActivityFeed = ({
     onClose: onDeleteConfirmationClose,
     onOpen: onDeleteConfirmationOpen,
   } = useDisclosure();
-
+  
   const [annotationObject, setAnnotationObject] = useState(null);
   const [annotationDetails, setAnnotationsDetails] = useState(null);
   const [ifScreenlessthan1660px] = useMediaQuery("(max-width:1660px)");
   const [ki67Feed, setKi67Feed] = useState({});
   const [activeTab, setActiveTab] = useState("");
-
+  const [state, setState] = useState({});
+  
   useEffect(() => {
     if (scrollbar.current) scrollbar.current.scrollToBottom();
     if (activityFeed.length === 0) setAnnotationsDetails(null);
   }, [activityFeed]);
+
+  // console.log(activeObject);
+  
+
+  useEffect(() => {
+    function handleMouseUp(event) {
+     
+    }
+  }, [activeObject, state]);
+
 
   useEffect(() => {
     if (isTILBoxVisible) {
@@ -238,6 +250,7 @@ const ActivityFeed = ({
   }, [tile]);
 
   const handleClick = (feed, index) => {
+    console.log(feed,index);
     setSelectedItemIndex(index);
     if (selectedItemIndex === index) {
       setSelectedItemIndex("");
@@ -264,7 +277,6 @@ const ActivityFeed = ({
       } else {
         viewer.viewport.zoomTo(zoomLevel);
       }
-
       // get viewport point of middle of selected annotation
       const vpoint = viewer.viewport.imageToViewportRectangle(
         left + width / 2,
@@ -272,7 +284,6 @@ const ActivityFeed = ({
       );
       viewer.viewport.panTo(vpoint);
     }
-
     canvas.requestRenderAll();
     setAnnotationsDetails(feed.object);
   };
@@ -316,14 +327,16 @@ const ActivityFeed = ({
     }
   }, [isTILBoxVisible, annotationDetails]);
 
+
+
+
+
   return (
     <Flex
       as="section"
       w="100%"
-      // h={ifScreenlessthan1660px ? "calc(100% - 15px)" : "97%"}
-      h="100%"
+      h="85vh"
       pb="30px"
-      // padding={0}
       margin={0}
       right="0"
       zIndex={2}
@@ -371,7 +384,7 @@ const ActivityFeed = ({
                         _focus={{ outline: "none" }}
                         style={{
                           fontWeight:
-                            selectedItemIndex === index ? "bold" : "normal",
+                            selectedItemIndex === index || feed.object.hash === activeObject?.hash ? "bold" : "normal",
                         }}
                       >
                         <Flex
@@ -663,7 +676,7 @@ const ActivityFeed = ({
                                         alignItems="center"
                                         w="100%"
                                       >
-                                        <Circle size="10px" bg="#BB4139" />
+                                        <Circle size="10px" bg="red" />
                                         <Text ml="5px">Positive Cells</Text>
                                       </Flex>
                                       <Flex
@@ -672,7 +685,7 @@ const ActivityFeed = ({
                                         alignItems="center"
                                         w="100%"
                                       >
-                                        <Circle size="10px" bg="#17478D" />
+                                        <Circle size="10px" bg="green" />
 
                                         <Text ml="5px">Negative Cells</Text>
                                       </Flex>

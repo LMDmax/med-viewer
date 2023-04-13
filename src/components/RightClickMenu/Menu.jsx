@@ -33,7 +33,7 @@ function DisplayMenu({ setZoom }) {
           left="210px"
           bottom="39px"
           borderRadius={0}
-          bgColor="#FCFCFC"
+          zIndex="99"
           p={0}
         >
           <MenuGroup title="Zoom level" fontWeight={400}>
@@ -200,7 +200,7 @@ export function CustomMenu({
               _hover={{ bgColor: "#DEDEDE" }}
               onClick={() => {
                 setModelname("Morphometry");
-                console.log("ki67 not runnnnn");
+                // console.log("ki67 not runnnnn");
                 closeMenu();
               }}
               closeOnSelect
@@ -216,7 +216,7 @@ export function CustomMenu({
                 onClick={() => {
                   // runKI67();
                 setModelname("KI67");
-                  console.log("ki67 runnnnn");
+                  // console.log("ki67 runnnnn");
                   closeMenu();
                 }}
                 closeOnSelect

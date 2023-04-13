@@ -10,6 +10,7 @@ const ViewerChat = ({
   setChatHover,
   chatFeedBar,
   setToolSelected,
+  navigatorCounter,
   chatHover,
 }) => {
 
@@ -23,6 +24,14 @@ const ViewerChat = ({
       setToolSelected("Chat");
     }
   }, [chatHover]);
+
+  useEffect(()=>{
+if(navigatorCounter > 0){
+  handleChatFeedBarClose();
+  setToolSelected("");
+
+}
+  },[navigatorCounter])
   return (
     <>
       <Tooltip

@@ -253,7 +253,6 @@ const CommentFeed = ({
       margin={0}
       right="0"
       zIndex={2}
-      background="#FCFCFC"
       boxShadow="-1px 0px 2px rgba(176, 200, 214, 0.3)"
       direction="column"
       pr="2px"

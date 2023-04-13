@@ -99,14 +99,14 @@ const Line = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
       // Create new Shape instance
       let newShape = null;
       const shapeOptions = {
-        color: myStateRef.current.color.hex,
+        color: "black",
       };
 
       // Stroke fill
       const scaleFactor = getScaleFactor(viewer);
 
       const fillProps = {
-        stroke: myStateRef.current.color.hex,
+        stroke: "black",
         strokeWidth: 2 / scaleFactor,
         strokeUniform: true,
       };

@@ -45,6 +45,7 @@ function AdjustmentBar({
   isNavigatorActive,
   setIsNavigatorActive,
   isMultiview,
+  navigatorCounter,
   toolSelected,
   setIsMultiview,
   setTotalCells,
@@ -65,6 +66,7 @@ function AdjustmentBar({
   modelName,
   questions,
   hideModification,
+  setNavigatorCounter,
   app,
   setModelname,
   setSlideId,
@@ -92,6 +94,10 @@ function AdjustmentBar({
     // showSidebar();
     navigate("/dashboard/cases");
   };
+
+  useEffect(()=>{
+    localStorage.setItem("page","viewer");
+  },[])
   return (
     <Flex
       className="adjustmentbar"
@@ -129,12 +135,14 @@ function AdjustmentBar({
         application={application}
         userInfo={userInfo}
         sidebar={sidebar}
+        navigatorCounter={navigatorCounter}
         hideTumor={hideTumor}
         hideStroma={hideStroma}
         setModelname={setModelname}
         toolSelected={toolSelected}
         hideLymphocyte={hideLymphocyte}
         slide={slide}
+        setNavigatorCounter={setNavigatorCounter}
         mongoId={mongoId}
         modelName={modelName}
         refreshHil={refreshHil}
@@ -181,6 +189,7 @@ function AdjustmentBar({
         chatHover={chatHover}
         chatFeedBar={chatFeedBar}
         handleFeedBar={handleFeedBar}
+        navigatorCounter={navigatorCounter}
         handleChatFeedbar={handleChatFeedbar}
         handleChatFeedBarClose={handleChatFeedBarClose}
         handleReport={handleReport}

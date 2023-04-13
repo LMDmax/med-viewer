@@ -85,7 +85,8 @@ const ZoomSlider = ({ viewerId , setBottomZoomValue}) => {
 
 useEffect(()=>{
   setBottomZoomValue(zoomValue);
-
+  // console.log(zoomValue);
+// localStorage.setItem("zoom",zoomValue);
 },[zoomValue])
 
   useEffect(() => {

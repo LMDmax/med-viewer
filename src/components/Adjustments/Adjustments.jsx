@@ -32,7 +32,7 @@ const Adjustments = ({ setIsOpen, viewer, setToolSelected, setSelectedOption }) 
     // setIsOpen(false);
     // if (sliderStateRef.current) setSliderInputs(sliderStateRef.current);
     // onClose();
-    // setToolSelected("");
+    setToolSelected("");
     setSelectedOption("slides");
   };
 

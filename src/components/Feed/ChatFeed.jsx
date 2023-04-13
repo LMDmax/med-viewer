@@ -87,7 +87,7 @@ function ChatFeed({
   // });
   const caseNo = caseInfo._id.slice(0, 5);
   return (
-    <Box w="100%" minW="100%" zIndex={2} background="#FCFCFC" height="100%">
+    <Box w="100%" minW="100%" zIndex={2}>
       <Flex
         px="12px"
         justifyContent="space-between"

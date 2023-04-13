@@ -11,6 +11,8 @@ const Multiview = ({
   viewerId,
   isMultiview,
   setToolSelected,
+  navigatorCounter,
+  setNavigatorCounter,
   setIsMultiview,
   setIsNavigatorActive,
 }) => {
@@ -20,21 +22,30 @@ const Multiview = ({
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
   const [state, setState] = useState(false);
 
-  const handleClick = () => {
-    setIsNavigatorActive(false);
-    setIsMultiview((state) => !state);
-  };
+ 
 
   useEffect((()=>{
     if(state){
       // console.log("sdsds");
+      setIsNavigatorActive(false);
+      setIsMultiview(true);
       setToolSelected("Multiview");
     }
     else{
       setToolSelected("");
-
+      setState(false);
+      setIsMultiview(false);
     }
   }),[state])
+
+  console.log(state);
+
+  useEffect(()=>{
+    if(navigatorCounter > 0){
+      setState(false);
+    }
+  },[navigatorCounter])
+
 
   return (
     <Tooltip
@@ -71,7 +82,7 @@ const Multiview = ({
         backgroundColor={isMultiview ? "#E4E5E8" : "#F8F8F5"}
         outline={isMultiview ? " 0.5px solid rgba(0, 21, 63, 1)" : ""}
         onClick={() => {
-          handleClick();
+          // handleClick();
           setState(!state);
         }}
         mr="7px"

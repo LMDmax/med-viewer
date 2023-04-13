@@ -5,8 +5,10 @@ import ToolbarButton from "../ViewerToolbar/button";
 import "./openseadragon-filtering";
 import { useFabricOverlayState } from "../../state/store";
 import TooltipLabel from "../AdjustmentBar/ToolTipLabel";
+import { useEffect } from "react";
+import { IoNavigate } from "react-icons/io5";
 
-const ImageFilter = ({ viewerId, setToolSelected }) => {
+const ImageFilter = ({ viewerId, setToolSelected, navigatorCounter }) => {
   const { fabricOverlayState } = useFabricOverlayState();
   const { viewerWindow } = fabricOverlayState;
   const { viewer, fabricOverlay } = viewerWindow[viewerId];
@@ -28,12 +30,14 @@ const ImageFilter = ({ viewerId, setToolSelected }) => {
   };
 
   const reinhardFilter = (context, callback) => {
+    console.log(context);
     const imgData = context.getImageData(
       0,
       0,
       context.canvas.width,
       context.canvas.height
     );
+    console.log(imgData);
     const pixels = imgData.data;
 
     // let perc = []
@@ -86,7 +90,7 @@ const ImageFilter = ({ viewerId, setToolSelected }) => {
   const handleClick = () => {
     if (!viewer) return;
     if (isActive) {
-      setToolSelected("Normalisation");
+      setToolSelected("");
       viewer.setFilterOptions(null);
       viewer.viewport.zoomBy(1.01);
       setIsActive(false);
@@ -101,7 +105,13 @@ const ImageFilter = ({ viewerId, setToolSelected }) => {
       setIsActive(true);
     }
   };
-
+useEffect(()=>{
+if(navigatorCounter > 0){
+  setIsActive(false);
+  viewer.setFilterOptions(null);
+  viewer.viewport.zoomBy(1.01);
+}
+},[navigatorCounter])
   return (
     <ToolbarButton
       icon={<BsFilterSquare color={isActive ? "#3B5D7C" : "#151C25"} />}

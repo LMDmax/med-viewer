@@ -81,12 +81,14 @@ const LayoutApp = ({
   const [tumorArea, setTumorArea] = useState();
   const [stromaArea, setStromaArea] = useState();
   const [lymphocyteCount, setLymphocyteCount] = useState();
+  const [navigatorCounter,setNavigatorCounter] = useState(0);
 
   const [ifBiggerScreen] = useMediaQuery("(min-width:1920px)");
   const [currentViewer, setCurrentViewer] = useState(
     viewerIds?.[0]?._id || viewerIds?.[0]?.slideId
   );
 
+  
   // console.log('slideInfo',refreshHil);
   const [showAnnotationsBar, setShowAnnotationsBar] = useState(false);
   const [showFeedBar, setShowFeedBar] = useState(false);
@@ -102,23 +104,25 @@ const LayoutApp = ({
   const [hideLymphocyte, setHideLymphocyte] = useState(false);
   const [annotationObject, setAnnotationObject] = useState("");
   const [toolSelected, setToolSelected] = useState("");
-  const [bottomZoomValue, setBottomZoomValue] = useState('');
-
+  const [bottomZoomValue, setBottomZoomValue] = useState("");
+  
   // xml annotations check
   const [isXmlAnnotations, setIsXmlAnnotations] = useState(false);
   const [loadUI, setLoadUI] = useState(true);
   const [unit, setUnit] = useState();
-
+  
   const [modelName, setModelname] = useState("");
-
+  
   const { tile, viewer } = viewerWindow[currentViewer];
-  const value = getZoomValue(viewer);
-  // console.log(value);
 
+
+
+  
   useEffect(() => {
     const UnitStore = localStorage.getItem("unit");
     setUnit(UnitStore);
 },[bottomZoomValue]);
+
 
 
   // console.log(modelName);
@@ -303,6 +307,8 @@ const LayoutApp = ({
           toolSelected={toolSelected}
           setToolSelected={setToolSelected}
           refreshHil={refreshHil}
+          navigatorCounter={navigatorCounter}
+          setNavigatorCounter={setNavigatorCounter}
           pathStroma={pathStroma}
           hitTil={hitTil}
           zoomValue={zoomValue}
@@ -555,6 +561,7 @@ const LayoutApp = ({
                   caseInfo={caseInfo}
                   slides={slides}
                   viewerId={currentViewer}
+                  setNavigatorCounter={setNavigatorCounter}
                   slideUrl={tile}
                   setIsMultiview={setIsMultiview}
                   setIsNavigatorActive={setIsNavigatorActive}
