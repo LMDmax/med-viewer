@@ -116,7 +116,7 @@ const Line = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
         ...shapeOptions,
         ...fillProps,
       });
-      // canvas.add(newShape);
+       canvas.add(newShape);
 
       setMyState({
         ...myStateRef.current,
