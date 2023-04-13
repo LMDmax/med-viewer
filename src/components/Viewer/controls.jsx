@@ -68,6 +68,7 @@ const ViewerControls = ({
   application,
   setLoadUI,
   zoomValue,
+  navigatorCounter,
   setZoomValue,
   client2,
   mentionUsers,
@@ -1052,7 +1053,7 @@ useEffect(() => {
                 px={1.5}
                 zIndex="1"
               >
-                <ZoomButton setBottomZoomValue={setBottomZoomValue} viewerId={viewerId} />
+                <ZoomButton navigatorCounter={navigatorCounter} setBottomZoomValue={setBottomZoomValue} viewerId={viewerId} />
               </VStack>
             </Flex>
           </Draggable>

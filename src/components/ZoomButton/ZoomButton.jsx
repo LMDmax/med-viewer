@@ -7,7 +7,7 @@ import {
   zoomToLevel,
 } from "../../utility/utility";
 
-const ZoomButton = ({ viewerId, setBottomZoomValue }) => {
+const ZoomButton = ({ viewerId, setBottomZoomValue, navigatorCounter }) => {
   const { fabricOverlayState } = useFabricOverlayState();
   const { viewerWindow } = fabricOverlayState;
   const { viewer, fabricOverlay } = viewerWindow[viewerId];
@@ -55,6 +55,12 @@ const ZoomButton = ({ viewerId, setBottomZoomValue }) => {
 		setZoomButtonValue("")
 	  }
   });
+
+  useEffect(()=>{
+    if(navigatorCounter > 0){
+    setZoomButtonValue("")  
+    }
+  },[navigatorCounter])
 
   return (
     <>

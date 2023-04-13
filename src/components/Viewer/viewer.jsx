@@ -53,6 +53,7 @@ function Viewer({
   runAiModel,
   userInfo,
   enableAI,
+  navigatorCounter,
   bottomZoomValue,
   zoomValue,
   setZoomValue,
@@ -147,6 +148,7 @@ function Viewer({
           runAiModel={runAiModel}
           setLoadUI={setLoadUI}
           client2={client2}
+          navigatorCounter={navigatorCounter}
           setModelname={setModelname}
           setZoomValue={setZoomValue}
           zoomValue={zoomValue}

@@ -37,6 +37,7 @@ const ViewerContainer = ({
 	client2,
 	mentionUsers,
 	caseInfo,
+  navigatorCounter,
 	addUsersToCase,
 	Environment,
 	accessToken,
@@ -105,6 +106,7 @@ const ViewerContainer = ({
       setBottomZoomValue={setBottomZoomValue}
       runAiModel={runAiModel}
 			setLoadUI={setLoadUI}
+      navigatorCounter={navigatorCounter}
       setToolSelected={setToolSelected}
 			mentionUsers={mentionUsers}
 			caseInfo={caseInfo}

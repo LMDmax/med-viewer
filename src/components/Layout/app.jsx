@@ -81,14 +81,13 @@ const LayoutApp = ({
   const [tumorArea, setTumorArea] = useState();
   const [stromaArea, setStromaArea] = useState();
   const [lymphocyteCount, setLymphocyteCount] = useState();
-  const [navigatorCounter,setNavigatorCounter] = useState(0);
+  const [navigatorCounter, setNavigatorCounter] = useState(0);
 
   const [ifBiggerScreen] = useMediaQuery("(min-width:1920px)");
   const [currentViewer, setCurrentViewer] = useState(
     viewerIds?.[0]?._id || viewerIds?.[0]?.slideId
   );
 
-  
   // console.log('slideInfo',refreshHil);
   const [showAnnotationsBar, setShowAnnotationsBar] = useState(false);
   const [showFeedBar, setShowFeedBar] = useState(false);
@@ -105,25 +104,20 @@ const LayoutApp = ({
   const [annotationObject, setAnnotationObject] = useState("");
   const [toolSelected, setToolSelected] = useState("");
   const [bottomZoomValue, setBottomZoomValue] = useState("");
-  
+
   // xml annotations check
   const [isXmlAnnotations, setIsXmlAnnotations] = useState(false);
   const [loadUI, setLoadUI] = useState(true);
   const [unit, setUnit] = useState();
-  
+
   const [modelName, setModelname] = useState("");
-  
+
   const { tile, viewer } = viewerWindow[currentViewer];
 
-
-
-  
   useEffect(() => {
     const UnitStore = localStorage.getItem("unit");
     setUnit(UnitStore);
-},[bottomZoomValue]);
-
-
+  }, [bottomZoomValue]);
 
   // console.log(modelName);
 
@@ -138,9 +132,9 @@ const LayoutApp = ({
     case "TIL":
       runAiModel = "TIL";
       break;
-      case "Morphometry":
-        runAiModel = "Morphometry";
-        break;
+    case "Morphometry":
+      runAiModel = "Morphometry";
+      break;
     default:
       runAiModel = "";
       break;
@@ -227,12 +221,13 @@ const LayoutApp = ({
     case "TILError":
       returnText = "TIL analysis can only be run on H&E slides.";
       break;
-      case "TILLoading":
+    case "TILLoading":
       returnText = "TIL will enable after sometime.";
       break;
 
     case "KI67Error":
-      returnText = "KI67 analysis can only be run on stain type IHC and marker type must be KI67 .";
+      returnText =
+        "KI67 analysis can only be run on stain type IHC and marker type must be KI67 .";
       break;
     case "MorphometrySlideIssue":
       returnText = "Morphometry analysis can only be run on H&E slides.";
@@ -243,9 +238,9 @@ const LayoutApp = ({
     case "KI67Analysed":
       returnText = "KI67 analysis done on selected annotation";
       break;
-      case "FilterSaved":
-        returnText = "Adjusment saved successfully ";
-        break;
+    case "FilterSaved":
+      returnText = "Adjusment saved successfully ";
+      break;
 
     default:
       returnText = "";
@@ -487,6 +482,7 @@ const LayoutApp = ({
               setModelname={setModelname}
               runAiModel={runAiModel}
               setToolSelected={setToolSelected}
+              navigatorCounter={navigatorCounter}
               mentionUsers={mentionUsers}
               addUsersToCase={addUsersToCase}
               Environment={Environment}
@@ -583,12 +579,12 @@ const LayoutApp = ({
             </Flex>
             <Box pos="absolute" right="0" me="30px">
               <Flex>
-                <Text  mr="5px">{bottomZoomValue}X</Text>
+                <Text mr="5px">{bottomZoomValue}X</Text>
                 <Image
                   src="https://i.ibb.co/7CtYTC2/bottom-Bar.png"
                   alt="Bottom Bar"
                 />
-                <Text  ml="5px">{unit}</Text>
+                <Text ml="5px">{unit}</Text>
               </Flex>
             </Box>
           </Flex>

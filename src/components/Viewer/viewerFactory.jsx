@@ -10,6 +10,7 @@ function ViewerFactory({
   enableAI,
   caseInfo,
   runAiModel,
+  navigatorCounter,
   userInfo,
   setToolSelected,
   bottomZoomValue,
@@ -102,6 +103,7 @@ console.log(viewerWindow);
             setLoadUI={setLoadUI}
             bottomZoomValue={bottomZoomValue}
             client2={client2}
+            navigatorCounter={navigatorCounter}
             setBottomZoomValue={setBottomZoomValue}
             mentionUsers={mentionUsers}
             caseInfo={caseInfo}
