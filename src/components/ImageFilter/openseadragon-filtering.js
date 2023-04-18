@@ -258,6 +258,8 @@ import OpenSeadragon from "openseadragon";
           context.canvas.width,
           context.canvas.height
         );
+        // console.log(imgData);
+        console.log("cons",context);
         const pixels = imgData.data;
         for (let i = 0; i < pixels.length; i += 4) {
           const r = pixels[i];

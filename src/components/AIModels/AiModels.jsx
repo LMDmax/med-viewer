@@ -4,143 +4,166 @@ import {
   Text,
   Tooltip,
   Box,
+  Flex,
   useMediaQuery,
   useToast,
+  Image,
 } from "@chakra-ui/react";
 import TooltipLabel from "../AdjustmentBar/ToolTipLabel";
 import { BiTargetLock } from "react-icons/bi";
-import { ImTarget } from "react-icons/im";
+import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import IconSize from "../ViewerToolbar/IconSize";
+import { AiAnalysisIcon } from "../Icons/CustomIcons";
+import aiIcon from "../../assets/images/AiIcon.png";
 
-const AiModels = ({ slide, setToolSelected, setModelname, bottomZoomValue,bottombottomZoomValue, navigatorCounter }) => {
+const AiModels = ({
+  slide,
+  setToolSelected,
+  setModelname,
+  bottomZoomValue,
+  bottombottomZoomValue,
+  navigatorCounter,
+}) => {
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
   const [TilHover, setTilHover] = useState(false);
   const [TilActiveState, setTilActiveState] = useState(0);
-  
+
   // console.log(slide);
 
-  useEffect(()=>{
-    if(!TilHover){
-      setModelname("")
+  useEffect(() => {
+    if (!TilHover) {
+      setModelname("");
     }
-  })
+  });
 
-  useEffect(()=>{
-    if(navigatorCounter>0){
+  useEffect(() => {
+    if (navigatorCounter > 0) {
       setTilHover(false);
-      if(TilActiveState > 0){
+      if (TilActiveState > 0) {
         setTilActiveState(0);
-      }      
+      }
       setToolSelected("");
       setModelname("");
     }
-  },[navigatorCounter]);
+  }, [navigatorCounter]);
 
   const handleKI67 = () => {
-    if (slide?.stainType === "IHC" && bottomZoomValue > 39 && slide?.bioMarkerType === "kI67") {
+    if (
+      slide?.stainType === "IHC" &&
+      bottomZoomValue > 39 &&
+      slide?.bioMarkerType === "kI67"
+    ) {
       // console.log("1");
       setModelname("KI67");
       // console.log("1");
     }
-    if(slide?.stainType !== "IHC" || slide?.bioMarkerType !== "kI67" ){
-          setToolSelected("KI67Error");
+    if (slide?.stainType !== "IHC" || slide?.bioMarkerType !== "kI67") {
+      setToolSelected("KI67Error");
       // console.log("1");
       // console.log("3");
-    setModelname("");
+      setModelname("");
+    }
+    if (bottomZoomValue < 39) {
+      setToolSelected("ZoomError");
+      // console.log("1");
+      setModelname("");
+    }
+  };
+
+    const handleMorphometry = () => {
+      // console.log("2");
+  if(slide.stainType ==="H&E" && bottomZoomValue >= 40){
+      setModelname("Morphometry");
+  }
+  if(slide.stainType !=="H&E" ){
+    setToolSelected("MorphometrySlideIssue");
+  }
+  if(bottomZoomValue < 40){
+    setToolSelected("ZoomError");
+    }
+    };
+
+  // console.log(slide);
+    useEffect(()=>{
+      if(slide.stainType ==="H&E"){
+          if(TilActiveState / 2 !== 0){
+              setModelname("TIL")
+          }
+          else{
+              setModelname("TILClear")
+          }
+          console.log("object");
+      }
+      else{
+          setToolSelected("TILError");
+          console.log("object2");
 
       }
-    if(bottomZoomValue < 39){
-    setToolSelected("ZoomError");
-    // console.log("1");
-    setModelname("");
-
-
-    }
-  };
-
-
-  const handleMorphometry = () => {
-    // console.log("2");
-if(slide.stainType ==="H&E" && bottomZoomValue >= 40){
-    setModelname("Morphometry");
-}
-if(slide.stainType !=="H&E" ){
-  setToolSelected("MorphometrySlideIssue");
-}
-if(bottomZoomValue < 40){
-  setToolSelected("ZoomError");
-  }
-  };
-
-// console.log(slide);
-  useEffect(()=>{
-    if(slide.stainType ==="H&E"){
-        if(TilActiveState / 2 !== 0){
-            setModelname("TIL")
-        }
-        else{
-            setModelname("TILClear")
-        }
-        console.log("object");
-    }
-    else{
-        setToolSelected("TILError");
-        console.log("object2");
-
-    }
-  },[TilActiveState])
+    },[TilActiveState])
 
   return (
     <Box
-      mr="8px"
-      w="28px"
-      h="26px"
-      style={{ position: "relative", display: "inline-block", }}
+      w="fit-content"
+      h="100%"
+      py="5px"
+      // border="1px solid green"
+      style={{ position: "relative", display: "inline-block" }}
+      _hover={{ bgColor: "transparent" }}
+      // border="2px solid red"
+      onClick={() => setTilHover(!TilHover)}
+      sx={{
+        ":before": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          left: 0,
+          cursor: "pointer",
+          width: "100%",
+          height: "100%",
+          backgroundColor: TilHover ? "rgba(157,195,226,0.4)" : "transparent",
+          zIndex: 1,
+        },
+      }}
     >
-      <Tooltip
-        label={<TooltipLabel heading="AI Models" />}
-        aria-label="TIL"
-        placement="bottom"
-        openDelay={0}
-        bg="#E4E5E8"
-        color="rgba(89, 89, 89, 1)"
-        fontSize="14px"
-        fontFamily="inter"
-        hasArrow
-        borderRadius="0px"
-        size="20px"
+      <IconButton
+        width={ifScreenlessthan1536px ? "100%" : "100%"}
+        height={ifScreenlessthan1536px ? "50%" : "70%"}
+        _hover={{ bgColor: "transparent" }}
+        icon={
+          !TilHover ? (
+            <Image src={aiIcon} alt="Image" boxSize="24px" />
+          ) : (
+            <Image src={aiIcon} alt="Image" boxSize="24px" />
+          )
+        }
+        _active={{
+          bgColor: "transparent",
+          outline: "none",
+        }}
+        // outline={TilHover ? " 0.5px solid rgba(0, 21, 63, 1)" : ""}
+        // _focus={{
+        // }}
+        backgroundColor="transparent"
+        // mr="7px"
+        // border="1px solid red"
+        borderRadius={0}
+      />
+      <Flex
+        justifyContent="space-between"
+        w="100%"
+        alignItems="center"
+        cursor="pointer"
       >
-        <IconButton
-          width={ifScreenlessthan1536px ? "30px" : "30px"}
-          size={ifScreenlessthan1536px ? 60 : 0}
-          height={ifScreenlessthan1536px ? "26px" : "27px"}
-          icon={
-            !TilHover ? (
-              <BiTargetLock size={IconSize()} color="#151C25" />
-            ) : (
-              <ImTarget size={IconSize()} color="#3b5d7c" />
-            )
-          }
-          _active={{
-            bgColor: "rgba(228, 229, 232, 1)",
-            outline: "0.5px solid rgba(0, 21, 63, 1)",
-          }}
-          outline={TilHover ? " 0.5px solid rgba(0, 21, 63, 1)" : ""}
-          _focus={{
-            border: "none",
-          }}
-          backgroundColor={!TilHover ? "#F8F8F5" : "#E4E5E8"}
-          mr="7px"
-          borderRadius={0}
-          onClick={() => setTilHover(!TilHover)}
-          _hover={{ bgColor: "rgba(228, 229, 232, 1)" }}
-        />
-      </Tooltip>
+        <Text ml="3px" userSelect="none" align="center" color="#5497cd">
+          PRR AI
+        </Text>
+        <RiArrowDownSLine color="#5497cd" size="16px" />
+      </Flex>
       {TilHover && (
         <Box
           style={{
             position: "absolute",
-            top: "170%",
+            top: "120%",
             left: 0,
             width: "120px",
             backgroundColor: "#F5F5F5",

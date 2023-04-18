@@ -286,7 +286,7 @@ const LayoutApp = ({
 
   return (
     <Flex
-      h={ifBiggerScreen ? "calc(100vh - 5.5vh)" : "calc(100vh - 44px)"}
+      h={ifBiggerScreen ? "calc(100vh - 5.5vh)" : "100vh"}
       direction="column"
     >
       <LayoutOuterBody>
@@ -567,11 +567,10 @@ const LayoutApp = ({
                 />
               )}
             </Flex>
-            <Text ml="10px" fontSize="14px">
-              {" "}
+            <Text ml="10px" fontSize="14px" style={{ color: localStorage.getItem("ModelName") ? "#1B75BC" : toolSelected === "RunRoi" ? "#1B75BC" : "black" }}>
               {localStorage.getItem("ModelName")
-                ? `${localStorage.getItem("ModelName")} is in process`
-                : returnText}{" "}
+                ? `Running ${localStorage.getItem("ModelName")}`
+                : returnText}
             </Text>
             <Flex ml="10px" justifyContent="flex-end" alignItems="center">
               {/* <ProgressBar /> */}

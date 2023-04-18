@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useState } from "react";
 import {useNavigate} from "react-router-dom"
-import { Flex, Text, useMediaQuery } from "@chakra-ui/react";
+import { Flex, Text, useMediaQuery, Box } from "@chakra-ui/react";
 import axios from "axios";
 import { GoChevronLeft } from "react-icons/go";
 
@@ -102,14 +102,19 @@ function AdjustmentBar({
     <Flex
       className="adjustmentbar"
       alignItems="center"
-      height={ifWidthLessthan1920 ? "46px" : "5.185vh"}
-      bgColor="#F8F8F5"
+      w="100%"
+      justifyContent="flex-end"
+      height={ifWidthLessthan1920 ? "7vh" : "8vh"}
+      // border="2px solid red"
+      boxShadow="0px 0px 3px 0.1px"
+      px="30px"
+      // py="5px"
       fontFamily="fira sans"
       fontSize={ifWidthLessthan1920 ? "14px" : "16px"}
       fontWeight="500"
       zIndex={2}
     >
-      <Flex
+      {/* <Flex
         borderRight="2px solid #E4E5E8"
         alignItems="center" ml="18px" mr="22px" pr="20px" minW="150px">
         {application === "hospital" ? (
@@ -130,7 +135,8 @@ function AdjustmentBar({
         >
          Case No-{caseInfo?.caseName || caseInfo?.name}
         </Text>
-      </Flex>
+      </Flex> */}
+      {/* <Box w="25%"  h="100%" /> */}
       <Move
         application={application}
         userInfo={userInfo}
@@ -171,7 +177,7 @@ function AdjustmentBar({
         setTotalCells={setTotalCells}
         isXmlAnnotations={isXmlAnnotations}
       />
-      <ActionTools setToolSelected={setToolSelected} viewerId={currentViewer} />
+      {/* <ActionTools setToolSelected={setToolSelected} viewerId={currentViewer} /> */}
       <ScreenTools
         viewerId={currentViewer}
         report={report}

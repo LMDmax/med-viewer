@@ -1,7 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 
 import { useMutation } from "@apollo/client";
-import { Tooltip, useToast, useDisclosure } from "@chakra-ui/react";
+import {
+  Tooltip,
+  useMediaQuery,
+  useToast,
+  useDisclosure,
+  IconButton,
+  Box,
+  Text,
+} from "@chakra-ui/react";
 import { fabric } from "openseadragon-fabricjs-overlay";
 import { RiChatQuoteLine } from "react-icons/ri";
 
@@ -29,6 +37,7 @@ const CommentBox = ({
   navigatorCounter,
 }) => {
   const [addComments, setAddComments] = useState(false);
+  const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
   const iconSize = IconSize();
   const toast = useToast();
   const caseData = JSON.parse(localStorage.getItem("caseData"));
@@ -256,51 +265,64 @@ const CommentBox = ({
     }
   }, [addComments]);
 
-  useEffect(()=>{
-if(navigatorCounter > 0) {
-setAddComments(false);
-setFabricOverlayState(updateTool({ tool: "Move" }));
-
-
-}
-  },[navigatorCounter])
+  useEffect(() => {
+    if (navigatorCounter > 0) {
+      setAddComments(false);
+      setFabricOverlayState(updateTool({ tool: "Move" }));
+    }
+  }, [navigatorCounter]);
 
   return (
-    <Tooltip
-      aria-label="comment"
-      placement="bottom"
-      openDelay={0}
-      bg="#E4E5E8"
-      color="rgba(89, 89, 89, 1)"
-      fontSize="14px"
-      fontFamily="inter"
-      hasArrow
-      borderRadius="0px"
-      size="20px"
+    <Box
+      onClick={() => {
+        setAddComments(!addComments);
+        handleClick();
+      }}
+      py="5px"
+      w="60px"
+      h="100%"
+      style={{ position: "relative", display: "inline-block" }}
+      _hover={{ bgColor: "transparent" }}
+      sx={{
+        ":before": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          left: 0,
+          cursor: "pointer",
+          width: "100%",
+          height: "100%",
+          backgroundColor: isActive ? "rgba(157,195,226,0.4)" : "transparent",
+          zIndex: 1,
+        },
+      }}
     >
-      <ToolbarButton
+      <IconButton
+        width={ifScreenlessthan1536px ? "100%" : "100%"}
+        height={ifScreenlessthan1536px ? "50%" : "70%"}
+        // border="2px solid red"
+        _hover={{ bgColor: "transparent" }}
         icon={
-          addComments ? (
-            <RiChatQuoteLine size={iconSize} color="#3B5D7C" />
-          ) : (
-            <RiChatQuoteLine size={iconSize} color="#151C25" />
-          )
+          <RiChatQuoteLine
+            transform="scale(1.5)"
+            size={iconSize}
+            color="black"
+          />
         }
-        label={<TooltipLabel heading="Add comments" />}
-        backgroundColor={!addComments ? "" : "#E4E5E8"}
-        outline={addComments ? " 0.5px solid rgba(0, 21, 63, 1)" : ""}
-        boxShadow={
-          addComments
-            ? "inset -2px -2px 2px rgba(0, 0, 0, 0.1), inset 2px 2px 2px rgba(0, 0, 0, 0.1)"
-            : null
-        }
-        onClick={() => {
-          setAddComments(!addComments);
-          handleClick();
+        _active={{
+          bgColor: "transparent",
+          outline: "none",
         }}
-        _hover={{ bgColor: "rgba(228, 229, 232, 1)" }}
+        // outline={TilHover ? " 0.5px solid rgba(0, 21, 63, 1)" : ""}
+        // _focus={{
+        // }}
+        backgroundColor="transparent"
+        // mr="7px"
+        // border="1px solid red"
+        borderRadius={0}
       />
-    </Tooltip>
+      <Text align="center">Comment</Text>
+    </Box>
   );
 };
 

@@ -102,7 +102,7 @@ const FunctionsMenu = ({
   const { viewerWindow } = fabricOverlayState;
   const { tile, slideId, viewer, fabricOverlay } = viewerWindow[viewerId];
   const [activeObject, setActiveObject] = useState();
-  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedOption, setSelectedOption] = useState("slides");
   const [reportData, setReportData] = useState({
     clinicalStudy: "",
     grossDescription: "",
@@ -148,11 +148,11 @@ const FunctionsMenu = ({
     }
   }, [toolSelected]);
 
-  useEffect(()=>{
-    if(navigatorCounter> 0){
+  useEffect(() => {
+    if (navigatorCounter > 0) {
       setIsOpen(false);
     }
-  },[navigatorCounter])
+  }, [navigatorCounter]);
 
   useEffect(async () => {
     if (selectedOption === "timeline") {
@@ -193,20 +193,21 @@ const FunctionsMenu = ({
     });
   }, [fabricOverlay]);
 
-useEffect(()=>{
-  if(activeObject?.type!=="textbox" && activeObject) {
-    setIsOpen(true);
-    setSelectedOption("annotations");
-  // console.log(activeObject);
-  }
-},[activeObject])
+  useEffect(() => {
+    if (activeObject?.type !== "textbox" && activeObject) {
+      setIsOpen(true);
+      setSelectedOption("annotations");
+      // console.log(activeObject);
+    }
+  }, [activeObject]);
   return (
     <Box
       pos="absolute"
       right={0}
-      background="rgba(217, 217, 217, 0.3)"
+      background="#FFFFFF"
       zIndex={10}
-      h={ifWidthLessthan1920 ? "calc(100vh - 92px)" : "calc(100vh - 10.033vh)"}
+      mt="2px"
+      h={ifWidthLessthan1920 ? "calc(100vh - 14vh)" : "calc(100vh - 10.033vh)"}
     >
       <motion.div
         animate={{
@@ -221,39 +222,41 @@ useEffect(()=>{
             : "70px",
         }}
         style={{
-          background: "#FCFCFC",
           overflowY: isOpen ? "scroll" : "hidden",
           overflowX: "hidden",
           whiteSpace: "nowrap",
           position: "absolute",
           right: isOpen ? "0" : "0px",
-          height: "97%",
+          height: "98%",
           top: "0",
         }}
+        
       >
         <Flex>
-          <Flex direction="column" h="fit-content">
+          <Flex direction="column"  h="fit-content">
             <Button
               onClick={() => setIsOpen(!isOpen)}
               w="70px"
               borderRadius={0}
-              background="rgba(246, 246, 246,0.5)"
+              background="#FFFFFF"
               box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-              _hover={{ bgColor: "rgba(246, 246, 246,0.5)" }}
+              _hover={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}
+              
             >
               {isOpen ? ">>" : "<<"}
             </Button>
-            <Tooltip label="View slides" placement='left'>
+            <Tooltip label="View slides" placement="left">
               <Button
                 height="73px"
                 w="73px"
                 borderRadius={0}
-                background="#F6F6F6"
+                background="rgba(255, 255, 255, 0.5)"
                 box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
                 onClick={() => {
                   setSelectedOption("slides");
                   setIsOpen(true);
                 }}
+                _hover={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}
               >
                 <VStack>
                   {selectedOption === "slides" ? (
@@ -275,13 +278,15 @@ useEffect(()=>{
                 </VStack>
               </Button>
             </Tooltip>
-            <Tooltip label="View timeline" placement='left'>
+            <Tooltip label="View timeline" placement="left">
               <Button
                 height="73px"
                 w="73px"
                 borderRadius={0}
-                background="#F6F6F6"
+                background="rgba(255, 255, 255, 0.5)"
                 box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
+                _hover={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}
+
                 onClick={() => {
                   setSelectedOption("timeline");
                   setIsOpen(true);
@@ -307,13 +312,15 @@ useEffect(()=>{
                 </VStack>
               </Button>
             </Tooltip>
-            <Tooltip label="View annotations" placement='left'>
+            <Tooltip label="View annotations" placement="left">
               <Button
                 height="73px"
                 w="73px"
                 borderRadius={0}
-                background="#F6F6F6"
+                background="rgba(255, 255, 255, 0.5)"
                 box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
+                _hover={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}
+
                 onClick={() => {
                   setSelectedOption("annotations");
                   setIsOpen(true);
@@ -339,12 +346,14 @@ useEffect(()=>{
                 </VStack>
               </Button>
             </Tooltip>
-            <Tooltip label="View comments" placement='left'>
+            <Tooltip label="View comments" placement="left">
               <Button
                 height="73px"
                 w="73px"
+                background="rgba(255, 255, 255, 0.5)"
                 borderRadius={0}
-                background="#F6F6F6"
+                _hover={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}
+
                 box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
                 onClick={() => {
                   setSelectedOption("comments");
@@ -371,13 +380,15 @@ useEffect(()=>{
                 </VStack>
               </Button>
             </Tooltip>
-            <Tooltip label="View slide info" placement='left'>
+            <Tooltip label="View slide info" placement="left">
               <Button
                 height="73px"
                 w="73px"
+                background="rgba(255, 255, 255, 0.5)"
                 borderRadius={0}
-                background="#F6F6F6"
                 box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
+                _hover={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}
+
                 onClick={() => {
                   setSelectedOption("information");
                   setIsOpen(true);
@@ -403,13 +414,15 @@ useEffect(()=>{
                 </VStack>
               </Button>
             </Tooltip>
-            <Tooltip label="Report slide" placement='left'>
+            <Tooltip label="Report slide" placement="left">
               <Button
                 height="73px"
                 w="73px"
+                background="rgba(255, 255, 255, 0.5)"
                 borderRadius={0}
-                background="#F6F6F6"
                 box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
+                _hover={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}
+
                 onClick={() => {
                   setSelectedOption("report");
                   setIsOpen(true);
@@ -436,14 +449,19 @@ useEffect(()=>{
               </Button>
             </Tooltip>
             {chatFeedBar ? (
-              <Tooltip label=" View Conversation" placement='left'>
+              <Tooltip label=" View Conversation" placement="left">
                 <Button
                   height="73px"
                   w="73px"
+                  background="rgba(255, 255, 255, 0.5)"
                   borderRadius={0}
-                  background="#F6F6F6"
                   box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-                  onClick={() => setSelectedOption("messages")}
+                _hover={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}
+
+                  onClick={() => {
+                    setSelectedOption("messages");
+                    setIsOpen(true);
+                  }}
                 >
                   <VStack>
                     {selectedOption === "messages" ? (
@@ -467,14 +485,19 @@ useEffect(()=>{
               </Tooltip>
             ) : null}
             {toolSelected === "Filter" ? (
-              <Tooltip label=" Adjustments" placement='left'>
+              <Tooltip label=" Adjustments" placement="left">
                 <Button
                   height="73px"
                   w="73px"
+                  background="rgba(255, 255, 255, 0.5)"
                   borderRadius={0}
-                  background="#F6F6F6"
                   box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-                  onClick={() => setSelectedOption("adjustments")}
+                _hover={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}
+
+                  onClick={() => {
+                    setSelectedOption("adjustments");
+                    setIsOpen(true);
+                  }}
                 >
                   <VStack>
                     {selectedOption === "adjustments" ? (
@@ -544,7 +567,7 @@ useEffect(()=>{
                 searchSelectedData={searchSelectedData}
               />
             ) : selectedOption === "report" ? (
-              <Flex w="100%" h="100%" direction="column" bgColor="#FCFCFC">
+              <Flex w="100%" h="86vh" direction="column" bgColor="#FCFCFC">
                 <Flex w="100%" direction="row" p="5px 5px 0px 20px">
                   <Text fontFamily="Inter" color="#3B5D7C" mr="60%">
                     Report

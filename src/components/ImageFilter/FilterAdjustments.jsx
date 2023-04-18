@@ -6,9 +6,13 @@ import {
   ModalHeader,
   ModalCloseButton,
   ModalBody,
+  IconButton,
+  Box,
   VStack,
   ModalFooter,
   Button,
+  Text,
+  useMediaQuery,
   useToast,
 } from "@chakra-ui/react";
 import { HiAdjustments } from "react-icons/hi";
@@ -27,11 +31,16 @@ const getFilters = (sliderInputs) => {
   return filters;
 };
 
-const FilterAdjustments = ({ viewerId, setToolSelected,toolSelected, navigatorCounter }) => {
+const FilterAdjustments = ({
+  viewerId,
+  setToolSelected,
+  toolSelected,
+  navigatorCounter,
+}) => {
   const { fabricOverlayState } = useFabricOverlayState();
   const { viewerWindow } = fabricOverlayState;
   const { viewer } = viewerWindow[viewerId];
-
+  const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
   const [isActive, setIsActive] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -43,27 +52,25 @@ const FilterAdjustments = ({ viewerId, setToolSelected,toolSelected, navigatorCo
     exposure: 0,
   });
 
-  useEffect(()=>{
-    if(navigatorCounter>0){
+  useEffect(() => {
+    if (navigatorCounter > 0) {
       setIsActive(false);
     }
-  },[navigatorCounter])
+  }, [navigatorCounter]);
 
-  useEffect(()=>{
-    if(isActive){
+  useEffect(() => {
+    if (isActive) {
       setToolSelected("Filter");
+    } else {
+      setToolSelected("");
     }
-    else{
-      setToolSelected("")
-    }
-  },[isActive])
+  }, [isActive]);
 
-  useEffect(()=>{
-    if(toolSelected === ""){
+  useEffect(() => {
+    if (toolSelected === "") {
       setIsActive(false);
     }
-    
-  },[toolSelected])
+  }, [toolSelected]);
 
   const sliderStateRef = useRef(sliderInputs);
   const modalRef = useRef(null);
@@ -119,21 +126,46 @@ const FilterAdjustments = ({ viewerId, setToolSelected,toolSelected, navigatorCo
   }, [sliderInputs, viewer]);
 
   return (
-    <>
-      <ToolbarButton
-        icon={<HiAdjustments color={!isActive ? "black" : "#3B5D7C"} size={IconSize()} />}
-        label={<TooltipLabel heading="Adjustments" />}
-        backgroundColor={!isActive ? "" : "#E4E5E8"}
-        outline={isActive ? " 0.5px solid rgba(0, 21, 63, 1)" : ""}
-        boxShadow={
-          isActive
-            ? "inset -2px -2px 2px rgba(0, 0, 0, 0.1), inset 2px 2px 2px rgba(0, 0, 0, 0.1)"
-            : null
-        }
-        onClick={handleClick}
-        _hover={{ bgColor: "rgba(228, 229, 232, 1)" }}
+    <Box
+      w="70px"
+      h="100%"
+      py="5px"
+      onClick={handleClick}
+      style={{ position: "relative", display: "inline-block" }}
+      _hover={{ bgColor: "transparent" }}
+      sx={{
+        ":before": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          left: 0,
+          cursor: "pointer",
+          width: "100%",
+          height: "100%",
+          backgroundColor: isActive ? "rgba(157,195,226,0.4)" : "transparent",
+          zIndex: 1,
+        },
+      }}
+    >
+      <IconButton
+        height={ifScreenlessthan1536px ? "50%" : "70%"}
+        width={ifScreenlessthan1536px ? "100%" : "100%"}
+        // border="2px solid red"
+        _hover={{ bgColor: "transparent" }}
+        icon={<HiAdjustments color="black" transform="scale(1.5)" />}
+        _active={{
+          bgColor: "transparent",
+          outline: "none",
+        }}
+        // outline={TilHover ? " 0.5px solid rgba(0, 21, 63, 1)" : ""}
+        // _focus={{
+        // }}
+        backgroundColor="transparent"
+        // mr="7px"
+        // border="1px solid red"
+        borderRadius={0}
       />
-
+      <Text align="center">Adjustment</Text>
       <Modal
         isOpen={isOpen}
         onClose={handleOnClose}
@@ -150,7 +182,7 @@ const FilterAdjustments = ({ viewerId, setToolSelected,toolSelected, navigatorCo
             Adjustments
           </ModalHeader>
           <ModalCloseButton _focus={{ border: "none" }} />
-          <ModalBody >
+          <ModalBody>
             <VStack>
               <AdjustmentRow
                 label="Contrast"
@@ -227,7 +259,7 @@ const FilterAdjustments = ({ viewerId, setToolSelected,toolSelected, navigatorCo
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </>
+    </Box>
   );
 };
 

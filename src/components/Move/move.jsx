@@ -5,10 +5,10 @@ import {
   IconButton,
   useMediaQuery,
   Tooltip,
+  Text,
   Image,
   Box,
 } from "@chakra-ui/react";
-import { BsCursorFill, BsCursor } from "react-icons/bs";
 
 import { updateTool } from "../../state/actions/fabricOverlayActions";
 import { useFabricOverlayState } from "../../state/store";
@@ -21,11 +21,11 @@ import Multiview from "../Multiview/multiview";
 import Popup from "../Popup/popup";
 import Rotate from "../Rotate/Rotate";
 import Til from "../TIL/Til";
-import ToolbarButton from "../ViewerToolbar/button";
-import IconSize from "../ViewerToolbar/IconSize";
 import Measuremnet from "../Measurement/Measuremnet";
+import IconSize from "../ViewerToolbar/IconSize";
 import Mode from "../Mode/Mode";
 import AiModels from "../AIModels/AiModels";
+import MoveTool from "../MoveTool/MoveTool";
 
 function Move({
   userInfo,
@@ -121,36 +121,22 @@ function Move({
   }, [isActive, fabricOverlay]);
 
   return (
-    <Flex direction="column">
-      <Flex alignItems="center" borderRight="2px solid #E4E5E8" ml="0px">
+    <Flex
+      direction="row"
+      justifyContent="space-evenly"
+      w="40%"
+      h="100%"
+      // border="2px solid red"
+    >
+      <Flex
+        alignItems="center"
+        justifyContent="space-evenly"
+        gap="0px"
+        ml="0px"
+        w="100%"
+      >
         {/* <ToolbarPointerControl viewerId={viewerId} /> */}
-        <ToolbarButton
-          icon={
-            isActive ? (
-              <BsCursorFill
-                size={iconSize}
-                color="#3B5D7C"
-                style={{ transform: "rotate(-90deg)" }}
-              />
-            ) : (
-              <BsCursor
-                size={iconSize}
-                color="#151C25"
-                style={{ transform: "rotate(-90deg)" }}
-              />
-            )
-          }
-          label={<TooltipLabel heading="Move" />}
-          backgroundColor={!isActive ? "" : "#E4E5E8"}
-          outline={isActive ? " 0.5px solid rgba(0, 21, 63, 1)" : ""}
-          boxShadow={
-            isActive
-              ? "inset -2px -2px 2px rgba(0, 0, 0, 0.1), inset 2px 2px 2px rgba(0, 0, 0, 0.1)"
-              : null
-          }
-          onClick={handleClick}
-          _hover={{ bgColor: "rgba(228, 229, 232, 1)" }}
-        />
+        <MoveTool handleClick={handleClick} isActive={isActive} />
         <Rotate
           setIsNavigatorActive={setIsNavigatorActive}
           navigatorCounter={navigatorCounter}
@@ -166,59 +152,59 @@ function Move({
           navigatorCounter={navigatorCounter}
         />
         {annotations && !isXmlAnnotations ? (
-          <Tooltip
-            label={
-              <TooltipLabel
-                heading="Annotation"
-                paragraph="Open/Close more annotation tools"
-              />
-            }
-            aria-label="Annotations"
-            placement="bottom"
-            openDelay={0}
-            bg="#E4E5E8"
-            color="rgba(89, 89, 89, 1)"
-            fontSize="14px"
-            fontFamily="inter"
-            hasArrow
-            borderRadius="0px"
-            size="20px"
+          <Box
+            onClick={() => {
+              handleAnnotationsClick();
+              setActiveAnnotations(!activeAnnotations);
+            }}
+            w="70px"
+            py="5px"
+            h="100%"
+            style={{ position: "relative", display: "inline-block" }}
+            _hover={{ bgColor: "transparent" }}
+            sx={{
+              ":before": {
+                content: '""',
+                position: "absolute",
+                top: 0,
+                left: 0,
+                cursor: "pointer",
+                width: "100%",
+                height: "100%",
+                backgroundColor: activeAnnotations
+                  ? "rgba(157,195,226,0.4)"
+                  : "transparent",
+                zIndex: 1,
+              },
+            }}
+            F
           >
             <IconButton
-              width={ifScreenlessthan1536px ? "30px" : "40px"}
-              size={ifScreenlessthan1536px ? 60 : 0}
-              height={ifScreenlessthan1536px ? "26px" : "34px"}
+              width={ifScreenlessthan1536px ? "100%" : "100%"}
+              height={ifScreenlessthan1536px ? "50%" : "70%"}
+              // border="2px solid red"
+              _hover={{ bgColor: "transparent" }}
               icon={
-                activeAnnotations ? (
-                  <AnnotationSelectedIcon />
-                ) : (
-                  <AnnotationIcon />
-                )
+                <AnnotationIcon
+                  transform="scale(1.5)"
+                  size={iconSize}
+                  color="black"
+                />
               }
               _active={{
-                bgColor: "rgba(228, 229, 232, 1)",
-                outline: "0.5px solid rgba(0, 21, 63, 1)",
+                bgColor: "transparent",
+                outline: "none",
               }}
-              _focus={{
-                border: "none",
-              }}
-              mr="7px"
+              // outline={TilHover ? " 0.5px solid rgba(0, 21, 63, 1)" : ""}
+              // _focus={{
+              // }}
+              backgroundColor="transparent"
+              // mr="7px"
+              // border="1px solid red"
               borderRadius={0}
-              backgroundColor={typeToolsToggle ? "#E4E5E8" : "#F8F8F5"}
-              outline={typeToolsToggle ? " 0.5px solid rgba(0, 21, 63, 1)" : ""}
-              label="Annotations"
-              onClick={() => {
-                handleAnnotationsClick();
-                setActiveAnnotations(!activeAnnotations);
-              }}
-              boxShadow={
-                activeAnnotations
-                  ? "inset -2px -2px 2px rgba(0, 0, 0, 0.1), inset 2px 2px 2px rgba(0, 0, 0, 0.1)"
-                  : null
-              }
-              _hover={{ bgColor: "rgba(228, 229, 232, 1)" }}
             />
-          </Tooltip>
+            <Text align="center" color="black">Annotation</Text>
+          </Box>
         ) : null}
 
         {/* <Measuremnet /> */}

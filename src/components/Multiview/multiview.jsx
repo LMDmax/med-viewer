@@ -1,6 +1,14 @@
 import React, { useState } from "react";
-import { IconButton, Tooltip, useMediaQuery } from "@chakra-ui/react";
+import {
+  IconButton,
+  Tooltip,
+  useMediaQuery,
+  Box,
+  Text,
+  Flex,
+} from "@chakra-ui/react";
 import ToolbarButton from "../ViewerToolbar/button";
+import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import IconSize from "../ViewerToolbar/IconSize";
 import { useFabricOverlayState } from "../../state/store";
 import { MultiviewIcon, MultiviewSelectedIcon } from "../Icons/CustomIcons";
@@ -22,79 +30,86 @@ const Multiview = ({
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
   const [state, setState] = useState(false);
 
- 
-
-  useEffect((()=>{
-    if(state){
+  useEffect(() => {
+    if (state) {
       // console.log("sdsds");
       setIsNavigatorActive(false);
       setIsMultiview(true);
       setToolSelected("Multiview");
-    }
-    else{
+    } else {
       setToolSelected("");
       setState(false);
       setIsMultiview(false);
     }
-  }),[state])
+  }, [state]);
 
   console.log(state);
 
-  useEffect(()=>{
-    if(navigatorCounter > 0){
+  useEffect(() => {
+    if (navigatorCounter > 0) {
       setState(false);
     }
-  },[navigatorCounter])
-
+  }, [navigatorCounter]);
 
   return (
-    <Tooltip
-      label={
-        <TooltipLabel
-          heading="Multiview"
-          paragraph="View Multi-WSI Images in Same Screen"
-        />
-      }
-      aria-label="Multiview"
-      placement="bottom"
-      openDelay={0}
-      bg="#E4E5E8"
-      color="rgba(89, 89, 89, 1)"
-      fontSize="14px"
-      fontFamily="inter"
-      hasArrow
-      borderRadius="0px"
-      size="20px"
+    <Box
+      onClick={() => {
+        // handleClick();
+        setState(!state);
+      }}
+      py="5px"
+      w="60px"
+      backgroundColor={isMultiview ? "rgba(157,195,226,0.4)" : "transparent"}
+      h="100%"
+      // sx={{
+      //   ":before": {
+      //     content: '""',
+      //     top: 0,
+      //     left: 0,
+      //     cursor:"pointer",
+      //     width: "100%",
+      //     height: "100%",
+      //     backgroundColor: isMultiview ? "rgba(157,195,226,0.4)" : "transparent",
+      //     zIndex: 1,
+      //   },
+      // }}
     >
       <IconButton
-        width={ifScreenlessthan1536px ? "30px" : "40px"}
-        size={ifScreenlessthan1536px ? 60 : 0}
-        height={ifScreenlessthan1536px ? "26px" : "34px"}
-        borderRadius={0}
-        _active={{
-          bgColor: "rgba(228, 229, 232, 1)",
-          outline: "0.5px solid rgba(0, 21, 63, 1)",
-        }}
-        _focus={{
-          border: "none",
-        }}
-        icon={isMultiview ? <MultiviewSelectedIcon /> : <MultiviewIcon />}
-        backgroundColor={isMultiview ? "#E4E5E8" : "#F8F8F5"}
-        outline={isMultiview ? " 0.5px solid rgba(0, 21, 63, 1)" : ""}
-        onClick={() => {
-          // handleClick();
-          setState(!state);
-        }}
-        mr="7px"
-        boxShadow={
-          isMultiview
-            ? "inset -2px -2px 2px rgba(0, 0, 0, 0.1), inset 2px 2px 2px rgba(0, 0, 0, 0.1)"
-            : null
+        width={ifScreenlessthan1536px ? "100%" : "100%"}
+        height={ifScreenlessthan1536px ? "50%" : "70%"}
+        // border="2px solid red"
+        _hover={{ bgColor: "transparent" }}
+        icon={
+          <MultiviewIcon
+            transform="scale(1.5)"
+            size={iconSize}
+            color="#3B5D7C"
+          />
         }
-        isDisabled={isAnnotationLoading || Object.keys(viewerWindow).length > 1}
-        _hover={{ bgColor: "rgba(228, 229, 232, 1)" }}
+        _active={{
+          bgColor: "transparent",
+          outline: "none",
+        }}
+        // outline={TilHover ? " 0.5px solid rgba(0, 21, 63, 1)" : ""}
+        // _focus={{
+        // }}
+        backgroundColor="transparent"
+        // mr="7px"
+        // border="1px solid red"
+        borderRadius={0}
       />
-    </Tooltip>
+      <Flex
+        justifyContent="space-evenly"
+        w="100%"
+        alignItems="center"
+        cursor="pointer"
+      >
+        <Text userSelect="none" align="center">
+          View
+        </Text>
+        <RiArrowDownSLine color="black" size="16px" />
+      </Flex>
+    </Box>
   );
 };
 

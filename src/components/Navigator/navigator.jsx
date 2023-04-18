@@ -187,9 +187,11 @@ const Navigator = ({
                       alignSelf="center"
                       noOfLines={1}
                     >
-                      {slide.slideName ||
+                      {`${(
+                        slide.slideName ||
                         slide.originalName ||
-                        `${caseInfo.caseName}-${index}`}
+                        `${caseInfo.caseName}-${index}`
+                      ).substring(0, 10)}...`}
                     </Text>
                     {isMultiview && tile === slide.awsImageBucketUrl ? (
                       <Flex

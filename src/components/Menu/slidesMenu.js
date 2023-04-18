@@ -42,7 +42,7 @@ const SlidesMenu = ({
   };
 
   return (
-    <Flex bgColor="#fff" w="100%" p={5} direction="column">
+    <Flex bgColor="#fff" w="100%" direction="column">
       <Text
         fontFamily="Inter"
         fontStyle="normal"
@@ -54,7 +54,7 @@ const SlidesMenu = ({
       >
         Slide Navigation
       </Text>
-     <Flex w="100%" h="100vh" alignItems="center" direction="column"> 
+      <Flex w="100%" h="80vh" alignItems="center" direction="column">
         <Text mb="1vh" fontSize={10}>{`${curIndex + 1} of ${
           slides?.length
         } slides`}</Text>
@@ -65,7 +65,7 @@ const SlidesMenu = ({
           )}
           autoHide
         >
-          <Flex w="100%" h="100%"  bg="#F2F2F2" flexWrap="wrap">
+          <Flex w="100%"  flexWrap="wrap">
             {slides.map((slide, index) => {
               const url = getSlideUrl(slide.awsImageBucketUrl);
               return (
@@ -83,8 +83,9 @@ const SlidesMenu = ({
                   <Flex
                     w="50%"
                     direction="column"
-                    bg="#FFFFFF"
+                    // bg="red"
                     p={1}
+                    h="fit-content"
                     border="0.5px solid #F2F2F2"
                     boxShadow="0px 0px 2px rgba(0, 0, 0, 0.25)"
                     background={
@@ -111,9 +112,11 @@ const SlidesMenu = ({
                       noOfLines={1}
                       textOverflow="ellipsis"
                     >
-                      {slide.slideName ||
+                      {`${(
+                        slide.slideName ||
                         slide.originalName ||
-                        `${caseInfo.caseName}-${index}`}
+                        `${caseInfo.caseName}-${index}`
+                      ).substring(0, 10)}...`}
                     </Text>
                   </Flex>
                 </Tooltip>

@@ -15,6 +15,7 @@ import {
   TabList,
   Tab,
   TabPanels,
+  Tooltip,
   TabPanel,
   Accordion,
   AccordionItem,
@@ -168,9 +169,9 @@ const ActivityFeed = ({
   ] = useMutation(UPDATE_ANNOTATION);
 
   const onUpdateAnnotation = (data) => {
-    console.log("====================================");
-    console.log("activity feed update");
-    console.log("====================================");
+    // console.log("====================================");
+    // console.log("activity feed update");
+    // console.log("====================================");
     delete data?.slideId;
     modifyAnnotation({
       variables: { body: { ...data } },
@@ -335,7 +336,7 @@ const ActivityFeed = ({
     <Flex
       as="section"
       w="100%"
-      h="85vh"
+      h="86vh"
       pb="30px"
       margin={0}
       right="0"
@@ -738,7 +739,7 @@ const ActivityFeed = ({
             </Accordion>
 
             {localStorage.getItem("til") ? (
-              <Box my="0px" cursor="pointer">
+              <Box my="10px" cursor="pointer">
                 <Flex
                   w="40%"
                   onClick={() => setIsTilBoxVisible(!isTILBoxVisible)}
@@ -789,7 +790,8 @@ const ActivityFeed = ({
                         justifyContent="flex-end"
                         w="100%"
                       >
-                        <IconButton
+                      <Tooltip label={!visibleTumor ? "Click to enable tumor" : "Click to disable tumor"} placement="left" hasArrow>
+                      <IconButton
                           width={ifScreenlessthan1536px ? "30px" : "40px"}
                           size={ifScreenlessthan1536px ? 60 : 0}
                           height={ifScreenlessthan1536px ? "26px" : "34px"}
@@ -819,6 +821,7 @@ const ActivityFeed = ({
                             setVisibleLymphocyte(true);
                           }}
                         />
+                      </Tooltip>
                       </Flex>
                     </Flex>
                     <Flex
@@ -834,6 +837,8 @@ const ActivityFeed = ({
                         justifyContent="flex-end"
                         w="100%"
                       >
+                      <Tooltip label={!visibleStroma ? "Click to enable stroma" : "Click to disable stroma"} placement="left" hasArrow>
+
                         <IconButton
                           width={ifScreenlessthan1536px ? "30px" : "40px"}
                           size={ifScreenlessthan1536px ? 60 : 0}
@@ -864,6 +869,7 @@ const ActivityFeed = ({
                             setVisibleTumor(true);
                           }}
                         />
+                        </Tooltip>
                       </Flex>
                     </Flex>
                     <Flex my="0" ml="50px" alignItems="center">
@@ -874,6 +880,8 @@ const ActivityFeed = ({
                         justifyContent="flex-end"
                         w="100%"
                       >
+                      <Tooltip label={!visibleLymphocyte ? "Click to enable Lymphocytes" : "Click to disable Lymphocytes"} placement="left" hasArrow>
+                        
                         <IconButton
                           width={ifScreenlessthan1536px ? "30px" : "40px"}
                           size={ifScreenlessthan1536px ? 60 : 0}
@@ -904,6 +912,7 @@ const ActivityFeed = ({
                             setVisibleStroma(true);
                           }}
                         />
+                        </Tooltip>
                       </Flex>
                     </Flex>
                     <Box w="100%" mx="25px" my="10px" textAlign="left">

@@ -67,7 +67,7 @@ const Adjustments = ({ setIsOpen, viewer, setToolSelected, setSelectedOption }) 
     }
   }, [sliderInputs, viewer]);
   return (
-    <Box w="100%" bg="white" px="5px">
+    <Box w="100%" bg="white" h="84vh" px="5px">
       <Text
         fontFamily="Inter"
         fontStyle="normal"

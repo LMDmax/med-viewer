@@ -4,6 +4,7 @@ import {
   IconButton,
   Image,
   Modal,
+  Box,
   ModalOverlay,
   ModalContent,
   ModalHeader,
@@ -11,6 +12,7 @@ import {
   ModalBody,
   ModalCloseButton,
   Tooltip,
+  Text,
   useDisclosure,
   useMediaQuery,
 } from "@chakra-ui/react";
@@ -19,7 +21,7 @@ import IconSize from "./ViewerToolbar/IconSize";
 import { ScreenshotIcon, ScreenshotSelectedIcon } from "./Icons/CustomIcons";
 import TooltipLabel from "./AdjustmentBar/ToolTipLabel";
 
-const DownloadImage = ({setToolSelected}) => {
+const DownloadImage = ({ setToolSelected }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [img, setImg] = useState();
   const [screenshotHover, setScreenshotHover] = useState(false);
@@ -37,51 +39,38 @@ const DownloadImage = ({setToolSelected}) => {
       setImg(canvas.toDataURL("image/png"));
     });
     onOpen();
+    
   };
   return (
     <>
-      <Tooltip
+      <Box
         ref={modalRef}
-        label={<TooltipLabel heading="Screenshot" />}
-        aria-label="Screenshot"
-        placement="bottom"
-        openDelay={0}
-        bg="#E4E5E8"
-        color="rgba(89, 89, 89, 1)"
-        fontSize="14px"
-        fontFamily="inter"
-        hasArrow
-        borderRadius="0px"
-        size="20px"
+        onClick={() => {
+          handleClick();
+          setScreenshotHover(!screenshotHover);
+        }}
+        py="5px"
+        mx="15px"
+        w="65px"
+        h="100%"
+        cursor="pointer"
+        bg={screenshotHover ? "rgba(157,195,226,0.4)" : ""}
       >
         <IconButton
-          width={ifScreenlessthan1536px ? "30px" : "40px"}
-          size={ifScreenlessthan1536px ? 60 : 0}
-          height={ifScreenlessthan1536px ? "26px" : "34px"}
-          icon={
-            screenshotHover ? (
-              <ScreenshotSelectedIcon size={IconSize()} color="#151C25" />
-            ) : (
-              <ScreenshotIcon size={IconSize()} color="#151C25" />
-            )
-          }
+        height={ifScreenlessthan1536px ? "50%" : "70%"}
+        width={ifScreenlessthan1536px ? "100%" : "100%"}
+          // border="2px solid red"
+          _hover={{ bgColor: "transparent" }}
+          icon={<ScreenshotIcon transform="scale(1.2)" color="#3B5D7C" />}
           _active={{
-            bgColor: "rgba(228, 229, 232, 1)",
-            outline: "0.5px solid rgba(0, 21, 63, 1)",
+            bgColor: "transparent",
+            outline: "none",
           }}
-          _focus={{
-            border: "none",
-          }}
-          mr="7px"
+          backgroundColor="transparent"
           borderRadius={0}
-          onClick={() => {
-            handleClick();
-            setScreenshotHover(true);
-          }}
-          backgroundColor="#F8F8F5"
-          _hover={{ bgColor: "rgba(228, 229, 232, 1)" }}
         />
-      </Tooltip>
+        <Text align="center">Screenshot</Text>
+      </Box>
 
       <Modal
         isOpen={isOpen}
@@ -109,7 +98,7 @@ const DownloadImage = ({setToolSelected}) => {
               href={img}
               download="my-speculative-annotation"
               fontFamily="ocr-a-std"
-              onClick={()=>setToolSelected("Downloaded")}
+              onClick={() => setToolSelected("Downloaded")}
             >
               Save
             </Button>

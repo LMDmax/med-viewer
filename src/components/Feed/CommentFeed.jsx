@@ -243,12 +243,15 @@ const CommentFeed = ({
     onDeleteConfirmationClose();
   };
 
+  console.log(activityFeed);
+
   return (
     <Flex
       as="section"
       w="100%"
       // h={ifScreenlessthan1660px ? "calc(100% - 90px)" : "90%"}
-      h="100%"
+      h="86vh"
+      background="#FCFCFC"
       pb="30px"
       margin={0}
       right="0"

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { BsFilterSquare } from "react-icons/bs";
+import { Box, Text, IconButton, useMediaQuery } from "@chakra-ui/react";
 import { rgb, lab } from "color-convert";
 import ToolbarButton from "../ViewerToolbar/button";
 import "./openseadragon-filtering";
@@ -13,6 +14,7 @@ const ImageFilter = ({ viewerId, setToolSelected, navigatorCounter }) => {
   const { viewerWindow } = fabricOverlayState;
   const { viewer, fabricOverlay } = viewerWindow[viewerId];
   const [isActive, setIsActive] = useState(false);
+  const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
 
   const targetMean = [56.35951712, 55.60842896, -40.15281677];
 
@@ -105,27 +107,38 @@ const ImageFilter = ({ viewerId, setToolSelected, navigatorCounter }) => {
       setIsActive(true);
     }
   };
-useEffect(()=>{
-if(navigatorCounter > 0){
-  setIsActive(false);
-  viewer.setFilterOptions(null);
-  viewer.viewport.zoomBy(1.01);
-}
-},[navigatorCounter])
+  useEffect(() => {
+    if (navigatorCounter > 0) {
+      setIsActive(false);
+      viewer.setFilterOptions(null);
+      viewer.viewport.zoomBy(1.01);
+    }
+  }, [navigatorCounter]);
   return (
-    <ToolbarButton
-      icon={<BsFilterSquare color={isActive ? "#3B5D7C" : "#151C25"} />}
-      label={<TooltipLabel heading="Normalisation" />}
-      backgroundColor={!isActive ? "" : "#E4E5E8"}
-      outline={isActive ? " 0.5px solid rgba(0, 21, 63, 1)" : ""}
-      boxShadow={
-        isActive
-          ? "inset -2px -2px 2px rgba(0, 0, 0, 0.1), inset 2px 2px 2px rgba(0, 0, 0, 0.1)"
-          : null
-      }
+    <Box
+      w="82px"
+      py="5px"
+      h="100%"
+      cursor="pointer"
+      bg={isActive ? "rgba(157,195,226,0.4)" : ""}
       onClick={handleClick}
-      _hover={{ bgColor: "rgba(228, 229, 232, 1)" }}
-    />
+    >
+      <IconButton
+        width={ifScreenlessthan1536px ? "100%" : "100%"}
+        height={ifScreenlessthan1536px ? "50%" : "70%"}
+        
+        // border="2px solid red"
+        _hover={{ bgColor: "transparent" }}
+        icon={<BsFilterSquare transform="scale(1.2)" color="black" />}
+        _active={{
+          bgColor: "transparent",
+          outline: "none",
+        }}
+        backgroundColor="transparent"
+        borderRadius={0}
+      />
+      <Text>Normalisation</Text>
+    </Box>
   );
 };
 

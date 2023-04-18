@@ -25,22 +25,24 @@ const ProgressBar = () => {
   return (
     <Box
       w="300px"
-      h="15px"
-      border="1px solid black" // Add black border
+      h="4px"
+      borderRadius="20px"
+      // border="1px solid black" // Add black border
       overflow="hidden" // Hide overflowing progress
       zIndex="9999"
+      // bg="#D9D9D9"
       display="flex"
       justifyContent="center"
       alignItems="center"
     >
-      <Box w="100%" h="100%" background="#f0f0f0" position="relative">
+      <Box w="100%" h="100%" background="#D9D9D9" position="relative">
         <Box
           position="absolute"
           top="0"
           left="0"
           bottom="0"
           width={progressWidth}
-          background="#3b5d7c"
+          background="#1B75BC"
           transition="width 0.5s ease-out" // Add transition for width
         />
       </Box>
