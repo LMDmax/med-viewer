@@ -1,6 +1,11 @@
 import React from "react";
 import { createIcon } from "@chakra-ui/react";
 
+export const AIcon = createIcon({
+  displayName: "AiIcon",
+
+});
+
 
 export const SquareIcon = createIcon({
   displayName: "SquareIcon",

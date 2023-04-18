@@ -14,18 +14,20 @@ import { BiTargetLock } from "react-icons/bi";
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import IconSize from "../ViewerToolbar/IconSize";
 import { AiAnalysisIcon } from "../Icons/CustomIcons";
-import aiIcon from "../../assets/images/AiIcon.png";
+import aiIcon from "../../../../Static/Images/AiIcon.png";
 
 const AiModels = ({
   slide,
   setToolSelected,
   setModelname,
+  toolSelected,
   bottomZoomValue,
   bottombottomZoomValue,
   navigatorCounter,
 }) => {
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
   const [TilHover, setTilHover] = useState(false);
+  const [animationActive, setAnimationActive] = useState(true);
   const [TilActiveState, setTilActiveState] = useState(0);
 
   // console.log(slide);
@@ -101,6 +103,19 @@ const AiModels = ({
       }
     },[TilActiveState])
 
+    useEffect(() => {
+      if (toolSelected === "RunRoi") {
+        setAnimationActive(true); // start the animation
+        const timeoutId = setTimeout(() => {
+          setAnimationActive(false); // stop the animation after 3 seconds
+        }, 3000);
+        return () => clearTimeout(timeoutId); // clear the timeout when component unmounts
+      } else {
+        setAnimationActive(false); // stop the animation if the condition is not met
+      }
+    }, [toolSelected]);
+    
+
   return (
     <Box
       w="fit-content"
@@ -123,6 +138,20 @@ const AiModels = ({
           backgroundColor: TilHover ? "rgba(157,195,226,0.4)" : "transparent",
           zIndex: 1,
         },
+        ...(animationActive && {
+          animation: `pulse 1s infinite`,
+          "@keyframes pulse": {
+            "0%": {
+              transform: "scale(1)"
+            },
+            "50%": {
+              transform: "scale(1.2)"
+            },
+            "100%": {
+              transform: "scale(1)"
+            }
+          }
+        })
       }}
     >
       <IconButton

@@ -19,6 +19,7 @@ import ViewerChat from "../ViewerChat";
 import ShowReport from "./ShowReport";
 import Crop from "../Crop/Crop";
 import Share from "../Sidebar/Share";
+import Cancel from "../Cancel/Cancel";
 
 function ScreenTools({
   viewerId,
@@ -80,7 +81,8 @@ function ScreenTools({
           handleChatFeedbar={handleChatFeedbar}
           navigatorCounter={navigatorCounter}
         />
-      )}
+        )}
+        <Cancel />
       {/* <Divider orientation="vertical" ml="5px" border="1px solid gray" /> */}
       {/* {report ? (
         <ShowReport

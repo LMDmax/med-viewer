@@ -287,6 +287,8 @@ import OpenSeadragon from "openseadragon";
           context.canvas.width,
           context.canvas.height
         );
+        console.log("context",context);
+        console.log("imgData",imgData);
         const pixels = imgData.data;
         for (let i = 0; i < pixels.length; i += 4) {
           pixels[i] = precomputedBrightness[pixels[i]];

@@ -186,7 +186,7 @@ const LayoutApp = ({
       break;
     case "RunRoi":
       returnText =
-        "Annotation is marked on the slide. Right click to run a ROI Algorithm.";
+        "Annotation is marked on the slide. Click on PRR AI button from top bar to run ROI analysis";
       break;
     case "Filter":
       returnText = "Enhance slide using the adjustment in the right panel. ";

@@ -250,6 +250,7 @@ function Move({
         />
         <AiModels
           bottomZoomValue={bottomZoomValue}
+          toolSelected={toolSelected}
           zoomValue={zoomValue}
           setModelname={setModelname}
           navigatorCounter={navigatorCounter}
