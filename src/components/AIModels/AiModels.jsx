@@ -13,8 +13,7 @@ import TooltipLabel from "../AdjustmentBar/ToolTipLabel";
 import { BiTargetLock } from "react-icons/bi";
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import IconSize from "../ViewerToolbar/IconSize";
-import { AiAnalysisIcon } from "../Icons/CustomIcons";
-import aiIcon from "../../../../Static/Images/AiIcon.png";
+import { AiIcon } from "../Icons/CustomIcons";
 
 const AiModels = ({
   slide,
@@ -160,9 +159,9 @@ const AiModels = ({
         _hover={{ bgColor: "transparent" }}
         icon={
           !TilHover ? (
-            <Image src={aiIcon} alt="Image" boxSize="24px" />
+            <AiIcon transform="scale(1.5)" color="red"/>
           ) : (
-            <Image src={aiIcon} alt="Image" boxSize="24px" />
+            <AiIcon transform="scale(1.5)" color="red"/>
           )
         }
         _active={{
