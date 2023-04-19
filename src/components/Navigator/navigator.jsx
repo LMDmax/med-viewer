@@ -127,12 +127,10 @@ const Navigator = ({
       align="center"
       py="12px"
     >
-      <HStack w="100%" align="center" justify="space-between">
-        <SideNavigationButton
-          icon={<MdOutlineKeyboardArrowLeft color="#151C25" />}
-          onClick={() => handleScroll("left")}
-          pl="20px"
-        />
+       <Text fontSize="14px">{`${curIndex + 1} of ${
+        slides?.length
+      } slides`}</Text>
+      <VStack w="100%" align="center" justify="space-between">
         <Scrollbars
           ref={scrollbarRef}
           style={{ width: "100%", borderWidth: "0px" }}
@@ -143,7 +141,7 @@ const Navigator = ({
           )}
           autoHide
         >
-          <HStack spacing="20px" px="12px" justify="center">
+          <VStack spacing="20px" px="12px" justify="center">
             {slides?.map((slide, index) => {
               const url = getSlideUrl(slide.awsImageBucketUrl);
               return (
@@ -209,16 +207,9 @@ const Navigator = ({
                 </Tooltip>
               );
             })}
-          </HStack>
+          </VStack>
         </Scrollbars>
-        <SideNavigationButton
-          icon={<MdOutlineKeyboardArrowRight color="#151C25" />}
-          onClick={() => handleScroll("right")}
-        />
-      </HStack>
-      <Text fontSize="14px">{`${curIndex + 1} of ${
-        slides?.length
-      } slides`}</Text>
+      </VStack>
     </VStack>
   ) : null;
 };

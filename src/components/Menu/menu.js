@@ -43,6 +43,7 @@ import Adjustments from "../Adjustments/Adjustments";
 
 import { BsSliders } from "react-icons/bs";
 import IconSize from "../ViewerToolbar/IconSize";
+import Navigator from "../Navigator/navigator";
 
 const FunctionsMenu = ({
   caseInfo,
@@ -193,6 +194,15 @@ const FunctionsMenu = ({
     });
   }, [fabricOverlay]);
 
+  useEffect(()=>{
+    if(isMultiview){
+      setIsOpen(true);
+    }
+    else{
+      setIsOpen(false);
+    }
+  },[isMultiview])
+
   useEffect(() => {
     if (activeObject?.type !== "textbox" && activeObject) {
       setIsOpen(true);
@@ -227,21 +237,19 @@ const FunctionsMenu = ({
           whiteSpace: "nowrap",
           position: "absolute",
           right: isOpen ? "0" : "0px",
-          height: "98%",
+          height: "85vh",
           top: "0",
         }}
-        
       >
         <Flex>
-          <Flex direction="column"  h="fit-content">
+          <Flex direction="column" h="fit-content">
             <Button
               onClick={() => setIsOpen(!isOpen)}
               w="70px"
               borderRadius={0}
               background="#FFFFFF"
               box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-              _hover={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}
-              
+              _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
             >
               {isOpen ? ">>" : "<<"}
             </Button>
@@ -256,7 +264,7 @@ const FunctionsMenu = ({
                   setSelectedOption("slides");
                   setIsOpen(true);
                 }}
-                _hover={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}
+                _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
               >
                 <VStack>
                   {selectedOption === "slides" ? (
@@ -285,8 +293,7 @@ const FunctionsMenu = ({
                 borderRadius={0}
                 background="rgba(255, 255, 255, 0.5)"
                 box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-                _hover={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}
-
+                _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
                 onClick={() => {
                   setSelectedOption("timeline");
                   setIsOpen(true);
@@ -319,8 +326,7 @@ const FunctionsMenu = ({
                 borderRadius={0}
                 background="rgba(255, 255, 255, 0.5)"
                 box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-                _hover={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}
-
+                _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
                 onClick={() => {
                   setSelectedOption("annotations");
                   setIsOpen(true);
@@ -352,8 +358,7 @@ const FunctionsMenu = ({
                 w="73px"
                 background="rgba(255, 255, 255, 0.5)"
                 borderRadius={0}
-                _hover={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}
-
+                _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
                 box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
                 onClick={() => {
                   setSelectedOption("comments");
@@ -387,8 +392,7 @@ const FunctionsMenu = ({
                 background="rgba(255, 255, 255, 0.5)"
                 borderRadius={0}
                 box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-                _hover={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}
-
+                _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
                 onClick={() => {
                   setSelectedOption("information");
                   setIsOpen(true);
@@ -421,8 +425,7 @@ const FunctionsMenu = ({
                 background="rgba(255, 255, 255, 0.5)"
                 borderRadius={0}
                 box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-                _hover={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}
-
+                _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
                 onClick={() => {
                   setSelectedOption("report");
                   setIsOpen(true);
@@ -456,8 +459,7 @@ const FunctionsMenu = ({
                   background="rgba(255, 255, 255, 0.5)"
                   borderRadius={0}
                   box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-                _hover={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}
-
+                  _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
                   onClick={() => {
                     setSelectedOption("messages");
                     setIsOpen(true);
@@ -492,8 +494,7 @@ const FunctionsMenu = ({
                   background="rgba(255, 255, 255, 0.5)"
                   borderRadius={0}
                   box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-                _hover={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}
-
+                  _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
                   onClick={() => {
                     setSelectedOption("adjustments");
                     setIsOpen(true);
@@ -535,7 +536,10 @@ const FunctionsMenu = ({
                 caseInfo={caseInfo}
                 slides={slides}
                 viewerId={viewerId}
+                isMultiview={isMultiview}
                 tile={tile}
+                setIsMultiview={setIsMultiview}
+                setToolSelected={setToolSelected}
                 setIsNavigatorActive={setIsNavigatorActive}
               />
             ) : selectedOption === "information" ? (

@@ -2,16 +2,21 @@ import { Flex, Image, Text, Tooltip } from "@chakra-ui/react";
 import React from "react";
 import Scrollbars from "react-custom-scrollbars";
 import { useFabricOverlayState } from "../../state/store";
-import { getSlideUrl } from "../../utility/utility";
+import { getSlideUrl } from "../../utility/utility"
+import { v4 as uuidv4 } from "uuid";
 import {
   changeTile,
   updateTool,
+  addViewerWindow,
 } from "../../state/actions/fabricOverlayActions";
 
 const SlidesMenu = ({
   caseInfo,
   slides,
   viewerId,
+  setToolSelected,
+  isMultiview,
+  setIsMultiview,
   tile,
   setIsNavigatorActive,
 }) => {
@@ -23,21 +28,59 @@ const SlidesMenu = ({
   );
 
   const changeSlide = (slide) => {
-    setFabricOverlayState(
-      changeTile({
-        id: viewerId,
-        tile: slide.awsImageBucketUrl,
-        slideName: slide.accessionId,
-        slideId: slide?._id || slide?.slideId,
-        originalFileUrl: slide.originalFileUrl,
-      })
-    );
-    viewer.open(slide.awsImageBucketUrl);
+    if (isMultiview) {
+      const vKeys = Object.keys(viewerWindow);
+      if (vKeys.length > 1) {
+        const { viewer: v, fabricOverlay: fo } = viewerWindow[vKeys[1]];
 
-    // clear canvas (remove all annotations)
-    fabricOverlay.fabricCanvas().clear();
-    setIsNavigatorActive(false);
+        // clear canvas (remove all annotations)
+        fo.fabricCanvas().clear();
 
+        // change tile
+        setFabricOverlayState(
+          changeTile({
+            id: vKeys[1],
+            tile: slide.awsImageBucketUrl,
+            slideName: slide.slideName,
+            slideId: slide?._id || slide?.slideId,
+            originalFileUrl: slide.originalFileUrl,
+          })
+        );
+        v.open(slide.awsImageBucketUrl);
+        fo.fabricCanvas().requestRenderAll();
+      } else {
+        const id = uuidv4();
+        setFabricOverlayState(
+          addViewerWindow([
+            {
+              id,
+              tile: slide.awsImageBucketUrl,
+              slideName: slide.slideName,
+              slideId: slide?._id || slide?.slideId,
+              originalFileUrl: slide.originalFileUrl,
+            },
+          ])
+        );
+      }
+      setToolSelected("MultiviewSlideChoosed")
+      setIsMultiview(false);
+    } else {
+      setFabricOverlayState(
+        changeTile({
+          id: viewerId,
+          tile: slide.awsImageBucketUrl,
+          slideName: slide.accessionId,
+          slideId: slide?._id || slide?.slideId,
+          originalFileUrl: slide.originalFileUrl,
+        })
+      );
+      viewer.open(slide.awsImageBucketUrl);
+
+      // clear canvas (remove all annotations)
+      fabricOverlay.fabricCanvas().clear();
+      setIsNavigatorActive(false);
+
+    }
     setFabricOverlayState(updateTool({ tool: "Move" }));
   };
 

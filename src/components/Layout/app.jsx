@@ -360,7 +360,7 @@ const LayoutApp = ({
           isXmlAnnotations={isXmlAnnotations}
         />
 
-        {isNavigatorActive && (
+        {/* {isNavigatorActive && (
           <Navigator
             caseInfo={caseInfo}
             slides={slides}
@@ -368,8 +368,8 @@ const LayoutApp = ({
             isActive={isNavigatorActive}
             setIsNavigatorActive={setIsNavigatorActive}
           />
-        )}
-        {isMultiview && (
+        )} */}
+        {/* {isMultiview && (
           <Navigator
             caseInfo={caseInfo}
             slides={slides}
@@ -379,7 +379,7 @@ const LayoutApp = ({
             isMultiview={isMultiview}
             setIsMultiview={setIsMultiview}
           />
-        )}
+        )} */}
         <LayoutInnerBody>
           {sidebar ? (
             <LayoutAppSidebar
