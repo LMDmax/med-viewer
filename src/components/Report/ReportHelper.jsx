@@ -120,7 +120,7 @@ const SubmitReportButton = ({ userInfo, reportData, handleReportsubmit }) => {
       <Button
         variant="solid"
         h="32px"
-        ml="15px"
+        // mr="15px"
         borderRadius="0px"
         backgroundColor="#00153F"
         _hover={{}}
@@ -190,7 +190,7 @@ const ReportHelper = ({
   const openReport = () => {
     setSynopticType("");
     setShowReport(true);
-    console.log("clicked");
+    // console.log("clicked");
   };
   // form
   const annotedSlidesForm = new FormData();

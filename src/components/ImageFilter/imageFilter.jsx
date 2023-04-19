@@ -32,14 +32,14 @@ const ImageFilter = ({ viewerId, setToolSelected, navigatorCounter }) => {
   };
 
   const reinhardFilter = (context, callback) => {
-    console.log(context);
+    // console.log(context);
     const imgData = context.getImageData(
       0,
       0,
       context.canvas.width,
       context.canvas.height
     );
-    console.log(imgData);
+    // console.log(imgData);
     const pixels = imgData.data;
 
     // let perc = []

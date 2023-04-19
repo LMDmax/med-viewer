@@ -93,11 +93,11 @@ const AiModels = ({
           else{
               setModelname("TILClear")
           }
-          console.log("object");
+          // console.log("object");
       }
       else{
           setToolSelected("TILError");
-          console.log("object2");
+          // console.log("object2");
 
       }
     },[TilActiveState])

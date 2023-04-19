@@ -43,7 +43,7 @@ const Multiview = ({
     }
   }, [state]);
 
-  console.log(state);
+  // console.log(state);
 
   useEffect(() => {
     if (navigatorCounter > 0) {

@@ -372,7 +372,7 @@ const ViewerControls = ({
   // update Annotation in db
   const onUpdateAnnotation = (data) => {
     delete data?.slideId;
-    console.log(data);
+    // console.log(data);
     modifyAnnotation({
       variables: { body: { ...data } },
     });
@@ -396,13 +396,19 @@ const ViewerControls = ({
     setIsAnnotationLoaded(true);
   }, [slideId]);
 
+// console.log(responseData);
+
   useEffect(() => {
     if (responseData) {
       // console.log("====================================");
-      // console.log("analysis...", responseData);
+      // console.log("analysis...", responseData.getVhutAnalysis.message);
       // console.log("====================================");
-
-      showAnalysisData(responseData);
+if(responseData.getVhutAnalysis.message !== "No Analysis found"){
+  showAnalysisData(responseData);
+}
+else{
+ setToolSelected("MorphometryError")
+}
     }
   }, [responseData]);
 

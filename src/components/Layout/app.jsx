@@ -229,6 +229,10 @@ const LayoutApp = ({
       returnText =
         "KI67 analysis can only be run on stain type IHC and marker type must be KI67 .";
       break;
+      case "MorphometryError":
+        returnText =
+          "Something went wrong";
+        break;
     case "MorphometrySlideIssue":
       returnText = "Morphometry analysis can only be run on H&E slides.";
       break;

@@ -19,7 +19,7 @@ const Studies = ({ caseInfo, slideInfo }) => {
       : "-",
   };
 
-  console.log(slideInfo);
+  // console.log(slideInfo);
 
   const patientDetails = {
     UHID: `${caseInfo?.patient?.uhid}`,

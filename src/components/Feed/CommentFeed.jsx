@@ -243,7 +243,7 @@ const CommentFeed = ({
     onDeleteConfirmationClose();
   };
 
-  console.log(activityFeed);
+  // console.log(activityFeed);
 
   return (
     <Flex
