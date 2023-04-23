@@ -49,11 +49,12 @@ const DownloadImage = ({ setToolSelected }) => {
           handleClick();
           setScreenshotHover(!screenshotHover);
         }}
-        py="5px"
+        pt="8px"
         mx="15px"
         w="65px"
         h="100%"
         cursor="pointer"
+        // border="1px solid red"
         bg={screenshotHover ? "rgba(157,195,226,0.4)" : ""}
       >
         <IconButton
@@ -68,8 +69,9 @@ const DownloadImage = ({ setToolSelected }) => {
           }}
           backgroundColor="transparent"
           borderRadius={0}
+          mb="3px"
         />
-        <Text align="center">Screenshot</Text>
+        <Text align="center" fontFamily="inter" fontSize="10px">Screenshot</Text>
       </Box>
 
       <Modal

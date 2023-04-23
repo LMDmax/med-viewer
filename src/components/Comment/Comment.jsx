@@ -278,7 +278,7 @@ const CommentBox = ({
         setAddComments(!addComments);
         handleClick();
       }}
-      py="5px"
+      pt="8px"
       w="60px"
       h="100%"
       style={{ position: "relative", display: "inline-block" }}
@@ -304,7 +304,7 @@ const CommentBox = ({
         _hover={{ bgColor: "transparent" }}
         icon={
           <RiChatQuoteLine
-            transform="scale(1.5)"
+            transform="scale(1.2)"
             size={iconSize}
             color="black"
           />
@@ -320,8 +320,9 @@ const CommentBox = ({
         // mr="7px"
         // border="1px solid red"
         borderRadius={0}
+        mb="3px"
       />
-      <Text align="center">Comment</Text>
+      <Text align="center" fontFamily="inter" fontSize="10px">Comment</Text>
     </Box>
   );
 };

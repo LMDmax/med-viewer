@@ -39,7 +39,7 @@ const ViewerChat = ({
     <Box
       w="60px"
       h="100%"
-      py="5px"
+      pt="8px"
       bg={chatHover ? "rgba(157,195,226,0.4)" : ""}
       cursor="pointer"
       onClick={() => {
@@ -58,8 +58,9 @@ const ViewerChat = ({
         }}
         backgroundColor="transparent"
         borderRadius={0}
+        mb="3px"
       />
-      <Text align="center">Chat</Text>
+      <Text align="center" fontFamily="inter" fontSize="10px">Chat</Text>
     </Box>
   );
 };

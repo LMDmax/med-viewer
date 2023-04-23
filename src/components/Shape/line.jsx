@@ -164,22 +164,32 @@ const Line = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
       viewer.setMouseNavEnabled(true);
       viewer.outerTracker.setTracking(true);
 
-      canvas.setActiveObject(myStateRef.current.currentDragShape);
-
-      canvas.renderAll();
-
       const currShape = myStateRef.current.currentDragShape;
 
-      currShape.setCoords();
-      setShape(myStateRef.current.currentDragShape);
+      // Check if the shape has been dragged
+      if (currShape.x1 !== currShape.x2 || currShape.y1 !== currShape.y2) {
+        canvas.add(currShape);
+        currShape.setCoords();
+        setShape(myStateRef.current.currentDragShape);
+        onOpen();
+      } else {
+        toast({
+          title: "Please Draw Again",
+          status: "error",
+          duration: 500,
+          isClosable: true,
+        });
+        canvas.remove(currShape);
+        setFabricOverlayState(updateTool({ tool: "Move" }));
+      }
+
+      canvas.renderAll();
 
       setMyState({
         ...myStateRef.current,
         currentDragShape: null,
         isMouseDown: false,
       });
-
-      onOpen();
     }
 
     // Add click handlers
@@ -201,7 +211,12 @@ const Line = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
     const addToFeed = async () => {
       if (!shape) return;
 
-      const message = createAnnotationMessage({ slideId, shape, viewer, type:"line" });
+      const message = createAnnotationMessage({
+        slideId,
+        shape,
+        viewer,
+        type: "line",
+      });
 
       const { x1, y1, x2, y2 } = message.object;
       message.object.set({
@@ -259,12 +274,6 @@ const Line = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
       onClick={() => {
         handleClick();
         setToolSelected("LineTool");
-        toast({
-          title: "Line annotation tool selected",
-          status: "success",
-          duration: 1500,
-          isClosable: true,
-        });
       }}
       borderRadius={0}
       bg={isActive ? "#DEDEDE" : "#F6F6F6"}

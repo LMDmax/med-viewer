@@ -20,7 +20,7 @@ navigate("/dashboard/cases")
         <Box
       w="60px"
       h="100%"
-      py="5px"
+      pt="8px"
       ml="10px"
       bg={""}
       cursor="pointer"
@@ -33,15 +33,16 @@ navigate("/dashboard/cases")
         width={ifScreenlessthan1536px ? "100%" : "100%"}
         // border="2px solid red"
         _hover={{ bgColor: "transparent" }}
-        icon={<RxCross1 transform="scale(1.5)" color="red" />}
+        icon={<RxCross1 transform="scale(1.2)" color="red" />}
         _active={{
           bgColor: "transparent",
           outline: "none",
         }}
         backgroundColor="transparent"
         borderRadius={0}
+        mb="3px"
       />
-      <Text align="center" color="red">Close</Text>
+      <Text align="center" fontFamily="inter" fontSize="10px" color="red">Close</Text>
     </Box>
     );
 };

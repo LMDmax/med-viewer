@@ -362,7 +362,7 @@ const BreastCancer = ({
           MACROSCOPY
         </Text>
       </Flex>
-      <Flex w="100%" flex="1" flexWrap="wrap" justifyContent="space-between">
+      {/* <Flex w="100%" flex="1" flexWrap="wrap" justifyContent="space-between">
         {reportData.slice(0, 13).map((inputField, index) => {
           return (
             <SRHelper
@@ -374,7 +374,7 @@ const BreastCancer = ({
             />
           );
         })}
-      </Flex>
+      </Flex> */}
       <Flex direction="column">
         <HStack flex="1" py="1vh" />
         <Text fontWeight="600" py="1vh">
@@ -405,6 +405,7 @@ const BreastCancer = ({
                 ? synopticReportData?.comments
                 : inputData.comments
             }
+            style={{ width: '450px' }}
           />
         </VStack>
         <Flex
@@ -418,7 +419,7 @@ const BreastCancer = ({
         >
           <Text fontWeight="600">INVASIVE CARCINOMA</Text>
         </Flex>
-        <HStack flex="1" alignItems="flex-start">
+        <HStack flexWrap="wrap" alignItems="flex-start">
           <Text fontWeight="600" minW="49%">
             INVASIVE TUMOUR SIZE{" "}
             <Input

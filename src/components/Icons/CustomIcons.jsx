@@ -13,6 +13,17 @@ export const AiIcon = createIcon({
 
   ),
 });
+export const MoveBar = createIcon({
+  displayName: "CircleIconFilled",
+  viewBox:"0 0 24 24",
+  path: (
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="6" viewBox="0 0 16 6" fill="none">
+<path d="M16 0H0V2H16V0ZM0 6H16V4H0V6Z" fill="black"/>
+</svg>
+  ),
+});
+
+
 
 export const SquareIcon = createIcon({
   displayName: "SquareIcon",

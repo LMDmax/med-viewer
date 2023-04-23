@@ -40,7 +40,7 @@ const Timeline = ({ timelineData, viewerId }) => {
   // console.log(timelineData);
   return (
     <ScrollBar>
-      <Box w="350px">
+      <Box w="350px" bg="#FFFFFF" h="83vh">
         <VerticalTimeline
           layout="1-column-left"
           lineColor="#DEDEDE"

@@ -86,7 +86,7 @@ function Move({
   }, [typeToolsToggle]);
 
   const handleClick = () => {
-    setFabricOverlayState(updateTool({ tool: "Move" }));
+    // setFabricOverlayState(updateTool({ tool: "Move" }));
   };
   const handleAnnotationsClick = () => {
     if (!isActive) setFabricOverlayState(updateTool({ tool: "Move" }));
@@ -158,7 +158,7 @@ function Move({
               setActiveAnnotations(!activeAnnotations);
             }}
             w="70px"
-            py="5px"
+            pt="8px"
             h="100%"
             style={{ position: "relative", display: "inline-block" }}
             _hover={{ bgColor: "transparent" }}
@@ -186,7 +186,7 @@ function Move({
               _hover={{ bgColor: "transparent" }}
               icon={
                 <AnnotationIcon
-                  transform="scale(1.5)"
+                  transform="scale(1.2)"
                   size={iconSize}
                   color="black"
                 />
@@ -202,8 +202,9 @@ function Move({
               // mr="7px"
               // border="1px solid red"
               borderRadius={0}
+              mb="3px"
             />
-            <Text align="center" color="black">Annotation</Text>
+            <Text align="center" color="black" fontSize="10px" fontFamily="inter">Annotation</Text>
           </Box>
         ) : null}
 

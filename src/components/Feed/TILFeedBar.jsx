@@ -167,7 +167,7 @@ const TILFeedBar = ({
       pathStroma.opacity = "0.5";
       pathStroma.selectable = false;
       pathStroma.hoverCursor = "default";
-      if(pathStroma?.path.length >2){
+      if (pathStroma?.path.length > 2) {
         const message = createAnnotationMessage({
           slideId,
           shape: pathStroma,
@@ -175,51 +175,47 @@ const TILFeedBar = ({
           maskType: "stroma",
           type: "path",
         });
-          const key = getFileBucketFolder(originalFileUrl);
-      const newObject = {
-        hash: message?.object?.hash,
-        path: message?.object?.path,
-        top: message?.object?.top,
-        width: message?.object?.width,
-        height: message?.object?.height,
-        left: message?.object?.left,
-        maskType: message?.object?.maskType,
-        slideId: message?.object?.slide,
-	isRemove: false,
-        type: message?.object?.type,
-	bucket_name: "med-ai-image-processor",
-        notifyHook: `${Environment.VIEWER_URL}/notify_hil`,
-        key,
-      };
-      const resp = axios.post(
-        "https://backup-quantize-vhut.prr.ai/TILS/HIL",
-        newObject
-      );
-      // console.log(resp);
-      if ((resp.status = "Accepted")) {
-        setLoadUI(false);
-        handleDrawStroma();
+        const key = getFileBucketFolder(originalFileUrl);
+        const newObject = {
+          hash: message?.object?.hash,
+          path: message?.object?.path,
+          top: message?.object?.top,
+          width: message?.object?.width,
+          height: message?.object?.height,
+          left: message?.object?.left,
+          maskType: message?.object?.maskType,
+          slideId: message?.object?.slide,
+          isRemove: false,
+          type: message?.object?.type,
+          bucket_name: "med-ai-image-processor",
+          notifyHook: `${Environment.VIEWER_URL}/notify_hil`,
+          key,
+        };
+        const resp = axios.post(
+          "https://backup-quantize-vhut.prr.ai/TILS/HIL",
+          newObject
+        );
+        // console.log(resp);
+        if ((resp.status = "Accepted")) {
+          setLoadUI(false);
+          handleDrawStroma();
+          toast({
+            title: "HIL is Processing ",
+            status: "success",
+            duration: 500,
+            isClosable: true,
+          });
+        }
+      } else if (pathStroma?.path?.length <= 2) {
+        // console.log("object23");
         toast({
-          title: "HIL is Processing ",
-          status: "success",
+          title: "Please Draw Again",
+          status: "error",
           duration: 500,
           isClosable: true,
         });
       }
-       }
-       else if (pathStroma?.path?.length <= 2){
-        // console.log("object23");
-        toast({
-              title: "Please Draw Again",
-              status: "error",
-              duration: 500,
-              isClosable: true,
-            });
-       }
-     
     }
-
-   
   }, [pathStroma]);
 
   const handleDrawStroma = () => {
@@ -546,9 +542,9 @@ const TILFeedBar = ({
             borderColor="#00153f"
             borderRadius="none"
             size="sm"
-            disabled={newHilData? false : true}
-            onClick={()=>{
-              setRefreshHil(refreshHil+1);
+            disabled={newHilData ? false : true}
+            onClick={() => {
+              setRefreshHil(refreshHil + 1);
             }}
           >
             Refresh
@@ -565,18 +561,18 @@ const TILFeedBar = ({
             borderColor="#00153f"
             borderRadius="none"
             size="sm"
-            disabled={newHilData? false : true}
-            onClick={()=>{
+            disabled={newHilData ? false : true}
+            onClick={() => {
               setHideModification(!hideModification);
             }}
           >
-           {hideModification  === true ? "Show Modification" : "Hide Modification"}
+            {hideModification === true
+              ? "Show Modification"
+              : "Hide Modification"}
           </Button>
         </Flex>
         <Box borderBottom="1px solid gray" px="5px" mb="10px" py="3px">
-          <Text fontSize="15px">
-            TIL Score : {tilScore}
-          </Text>
+          <Text fontSize="15px">TIL Score : {tilScore}</Text>
         </Box>
         <Box borderBottom="1px solid gray" px="5px" mb="10px" py="3px">
           <Text fontSize="15px">TIL Formula :</Text>
@@ -585,19 +581,13 @@ const TILFeedBar = ({
           </Text>
         </Box>
         <Box borderBottom="1px solid gray" px="5px" mb="10px" py="3px">
-          <Text fontSize="15px">
-            Tumor Area : {tumorArea}
-          </Text>
+          <Text fontSize="15px">Tumor Area : {tumorArea}</Text>
         </Box>
         <Box borderBottom="1px solid gray" px="5px" mb="10px" py="3px">
-          <Text fontSize="15px">
-            Stroma Area : {stromaArea}
-          </Text>
+          <Text fontSize="15px">Stroma Area : {stromaArea}</Text>
         </Box>
         <Box borderBottom="1px solid gray" px="5px" mb="10px" py="3px">
-          <Text fontSize="15px">
-            Lymphocytes Count: {lymphocyteCount}
-          </Text>
+          <Text fontSize="15px">Lymphocytes Count: {lymphocyteCount}</Text>
         </Box>
       </Box>
     </Box>

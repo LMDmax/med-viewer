@@ -116,9 +116,9 @@ const useCanvasHelpers = (viewerId) => {
     if (!canvas || !annotation) return;
 
     const target = canvas.getObjectByHash(annotation?.hash);
-    target.set(annotation);
+    target?.set(annotation);
 
-    if (target.type === "textbox") {
+    if (target?.type === "textbox") {
       toast({
         title: "Comment updated",
         status: "success",

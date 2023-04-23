@@ -91,16 +91,23 @@ const TypeTools = ({
         right: 90 * (window.screen.width / 100),
         bottom: 60 * (window.screen.height / 100),
       }}
+      handle=".drag-handle"
     >
       <Flex
         direction="column"
         pos="fixed"
         zIndex="999"
         boxShadow="1px 1px 2px rgba(176, 200, 214, 0.5)"
-        bgColor="#FCFCFC"
       >
-        <Flex h="12px" bgColor="rgba(236, 236, 236, 1)" cursor="move" />
-        <SimpleGrid columns={2} px="8px" py="8px" spacing={2} cursor="move">
+        <Flex
+          className="drag-handle"
+          borderTop="5px solid black"
+          borderBottom="5px solid black"
+          h="15px"
+          bgColor="transparent"
+          cursor="move"
+        />
+        <SimpleGrid columns={2} px="8px" bgColor="#FCFCFC" py="8px" spacing={2}>
           <Line
             setToolSelected={setToolSelected}
             viewerId={viewerId}

@@ -119,7 +119,7 @@ const AiModels = ({
     <Box
       w="fit-content"
       h="100%"
-      py="5px"
+      pt="8px"
       // border="1px solid green"
       style={{ position: "relative", display: "inline-block" }}
       _hover={{ bgColor: "transparent" }}
@@ -159,9 +159,9 @@ const AiModels = ({
         _hover={{ bgColor: "transparent" }}
         icon={
           !TilHover ? (
-            <AiIcon transform="scale(1.5)" color="red"/>
+            <AiIcon transform="scale(1.2)" color="red"/>
           ) : (
-            <AiIcon transform="scale(1.5)" color="red"/>
+            <AiIcon transform="scale(1.2)" color="red"/>
           )
         }
         _active={{
@@ -175,6 +175,7 @@ const AiModels = ({
         // mr="7px"
         // border="1px solid red"
         borderRadius={0}
+        mb="3px"
       />
       <Flex
         justifyContent="space-between"
@@ -182,7 +183,7 @@ const AiModels = ({
         alignItems="center"
         cursor="pointer"
       >
-        <Text ml="3px" userSelect="none" align="center" color="#5497cd">
+        <Text ml="3px" fontFamily="inter" fontSize="10px" userSelect="none" align="center" color="#5497cd">
           PRR AI
         </Text>
         <RiArrowDownSLine color="#5497cd" size="16px" />

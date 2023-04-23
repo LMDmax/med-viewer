@@ -607,6 +607,7 @@ export const updateAnnotationInDB = async ({
   updateObject,
   onUpdateAnnotation,
 }) => {
+  // console.log("updateObject",updateObject);
   if (!hash || !updateObject || !onUpdateAnnotation) return false;
   try {
     await onUpdateAnnotation({

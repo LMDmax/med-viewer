@@ -18,10 +18,10 @@ const MoveTool = ({ isActive, handleClick }) => {
     <Box
       bg={isActive ? " rgba(157,195,226,0.4)" : ""}
       w="60px"
-      // border="2px solid red"
+      // border="2px solid pink"
       h="100%"
-      py="5px"
-      onClick={handleClick}
+      pt="8px"
+      onClick={()=>handleClick()}
     >
       <IconButton
         width={ifScreenlessthan1536px ? "100%" : "100%"}
@@ -29,7 +29,7 @@ const MoveTool = ({ isActive, handleClick }) => {
         _hover={{ bgColor: "transparent" }}
         icon={
           <BsCursor
-            style={{ fontSize: "1.5em", transform: "scaleX(-1)" }}
+            style={{ fontSize: "1.2em", transform: "scaleX(-1)" }}
             color="black"
           />
         }
@@ -44,8 +44,9 @@ const MoveTool = ({ isActive, handleClick }) => {
         // mr="7px"
         // border="1px solid red"
         borderRadius={0}
+        mb="3px"
       />
-      <Text align="center">Select</Text>
+      <Text fontFamily="inter" fontSize="10px" align="center">Select</Text>
     </Box>
   );
 };

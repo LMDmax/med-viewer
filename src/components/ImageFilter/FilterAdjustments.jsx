@@ -129,7 +129,7 @@ const FilterAdjustments = ({
     <Box
       w="70px"
       h="100%"
-      py="5px"
+      pt="8px"
       onClick={handleClick}
       style={{ position: "relative", display: "inline-block" }}
       _hover={{ bgColor: "transparent" }}
@@ -164,8 +164,9 @@ const FilterAdjustments = ({
         // mr="7px"
         // border="1px solid red"
         borderRadius={0}
+        mb="3px"
       />
-      <Text align="center">Adjustment</Text>
+      <Text align="center" fontFamily="inter" fontSize="10px">Adjustment</Text>
       <Modal
         isOpen={isOpen}
         onClose={handleOnClose}

@@ -22,7 +22,7 @@ const Fullscreen = ({ viewerId }) => {
   return (
     <ToolbarButton
       icon={<RiFullscreenFill size={IconSize()} color="#151C25" />}
-      backgroundColor="#E4E5E8"
+      backgroundColor="#D9D9D9"
       _hover={{ bgColor: "#ECECEC" }}
       _active={{
         outline: "none",

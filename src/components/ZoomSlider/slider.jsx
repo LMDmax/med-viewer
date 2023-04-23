@@ -149,7 +149,7 @@ useEffect(()=>{
         w={inputRef?.current?.value?.length > 2 ? "45px" : "25px"}
         textAlign="center"
       />
-      <Text>x</Text>
+      <Text fontFamily="inter">x</Text>
     </Flex>
   );
 };

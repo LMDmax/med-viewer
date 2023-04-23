@@ -41,6 +41,7 @@ const MagicWandTool = ({
   const { fabricOverlay, viewer, slideId, originalFileUrl } =
     viewerWindow[viewerId];
   const [zoomValue, setZoomValue] = useState(1);
+  const[activeMagicWand, setActiveMagicWand] = useState(false);
 
 
   const toast = useToast();
@@ -205,8 +206,15 @@ const MagicWandTool = ({
   }, [isActive, fabricOverlay]);
 
   const handleClick = () => {
-    setFabricOverlayState(updateTool({ tool: "MagicWand" }));
+    setActiveMagicWand(!activeMagicWand)
+    if(!activeMagicWand){
+      setFabricOverlayState(updateTool({ tool: "MagicWand" }));
     setFabricOverlayState(updateIsViewportAnalysing(true));
+    }
+    else{
+      setFabricOverlayState(updateTool({ tool: "Move" }));
+
+    }
   };
 
   const { data: vhutSubscriptionData, error: vhutSubscription_error } =
@@ -377,12 +385,7 @@ const MagicWandTool = ({
       icon={<VscWand size={24} color={isActive ? "#3B5D7C" : "#000"} />}
       onClick={() => {
         handleClick();
-        toast({
-          title: "Magic wand tool selected",
-          status: "success",
-          duration: 500,
-          isClosable: true,
-        });
+        
       }}
       borderRadius={0}
       bg={isActive ? "#DEDEDE" : "#F6F6F6"}

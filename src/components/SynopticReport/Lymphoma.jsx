@@ -312,7 +312,7 @@ const Lymphoma = ({
         })}
       </Flex>
       <Flex direction="column">
-        <HStack flex="1" alignItems="flex-start">
+        <HStack flex="1" w="450px" flexWrap="wrap" alignItems="flex-start">
           <Text fontWeight="600" minW="49%">
             CLINICAL OR DIFFERENT DIAGNOSIS
           </Text>

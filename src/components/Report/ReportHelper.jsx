@@ -105,7 +105,8 @@ const OpenReportButton = ({ openReport }) => {
 
 const SubmitReportButton = ({ userInfo, reportData, handleReportsubmit }) => {
   return (
-    <Tooltip
+   <Box>
+     <Tooltip
       label="Submit Report"
       placement="bottom"
       openDelay={0}
@@ -145,6 +146,7 @@ const SubmitReportButton = ({ userInfo, reportData, handleReportsubmit }) => {
         Submit Report
       </Button>
     </Tooltip>
+   </Box>
   );
 };
 
@@ -262,7 +264,7 @@ const ReportHelper = ({
   // }
 
   return (
-    <Box>
+    <Box ml="-82px">
       {!showReport ? (
         <Menu autoSelect={false}>
           <MenuButton>

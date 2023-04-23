@@ -224,6 +224,9 @@ const LayoutApp = ({
     case "TILLoading":
       returnText = "TIL will enable after sometime.";
       break;
+      case "pathError":
+      returnText = "Please draw a closed path to run ROI analysis.";
+      break;
 
     case "KI67Error":
       returnText =
@@ -548,7 +551,7 @@ const LayoutApp = ({
             searchSelectedData={searchSelectedData}
           />
         </LayoutInnerBody>
-        <Flex bg="#F0F0F0" pl="30px" w="100%" zIndex={99} h="25px">
+        <Flex bg="#FFFFFF" py="5px" boxShadow="0px 0px 1px 0.1px" pl="30px" w="100%" zIndex={99} h="32px">
           <Flex justifyContent="space-between" alignItems="center">
             <Flex
               h="full"
@@ -582,12 +585,12 @@ const LayoutApp = ({
             </Flex>
             <Box pos="absolute" right="0" me="30px">
               <Flex>
-                <Text mr="5px">{bottomZoomValue}X</Text>
+                <Text  fontSize="14px" mr="5px">{bottomZoomValue}X</Text>
                 <Image
                   src="https://i.ibb.co/7CtYTC2/bottom-Bar.png"
                   alt="Bottom Bar"
                 />
-                <Text ml="5px">{unit}</Text>
+                <Text ml="5px" fontSize="14px">{unit}</Text>
               </Flex>
             </Box>
           </Flex>

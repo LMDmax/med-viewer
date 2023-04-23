@@ -1,6 +1,8 @@
-import React from "react";
+import React,{useEffect, useState} from "react";
 
 import { ChevronRightIcon } from "@chakra-ui/icons";
+import { useFabricOverlayState } from "../../state/store";
+
 import {
   Menu,
   MenuButton,
@@ -17,6 +19,7 @@ import {
   Box,
   forwardRef,
 } from "@chakra-ui/react";
+import { getZoomValue } from "../../utility";
 
 function DisplayMenu({ setZoom }) {
   return (
@@ -160,6 +163,7 @@ export function CustomMenu({
   setZoom,
   viewer,
   enableAI,
+  viewerId,
   runKI67,
   setModelname,
   onHandleVhutAnalysis,
@@ -174,6 +178,8 @@ export function CustomMenu({
   application,
   isKI67Analysed,
 }) {
+  const value = getZoomValue(viewer);
+
   return isMenuOpen ? (
     <Box>
       <Menu isOpen={isMenuOpen}>
@@ -205,7 +211,7 @@ export function CustomMenu({
                 closeMenu();
               }}
               closeOnSelect
-              isDisabled={isMorphometryDisabled || slide?.stainType === "IHC"}
+              isDisabled={isMorphometryDisabled || slide?.stainType === "IHC" || value <39}
             >
               Run Morphometry
             </MenuItem>
@@ -221,7 +227,7 @@ export function CustomMenu({
                   closeMenu();
                 }}
                 closeOnSelect
-                isDisabled={isMorphometryDisabled}
+                isDisabled={isMorphometryDisabled || value <39}
               >
                 Run KI-67
               </MenuItem>

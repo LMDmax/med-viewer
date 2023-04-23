@@ -42,8 +42,16 @@ import ChatFeed from "../Feed/ChatFeed";
 import Adjustments from "../Adjustments/Adjustments";
 
 import { BsSliders } from "react-icons/bs";
+import {
+  HiOutlineChevronDoubleLeft,
+  HiOutlineChevronDoubleRight,
+} from "react-icons/hi";
 import IconSize from "../ViewerToolbar/IconSize";
 import Navigator from "../Navigator/navigator";
+import { updateAnnotationInDB } from "../../utility";
+import { UPDATE_ANNOTATION } from "../../graphql/annotaionsQuery";
+import { useMutation } from "@apollo/client";
+import { debounce } from "lodash";
 
 const FunctionsMenu = ({
   caseInfo,
@@ -103,6 +111,8 @@ const FunctionsMenu = ({
   const { viewerWindow } = fabricOverlayState;
   const { tile, slideId, viewer, fabricOverlay } = viewerWindow[viewerId];
   const [activeObject, setActiveObject] = useState();
+  const [updatedAnnotation, setUpdatedAnnotation] = useState(null);
+  
   const [selectedOption, setSelectedOption] = useState("slides");
   const [reportData, setReportData] = useState({
     clinicalStudy: "",
@@ -112,6 +122,20 @@ const FunctionsMenu = ({
     advice: "",
     annotedSlides: "",
   });
+  const [
+    modifyAnnotation,
+    { data: updatedData, error: updateError, loading: updateLoading },
+  ] = useMutation(UPDATE_ANNOTATION);
+
+  const onUpdateAnnotation = (data) => {
+    // console.log("====================================");
+    // console.log("activity feed update");
+    // console.log("====================================");
+    delete data?.slideId;
+    modifyAnnotation({
+      variables: { body: { ...data } },
+    });
+  };
   const handleReportData = (input) => (e) => {
     const { value } = e.target;
     setReportData((prevState) => ({
@@ -190,18 +214,21 @@ const FunctionsMenu = ({
     const canvas = fabricOverlay?.fabricCanvas();
     canvas?.on("mouse:down", (e) => {
       const clickedObject = canvas?.findTarget(e.e);
+      // console.log(clickedObject);
       setActiveObject(clickedObject); // You can access the details of the clicked object here
     });
   }, [fabricOverlay]);
 
-  useEffect(()=>{
-    if(isMultiview){
+  
+
+  useEffect(() => {
+    if (isMultiview) {
+      setSelectedOption("slides");
       setIsOpen(true);
-    }
-    else{
+    } else {
       setIsOpen(false);
     }
-  },[isMultiview])
+  }, [isMultiview]);
 
   useEffect(() => {
     if (activeObject?.type !== "textbox" && activeObject) {
@@ -210,6 +237,27 @@ const FunctionsMenu = ({
       // console.log(activeObject);
     }
   }, [activeObject]);
+
+
+  // useEffect(() => {
+  //   if (updatedAnnotation) {
+  //     // console.log('Updated annotation object: ', updatedAnnotation);
+  //   const canvas = fabricOverlay?.fabricCanvas();  
+  //     const width = updatedAnnotation.width;
+  //     const height = updatedAnnotation.height;
+  //     const left = updatedAnnotation.left;
+  //     const top = updatedAnnotation.top;
+  //     const angle = updatedAnnotation.angle;
+  //     updateAnnotationInDB({
+  //       slideId,
+  //       hash: updatedAnnotation.hash,
+  //       updateObject: { width, height,left,top,angle },
+  //       onUpdateAnnotation,
+  //     });
+  //     // console.log("sss");
+  //   }
+  // }, [updatedAnnotation]);
+
   return (
     <Box
       pos="absolute"
@@ -251,7 +299,11 @@ const FunctionsMenu = ({
               box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
               _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
             >
-              {isOpen ? ">>" : "<<"}
+              {isOpen ? (
+                <HiOutlineChevronDoubleRight size="20px" />
+              ) : (
+                <HiOutlineChevronDoubleLeft size="20px" />
+              )}
             </Button>
             <Tooltip label="View slides" placement="left">
               <Button

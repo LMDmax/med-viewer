@@ -36,6 +36,7 @@ const Report = ({
       bg="#FCFCFC"
       flexDirection="column"
       display="flex"
+      pb="30px"
     >
       <Flex
         bg="#fff"

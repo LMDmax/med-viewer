@@ -106,7 +106,7 @@ function AdjustmentBar({
       justifyContent="flex-end"
       height={ifWidthLessthan1920 ? "7vh" : "8vh"}
       // border="2px solid red"
-      boxShadow="0px 0px 3px 0.1px"
+      boxShadow="0px 0px 1px 0.1px"
       px="30px"
       // py="5px"
       fontFamily="fira sans"

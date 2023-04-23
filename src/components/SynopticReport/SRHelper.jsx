@@ -8,9 +8,11 @@ const SRHelper = ({ inputField, handleInput, synopticReportData }) => {
       <Text fontWeight="600">{inputField.title}</Text>
       <Flex
         color="#8F8F8F"
-        mt="-0rem !important"
+        mt="12px !important"
         flexWrap="wrap"
         ml="-16px !important"
+        width="450px"
+        overflowX="auto"
       >
         {inputField?.options ? (
           <RadioGroup

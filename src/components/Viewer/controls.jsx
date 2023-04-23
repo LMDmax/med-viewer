@@ -54,6 +54,7 @@ import ToolbarButton from "../ViewerToolbar/button";
 import IconSize from "../ViewerToolbar/IconSize";
 import ZoomButton from "../ZoomButton/ZoomButton";
 import ZoomSlider from "../ZoomSlider/slider";
+import { MoveBar } from "../Icons/CustomIcons";
 
 const ViewerControls = ({
   viewerId,
@@ -107,6 +108,7 @@ const ViewerControls = ({
   const toast = useToast();
   const iconSize = IconSize();
   const { isOpen, onOpen: openMenu, onClose: closeMenu } = useDisclosure();
+  const [isDisabled, setIsDisablesd] = useState(false);
   const {
     isOpen: isAnnotationOpen,
     onOpen: annotationChat,
@@ -156,7 +158,6 @@ const ViewerControls = ({
     }
   );
 
-
   // #################### VHUT_ANALYSIS_SUBSCRIPTION ##############
   const { data: vhutSubscriptionData, error: vhutSubscription_error } =
     useSubscription(VHUT_ANALYSIS_SUBSCRIPTION, {
@@ -167,6 +168,16 @@ const ViewerControls = ({
       },
     });
 
+  // console.log(viewer?.viewport?.getZoom(true));
+  // console.log(viewer?.viewport?.getBounds());
+  const bounds = viewer?.viewport?.getBounds();
+
+  // get the x and y values in the viewport
+  const x = bounds?.x + bounds?.width / 2;
+  const y = bounds?.y + bounds?.height / 2;
+
+  // console.log(x);
+  // console.log(y);
 
   const handleZoomIn = () => {
     try {
@@ -215,8 +226,7 @@ const ViewerControls = ({
     // annotationClose();
   };
 
-
-  
+  useEffect(() => {});
 
   const handleVhutAnalysis = async () => {
     if (!fabricOverlay || !annotationObject) return;
@@ -255,6 +265,7 @@ const ViewerControls = ({
     // console.log("body....", body);
     try {
       // const resp = await onVhutAnalysis(body);
+      // console.log(body);
       onVhutAnalysis({
         variables: { body: { ...body } },
       });
@@ -276,6 +287,8 @@ const ViewerControls = ({
       });
     }
   };
+
+  // console.log(annotationObject);
 
   const showAnalysisData = async (resp) => {
     const canvas = fabricOverlay.fabricCanvas();
@@ -316,6 +329,7 @@ const ViewerControls = ({
   };
 
   const handleShowAnalysis = async () => {
+    // console.log(annotationObject);
     if (!annotationObject) return;
 
     const canvas = fabricOverlay.fabricCanvas();
@@ -372,7 +386,7 @@ const ViewerControls = ({
   // update Annotation in db
   const onUpdateAnnotation = (data) => {
     delete data?.slideId;
-    // console.log(data);
+    console.log(data);
     modifyAnnotation({
       variables: { body: { ...data } },
     });
@@ -396,19 +410,18 @@ const ViewerControls = ({
     setIsAnnotationLoaded(true);
   }, [slideId]);
 
-// console.log(responseData);
+  // console.log(responseData);
 
   useEffect(() => {
     if (responseData) {
-      // console.log("====================================");
-      // console.log("analysis...", responseData.getVhutAnalysis.message);
-      // console.log("====================================");
-if(responseData.getVhutAnalysis.message !== "No Analysis found"){
-  showAnalysisData(responseData);
-}
-else{
- setToolSelected("MorphometryError")
-}
+      console.log("====================================");
+      console.log("analysis...", responseData);
+      console.log("====================================");
+      if (responseData.getVhutAnalysis.message !== "No Analysis found") {
+        showAnalysisData(responseData);
+      } else {
+        setToolSelected("MorphometryError");
+      }
     }
   }, [responseData]);
 
@@ -428,22 +441,22 @@ else{
           const canvas = fabricOverlay.fabricCanvas();
           const { hash, analysedROI } = data;
           const annotation = canvas.getObjectByHash(hash);
-					if (annotation) {
-						annotation.set({ isAnalysed: true, analysedROI });
-					}
-				}
-				// console.log(vhutSubscriptionData.analysisStatus);
-				toast({
-					title: message,
-					status: "success",
-					duration: 1500,
-					isClosable: true,
-				});
-			} else if (type === "KI67_ANALYSIS") {
-				setModelname("KI67Analysed");
-			} else if (type === "VIEWPORT_ANALYSIS") {
-				if (data && data.isAnalysed)
-					setFabricOverlayState(updateIsViewportAnalysing(false));
+          if (annotation) {
+            annotation.set({ isAnalysed: true, analysedROI });
+          }
+        }
+        // console.log(vhutSubscriptionData.analysisStatus);
+        toast({
+          title: message,
+          status: "success",
+          duration: 1500,
+          isClosable: true,
+        });
+      } else if (type === "KI67_ANALYSIS") {
+        setModelname("KI67Analysed");
+      } else if (type === "VIEWPORT_ANALYSIS") {
+        if (data && data.isAnalysed)
+          setFabricOverlayState(updateIsViewportAnalysing(false));
         toast({
           title: message || "ViewPort Ready",
           status: "success",
@@ -753,243 +766,258 @@ else{
     };
   }, [viewer, fabricOverlay]);
 
-
   // ######################## RUN KI67 ###############################################
   // ######################## RUN KI67 ###############################################
-	const groupAnnotationAndCellsKI67 = ({
-		cells,
-		enclosingAnnotation,
-		optionalData,
-	}) => {
-		if (!cells || !enclosingAnnotation) return null;
-		const { slide, hash, title, text, zoomLevel, points, timeStamp, path } =
-			enclosingAnnotation;
-		enclosingAnnotation.set({ fill: "" });
-		const group = new fabric.Group([enclosingAnnotation, ...cells]).set({
-			slide,
-			hash,
-			title,
-			text,
-			zoomLevel,
-			points,
-			path,
-			timeStamp,
-			isKI67Analysed: true,
-			fill: "",
-		});
+  const groupAnnotationAndCellsKI67 = ({
+    cells,
+    enclosingAnnotation,
+    optionalData,
+  }) => {
+    if (!cells || !enclosingAnnotation) return null;
+    const { slide, hash, title, text, zoomLevel, points, timeStamp, path } =
+      enclosingAnnotation;
+    enclosingAnnotation.set({ fill: "" });
+    const group = new fabric.Group([enclosingAnnotation, ...cells]).set({
+      slide,
+      hash,
+      title,
+      text,
+      zoomLevel,
+      points,
+      selectable:false,
+      evented:false,
+      path,
+      timeStamp,
+      isKI67Analysed: true,
+      fill: "",
+    });
 
-		// check if optionalData is available and also is not empty
-		if (optionalData && Object.keys(optionalData).length > 0) {
-			group.set({ analysedData: optionalData, roiType: optionalData.roiType });
-		}
-
-		const message = {
-			username: "",
-			object: group,
-			image: null,
-		};
-
-		return message;
-	};
-
-	const runKI67 = async () => {
-		if (!fabricOverlay || !annotationObject) return;
-
-		// get s3 folder key from the originalFileUrl
-		const key = getFileBucketFolder(originalFileUrl);
-		const { left, top, width, height, type } = annotationObject;
-		let body = {
-			key,
-			type,
-			left,
-			top,
-			width,
-			height,
-			slideId,
-			hash: annotationObject.hash,
-		};
-
-		// if annoatation is a freehand, send the coordinates of the path
-		// otherwise, send the coordinates of the rectangle
-		if (annotationObject.type === "path") {
-			body = { ...body, path: annotationObject.path };
-
-			if (slide?.isIHC === false) {
-				isKI67Open();
-			}
-		} else if (annotationObject.type === "ellipse") {
-			body = {
-				...body,
-				cx: annotationObject.cx,
-				cy: annotationObject.cy,
-				rx: annotationObject.rx,
-				ry: annotationObject.ry,
-				type: "ellipse",
-			};
-		} else if (annotationObject.type === "polygon") {
-			body = { ...body, points: annotationObject.points };
-		}
-		// console.log("slideID", slideId);
-		// console.log("body....", body);
-		const originalBody = {
-			...body,
-			notifyHook: `${Environment.VIEWER_URL}/notify_KI67`,
-			annotationId: "",
-		};
-		// console.log("body", originalBody);
-		try {
-			// const resp = await onVhutAnalysis(body);
-			const resp = await axios.post(
-				"https://backup-quantize-vhut.prr.ai/ki_six_seven_predict",
-				originalBody
-			);
-		} catch (err) {
-			toast({
-				title: "Server Unavailable",
-				description: err.message,
-				status: "error",
-				duration: 1500,
-				isClosable: true,
-			});
-		}
-	};
-
-	useEffect(() => {
-		if (vhutSubscriptionData) {
-			// console.log("subscribed", vhutSubscriptionData);
-			const {
-				data,
-				status,
-				message,
-				analysisType: type,
-			} = vhutSubscriptionData.analysisStatus;
-
-			if (type === "KI67_ANALYSIS") {
-				const posContours = data.kiResults.pos_contours;
-				const negContours = data.kiResults.neg_contours;
-				const canvas = fabricOverlay.fabricCanvas();
-				const { left, top } = annotationObject;
-				const circles = posContours.map((coord) => {
-					const circle = new fabric.Circle({
-						left: coord[0] + left,
-						top: coord[1] + top,
-						radius: 6,
-						fill: "red",
-						stroke: "red",
-						strokeWidth: 2,
-					});
-					return circle;
-				});
-				const circlesNegative = negContours.map((coord) => {
-					const circle = new fabric.Circle({
-						left: coord[0] + left,
-						top: coord[1] + top,
-						radius: 9,
-						fill: "green",
-						stroke: "green",
-						strokeWidth: 2,
-					});
-					return circle;
-				});
-				const cells = [...circles, ...circlesNegative];
-				const feedMessage = groupAnnotationAndCellsKI67({
-					enclosingAnnotation: annotationObject,
-					cells,
-					optionalData: {
-						data: "",
-						roiType: "KI67",
-						num_positive: data?.kiResults?.num_positive,
-						num_negative: data?.kiResults?.num_negative,
-						proliferation_score: data?.kiResults?.proliferation_score,
-					},
-				});
-				// console.log(feedMessage);
-				if (feedMessage?.object) {
-					// remove enclosing annotation and add new one to canvas
-					// console.log(feedMessage);
-					canvas.remove(annotationObject);
-					canvas.add(feedMessage.object).requestRenderAll();
-
-					setFabricOverlayState(
-						updateFeedInAnnotationFeed({ id: viewerId, feed: feedMessage })
-					);
-				}
-			}
-		}
-	}, [vhutSubscriptionData]);
-
-  // console.log(annotationObject);
-useEffect(()=>{
- if(bottomZoomValue >39){
-  if(runAiModel === "KI67"){ 
-    if(!annotationObject && runAiModel === "KI67"){
-      setToolSelected("MorphometryError");
-      setModelname("");
-         }
-    if(runAiModel === "KI67" && annotationObject){
-     runKI67();
-     setToolSelected("KI67Analysed");
-    //  setModelname("");
-     setModelname("");
+    // check if optionalData is available and also is not empty
+    if (optionalData && Object.keys(optionalData).length > 0) {
+      group.set({ analysedData: optionalData, roiType: optionalData.roiType });
     }
-   }
-    if(slide?.stainType === "H&E"){
-      if(runAiModel === "Morphometry"){
-        if( annotationObject){  //first time run morphometry
-         if(!annotationObject?.isAnalysed){
-           handleVhutAnalysis();
-        setToolSelected("MorphometryAnalysed");
-        setModelname("");
-       //  setAnnotationObject(null);
-       // console.log("iiiiiammmmm");
-         }
-         if(!annotationObject?.analysedData && annotationObject?.isAnalysed  && annotationObject){
-           handleShowAnalysis(); // second time run to show only analysis
-        setToolSelected("MorphometryAnalysed");
-        setModelname("");
-       // console.log("sssssssss");
-         }
-       }
-       if(runAiModel === "Morphometry" && !annotationObject){
-         setToolSelected("MorphometryError");
-         // console.log("jjjjjjjjjjjjmm");
-       }
+
+    const message = {
+      username: "",
+      object: group,
+      image: null,
+    };
+
+    return message;
+  };
+
+  const runKI67 = async () => {
+    if (!fabricOverlay || !annotationObject) return;
+
+    // get s3 folder key from the originalFileUrl
+    const key = getFileBucketFolder(originalFileUrl);
+    const { left, top, width, height, type } = annotationObject;
+    let body = {
+      key,
+      type,
+      left,
+      top,
+      width,
+      height,
+      slideId,
+      hash: annotationObject.hash,
+    };
+
+    // if annoatation is a freehand, send the coordinates of the path
+    // otherwise, send the coordinates of the rectangle
+    if (annotationObject.type === "path") {
+      body = { ...body, path: annotationObject.path };
+
+      if (slide?.isIHC === false) {
+        isKI67Open();
+      }
+    } else if (annotationObject.type === "ellipse") {
+      body = {
+        ...body,
+        cx: annotationObject.cx,
+        cy: annotationObject.cy,
+        rx: annotationObject.rx,
+        ry: annotationObject.ry,
+        type: "ellipse",
+      };
+    } else if (annotationObject.type === "polygon") {
+      body = { ...body, points: annotationObject.points };
+    }
+    // console.log("slideID", slideId);
+    // console.log("body....", body);
+    const originalBody = {
+      ...body,
+      notifyHook: `${Environment.VIEWER_URL}/notify_KI67`,
+      annotationId: "",
+    };
+    // console.log("body", originalBody);
+    try {
+      // const resp = await onVhutAnalysis(body);
+      const resp = await axios.post(
+        "https://backup-quantize-vhut.prr.ai/ki_six_seven_predict",
+        originalBody
+      );
+    } catch (err) {
+      toast({
+        title: "Server Unavailable",
+        description: err.message,
+        status: "error",
+        duration: 1500,
+        isClosable: true,
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (vhutSubscriptionData) {
+      console.log("subscribed", vhutSubscriptionData);
+      const {
+        data,
+        status,
+        message,
+        analysisType: type,
+      } = vhutSubscriptionData.analysisStatus;
+
+      if (type === "KI67_ANALYSIS") {
+        const posContours = data.kiResults.pos_contours;
+        const negContours = data.kiResults.neg_contours;
+        const canvas = fabricOverlay.fabricCanvas();
+        const { left, top } = annotationObject;
+        const circles = posContours.map((coord) => {
+          const circle = new fabric.Circle({
+            left: coord[0] + left,
+            top: coord[1] + top,
+            radius: 6,
+            fill: "red",
+            stroke: "red",
+            strokeWidth: 2,
+          });
+          return circle;
+        });
+        const circlesNegative = negContours.map((coord) => {
+          const circle = new fabric.Circle({
+            left: coord[0] + left,
+            top: coord[1] + top,
+            radius: 9,
+            fill: "green",
+            stroke: "green",
+            strokeWidth: 2,
+          });
+          return circle;
+        });
+        const cells = [...circles, ...circlesNegative];
+        const feedMessage = groupAnnotationAndCellsKI67({
+          enclosingAnnotation: annotationObject,
+          cells,
+          optionalData: {
+            data: "",
+            roiType: "KI67",
+            num_positive: data?.kiResults?.num_positive,
+            num_negative: data?.kiResults?.num_negative,
+            proliferation_score: data?.kiResults?.proliferation_score,
+          },
+        });
+        // console.log(feedMessage);
+        if (feedMessage?.object) {
+          // remove enclosing annotation and add new one to canvas
+          feedMessage.object.selectable = false;
+          feedMessage.object.evented = false;
+          feedMessage.object.getObjects().forEach((circle) => {
+            circle.selectable = false;
+            circle.evented = false;
+          });
+        
+          // remove enclosing annotation and add new one to canvas
+          console.log(feedMessage);
+          canvas.remove(annotationObject);
+          canvas.add(feedMessage.object).requestRenderAll();
+
+          setFabricOverlayState(
+            updateFeedInAnnotationFeed({ id: viewerId, feed: feedMessage })
+          );
+        }
       }
     }
+  }, [vhutSubscriptionData]);
 
-  //  console.log(runAiModel);
- }
- else{
+  // console.log(annotationObject);
+  useEffect(() => {
+    if (annotationObject?.type === "path") {
+      if (annotationObject?.isClosed === false) {
+        //return from this block print a console out
+        console.log("Annotation object is an open path");
+        return;
+      }
+    }
+    if (bottomZoomValue > 39) {
+      if (runAiModel === "KI67") {
+        if (!annotationObject && runAiModel === "KI67") {
+          setToolSelected("MorphometryError");
+          setModelname("");
+        }
+        if (runAiModel === "KI67" && annotationObject) {
+          runKI67();
+          setToolSelected("KI67Analysed");
+          //  setModelname("");
+          setModelname("");
+        }
+      }
+      if (slide?.stainType === "H&E") {
+        if (runAiModel === "Morphometry") {
+          if (annotationObject) {
+            //first time run morphometry
+            if (!annotationObject?.isAnalysed) {
+              handleVhutAnalysis();
+              setToolSelected("MorphometryAnalysed");
+              setModelname("");
+              //  setAnnotationObject(null);
+              // console.log("iiiiiammmmm");
+            }
+            if (
+              !annotationObject?.analysedData &&
+              annotationObject?.isAnalysed &&
+              annotationObject
+            ) {
+              handleShowAnalysis(); // second time run to show only analysis
+              setToolSelected("MorphometryAnalysed");
+              setModelname("");
+              // console.log("sssssssss");
+            }
+          }
+          if (runAiModel === "Morphometry" && !annotationObject) {
+            setToolSelected("MorphometryError");
+            // console.log("jjjjjjjjjjjjmm");
+          }
+        }
+      }
 
- }
+      //  console.log(runAiModel);
+    } else {
+      // console.log("aaaa");
+      setModelname("ZoomError");
+    }
 
+    setModelname("");
+    // setAnnotationObject(null);
+  }, [runAiModel]);
 
-  setModelname("");
-  // setAnnotationObject(null);
-},[runAiModel])
-
-
-useEffect(() => {
+  useEffect(() => {
     const timer = setTimeout(() => {
       handleShowAnalysis();
-    }, 4000); 
+    }, 4000);
     return () => {
       clearTimeout(timer);
       setModelname("");
-     } 
-}, [analysis_data]);
+    };
+  }, [analysis_data]);
 
-
-
-
-  // console.log(caseInfo);
-	return (
-		<Box>
+  return (
+    <Box>
       {!isAnnotationLoaded || isViewportAnalysing ? (
         <Loading position="absolute" w="100%" zIndex="3" h="79vh" />
       ) : null}
       <Box position="absolute" left="2vw" top="5vh">
-        <Flex direction="column" alignItems="end" mr="23px" cursor="move">
+        <Flex direction="column" alignItems="end" mr="23px">
           <Draggable
             bounds={{
               top: 0,
@@ -997,17 +1025,27 @@ useEffect(() => {
               right: 90 * (window.screen.width / 100),
               bottom: 60 * (window.screen.height / 100),
             }}
+            handle=".drag-handle"
           >
             <Flex
               direction="column"
               boxShadow="1px 1px 2px rgba(176, 200, 214, 0.5)"
               zIndex="1"
             >
-              <VStack bgColor="rgba(236, 236, 238, 1)" h="10px" />
+              <VStack
+                className="drag-handle"
+                cursor="move"
+                borderTop="5px solid black"
+                borderBottom="5px solid black"
+                bgColor="transparent"
+                h="15px"
+              >
+                {/* <MoveBar/> */}
+              </VStack>
               <VStack
                 // w="fit-content"
                 backgroundColor="#F8F8F5"
-                border="1px solid #00153F"
+                // border="1px solid #00153F"
                 // borderRadius="5px"
                 py={2}
                 px={1.5}
@@ -1018,33 +1056,36 @@ useEffect(() => {
               <VStack
                 // w="fit-content"
                 backgroundColor="#F8F8F5"
-                border="1px solid #00153F"
+                // border="1px solid #00153F"
                 // borderRadius="5px"
                 py={2}
                 px={1.5}
                 zIndex="1"
               >
                 <ToolbarButton
-                  icon={<AiOutlinePlus color="#00153F" size={iconSize} />}
+                  icon={<AiOutlinePlus color="#2E519E" size={iconSize} />}
                   // border="1px solid #3965C6"
-                  backgroundColor="#E4E5E8"
+                  backgroundColor="#D9D9D9"
                   onClick={handleZoomIn}
                   label="Zoom In"
                   mr="0px"
-                  _hover={{ bgColor: "#ECECEC" }}
+                  _hover={{ bgColor: "#D9D9D9" }}
                   _active={{
                     outline: "none",
                   }}
                 />
-                <ZoomSlider setBottomZoomValue={setBottomZoomValue} viewerId={viewerId} />
+                <ZoomSlider
+                  setBottomZoomValue={setBottomZoomValue}
+                  viewerId={viewerId}
+                />
                 <ToolbarButton
-                  icon={<AiOutlineMinus color="#00153F" size={iconSize} />}
+                  icon={<AiOutlineMinus color="#2E519E" size={iconSize} />}
                   // border="1px solid #3965C6"
-                  backgroundColor="#E4E5E8"
+                  backgroundColor="#D9D9D9"
                   onClick={handleZoomOut}
                   label="Zoom Out"
                   mr="0px"
-                  _hover={{ bgColor: "#ECECEC" }}
+                  _hover={{ bgColor: "#D9D9D9" }}
                   _active={{
                     outline: "none",
                   }}
@@ -1053,13 +1094,17 @@ useEffect(() => {
               <VStack
                 // w="fit-content"
                 backgroundColor="#F8F8F5"
-                border="1px solid #00153F"
+                // border="1px solid #00153F"
                 // borderRadius="5px"
                 py={2}
                 px={1.5}
                 zIndex="1"
               >
-                <ZoomButton navigatorCounter={navigatorCounter} setBottomZoomValue={setBottomZoomValue} viewerId={viewerId} />
+                <ZoomButton
+                  navigatorCounter={navigatorCounter}
+                  setBottomZoomValue={setBottomZoomValue}
+                  viewerId={viewerId}
+                />
               </VStack>
             </Flex>
           </Draggable>
@@ -1069,6 +1114,7 @@ useEffect(() => {
             setIsOpen={setIsRightClickActive}
             left={menuPosition.left}
             top={menuPosition.top}
+            viewerId={viewerId}
             onHandleVhutAnalysis={handleVhutAnalysis}
             setZoom={handleZoomLevel}
             slide={slide}
@@ -1142,6 +1188,5 @@ useEffect(() => {
     </Box>
   );
 };
-
 
 export default ViewerControls;

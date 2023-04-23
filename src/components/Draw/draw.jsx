@@ -130,38 +130,86 @@ const Draw = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
   // first remove both from canvas then group them and then add group to canvas
   useEffect(() => {
     if (!path) return;
-    setToolSelected("RunRoi");
-    const addToFeed = async () => {
-      const message = createAnnotationMessage({ slideId, shape: path, viewer, type:"path" });
+    // console.log("ppppppppppppp",path.path.length);
+    
+    const canvas = fabricOverlay.fabricCanvas();
+    const pathLength = path.path.length;
+      // Check if the path is closed
+      const startingPoint = path.path[0];
+      const endingPoint = path.path[pathLength - 1];
+      const x1 = startingPoint[1];
+      const y1 = startingPoint[2];
+      const x2 = endingPoint[1];
+      const y2 = endingPoint[2];
+      
+      const distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+      // console.log(distance);
+      
+      if (distance < 2) {
+        // console.log("Path is closed");
+      setToolSelected("RunRoi");
+      path.isClosed = true;
 
-      saveAnnotationToDB({
-        slideId,
-        annotation: message.object,
-        onSaveAnnotation,
+
+      } else {
+        // console.log("Path is open");
+      setToolSelected("pathError");
+      // console.log(path);
+      path.isClosed = false;
+
+      }
+  
+  
+    if (path.path.length > 2) {
+      const addToFeed = async () => {
+        const message = createAnnotationMessage({
+          slideId,
+          shape: path,
+          viewer,
+          type: "path",
+        });
+
+        saveAnnotationToDB({
+          slideId,
+          annotation: message.object,
+          onSaveAnnotation,
+        });
+        setFabricOverlayState(
+          addToActivityFeed({
+            id: viewerId,
+            feed: message,
+          })
+        );
+
+        setPath(null);
+        setTextbox(false);
+
+        // send annotation
+        // socket.emit(
+        //   "send_annotations",
+        //   JSON.stringify({
+        //     roomName,
+        //     username,
+        //     content: canvas,
+        //     feed: [...activityFeed, message],
+        //   })
+        // );
+      };
+
+      addToFeed();
+    }
+    if (path.path.length <= 2) {
+      const canvas = fabricOverlay.fabricCanvas();
+      const objects = canvas.getObjects();
+      const lastObject = objects[objects.length - 1];
+      canvas.remove(lastObject);
+      toast({
+        title: "Please Draw Again",
+        status: "error",
+        duration: 500,
+        isClosable: true,
       });
-      setFabricOverlayState(
-        addToActivityFeed({
-          id: viewerId,
-          feed: message,
-        })
-      );
-
-      setPath(null);
-      setTextbox(false);
-
-      // send annotation
-      // socket.emit(
-      //   "send_annotations",
-      //   JSON.stringify({
-      //     roomName,
-      //     username,
-      //     content: canvas,
-      //     feed: [...activityFeed, message],
-      //   })
-      // );
-    };
-
-    addToFeed();
+    }
 
     // change tool back to move
     setFabricOverlayState(updateTool({ tool: "Move" }));
@@ -189,12 +237,6 @@ const Draw = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
       onClick={() => {
         handleToolbarClick();
         setToolSelected("FreeHand");
-        toast({
-          title: "Free hand annotation draw tool selected",
-          status: "success",
-          duration: 1500,
-          isClosable: true,
-        });
       }}
       borderRadius={0}
       bg={isActive ? "#DEDEDE" : "#F6F6F6"}

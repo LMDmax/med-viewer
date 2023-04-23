@@ -25,7 +25,7 @@ import { BiRotateLeft, BiRotateRight } from "react-icons/bi";
 
 const Rotate = ({ viewerId, setToolSelected, navigatorCounter }) => {
   const { fabricOverlayState } = useFabricOverlayState();
-  const { viewer } = fabricOverlayState?.viewerWindow[viewerId];
+  const { viewer, fabricOverlay } = fabricOverlayState?.viewerWindow[viewerId];
   const [sliderToggle, setSliderToggle] = useState(false);
   const [rotationValue, setRotationValue] = useState(0);
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
@@ -33,7 +33,31 @@ const Rotate = ({ viewerId, setToolSelected, navigatorCounter }) => {
   useEffect(() => {
     try {
       if (viewer.viewport) {
+        const canvas = fabricOverlay.fabricCanvas();
+  
+        // Set the rotation of the viewer
         viewer.viewport.setRotation(rotationValue);
+  
+        // Get all the objects in the canvas
+        const objects = canvas.getObjects();
+  
+        // Iterate over all the objects and set their angle property
+        objects.forEach((object) => {
+          // Check if the object is a Rect, Ellipse, Triangle, Polygon, or Group
+          if (
+            object instanceof fabric.Rect ||
+            object instanceof fabric.Ellipse ||
+            object instanceof fabric.Triangle ||
+            object instanceof fabric.Polygon ||
+            object instanceof fabric.Group
+          ) {
+            // Set the object's angle property to the rotation value
+            object.set('angle', rotationValue);
+          }
+        });
+  
+        // Render the canvas after updating the annotations
+        canvas.renderAll();
       }
     } catch (e) {
       console.error("Error handling rotate button click", e);
@@ -64,7 +88,7 @@ const Rotate = ({ viewerId, setToolSelected, navigatorCounter }) => {
       <Box
         w="60px"
         h="100%"
-        py="5px"
+        pt="8px"
         onClick={() => setSliderToggle(!sliderToggle)}
         backgroundColor={sliderToggle ? "rgba(157,195,226,0.4)" : "transparent"}
       >
@@ -73,7 +97,7 @@ const Rotate = ({ viewerId, setToolSelected, navigatorCounter }) => {
           width={ifScreenlessthan1536px ? "100%" : "100%"}
           // border="2px solid red"
           _hover={{ bgColor: "transparent" }}
-          icon={<FiRotateCw transform="scale(1.5)" color="black" />}
+          icon={<FiRotateCw transform="scale(1.2)" color="black" />}
           _active={{
             bgColor: "transparent",
             outline: "none",
@@ -85,13 +109,14 @@ const Rotate = ({ viewerId, setToolSelected, navigatorCounter }) => {
           // mr="7px"
           // border="1px solid red"
           borderRadius={0}
+          mb="3px"
         />
         {/* rgba(0, 21, 63, 1) */}
 
         {/* <Text color="white" align="center" fontSize="0.6rem">
         {label}
       </Text> */}
-        <Text align="center">Rotate</Text>
+        <Text align="center" fontFamily="inter" fontSize="10px">Rotate</Text>
       </Box>
       {sliderToggle ? (
         <Flex

@@ -68,7 +68,7 @@ function ScreenTools({
   } = useDisclosure();
 
   return (
-    <Flex h="100%" w="30%"  alignItems="center" justifyContent="center">
+    <Flex h="100%" w="30%"  alignItems="center" justifyContent="flex-end">
       <ImageFilter navigatorCounter={navigatorCounter} setToolSelected={setToolSelected} viewerId={viewerId} />
       <DownloadImage setToolSelected={setToolSelected} />
       {application === "hospital" && (

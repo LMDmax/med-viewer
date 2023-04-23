@@ -57,7 +57,7 @@ const Multiview = ({
         // handleClick();
         setState(!state);
       }}
-      py="5px"
+      pt="8px"
       w="60px"
       backgroundColor={isMultiview ? "rgba(157,195,226,0.4)" : "transparent"}
       h="100%"
@@ -81,7 +81,7 @@ const Multiview = ({
         _hover={{ bgColor: "transparent" }}
         icon={
           <MultiviewIcon
-            transform="scale(1.5)"
+            transform="scale(1.2)"
             size={iconSize}
             color="#3B5D7C"
           />
@@ -97,17 +97,19 @@ const Multiview = ({
         // mr="7px"
         // border="1px solid red"
         borderRadius={0}
+        mb="3px"
       />
       <Flex
-        justifyContent="space-evenly"
+        justifyContent="center"
         w="100%"
         alignItems="center"
+        // border="1px solid red"
         cursor="pointer"
       >
-        <Text userSelect="none" align="center">
+        <Text userSelect="none" fontFamily="inter" fontSize="10px" align="center">
           View
         </Text>
-        <RiArrowDownSLine color="black" size="16px" />
+        <RiArrowDownSLine color="black" size="12px" />
       </Flex>
     </Box>
   );
