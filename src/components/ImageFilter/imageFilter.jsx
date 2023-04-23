@@ -33,35 +33,91 @@ const ImageFilter = ({ viewerId, setToolSelected, navigatorCounter }) => {
     return imgSd;
   };
 
+  // const reinhardFilter = (context, callback) => {
+  //   const imgData = context.getImageData(
+  //     0,
+  //     0,
+  //     context.canvas.width,
+  //     context.canvas.height
+  //   );
+  //   const pixelsData = {
+  //     data: imgData.data,
+  //     width: imgData.width,
+  //     height: imgData.height,
+  //     colorSpace: "srgb",
+  //   };
+  
+  //   axios.post("https://backup-quantize-vhut.prr.ai/filter", pixelsData).then((resp) => {
+  //     const newPixelsData = {
+  //       data: new Uint8ClampedArray(resp.data),
+  //       width: imgData.width,
+  //       height: imgData.height,
+  //       colorSpace: "srgb",
+  //     };
+  //     const imageData = new ImageData(newPixelsData.data, newPixelsData.width, newPixelsData.height);
+  //     context.putImageData(imageData, 0, 0);
+  //     const newImgData = context.getImageData(0, 0, context.canvas.width, context.canvas.height);
+  //     console.log("Modified image data: ", newImgData);
+  //     callback(); // call callback inside the then block
+  //   });
+  // };
   const reinhardFilter = (context, callback) => {
+    // console.log(context);
     const imgData = context.getImageData(
       0,
       0,
       context.canvas.width,
       context.canvas.height
     );
-    const pixelsData = {
-      data: imgData.data,
-      width: imgData.width,
-      height: imgData.height,
-      colorSpace: "srgb",
-    };
-  
-    axios.post("https://backup-quantize-vhut.prr.ai/filter", pixelsData).then((resp) => {
-      const newPixelsData = {
-        data: new Uint8ClampedArray(resp.data),
-        width: imgData.width,
-        height: imgData.height,
-        colorSpace: "srgb",
-      };
-      const imageData = new ImageData(newPixelsData.data, newPixelsData.width, newPixelsData.height);
-      context.putImageData(imageData, 0, 0);
-      const newImgData = context.getImageData(0, 0, context.canvas.width, context.canvas.height);
-      console.log("Modified image data: ", newImgData);
-      callback(); // call callback inside the then block
-    });
+    // console.log(imgData);
+    const pixels = imgData.data;
+
+    // let perc = []
+    // for (let i = 0; i < 3; i++) {
+    //   perc.push(percentile(pixels[i]))
+    // }
+    // const p = percentile(pixels, 0.9);
+
+    // for (let i = 0; i < pixels.length; i++) {
+    //   pixels[i] = (pixels[i] * 255) / p;
+    // }
+
+    const l1 = [];
+    const l2 = [];
+    const l3 = [];
+    let imgMean = [0, 0, 0];
+    for (let i = 0; i < pixels.length; i += 4) {
+      const labl = rgb.lab(pixels[i], pixels[i + 1], pixels[i + 2]);
+
+      [pixels[i], pixels[i + 1], pixels[i + 2]] = labl;
+      l1.push(labl[0]);
+      l2.push(labl[1]);
+      l3.push(labl[2]);
+
+      imgMean = imgMean.map((x, k) => x + labl[k]);
+    }
+
+    imgMean = imgMean.map((x) => x / l1.length);
+
+    const imgSd = getStdev(l1, l2, l3, imgMean);
+
+    for (let i = 0; i < pixels.length; i += 4) {
+      const l =
+        (l1[i / 4] - imgMean[0]) * (targetSd[0] / imgSd[0]) + targetMean[0];
+      const a =
+        (l2[i / 4] - imgMean[1]) * (targetSd[1] / imgSd[1]) + targetMean[1];
+      const bl =
+        (l3[i / 4] - imgMean[2]) * (targetSd[2] / imgSd[2]) + targetMean[2];
+
+      const [r, g, b] = lab.rgb(l, a, bl);
+      pixels[i] = r;
+      pixels[i + 1] = g;
+      pixels[i + 2] = b;
+    }
+
+    context.putImageData(imgData, 0, 0);
+    callback();
   };
-  
 
   
 
