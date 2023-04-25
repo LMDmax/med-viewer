@@ -306,6 +306,7 @@ const ActivityFeed = ({
     });
     setAnnotationObject(null);
     onClose();
+    window.location.reload();
   };
 
   const handleEditClick = (feed) => {

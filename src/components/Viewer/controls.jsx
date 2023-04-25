@@ -879,7 +879,7 @@ const ViewerControls = ({
 
   useEffect(() => {
     if (vhutSubscriptionData) {
-      // console.log("subscribed", vhutSubscriptionData);
+      console.log("subscribed", vhutSubscriptionData);
       const {
         data,
         status,
@@ -937,7 +937,7 @@ const ViewerControls = ({
           });
         
           // remove enclosing annotation and add new one to canvas
-          // console.log(feedMessage);
+          console.log(feedMessage);
           canvas.remove(annotationObject);
           canvas.add(feedMessage.object).requestRenderAll();
 

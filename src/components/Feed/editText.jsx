@@ -38,6 +38,7 @@ const EditText = ({
     handleSave({ text, title });
     setText("");
     setTitle("");
+    window.location.reload();
   };
 
   return (

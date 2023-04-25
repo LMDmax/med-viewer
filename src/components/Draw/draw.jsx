@@ -170,7 +170,7 @@ const Draw = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
           isClosed: path.isClosed
         });
 
-        console.log(message.object);
+        // console.log(message.object);
 
         saveAnnotationToDB({
           slideId,

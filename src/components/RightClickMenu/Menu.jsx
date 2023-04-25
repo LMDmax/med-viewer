@@ -179,7 +179,7 @@ export function CustomMenu({
   isKI67Analysed,
 }) {
   const value = getZoomValue(viewer);
-  console.log(isAnnotationSelected?.isClosed);
+  // console.log(isAnnotationSelected?.isClosed);
   return isMenuOpen ? (
     <Box>
       <Menu isOpen={isMenuOpen}>
