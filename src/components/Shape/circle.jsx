@@ -285,6 +285,7 @@ function Circle({ viewerId, onSaveAnnotation, setToolSelected }) {
 				shape,
 				viewer,
 				type: "ellipse",
+				isClosed:true,
 			});
 
 			saveAnnotationToDB({

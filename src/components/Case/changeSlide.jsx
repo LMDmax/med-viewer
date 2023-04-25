@@ -11,6 +11,7 @@ import ChangeHelper from "./changeHelper";
 const ChangeSlide = ({
   caseInfo,
   slides,
+  loadUI,
   slideUrl,
   viewerId,
   setIsMultiview,
@@ -66,6 +67,7 @@ const ChangeSlide = ({
       disabledRight={disabledRight}
       clickHandler={clickHandler}
       setIsMultiview={setIsMultiview}
+      loadUI={loadUI}
       setIsNavigatorActive={setIsNavigatorActive}
       isNavigatorActive={isNavigatorActive}
       isAnnotationLoading={isAnnotationLoading}

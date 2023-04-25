@@ -61,15 +61,15 @@ const ImageFilter = ({ viewerId, setToolSelected, navigatorCounter }) => {
   //     callback(); // call callback inside the then block
   //   });
   // };
+  
   const reinhardFilter = (context, callback) => {
-    // console.log(context);
+    // console.log(callback);
     const imgData = context.getImageData(
       0,
       0,
       context.canvas.width,
       context.canvas.height
     );
-    // console.log(imgData);
     const pixels = imgData.data;
 
     // let perc = []
@@ -118,6 +118,7 @@ const ImageFilter = ({ viewerId, setToolSelected, navigatorCounter }) => {
     context.putImageData(imgData, 0, 0);
     callback();
   };
+
 
   
 

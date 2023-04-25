@@ -179,7 +179,7 @@ export function CustomMenu({
   isKI67Analysed,
 }) {
   const value = getZoomValue(viewer);
-
+  console.log(isAnnotationSelected?.isClosed);
   return isMenuOpen ? (
     <Box>
       <Menu isOpen={isMenuOpen}>
@@ -211,7 +211,7 @@ export function CustomMenu({
                 closeMenu();
               }}
               closeOnSelect
-              isDisabled={isMorphometryDisabled || slide?.stainType === "IHC" || value <39}
+              isDisabled={isMorphometryDisabled || slide?.stainType === "IHC" || value <39 || !isAnnotationSelected?.isClosed}
             >
               Run Morphometry
             </MenuItem>
@@ -227,7 +227,7 @@ export function CustomMenu({
                   closeMenu();
                 }}
                 closeOnSelect
-                isDisabled={isMorphometryDisabled || value <39}
+                isDisabled={isMorphometryDisabled || value <39 || !isAnnotationSelected?.isClosed}
               >
                 Run KI-67
               </MenuItem>

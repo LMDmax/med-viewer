@@ -27,6 +27,7 @@ export const GET_ANNOTATION = gql`
         angle
         flipX
         flipY
+        isClosed
         opacity
         visible
         backgroundColor
@@ -178,6 +179,7 @@ export const SAVE_ANNOTATION = gql`
         opacity
         visible
         backgroundColor
+        isClosed
         fillRule
         paintFirst
         globalCompositeOperation

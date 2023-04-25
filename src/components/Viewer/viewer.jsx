@@ -60,6 +60,7 @@ function Viewer({
   bottomZoomValue,
   zoomValue,
   setZoomValue,
+  viewerIds,
   slide,
   setBottomZoomValue,
   application,
@@ -156,6 +157,7 @@ function Viewer({
           setModelname={setModelname}
           setZoomValue={setZoomValue}
           zoomValue={zoomValue}
+          viewerIds={viewerIds}
           setBottomZoomValue={setBottomZoomValue}
           setToolSelected={setToolSelected}
           mentionUsers={mentionUsers}

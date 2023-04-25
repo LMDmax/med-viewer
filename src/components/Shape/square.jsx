@@ -249,7 +249,7 @@ const Square = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
 
     const addToFeed = async () => {
       // console.log("added");
-      const message = createAnnotationMessage({ slideId, shape, viewer, type:"rect" });
+      const message = createAnnotationMessage({ slideId, shape, viewer, type:"rect",isClosed:true, });
 
       saveAnnotationToDB({
         slideId,

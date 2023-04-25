@@ -88,7 +88,7 @@ const LayoutApp = ({
     viewerIds?.[0]?._id || viewerIds?.[0]?.slideId
   );
 
-  // console.log('slideInfo',refreshHil);
+  // console.log('slideInfo',viewerIds);
   const [showAnnotationsBar, setShowAnnotationsBar] = useState(false);
   const [showFeedBar, setShowFeedBar] = useState(false);
   const [chatFeedBar, setChatFeedBar] = useState(false);
@@ -158,6 +158,10 @@ const LayoutApp = ({
     case "MultiviewSlideChoosed":
       returnText =
         "Multiscreen view is active. Link slide to work on both slides simultaneously.";
+      break;
+      case "OpenPath":
+      returnText =
+        "ROI Analysis can be done on closed annotations only.";
       break;
     case "Annotation":
       returnText = "Select annotation draw tool.";
@@ -487,6 +491,7 @@ const LayoutApp = ({
               zoomValue={zoomValue}
               setLoadUI={setLoadUI}
               setModelname={setModelname}
+              viewerIds={viewerIds}
               runAiModel={runAiModel}
               setToolSelected={setToolSelected}
               navigatorCounter={navigatorCounter}
@@ -564,6 +569,7 @@ const LayoutApp = ({
                 <ChangeSlide
                   caseInfo={caseInfo}
                   slides={slides}
+                  loadUI={loadUI}
                   viewerId={currentViewer}
                   setNavigatorCounter={setNavigatorCounter}
                   slideUrl={tile}

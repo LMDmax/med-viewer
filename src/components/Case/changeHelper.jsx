@@ -13,6 +13,7 @@ const ChangeHelper = ({
   clickHandler,
   setIsMultiview,
   setIsNavigatorActive,
+  loadUI,
   isNavigatorActive,
   isAnnotationLoading,
 }) => {
@@ -49,7 +50,7 @@ const ChangeHelper = ({
             cursor="pointer"
             minW={0}
             _focus={{ background: "none" }}
-            disabled={disabledLeft}
+            disabled={disabledLeft || !loadUI}
             onClick={() =>{
               clickHandler(-1)
             }}
@@ -111,7 +112,7 @@ const ChangeHelper = ({
             cursor="pointer"
             minW={0}
             _focus={{ background: "none", border: "none" }}
-            disabled={disabledRight}
+            disabled={disabledRight || !loadUI}
             onClick={() => {
               clickHandler(1);
             }}

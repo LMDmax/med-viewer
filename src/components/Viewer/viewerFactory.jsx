@@ -19,6 +19,7 @@ function ViewerFactory({
   setBottomZoomValue,
   setCurrentViewer,
   application,
+  viewerIds,
   setLoadUI,
   setZoomValue,
   zoomValue,
@@ -102,6 +103,7 @@ function ViewerFactory({
             zoomValue={zoomValue}
             setLoadUI={setLoadUI}
             bottomZoomValue={bottomZoomValue}
+            viewerIds={viewerIds}
             client2={client2}
             navigatorCounter={navigatorCounter}
             setBottomZoomValue={setBottomZoomValue}

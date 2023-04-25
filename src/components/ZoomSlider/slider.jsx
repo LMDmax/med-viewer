@@ -64,7 +64,7 @@ const ZoomSlider = ({ viewerId , setBottomZoomValue}) => {
       } else {
         toast({
           title: "Not Valid Input",
-          description: "Please Provide Me A Valid Input",
+          description: "Please provide me a valid input",
           status: "error",
           duration: 2000,
           isClosable: true,

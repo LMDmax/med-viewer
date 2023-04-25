@@ -11,6 +11,7 @@ import { brandColors } from "../styles/brandPalette";
 import { getFileBucketFolder } from "../utility/utility";
 import LayoutApp from "./Layout/app";
 import Loading from "./Loading/loading";
+import { VscGlobe } from "react-icons/vsc";
 
 const theme = extendTheme({
 	components: {
@@ -113,6 +114,7 @@ function MedViewer({ viewerIds, ...props }) {
 		});
 		setFabricOverlayState(addViewerWindow(viewerWindows));
 		const key = getFileBucketFolder(viewerIds[0].originalFileUrl);
+		// console.log(key);
 		const respPromise = axios.post(
 			"https://backup-quantize-vhut.prr.ai/vhut/download",
 			{

@@ -63,6 +63,7 @@ const ViewerControls = ({
   bottomZoomValue,
   runAiModel,
   setToolSelected,
+  viewerIds,
   setBottomZoomValue,
   enableAI,
   slide,
@@ -226,13 +227,13 @@ const ViewerControls = ({
     // annotationClose();
   };
 
-  useEffect(() => {});
+ 
 
   const handleVhutAnalysis = async () => {
     if (!fabricOverlay || !annotationObject) return;
 
     // get s3 folder key from the originalFileUrl
-    const key = getFileBucketFolder(originalFileUrl);
+    const key = getFileBucketFolder(viewerIds[0].originalFileUrl);
     const { left, top, width, height, type } = annotationObject;
     let body = {
       key,
@@ -378,15 +379,14 @@ const ViewerControls = ({
     //     );
     //   }
     // }
-    setLoadUI(true);
-    localStorage.removeItem("ModelName");
+    
     // setToolSelected("MorphometryAnalysed");
   };
 
   // update Annotation in db
   const onUpdateAnnotation = (data) => {
     delete data?.slideId;
-    console.log(data);
+    // console.log(data);
     modifyAnnotation({
       variables: { body: { ...data } },
     });
@@ -414,11 +414,14 @@ const ViewerControls = ({
 
   useEffect(() => {
     if (responseData) {
-      console.log("====================================");
-      console.log("analysis...", responseData);
-      console.log("====================================");
+      // console.log("====================================");
+      // console.log("analysis...", responseData);
+      // console.log("====================================");
       if (responseData.getVhutAnalysis.message !== "No Analysis found") {
         showAnalysisData(responseData);
+        setLoadUI(true);
+    localStorage.removeItem("ModelName");
+        
       } else {
         setToolSelected("MorphometryError");
       }
@@ -430,7 +433,6 @@ const ViewerControls = ({
       // console.log("subscribed", vhutSubscriptionData);
       const {
         data,
-        status,
         message,
         analysisType: type,
       } = vhutSubscriptionData.analysisStatus;
@@ -444,6 +446,13 @@ const ViewerControls = ({
           if (annotation) {
             annotation.set({ isAnalysed: true, analysedROI });
           }
+          onGetVhutAnalysis({
+            variables: {
+              query: {
+                analysisId: annotationObject?.analysedROI,
+              },
+            },
+          });
         }
         // console.log(vhutSubscriptionData.analysisStatus);
         toast({
@@ -528,7 +537,7 @@ const ViewerControls = ({
       });
       setIsXmlAnnotations(false);
     }
-  }, [xmlLink, slideId]);
+  }, [xmlLink, slideId, fabricOverlay]);
 
   // set annotation data
   useEffect(() => {
@@ -592,7 +601,7 @@ const ViewerControls = ({
       setIsAnnotationLoaded(true);
     };
     loadAnnotations();
-  }, [fabricOverlay, annotatedData]);
+  }, [fabricOverlay, annotatedData, slideId]);
 
   // check if annotation is loaded or not
   // and then update fabricOverlayState
@@ -870,7 +879,7 @@ const ViewerControls = ({
 
   useEffect(() => {
     if (vhutSubscriptionData) {
-      console.log("subscribed", vhutSubscriptionData);
+      // console.log("subscribed", vhutSubscriptionData);
       const {
         data,
         status,
@@ -928,7 +937,7 @@ const ViewerControls = ({
           });
         
           // remove enclosing annotation and add new one to canvas
-          console.log(feedMessage);
+          // console.log(feedMessage);
           canvas.remove(annotationObject);
           canvas.add(feedMessage.object).requestRenderAll();
 
@@ -945,7 +954,7 @@ const ViewerControls = ({
     if (annotationObject?.type === "path") {
       if (annotationObject?.isClosed === false) {
         //return from this block print a console out
-        console.log("Annotation object is an open path");
+       setToolSelected("OpenPath")
         return;
       }
     }
@@ -1003,7 +1012,7 @@ const ViewerControls = ({
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      handleShowAnalysis();
+      // handleShowAnalysis();
     }, 4000);
     return () => {
       clearTimeout(timer);

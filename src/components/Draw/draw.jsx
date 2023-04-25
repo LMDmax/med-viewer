@@ -145,7 +145,7 @@ const Draw = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
       const distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
       // console.log(distance);
       
-      if (distance < 2) {
+      if (distance < 5) {
         // console.log("Path is closed");
       setToolSelected("RunRoi");
       path.isClosed = true;
@@ -167,7 +167,10 @@ const Draw = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
           shape: path,
           viewer,
           type: "path",
+          isClosed: path.isClosed
         });
+
+        console.log(message.object);
 
         saveAnnotationToDB({
           slideId,

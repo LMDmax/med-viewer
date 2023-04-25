@@ -40,6 +40,7 @@ const ViewerContainer = ({
   navigatorCounter,
 	addUsersToCase,
 	Environment,
+  viewerIds,
 	accessToken,
 	setIsXmlAnnotations,
 	handleAnnotationClick,
@@ -97,6 +98,7 @@ const ViewerContainer = ({
       tile={tile}
       enableAI={enableAI}
       slide={slide}
+      viewerIds={viewerIds}
       bottomZoomValue={bottomZoomValue}
       setZoomValue={setZoomValue}
       zoomValue={zoomValue}

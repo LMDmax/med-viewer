@@ -229,6 +229,7 @@ const CommentBox = ({
         viewer,
         userInfo,
         type: "textbox",
+        isClosed:true,
       });
 
       saveAnnotationToDB({

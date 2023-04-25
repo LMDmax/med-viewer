@@ -18,6 +18,7 @@ export const getAnnotationJSON = (annotation) => {
     "points",
     "cords",
     "timeStamp",
+    "isClosed",
     "area",
     "perimeter",
     "centroid",
@@ -57,6 +58,7 @@ export const createAnnotationMessage = ({
   annotation,
   maskType,
   type,
+  isClosed,
 }) => {
   if (!viewer || !shape) return null;
   const message = {
@@ -75,6 +77,7 @@ export const createAnnotationMessage = ({
       title,
       zoomLevel,
       points,
+      isClosed,
       timeStamp,
       area,
       perimeter,
@@ -110,6 +113,7 @@ export const createAnnotationMessage = ({
         zoomLevel,
         points,
         timeStamp,
+        isClosed,
         area,
         perimeter,
         centroid,
@@ -133,6 +137,7 @@ export const createAnnotationMessage = ({
         text: "",
         maskType: maskType || "",
         type: type || "",
+        
       };
     } else {
       message.object.set({
@@ -143,6 +148,7 @@ export const createAnnotationMessage = ({
         text: message.object.text,
         maskType: maskType || "",
         type: type || "",
+        isClosed:isClosed,
       });
     }
   }

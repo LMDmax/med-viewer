@@ -216,6 +216,7 @@ const Line = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
         shape,
         viewer,
         type: "line",
+        isClosed:false,
       });
 
       const { x1, y1, x2, y2 } = message.object;

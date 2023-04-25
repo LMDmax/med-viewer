@@ -261,7 +261,7 @@ const Polygon = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
     setToolSelected("RunRoi");
 
     const addToFeed = async () => {
-      const message = createAnnotationMessage({ slideId, shape, viewer, type:"polygon" });
+      const message = createAnnotationMessage({ slideId, shape, viewer, type:"polygon",isClosed:true, });
 
       saveAnnotationToDB({
         slideId,
