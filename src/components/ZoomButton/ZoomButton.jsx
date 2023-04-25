@@ -11,29 +11,9 @@ const ZoomButton = ({ viewerId, setBottomZoomValue, navigatorCounter }) => {
   const { fabricOverlayState } = useFabricOverlayState();
   const { viewerWindow } = fabricOverlayState;
   const { viewer, fabricOverlay } = viewerWindow[viewerId];
-  const [customZoom4, setCustomZoom4] = useState(false);
-  const [customZoom10, setCustomZoom10] = useState(false);
-  const [customZoom20, setCustomZoom20] = useState(false);
-  const [customZoom40, setCustomZoom40] = useState(false);
   const [zoomButtonValue, setZoomButtonValue] = useState();
+  
   useEffect(() => {
-    // 	if (customZoom10) {
-    // 		// console.log("10");
-    // 		const value = 10;
-    // 		zoomToLevel({ viewer, value });
-    // 	} else if (customZoom4) {
-    // 		const value = 4;
-    // 		zoomToLevel({ viewer, value });
-    // 	} else if (customZoom20) {
-    // 		const value = 20;
-    // 		zoomToLevel({ viewer, value });
-    // 	} else if (customZoom40) {
-    // 		const value = 40;
-    // 		zoomToLevel({ viewer, value });
-    // 	}
-
-    // 	const value = getZoomValue(viewer);
-    // 	setBottomZoomValue(value);
     if (zoomButtonValue === 4) {
       const value = 4;
       zoomToLevel({ viewer, value });
@@ -53,8 +33,9 @@ const ZoomButton = ({ viewerId, setBottomZoomValue, navigatorCounter }) => {
 		const value = 40;
 		zoomToLevel({ viewer, value });
 		setZoomButtonValue("")
-	  }
+	  } 
   });
+
 
   useEffect(()=>{
     if(navigatorCounter > 0){

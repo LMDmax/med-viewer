@@ -319,7 +319,14 @@ const ViewerControls = ({
       // and group to canvas
       if (feedMessage.object) {
         // remove enclosing annotation and add new one to canvas
+        feedMessage.object.selectable = false;
+        feedMessage.object.evented = false;
+        feedMessage.object.getObjects().forEach((circle) => {
+          circle.selectable = false;
+          circle.evented = false;
+        });
         canvas.remove(annotationObject);
+        // console.log(feedMessage);
         canvas.add(feedMessage.object).requestRenderAll();
 
         setFabricOverlayState(

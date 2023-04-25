@@ -137,7 +137,7 @@ useEffect(()=>{
   }, [viewer]);
 
   return (
-    <Flex>
+    <Flex alignItems="center">
       <Input
         ref={inputRef}
         maxLength={6}
@@ -145,11 +145,12 @@ useEffect(()=>{
         value={zoomValue > 40 ? 40 : zoomValue}
         onChange={handleZoomLevel}
         onBlur={handleZoomLevelBlur}
+        fontSize="16px"
         variant="unstyled"
         w={inputRef?.current?.value?.length > 2 ? "45px" : "25px"}
         textAlign="center"
       />
-      <Text fontFamily="inter">x</Text>
+      <Text fontFamily="inter" fontSize="16px">x</Text>
     </Flex>
   );
 };

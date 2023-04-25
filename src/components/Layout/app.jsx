@@ -117,9 +117,16 @@ const LayoutApp = ({
   useEffect(() => {
     const UnitStore = localStorage.getItem("unit");
     setUnit(UnitStore);
+    // console.log(bottomZoomValue);
   }, [bottomZoomValue]);
+console.log("sssss");
 
-  // console.log(modelName);
+window.onload = function() {
+  document.addEventListener("scroll", function() {
+    console.log("The user has scrolled.");
+  });
+};
+
 
   let runAiModel;
   switch (modelName) {

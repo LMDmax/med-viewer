@@ -77,6 +77,8 @@ function Move({
   const isActive = activeTool === "Move";
   const [activeAnnotations, setActiveAnnotations] = useState(false);
 
+  
+
   useEffect(() => {
     if (typeToolsToggle) {
       setToolSelected("Annotation");
