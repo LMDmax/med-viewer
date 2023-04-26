@@ -33,6 +33,7 @@ const CommentBox = ({
   userInfo,
   viewerId,
   application,
+  caseInfo,
   setToolSelected,
   navigatorCounter,
 }) => {
@@ -41,7 +42,7 @@ const CommentBox = ({
   const iconSize = IconSize();
   const toast = useToast();
   const caseData = JSON.parse(localStorage.getItem("caseData"));
-  const caseId = caseData?._id;
+  const caseId = caseInfo?._id;
   const onSaveAnnotation = (data) => {
     createAnnotation({
       variables: {

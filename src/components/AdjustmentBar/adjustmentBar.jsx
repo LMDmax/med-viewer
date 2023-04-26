@@ -108,6 +108,7 @@ function AdjustmentBar({
       // border="2px solid red"
       boxShadow="0px 0px 1px 0.1px"
       px="30px"
+      bg="white"
       // py="5px"
       fontFamily="fira sans"
       fontSize={ifWidthLessthan1920 ? "14px" : "16px"}
@@ -156,6 +157,7 @@ function AdjustmentBar({
         handleTILFeedBar={handleTILFeedBar}
         zoomValue={zoomValue}
         annotations={annotations}
+        caseInfo={caseInfo}
         enableAI={enableAI}
         setToolSelected={setToolSelected}
         setLoadUI={setLoadUI}

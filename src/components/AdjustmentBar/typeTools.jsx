@@ -25,6 +25,7 @@ const TypeTools = ({
   setToolSelected,
   setTotalCells,
   toolSelected,
+  caseInfo,
   application,
 }) => {
   // save annotation in db
@@ -58,7 +59,7 @@ const TypeTools = ({
     removeAnnotation({ variables: { body: data } });
   };
   const caseData = JSON.parse(localStorage.getItem("caseData"));
-  const caseId = caseData?._id;
+  const caseId = caseInfo?._id;
   const onSaveAnnotation = (data) => {
     createAnnotation({
       variables: {

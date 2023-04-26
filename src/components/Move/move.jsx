@@ -33,6 +33,7 @@ function Move({
   refreshHil,
   annotations,
   enableAI,
+  caseInfo,
   enableFilters,
   hitTil,
   setStromaArea,
@@ -76,8 +77,6 @@ function Move({
   const { fabricOverlay } = viewerWindow[viewerId];
   const isActive = activeTool === "Move";
   const [activeAnnotations, setActiveAnnotations] = useState(false);
-
-  
 
   useEffect(() => {
     if (typeToolsToggle) {
@@ -206,7 +205,14 @@ function Move({
               borderRadius={0}
               mb="3px"
             />
-            <Text align="center" color="black" fontSize="10px" fontFamily="inter">Annotation</Text>
+            <Text
+              align="center"
+              color="black"
+              fontSize="10px"
+              fontFamily="inter"
+            >
+              Annotation
+            </Text>
           </Box>
         ) : null}
 
@@ -217,6 +223,7 @@ function Move({
           viewerId={viewerId}
           setToolSelected={setToolSelected}
           application={application}
+          caseInfo={caseInfo}
           navigatorCounter={navigatorCounter}
         />
 
@@ -285,6 +292,7 @@ function Move({
             setToolSelected={setToolSelected}
             userInfo={userInfo}
             viewerId={viewerId}
+            caseInfo={caseInfo}
             setTotalCells={setTotalCells}
           />
         ) : null}

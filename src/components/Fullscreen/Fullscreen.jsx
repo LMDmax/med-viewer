@@ -19,12 +19,6 @@ const Fullscreen = ({ viewerId }) => {
       document.exitFullscreen();
     }
   };
-  window.addEventListener('popstate', () => {
-    if (isFullscreen) {
-      setIsFullscreen(false);
-      document.exitFullscreen();
-    }
-  });
   return (
     <ToolbarButton
       icon={<RiFullscreenFill size={IconSize()} color="#151C25" />}
