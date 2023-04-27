@@ -3,7 +3,6 @@ import {useNavigate} from "react-router-dom"
 import { Flex, Text, useMediaQuery, Box } from "@chakra-ui/react";
 import axios from "axios";
 import { GoChevronLeft } from "react-icons/go";
-
 import { useFabricOverlayState } from "../../state/store";
 import { getFileBucketFolder, getScaleFactor } from "../../utility";
 import ChangeSlide from "../Case/changeSlide";

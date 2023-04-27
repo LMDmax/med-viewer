@@ -26,7 +26,8 @@ const MoveTool = ({ isActive, handleClick }) => {
     >
       <IconButton
         width={ifScreenlessthan1536px ? "100%" : "100%"}
-        height={ifScreenlessthan1536px ? "50%" : "70%"}
+        height={ifScreenlessthan1536px ? "50%" : "50%"}
+        // border="2px solid red"
         _hover={{ bgColor: "transparent" }}
         icon={
           <BsCursor
