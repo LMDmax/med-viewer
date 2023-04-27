@@ -155,7 +155,7 @@ function ChatFeed({
           </TabPanel>
         </TabPanels>
       </Tabs> */}
-      <Box w="100%" ml="-5px" h="90%">
+      <Box w="100%"  h="90%">
         <Flex
           bg="#fff"
           margin="0 0 0 5px"

@@ -284,7 +284,7 @@ const FunctionsMenu = ({
           overflowX: "hidden",
           whiteSpace: "nowrap",
           position: "absolute",
-          right: isOpen ? "0px" : "0px",
+          right: isOpen ? "0" : "0px",
           height: "85vh",
           top: "0",
         }}
