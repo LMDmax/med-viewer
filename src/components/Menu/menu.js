@@ -263,10 +263,9 @@ const FunctionsMenu = ({
       pos="absolute"
       right={0}
       background="#FFFFFF"
-      border="1px solid red"
       zIndex={10}
       mt="2px"
-      h={ifWidthLessthan1920 ? "calc(100vh - 18vh)" : "calc(100vh - 10.033vh)"}
+      h={ifWidthLessthan1920 ? "calc(100vh - 14vh)" : "calc(100vh - 10.033vh)"}
     >
       <motion.div
         animate={{
@@ -286,7 +285,7 @@ const FunctionsMenu = ({
           whiteSpace: "nowrap",
           position: "absolute",
           right: isOpen ? "0" : "0px",
-          height: "82vh",
+          height: "85vh",
           top: "0",
         }}
       >
