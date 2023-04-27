@@ -20,6 +20,7 @@ const MoveTool = ({ isActive, handleClick }) => {
       w="60px"
       // border="2px solid pink"
       h="100%"
+      cursor="pointer"
       pt="8px"
       onClick={()=>handleClick()}
     >

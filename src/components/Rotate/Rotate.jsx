@@ -30,39 +30,85 @@ const Rotate = ({ viewerId, setToolSelected, navigatorCounter }) => {
   const [rotationValue, setRotationValue] = useState(0);
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
 
+  // useEffect(() => {
+  //   try {
+  //     if (viewer.viewport) {
+  //       const canvas = fabricOverlay.fabricCanvas();
+  
+  //       // Set the rotation of the viewer
+  //       viewer.viewport.setRotation(rotationValue);
+  
+  //       // Get all the objects in the canvas
+  //       const objects = canvas.getObjects();
+  
+  //       // Iterate over all the objects and set their angle property
+  //       objects.forEach((object) => {
+  //         // Check if the object is a Rect, Ellipse, Triangle, Polygon, or Group
+  //         if (
+  //           object instanceof fabric.Rect ||
+  //           object instanceof fabric.Ellipse ||
+  //           object instanceof fabric.Triangle ||
+  //           object instanceof fabric.Polygon ||
+  //           object instanceof fabric.Group
+  //         ) {
+  //           // Set the object's angle property to the rotation value
+  //           object.set('angle', rotationValue);
+  //         }
+  //       });
+  
+  //       // Render the canvas after updating the annotations
+  //       canvas.renderAll();
+  //     }
+  //   } catch (e) {
+  //     console.error("Error handling rotate button click", e);
+  //   }
+  // }, [rotationValue]);
+
+
   useEffect(() => {
     try {
       if (viewer.viewport) {
         const canvas = fabricOverlay.fabricCanvas();
-  
-        // Set the rotation of the viewer
+    
+        // Set the rotation of the viewport
         viewer.viewport.setRotation(rotationValue);
-  
-        // Get all the objects in the canvas
-        const objects = canvas.getObjects();
-  
-        // Iterate over all the objects and set their angle property
-        objects.forEach((object) => {
-          // Check if the object is a Rect, Ellipse, Triangle, Polygon, or Group
-          if (
-            object instanceof fabric.Rect ||
-            object instanceof fabric.Ellipse ||
-            object instanceof fabric.Triangle ||
-            object instanceof fabric.Polygon ||
-            object instanceof fabric.Group
-          ) {
-            // Set the object's angle property to the rotation value
-            object.set('angle', rotationValue);
-          }
+    
+        // Get the current zoom level and viewport rectangle
+        const zoom = viewer.viewport.getZoom();
+        const viewportRect = viewer.viewport.getBounds();
+    
+        // Iterate over all the objects in the canvas and rotate them
+        canvas.getObjects().forEach((object) => {
+          // Transform the annotation coordinates to image coordinates
+          const { x, y } = viewer.viewport.viewportToImageCoordinates(object.left, object.top);
+    
+          // Calculate the rotation angle in radians
+          const angle = (rotationValue * Math.PI) / 180;
+    
+          // Rotate the annotation object
+          object.set({
+            angle: rotationValue,
+          });
+    
+          // Transform the image coordinates back to viewport coordinates
+          const { x: newX, y: newY } = viewer.viewport.imageToViewportCoordinates(x, y);
+    
+          // Set the left and top properties of the annotation object
+          object.set({
+            left: newX,
+            top: newY,
+          });
         });
-  
-        // Render the canvas after updating the annotations
+    
+        // Render the annotations
         canvas.renderAll();
       }
     } catch (e) {
       console.error("Error handling rotate button click", e);
     }
   }, [rotationValue]);
+  
+
 
   useEffect(() => {
     if (sliderToggle) {
@@ -90,6 +136,7 @@ const Rotate = ({ viewerId, setToolSelected, navigatorCounter }) => {
         h="100%"
         pt="8px"
         onClick={() => setSliderToggle(!sliderToggle)}
+        cursor="pointer"
         backgroundColor={sliderToggle ? "rgba(157,195,226,0.4)" : "transparent"}
       >
         <IconButton

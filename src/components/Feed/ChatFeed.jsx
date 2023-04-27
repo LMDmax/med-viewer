@@ -94,7 +94,8 @@ function ChatFeed({
         alignItems="center"
         bg="#FEFEFE"
         height="50px"
-        w="102%"
+        w="100%"
+        pl="20px"
         borderBottom="1px solid #DEDEDE"
       >
         <Text
@@ -154,7 +155,7 @@ function ChatFeed({
           </TabPanel>
         </TabPanels>
       </Tabs> */}
-      <Box w="100%" h="90%">
+      <Box w="100%" ml="-5px" h="90%">
         <Flex
           bg="#fff"
           margin="0 0 0 5px"
