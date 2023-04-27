@@ -94,8 +94,7 @@ function ChatFeed({
         alignItems="center"
         bg="#FEFEFE"
         height="50px"
-        w="100%"
-        pl="20px"
+        w="102%"
         borderBottom="1px solid #DEDEDE"
       >
         <Text
