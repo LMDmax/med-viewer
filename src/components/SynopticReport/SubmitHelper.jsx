@@ -41,7 +41,7 @@ const SubmitHelper = ({
   return (
     userInfo?.userType !== "technologist" && (
       <>
-        <Flex justifyContent="flex-end" w="450px" mt="20px" mr="20px" pb="2vh">
+        <Flex justifyContent="flex-start" w="450px" mt="20px" alignItems="flex-start" mr="20px">
           {reportedStatus !== true ? (
             <Flex>
               {!answeredAll ? (

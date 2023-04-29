@@ -40,7 +40,10 @@ const Timeline = ({ timelineData, viewerId }) => {
   // console.log(timelineData);
   return (
     <ScrollBar>
-      <Box w="350px" bg="#FFFFFF" h="83vh">
+      <Box>
+        <Text>Slide Activity</Text>
+      </Box>
+      <Box w="340px" overflow="hidden" overflowY="auto" bg="#FFFFFF" h="100%">
         <VerticalTimeline
           layout="1-column-left"
           lineColor="#DEDEDE"
@@ -66,7 +69,7 @@ const Timeline = ({ timelineData, viewerId }) => {
                   width: "100%",
                   marginBottom: "0px",
                   fontSize: "4px",
-                  overflowY: "scroll",
+                  // overflowY: "hidden",
                   padding: "0px",
                   marginLeft: "40px",
                   height: "fit-content",
@@ -75,7 +78,7 @@ const Timeline = ({ timelineData, viewerId }) => {
                 date={
                   <div
                     style={{
-                      textAlign: "right",
+                      textAlign: "left",
                       width: "18vw",
                       position: "right",
                       color: "gray",
@@ -103,7 +106,9 @@ const Timeline = ({ timelineData, viewerId }) => {
                     </Flex>
                     <Text className="detail">
                       Added a comment{" "}
-                      <span style={{ color: "#3f5f7e" }}>{data.text == "comment" ? "" : `"${data.text}"`}</span>
+                      <span style={{ color: "#3f5f7e" }}>
+                        {data.text == "comment" ? "" : `"${data.text}"`}
+                      </span>
                     </Text>
                   </Flex>
                 ) : (

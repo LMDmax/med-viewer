@@ -1,25 +1,33 @@
-import { Flex, Input, Radio, RadioGroup, Text, VStack } from "@chakra-ui/react";
+import { Flex, Input, Radio, RadioGroup, Text, Box } from "@chakra-ui/react";
 import _ from "lodash";
 import React from "react";
 
 const SRHelper = ({ inputField, handleInput, synopticReportData }) => {
   return (
-    <VStack alignItems="flex-start" minW="49%" mt="1vh">
-      <Text fontWeight="600">{inputField.title}</Text>
+    <Flex alignItems="flex-start" minW="54%" overflow="hidden" overflowX="auto" flexDirection="column"  mt="1vh">
+      <Text fontWeight="600" maxW="200px">{inputField.title}</Text>
       <Flex
         color="#8F8F8F"
-        mt="12px !important"
-        flexWrap="wrap"
-        ml="-16px !important"
-        width="450px"
+        w="450px"
         overflowX="auto"
+        mt="12px !important"
+        ml="-16px !important"
+        direction="column"
       >
         {inputField?.options ? (
           <RadioGroup
             pl="-16px"
+            // border="1px solid red"
             defaultValue={synopticReportData?.[inputField?.inputName]}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              flexWrap: "wrap",
+              alignItems: "flex-start"
+            }}
           >
             {inputField?.options?.map((option, i) => {
+              
               return (
                 <Radio
                   key={`${i + 1}`}
@@ -27,6 +35,7 @@ const SRHelper = ({ inputField, handleInput, synopticReportData }) => {
                   ml="16px"
                   name={inputField?.inputName}
                   onChange={(e) => handleInput(e)}
+                  
                 >
                   {option}
                 </Radio>
@@ -34,10 +43,12 @@ const SRHelper = ({ inputField, handleInput, synopticReportData }) => {
             })}
           </RadioGroup>
         ) : (
-          <Input
+          <Box w="400px" >
+            <Input
             color="#000"
-            ml="16px"
+            w="100%"
             size="sm"
+            margin="25px"
             borderRadius="0"
             name={inputField?.inputName}
             defaultValue={
@@ -50,9 +61,10 @@ const SRHelper = ({ inputField, handleInput, synopticReportData }) => {
             onWheel={(e) => e.target.blur()}
             onChange={handleInput}
           />
+          </Box>
         )}
       </Flex>
-    </VStack>
+    </Flex>
   );
 };
 

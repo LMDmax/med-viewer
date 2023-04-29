@@ -222,14 +222,6 @@ const ActivityFeed = ({
     if (activityFeed.length === 0) setAnnotationsDetails(null);
   }, [activityFeed]);
 
-  // console.log(activeObject);
-
-  useEffect(() => {
-    if (isTILBoxVisible) {
-    }
-    if (annotationDetails) {
-    }
-  }, [isTILBoxVisible, annotationDetails]);
 
   useEffect(() => {
     return () => {
@@ -246,10 +238,12 @@ const ActivityFeed = ({
   const handleClick = (feed, index) => {
     // console.log(feed,index);
     const newAccordionState = [...accordionState];
-    newAccordionState[index].isOpen = !newAccordionState[index].isOpen;
-    newAccordionState[index].isFocused = true;
-    setAccordionState(newAccordionState);
-    setSelectedItemIndex(index);
+    if (newAccordionState[index]) {
+      newAccordionState[index].isOpen = !newAccordionState[index].isOpen;
+      newAccordionState[index].isFocused = true;
+      setAccordionState(newAccordionState);
+    }
+        setSelectedItemIndex(index);
     if (selectedItemIndex === index) {
       setSelectedItemIndex("");
     }
@@ -297,16 +291,15 @@ const ActivityFeed = ({
   const handleSave = ({ text, title }) => {
     annotationObject.text = text;
     annotationObject.title = title;
-
+    
     updateAnnotationInDB({
-      slideId,
-      hash: annotationObject.hash,
-      updateObject: { text, title },
-      onUpdateAnnotation,
-    });
+        slideId,
+        hash: annotationObject.hash,
+        updateObject: { text, title },
+        onUpdateAnnotation,
+      });
     setAnnotationObject(null);
     onClose();
-    window.location.reload();
   };
 
   const handleEditClick = (feed) => {
@@ -330,7 +323,7 @@ const ActivityFeed = ({
     <Flex
       as="section"
       w="100%"
-      h="86vh"
+      h="100%"
       pb="30px"
       margin={0}
       right="0"
@@ -925,6 +918,7 @@ const ActivityFeed = ({
       <EditText
         isOpen={isOpen}
         onClose={onClose}
+        annotationObject={annotationObject}
         textValue={annotationObject?.text ? annotationObject.text : ""}
         titleValue={annotationObject?.title ? annotationObject.title : ""}
         handleClose={onClose}

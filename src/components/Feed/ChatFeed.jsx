@@ -87,14 +87,14 @@ function ChatFeed({
   // });
   const caseNo = caseInfo._id.slice(0, 5);
   return (
-    <Box w="100%" minW="100%" zIndex={2}>
+    <Box w="100%" minW="100%" h="100%" zIndex={2}>
       <Flex
         px="12px"
         justifyContent="space-between"
         alignItems="center"
         bg="#FEFEFE"
         height="50px"
-        w="102%"
+        w="100%"
         borderBottom="1px solid #DEDEDE"
       >
         <Text
@@ -157,7 +157,6 @@ function ChatFeed({
       <Box w="100%"  h="90%">
         <Flex
           bg="#fff"
-          margin="0 0 0 5px"
           flexDir="column"
           pos="relative"
           w="100%"

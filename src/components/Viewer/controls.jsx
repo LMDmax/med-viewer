@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
+import { MdOutlineDragIndicator } from "react-icons/md";
 
 import Draggable from "react-draggable";
 import {
@@ -55,6 +56,7 @@ import IconSize from "../ViewerToolbar/IconSize";
 import ZoomButton from "../ZoomButton/ZoomButton";
 import ZoomSlider from "../ZoomSlider/slider";
 import { MoveBar } from "../Icons/CustomIcons";
+import ActivityFeed from "../Feed/activityFeed";
 
 const ViewerControls = ({
   viewerId,
@@ -291,10 +293,43 @@ const ViewerControls = ({
 
   // console.log(annotationObject);
 
+//Onload ROI results
+
+const onLoadCallData= async()=>{
+  const canvas = fabricOverlay.fabricCanvas();
+  const allAnnotations = canvas.getObjects();
+
+  // const filteredArr = allAnnotations.filter(obj => obj.hasOwnProperty('analyzedROI'));
+  const filteredArr = allAnnotations.filter(obj => obj.analysedROI);
+  if (filteredArr) {
+    for (let i = 0; i < filteredArr.length; i++) {
+      try {
+        await onGetVhutAnalysis({
+          variables: {
+            query: {
+              analysisId: filteredArr[i].analysedROI,
+            },
+          },
+        });
+        // log the response from the API call
+      } catch (error) {
+        console.error(error); // log any errors that occur during the API call
+      }
+    }
+  }
+
+console.log(filteredArr); 
+}
+
+
+
+
+
   const showAnalysisData = async (resp) => {
     const canvas = fabricOverlay.fabricCanvas();
 
     if (resp && typeof resp === "object") {
+      console.log(resp.getVhutAnalysis.data.hash);
       const { data: vhut } = resp.getVhutAnalysis;
       const { left, top } = annotationObject;
       const { analysedData, cells, totalCells } = await getVhutAnalysisData({
@@ -342,10 +377,6 @@ const ViewerControls = ({
 
     const canvas = fabricOverlay.fabricCanvas();
 
-    // const resp = await onGetVhutAnalysis({
-    //   analysisId: annotationObject?.analysedROI,
-    // });
-
     onGetVhutAnalysis({
       variables: {
         query: {
@@ -354,40 +385,6 @@ const ViewerControls = ({
       },
     });
 
-    // if (resp.data && typeof resp.data === "object") {
-    //   const { vhut } = resp.data;
-    //   const { left, top } = annotationObject;
-    //   const { analysedData, cells, totalCells } = await getVhutAnalysisData({
-    //     canvas,
-    //     vhut,
-    //     left,
-    //     top,
-    //   });
-
-    //   // group enclosing annotation and cells
-    //   const feedMessage = groupAnnotationAndCells({
-    //     enclosingAnnotation: annotationObject,
-    //     cells,
-    //     optionalData: {
-    //       data: analysedData,
-    //       totalCells,
-    //     },
-    //   });
-
-    //   // remove enclosing annotation
-    //   // and group to canvas
-    //   if (feedMessage.object) {
-    //     // remove enclosing annotation and add new one to canvas
-    //     canvas.remove(annotationObject);
-    //     canvas.add(feedMessage.object).requestRenderAll();
-
-    //     setFabricOverlayState(
-    //       updateFeedInAnnotationFeed({ id: viewerId, feed: feedMessage })
-    //     );
-    //   }
-    // }
-    
-    // setToolSelected("MorphometryAnalysed");
   };
 
   // update Annotation in db
@@ -421,23 +418,30 @@ const ViewerControls = ({
 
   useEffect(() => {
     if (responseData) {
-      // console.log("====================================");
-      // console.log("analysis...", responseData);
-      // console.log("====================================");
-      if (responseData.getVhutAnalysis.message !== "No Analysis found") {
+      console.log("====================================");
+      console.log("response...", responseData);
+      console.log("====================================");
+      if (responseData.getVhutAnalysis.message !== "No Analysis found" && annotationObject) {
         showAnalysisData(responseData);
         setLoadUI(true);
     localStorage.removeItem("ModelName");
         
-      } else {
+      }
+      if(!annotationObject){
+        console.log("");
+      }
+      else {
         setToolSelected("MorphometryError");
       }
     }
   }, [responseData]);
 
+
+  //On load run roi for existing ones
+
+
   useEffect(() => {
     if (vhutSubscriptionData) {
-      // console.log("subscribed", vhutSubscriptionData);
       const {
         data,
         message,
@@ -579,6 +583,9 @@ const ViewerControls = ({
               updateActivityFeed({ id: viewerId, fullFeed: feed })
             );
             setActiveFeed(feed);
+            // console.log(feed);
+            // onLoadCallData()
+          
           }
 
           canvas.requestRenderAll();
@@ -1047,20 +1054,24 @@ const ViewerControls = ({
               direction="column"
               boxShadow="1px 1px 2px rgba(176, 200, 214, 0.5)"
               zIndex="1"
+              
             >
               <VStack
                 className="drag-handle"
                 cursor="move"
-                borderTop="5px solid black"
-                borderBottom="5px solid black"
-                bgColor="transparent"
+                // borderTop="5px solid black"
+                // borderBottom="5px solid black"
+                // border="1px solid red"
+                bg="whitesmoke"
+                w="100%"
                 h="15px"
               >
                 {/* <MoveBar/> */}
+                <MdOutlineDragIndicator  style={{ transform: 'rotate(90deg)' , color:"darkgrey" }}  />
               </VStack>
               <VStack
                 // w="fit-content"
-                backgroundColor="#F8F8F5"
+                backgroundColor="#fcfcfc"
                 // border="1px solid #00153F"
                 // borderRadius="5px"
                 py={2}
@@ -1071,7 +1082,7 @@ const ViewerControls = ({
               </VStack>
               <VStack
                 // w="fit-content"
-                backgroundColor="#F8F8F5"
+                backgroundColor="#fcfcfc"
                 // border="1px solid #00153F"
                 // borderRadius="5px"
                 py={2}
@@ -1081,7 +1092,7 @@ const ViewerControls = ({
                 <ToolbarButton
                   icon={<AiOutlinePlus color="#2E519E" size={iconSize} />}
                   // border="1px solid #3965C6"
-                  backgroundColor="#D9D9D9"
+                  backgroundColor="#F6F6F6"
                   onClick={handleZoomIn}
                   label="Zoom In"
                   mr="0px"
@@ -1097,7 +1108,7 @@ const ViewerControls = ({
                 <ToolbarButton
                   icon={<AiOutlineMinus color="#2E519E" size={iconSize} />}
                   // border="1px solid #3965C6"
-                  backgroundColor="#D9D9D9"
+                  backgroundColor="#F6F6F6"
                   onClick={handleZoomOut}
                   label="Zoom Out"
                   mr="0px"
@@ -1109,7 +1120,7 @@ const ViewerControls = ({
               </VStack>
               <VStack
                 // w="fit-content"
-                backgroundColor="#F8F8F5"
+                backgroundColor="#fcfcfc"
                 // border="1px solid #00153F"
                 // borderRadius="5px"
                 py={2}

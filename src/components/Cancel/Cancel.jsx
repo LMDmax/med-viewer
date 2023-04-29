@@ -3,6 +3,7 @@ import {
     IconButton,
     Tooltip,
     useMediaQuery,
+    Flex,
     Box,
     Text,
   } from "@chakra-ui/react";
@@ -20,7 +21,6 @@ navigate("/dashboard/cases")
         <Box
       w="60px"
       h="100%"
-      pt="8px"
       ml="10px"
       bg={""}
       cursor="pointer"
@@ -28,8 +28,9 @@ navigate("/dashboard/cases")
         handleClick();
       }}
     >
-      <IconButton
-        height={ifScreenlessthan1536px ? "50%" : "70%"}
+   <Flex direction="column" mt={ifScreenlessthan1536px? "1px" : "-2px"} justifyContent="center" alignItems="center" h="100%">
+   <IconButton
+        height={ifScreenlessthan1536px ? "50%" : "50%"}
         width={ifScreenlessthan1536px ? "100%" : "100%"}
         // border="2px solid red"
         _hover={{ bgColor: "transparent" }}
@@ -40,9 +41,10 @@ navigate("/dashboard/cases")
         }}
         backgroundColor="transparent"
         borderRadius={0}
-        mb="3px"
+       
       />
       <Text align="center" fontFamily="inter" fontSize="10px" color="red">Close</Text>
+   </Flex>
     </Box>
     );
 };

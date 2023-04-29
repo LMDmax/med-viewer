@@ -456,6 +456,7 @@ export const GET_VHUT_ANALYSIS = gql`
         }
         annotation
         isDeleted
+        hash
       }
     }
   }

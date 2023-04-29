@@ -137,7 +137,7 @@ useEffect(()=>{
   }, [viewer]);
 
   return (
-    <Flex alignItems="center">
+    <Flex alignItems="center" bg="white">
       <Input
         ref={inputRef}
         maxLength={6}
@@ -150,7 +150,7 @@ useEffect(()=>{
         w={inputRef?.current?.value?.length > 2 ? "45px" : "25px"}
         textAlign="center"
       />
-      <Text fontFamily="inter" fontSize="16px">x</Text>
+      <Text fontFamily="inter"  fontSize="16px">x</Text>
     </Flex>
   );
 };

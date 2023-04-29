@@ -22,13 +22,17 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { BiRotateLeft, BiRotateRight } from "react-icons/bi";
+import { updateTool } from "../../state/actions/fabricOverlayActions";
 
 const Rotate = ({ viewerId, setToolSelected, navigatorCounter }) => {
-  const { fabricOverlayState } = useFabricOverlayState();
+  const { fabricOverlayState,setFabricOverlayState } = useFabricOverlayState();
+  const { activeTool, } = fabricOverlayState;
   const { viewer, fabricOverlay } = fabricOverlayState?.viewerWindow[viewerId];
   const [sliderToggle, setSliderToggle] = useState(false);
   const [rotationValue, setRotationValue] = useState(0);
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
+  const isActive = activeTool === "Rotate";
+
 
   // useEffect(() => {
   //   try {
@@ -113,8 +117,12 @@ const Rotate = ({ viewerId, setToolSelected, navigatorCounter }) => {
   useEffect(() => {
     if (sliderToggle) {
       setToolSelected("Rotate");
+    setFabricOverlayState(updateTool({ tool: "Rotate" }));
+
     } else {
       setToolSelected("");
+    setFabricOverlayState(updateTool({ tool: "Move" }));
+
     }
   }, [sliderToggle]);
 
@@ -132,15 +140,16 @@ const Rotate = ({ viewerId, setToolSelected, navigatorCounter }) => {
         onClick={setSliderToggle(true)}
       /> */}
       <Box
-        w="60px"
-        h="100%"
-        pt="8px"
+      backgroundColor= {sliderToggle ? "rgba(157,195,226,0.4)" : "transparent"}
+       w="60px"
+      //  border="2px solid black"
+       h="100%"
+       cursor="pointer"
         onClick={() => setSliderToggle(!sliderToggle)}
-        cursor="pointer"
-        backgroundColor={sliderToggle ? "rgba(157,195,226,0.4)" : "transparent"}
       >
-        <IconButton
-          height={ifScreenlessthan1536px ? "50%" : "70%"}
+      <Flex direction="column" mt={ifScreenlessthan1536px? "1px" : "-2px"} justifyContent="center" alignItems="center" h="100%">
+      <IconButton
+          height={ifScreenlessthan1536px ? "50%" : "50%"}
           width={ifScreenlessthan1536px ? "100%" : "100%"}
           // border="2px solid red"
           _hover={{ bgColor: "transparent" }}
@@ -156,7 +165,7 @@ const Rotate = ({ viewerId, setToolSelected, navigatorCounter }) => {
           // mr="7px"
           // border="1px solid red"
           borderRadius={0}
-          mb="3px"
+          // mb="3px"
         />
         {/* rgba(0, 21, 63, 1) */}
 
@@ -164,6 +173,7 @@ const Rotate = ({ viewerId, setToolSelected, navigatorCounter }) => {
         {label}
       </Text> */}
         <Text align="center" fontFamily="inter" fontSize="10px">Rotate</Text>
+      </Flex>
       </Box>
       {sliderToggle ? (
         <Flex

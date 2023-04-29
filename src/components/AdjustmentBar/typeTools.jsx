@@ -4,7 +4,7 @@ import { useMutation } from "@apollo/client";
 import { Flex, SimpleGrid, useToast } from "@chakra-ui/react";
 import { fabric } from "openseadragon-fabricjs-overlay";
 import Draggable from "react-draggable";
-
+import { MdOutlineDragIndicator } from "react-icons/md";
 import {
   DELETE_ANNOTATION,
   SAVE_ANNOTATION,
@@ -102,12 +102,17 @@ const TypeTools = ({
       >
         <Flex
           className="drag-handle"
-          borderTop="5px solid black"
-          borderBottom="5px solid black"
-          h="15px"
-          bgColor="transparent"
+          // borderTop="5px solid black"
+          // borderBottom="5px solid black"
+          bg="whitesmoke"
+          h="15px"  
+          // border="1px solid red"
           cursor="move"
-        />
+          alignItems="center"
+          justifyContent="center"
+        >
+                        <MdOutlineDragIndicator  style={{ transform: 'rotate(90deg)'  , color:"darkgrey" }}  />
+                        </Flex>
         <SimpleGrid columns={2} px="8px" bgColor="#FCFCFC" py="8px" spacing={2}>
           <Line
             setToolSelected={setToolSelected}

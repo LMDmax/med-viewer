@@ -51,7 +51,7 @@ const Report = ({
       <Flex
         bg="#fff"
         mt="0.5vw"
-        h="77vh"
+        h="100%"
         mr="0.7333vw"
         pl="1.666vw"
         // pb="1vh"

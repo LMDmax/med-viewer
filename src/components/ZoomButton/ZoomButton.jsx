@@ -48,36 +48,45 @@ const ZoomButton = ({ viewerId, setBottomZoomValue, navigatorCounter }) => {
       <Box w="35px" display="flex" flexDirection="column" alignItems="center">
         <Box
           w="30px"
+          h="30px"
           textAlign="center"
           pb="  8px"
           // color={customZoom4 ? "#468" : ""}
           // borderBottom="1px solid black"
+          backgroundColor="#F6F6F6"
+          mb="4px"
           cursor="pointer"
           onClick={() => {
             setZoomButtonValue(4);
           }}
         >
-          4X
+          4x
         </Box>
         <Box
           w="30px"
+          h="30px"
+          mb="4px"
           textAlign="center"
           pt="3px"
           pb="  8px"
           // color={customZoom10 ? "#468" : ""}
           // borderBottom="1px solid black"
+          backgroundColor="#F6F6F6"
           cursor="pointer"
           onClick={() => {
             setZoomButtonValue(10);
           }}
         >
-          10X
+          10x
         </Box>
         <Box
           w="30px"
+          h="30px"
+          mb="4px"
           textAlign="center"
           pt="3px"
           pb="  8px"
+          backgroundColor="#F6F6F6"
           // color={customZoom20 ? "#468" : ""}
           // borderBottom="1px solid black"
           cursor="pointer"
@@ -85,12 +94,15 @@ const ZoomButton = ({ viewerId, setBottomZoomValue, navigatorCounter }) => {
             setZoomButtonValue(20);
           }}
         >
-          20X
+          20x
         </Box>
         <Box
           w="30px"
+          h="30px"
+          mb="4px"
           textAlign="center"
           pt="3px"
+          backgroundColor="#F6F6F6"
           pb="  8px"
           // color={customZoom40 ? "#468" : ""}
           cursor="pointer"

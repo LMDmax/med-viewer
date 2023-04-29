@@ -9,6 +9,7 @@ import {
   IconButton,
   Box,
   VStack,
+  Flex,
   ModalFooter,
   Button,
   Text,
@@ -23,6 +24,7 @@ import { useFabricOverlayState } from "../../state/store";
 import IconSize from "../ViewerToolbar/IconSize";
 import "./openseadragon-filtering";
 import AdjustmentRow from "./AdjustmentRow";
+import { updateTool } from "../../state/actions/fabricOverlayActions";
 
 const getFilters = (sliderInputs) => {
   const filters = [];
@@ -37,11 +39,11 @@ const FilterAdjustments = ({
   toolSelected,
   navigatorCounter,
 }) => {
-  const { fabricOverlayState } = useFabricOverlayState();
-  const { viewerWindow } = fabricOverlayState;
+  const { fabricOverlayState,setFabricOverlayState  } = useFabricOverlayState();
+  const { viewerWindow, activeTool } = fabricOverlayState;
   const { viewer } = viewerWindow[viewerId];
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
-  const [isActive, setIsActive] = useState(false);
+  const [isActiveTool, setIsActiveTool] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [sliderInputs, setSliderInputs] = useState({
@@ -51,24 +53,28 @@ const FilterAdjustments = ({
     gamma: 1,
     exposure: 0,
   });
+  const isActive = activeTool === "Filter"
 
   useEffect(() => {
     if (navigatorCounter > 0) {
-      setIsActive(false);
+      setIsActiveTool(false);
     }
   }, [navigatorCounter]);
 
   useEffect(() => {
-    if (isActive) {
+    if (isActiveTool) {
       setToolSelected("Filter");
+      setFabricOverlayState(updateTool({ tool: "Filter" }));
+
     } else {
       setToolSelected("");
+      setFabricOverlayState(updateTool({ tool: "Move" }));
     }
-  }, [isActive]);
+  }, [isActiveTool]);
 
   useEffect(() => {
     if (toolSelected === "") {
-      setIsActive(false);
+      setIsActiveTool(false);
     }
   }, [toolSelected]);
 
@@ -78,7 +84,7 @@ const FilterAdjustments = ({
   const toast = useToast();
 
   const handleClick = () => {
-    setIsActive((state) => !state);
+    setIsActiveTool((state) => !state);
   };
 
   const handleSliderChange = (name, value) => {
@@ -86,7 +92,7 @@ const FilterAdjustments = ({
   };
 
   const handleOnClose = () => {
-    setIsActive(false);
+    setIsActiveTool(false);
     if (sliderStateRef.current) setSliderInputs(sliderStateRef.current);
     onClose();
   };
@@ -99,7 +105,7 @@ const FilterAdjustments = ({
       isClosable: true,
       duration: 1000,
     });
-    setIsActive(false);
+    setIsActiveTool(false);
     onClose();
   };
 
@@ -129,8 +135,8 @@ const FilterAdjustments = ({
     <Box
       w="70px"
       h="100%"
-      pt="8px"
       onClick={handleClick}
+      // border="1px solid black"
       style={{ position: "relative", display: "inline-block" }}
       _hover={{ bgColor: "transparent" }}
       sx={{
@@ -142,13 +148,14 @@ const FilterAdjustments = ({
           cursor: "pointer",
           width: "100%",
           height: "100%",
-          backgroundColor: isActive ? "rgba(157,195,226,0.4)" : "transparent",
+          backgroundColor: isActiveTool ? "rgba(157,195,226,0.4)" : "transparent",
           zIndex: 1,
         },
       }}
     >
-      <IconButton
-        height={ifScreenlessthan1536px ? "50%" : "70%"}
+     <Flex direction="column" mt={ifScreenlessthan1536px? "1px" : "-2px"} justifyContent="center" alignItems="center" h="100%">
+     <IconButton
+        height={ifScreenlessthan1536px ? "50%" : "50%"}
         width={ifScreenlessthan1536px ? "100%" : "100%"}
         // border="2px solid red"
         _hover={{ bgColor: "transparent" }}
@@ -164,9 +171,9 @@ const FilterAdjustments = ({
         // mr="7px"
         // border="1px solid red"
         borderRadius={0}
-        mb="3px"
       />
       <Text align="center" fontFamily="inter" fontSize="10px">Adjustment</Text>
+     </Flex>
       <Modal
         isOpen={isOpen}
         onClose={handleOnClose}

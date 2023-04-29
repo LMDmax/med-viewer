@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Button,
   IconButton,
@@ -10,6 +10,7 @@ import {
   ModalHeader,
   ModalFooter,
   ModalBody,
+  Flex,
   ModalCloseButton,
   Tooltip,
   Text,
@@ -20,14 +21,18 @@ import html2canvas from "html2canvas";
 import IconSize from "./ViewerToolbar/IconSize";
 import { ScreenshotIcon, ScreenshotSelectedIcon } from "./Icons/CustomIcons";
 import TooltipLabel from "./AdjustmentBar/ToolTipLabel";
+import { useFabricOverlayState } from "../state/store";
+import { updateTool } from "../state/actions/fabricOverlayActions";
 
 const DownloadImage = ({ setToolSelected }) => {
+  const { fabricOverlayState,setFabricOverlayState } = useFabricOverlayState();
+  const { activeTool, } = fabricOverlayState;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [img, setImg] = useState();
   const [screenshotHover, setScreenshotHover] = useState(false);
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
   const modalRef = useRef(null);
-
+const isActive = activeTool === "Screenshot"
   const handleClick = () => {
     html2canvas(document.querySelector(".openseadragon-canvas"), {
       backgroundColor: null,
@@ -41,6 +46,16 @@ const DownloadImage = ({ setToolSelected }) => {
     onOpen();
     
   };
+  useEffect(()=>{
+    if(screenshotHover){
+    setFabricOverlayState(updateTool({ tool: "Screenshot" }));
+
+    }
+    else{
+    setFabricOverlayState(updateTool({ tool: "Move" }));
+
+    }
+  },[screenshotHover])
   return (
     <>
       <Box
@@ -49,7 +64,6 @@ const DownloadImage = ({ setToolSelected }) => {
           handleClick();
           setScreenshotHover(!screenshotHover);
         }}
-        pt="8px"
         mx="15px"
         w="65px"
         h="100%"
@@ -57,8 +71,9 @@ const DownloadImage = ({ setToolSelected }) => {
         // border="1px solid red"
         bg={screenshotHover ? "rgba(157,195,226,0.4)" : ""}
       >
+        <Flex direction="column" mt={ifScreenlessthan1536px? "1px" : "-2px"} justifyContent="center" alignItems="center" h="100%">
         <IconButton
-        height={ifScreenlessthan1536px ? "50%" : "70%"}
+        height={ifScreenlessthan1536px ? "50%" : "50%"}
         width={ifScreenlessthan1536px ? "100%" : "100%"}
           // border="2px solid red"
           _hover={{ bgColor: "transparent" }}
@@ -69,9 +84,9 @@ const DownloadImage = ({ setToolSelected }) => {
           }}
           backgroundColor="transparent"
           borderRadius={0}
-          mb="3px"
         />
         <Text align="center" fontFamily="inter" fontSize="10px">Screenshot</Text>
+        </Flex>
       </Box>
 
       <Modal

@@ -224,6 +224,8 @@ const Line = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
         cords: [x1, y1, x2, y2],
       });
 
+    
+
       saveAnnotationToDB({
         slideId,
         annotation: message.object,
@@ -241,16 +243,6 @@ const Line = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
     // change tool back to move
     setFabricOverlayState(updateTool({ tool: "Move" }));
 
-    // send annotation
-    // socket.emit(
-    //   "send_annotations",
-    //   JSON.stringify({
-    //     roomName,
-    //     username,
-    //     content: canvas,
-    //     feed: [...activityFeed, message],
-    //   })
-    // );
   }, [shape]);
 
   const handleClick = () => {

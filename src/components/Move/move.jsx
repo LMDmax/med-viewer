@@ -75,14 +75,18 @@ function Move({
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { activeTool, viewerWindow } = fabricOverlayState;
   const { fabricOverlay } = viewerWindow[viewerId];
-  const isActive = activeTool === "Move";
+  let isActive = activeTool === "Move";
   const [activeAnnotations, setActiveAnnotations] = useState(false);
 
   useEffect(() => {
     if (typeToolsToggle) {
       setToolSelected("Annotation");
+    setFabricOverlayState(updateTool({ tool: "Annotations" }));
+
     } else {
       setToolSelected("");
+     setFabricOverlayState(updateTool({ tool: "Move" }));
+
     }
   }, [typeToolsToggle]);
 
@@ -90,7 +94,6 @@ function Move({
     // setFabricOverlayState(updateTool({ tool: "Move" }));
   };
   const handleAnnotationsClick = () => {
-    if (!isActive) setFabricOverlayState(updateTool({ tool: "Move" }));
     setTypeToolsToggle((state) => !state);
   };
   const handlePopup = () => {
@@ -159,8 +162,8 @@ function Move({
               setActiveAnnotations(!activeAnnotations);
             }}
             w="70px"
-            pt="8px"
             h="100%"
+            // border="1px solid black"
             style={{ position: "relative", display: "inline-block" }}
             _hover={{ bgColor: "transparent" }}
             sx={{
@@ -178,11 +181,12 @@ function Move({
                 zIndex: 1,
               },
             }}
-            F
+            
           >
+            <Flex direction="column" mt={ifScreenlessthan1536px? "1px" : "-2px"} justifyContent="center" alignItems="center" h="100%">
             <IconButton
               width={ifScreenlessthan1536px ? "100%" : "100%"}
-              height={ifScreenlessthan1536px ? "50%" : "70%"}
+              height={ifScreenlessthan1536px ? "50%" : "50%"}
               // border="2px solid red"
               _hover={{ bgColor: "transparent" }}
               icon={
@@ -213,6 +217,7 @@ function Move({
             >
               Annotation
             </Text>
+            </Flex>
           </Box>
         ) : null}
 

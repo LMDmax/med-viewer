@@ -6,6 +6,7 @@ import {
   Accordion,
   AccordionItem,
   AccordionButton,
+  Tooltip,
   AccordionPanel,
   AccordionIcon,
   Box,
@@ -49,9 +50,17 @@ const DetailsCard = ({ cardTitle, details = [], ...restProps }) => {
                 borderBottom="1px solid #DEDEDE"
               >
                 <Text flex={1}>{title}:</Text>
-                <Text textTransform="capitalize" flex={1} whiteSpace="initial">
-                  {details[title]}
-                </Text>
+                {title === "Title" ? (
+                  <Tooltip label={details[title]}>
+                    <Text textTransform="capitalize" flex={1} whiteSpace="initial" overflowWrap="break-word">
+                      {details[title]}
+                    </Text>
+                  </Tooltip>
+                ) : (
+                  <Text textTransform="capitalize" flex={1} whiteSpace="initial">
+                    {details[title]}
+                  </Text>
+                )}
               </Flex>
             ))}
           </VStack>

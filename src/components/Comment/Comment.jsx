@@ -6,6 +6,7 @@ import {
   useMediaQuery,
   useToast,
   useDisclosure,
+  Flex,
   IconButton,
   Box,
   Text,
@@ -64,7 +65,7 @@ const CommentBox = ({
   const { fabricOverlay, viewer, activityFeed, slideId } =
     viewerWindow[viewerId];
 
-  const isActive = activeTool === "Circle";
+  const isActive = activeTool === "Comment";
 
   const [shape, setShape] = useState(null);
   const [textbox, setTextbox] = useState(false);
@@ -251,7 +252,13 @@ const CommentBox = ({
   }, [shape]);
 
   const handleClick = () => {
-    setFabricOverlayState(updateTool({ tool: "Circle" }));
+    if(addComments){
+      setFabricOverlayState(updateTool({ tool: "Move" }));
+    }
+    else{
+      setFabricOverlayState(updateTool({ tool: "Comment" }));
+
+    }
   };
 
   useEffect(() => {
@@ -280,7 +287,7 @@ const CommentBox = ({
         setAddComments(!addComments);
         handleClick();
       }}
-      pt="8px"
+      // border="1px solid black"
       w="60px"
       h="100%"
       style={{ position: "relative", display: "inline-block" }}
@@ -299,9 +306,10 @@ const CommentBox = ({
         },
       }}
     >
+      <Flex direction="column" mt={ifScreenlessthan1536px? "1px" : "-2px"} justifyContent="center" alignItems="center" h="100%">
       <IconButton
         width={ifScreenlessthan1536px ? "100%" : "100%"}
-        height={ifScreenlessthan1536px ? "50%" : "70%"}
+        height={ifScreenlessthan1536px ? "50%" : "50%"}
         // border="2px solid red"
         _hover={{ bgColor: "transparent" }}
         icon={
@@ -322,9 +330,9 @@ const CommentBox = ({
         // mr="7px"
         // border="1px solid red"
         borderRadius={0}
-        mb="3px"
       />
       <Text align="center" fontFamily="inter" fontSize="10px">Comment</Text>
+      </Flex>
     </Box>
   );
 };

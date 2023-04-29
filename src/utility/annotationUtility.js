@@ -575,6 +575,12 @@ export const saveAnnotationToDB = async ({
   const annotationJSON = getAnnotationJSON(annotation);
   // console.log(annotationJSON);
   try {
+    if (annotationJSON.type === "line") {
+      annotationJSON.x1 = annotationJSON.cords[0];
+      annotationJSON.y1 = annotationJSON.cords[1];
+      annotationJSON.x2 = annotationJSON.cords[2];
+      annotationJSON.y2 = annotationJSON.cords[3];
+    }
     annotationJSON.strokeWidth = annotationJSON.strokeWidth.toString();
     delete annotationJSON?.strokeDashArray;
     delete annotationJSON?.slide;

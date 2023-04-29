@@ -17,6 +17,7 @@ const EditText = ({
   isOpen,
   onClose,
   textValue,
+  annotationObject,
   titleValue,
   handleClose,
   handleSave,
@@ -38,7 +39,6 @@ const EditText = ({
     handleSave({ text, title });
     setText("");
     setTitle("");
-    window.location.reload();
   };
 
   return (

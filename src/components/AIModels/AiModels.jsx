@@ -119,8 +119,8 @@ const AiModels = ({
     <Box
       w="fit-content"
       h="100%"
-      pt="8px"
       // border="1px solid green"
+      // border="1px solid black"
       style={{ position: "relative", display: "inline-block" }}
       _hover={{ bgColor: "transparent" }}
       // border="2px solid red"
@@ -153,9 +153,10 @@ const AiModels = ({
         })
       }}
     >
-      <IconButton
+    <Flex direction="column" mt={ifScreenlessthan1536px? "1px" : "-2px"} justifyContent="center" alignItems="center" h="100%">
+    <IconButton
         width={ifScreenlessthan1536px ? "100%" : "100%"}
-        height={ifScreenlessthan1536px ? "50%" : "70%"}
+        height={ifScreenlessthan1536px ? "50%" : "50%"}
         _hover={{ bgColor: "transparent" }}
         icon={
           !TilHover ? (
@@ -175,7 +176,6 @@ const AiModels = ({
         // mr="7px"
         // border="1px solid red"
         borderRadius={0}
-        mb="3px"
       />
       <Flex
         justifyContent="space-between"
@@ -188,6 +188,7 @@ const AiModels = ({
         </Text>
         <RiArrowDownSLine color="#5497cd" size="16px" />
       </Flex>
+    </Flex>
       {TilHover && (
         <Box
           style={{

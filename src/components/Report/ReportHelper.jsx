@@ -97,7 +97,7 @@ const OpenReportButton = ({ openReport }) => {
         fontWeight="500"
         onClick={() => openReport()}
       >
-        Report
+        Report Type
       </Button>
     </Tooltip>
   );

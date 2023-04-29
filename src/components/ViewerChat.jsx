@@ -4,11 +4,14 @@ import {
   Tooltip,
   useMediaQuery,
   Box,
+  Flex,
   Text,
 } from "@chakra-ui/react";
 import IconSize from "./ViewerToolbar/IconSize";
 import TooltipLabel from "./AdjustmentBar/ToolTipLabel";
 import { BsChatRightText, BsFillChatRightTextFill } from "react-icons/bs";
+import { useFabricOverlayState } from "../state/store";
+import { updateTool } from "../state/actions/fabricOverlayActions";
 
 const ViewerChat = ({
   handleChatFeedbar,
@@ -19,7 +22,10 @@ const ViewerChat = ({
   navigatorCounter,
   chatHover,
 }) => {
+  const { fabricOverlayState,setFabricOverlayState } = useFabricOverlayState();
+  const { activeTool, } = fabricOverlayState;
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
+  const isActive = activeTool === "Chat";
   useEffect(() => {
     if (chatHover === false) {
       handleChatFeedBarClose();
@@ -39,15 +45,15 @@ const ViewerChat = ({
     <Box
       w="60px"
       h="100%"
-      pt="8px"
-      bg={chatHover ? "rgba(157,195,226,0.4)" : ""}
+      bg={chatFeedBar ? "rgba(157,195,226,0.4)" : ""}
       cursor="pointer"
       onClick={() => {
         handleChatFeedbar();
       }}
     >
-      <IconButton
-        height={ifScreenlessthan1536px ? "50%" : "70%"}
+     <Flex direction="column" mt={ifScreenlessthan1536px? "1px" : "-2px"} justifyContent="center" alignItems="center" h="100%">
+     <IconButton
+        height={ifScreenlessthan1536px ? "50%" : "50%"}
         width={ifScreenlessthan1536px ? "100%" : "100%"}
         // border="2px solid red"
         _hover={{ bgColor: "transparent" }}
@@ -58,9 +64,9 @@ const ViewerChat = ({
         }}
         backgroundColor="transparent"
         borderRadius={0}
-        mb="3px"
       />
       <Text align="center" fontFamily="inter" fontSize="10px">Chat</Text>
+     </Flex>
     </Box>
   );
 };

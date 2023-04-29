@@ -214,7 +214,7 @@ const FunctionsMenu = ({
     const canvas = fabricOverlay?.fabricCanvas();
     canvas?.on("mouse:down", (e) => {
       const clickedObject = canvas?.findTarget(e.e);
-      // console.log(clickedObject);
+      console.log(clickedObject);
       setActiveObject(clickedObject); // You can access the details of the clicked object here
     });
   }, [fabricOverlay]);
@@ -265,7 +265,7 @@ const FunctionsMenu = ({
       background="#FFFFFF"
       zIndex={10}
       mt="2px"
-      h={ifWidthLessthan1920 ? "calc(100vh - 14vh)" : "calc(100vh - 10.033vh)"}
+      h={ifWidthLessthan1920 ? "calc(100vh - 18vh)" : "calc(100vh - 18vh)"}
     >
       <motion.div
         animate={{
@@ -285,7 +285,7 @@ const FunctionsMenu = ({
           whiteSpace: "nowrap",
           position: "absolute",
           right: isOpen ? "0" : "0px",
-          height: "85vh",
+          height: "82vh",
           top: "0",
         }}
       >
@@ -581,7 +581,8 @@ const FunctionsMenu = ({
           <Flex
             w="100%"
             position="relative"
-            h={ifWidthLessthan1920 ? "100%" : "calc(100vh - 10.033vh)"}
+            // h="82vh"
+            h={ifWidthLessthan1920 ? "82vh" : "82vh"}
           >
             {selectedOption === "slides" ? (
               <SlidesMenu
@@ -719,7 +720,7 @@ const FunctionsMenu = ({
                 setIsOpen={setIsOpen}
               />
             ) : (
-              <Flex w="100%" h="95%" pb="25px" bgColor="#FCFCFC" p="5px">
+              <Flex w="100%" h="100%" pb="25px" bgColor="#FCFCFC" p="5px">
                 <Timeline timelineData={timelineData} viewerId={viewerId} />
               </Flex>
             )}

@@ -14,6 +14,7 @@ import { useFabricOverlayState } from "../../state/store";
 import { MultiviewIcon, MultiviewSelectedIcon } from "../Icons/CustomIcons";
 import TooltipLabel from "../AdjustmentBar/ToolTipLabel";
 import { useEffect } from "react";
+import { updateTool } from "../../state/actions/fabricOverlayActions";
 
 const Multiview = ({
   viewerId,
@@ -25,10 +26,12 @@ const Multiview = ({
   setIsNavigatorActive,
 }) => {
   const iconSize = IconSize();
-  const { fabricOverlayState } = useFabricOverlayState();
-  const { viewerWindow, isAnnotationLoading } = fabricOverlayState;
+  const { fabricOverlayState,setFabricOverlayState } = useFabricOverlayState();
+  const { activeTool, } = fabricOverlayState;
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
   const [state, setState] = useState(false);
+  const isActive = activeTool === "Multiview";
+
 
   useEffect(() => {
     if (state) {
@@ -36,7 +39,10 @@ const Multiview = ({
       setIsNavigatorActive(false);
       setIsMultiview(true);
       setToolSelected("Multiview");
+    setFabricOverlayState(updateTool({ tool: "Multiview" }));
+
     } else {
+    setFabricOverlayState(updateTool({ tool: "Move" }));
       setToolSelected("");
       setState(false);
       setIsMultiview(false);
@@ -51,32 +57,24 @@ const Multiview = ({
     }
   }, [navigatorCounter]);
 
+
   return (
     <Box
       onClick={() => {
         // handleClick();
         setState(!state);
       }}
-      pt="8px"
+      bg="white"
       w="60px"
-      backgroundColor={isMultiview ? "rgba(157,195,226,0.4)" : "transparent"}
+      // border="2px solid black"
+      backgroundColor= {isMultiview ? "rgba(157,195,226,0.4)" : "transparent"}
       h="100%"
-      // sx={{
-      //   ":before": {
-      //     content: '""',
-      //     top: 0,
-      //     left: 0,
-      //     cursor:"pointer",
-      //     width: "100%",
-      //     height: "100%",
-      //     backgroundColor: isMultiview ? "rgba(157,195,226,0.4)" : "transparent",
-      //     zIndex: 1,
-      //   },
-      // }}
+      cursor="pointer"
     >
-      <IconButton
+<Flex direction="column" mt={ifScreenlessthan1536px? "1px" : "-2px"} justifyContent="center" alignItems="center" h="100%">
+<IconButton
         width={ifScreenlessthan1536px ? "100%" : "100%"}
-        height={ifScreenlessthan1536px ? "50%" : "70%"}
+        height={ifScreenlessthan1536px ? "50%" : "50%"}
         // border="2px solid red"
         _hover={{ bgColor: "transparent" }}
         icon={
@@ -97,7 +95,7 @@ const Multiview = ({
         // mr="7px"
         // border="1px solid red"
         borderRadius={0}
-        mb="3px"
+        // mb="3px"
       />
       <Flex
         justifyContent="center"
@@ -111,6 +109,7 @@ const Multiview = ({
         </Text>
         <RiArrowDownSLine color="black" size="12px" />
       </Flex>
+</Flex>
     </Box>
   );
 };

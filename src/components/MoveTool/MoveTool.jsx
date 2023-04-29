@@ -16,14 +16,15 @@ const MoveTool = ({ isActive, handleClick }) => {
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
   return (
     <Box
+      // bg={isActive ? " rgba(157,195,226,0.4)" : ""}
       bg={isActive ? " rgba(157,195,226,0.4)" : ""}
       w="60px"
-      // border="2px solid pink"
+      // border="2px solid black"
       h="100%"
       cursor="pointer"
-      pt="8px"
       onClick={()=>handleClick()}
     >
+      <Flex direction="column" mt="-2px" justifyContent="center" alignItems="center" h="100%">
       <IconButton
         width={ifScreenlessthan1536px ? "100%" : "100%"}
         height={ifScreenlessthan1536px ? "50%" : "50%"}
@@ -46,9 +47,9 @@ const MoveTool = ({ isActive, handleClick }) => {
         // mr="7px"
         // border="1px solid red"
         borderRadius={0}
-        mb="3px"
       />
       <Text fontFamily="inter" fontSize="10px" align="center">Select</Text>
+      </Flex>
     </Box>
   );
 };

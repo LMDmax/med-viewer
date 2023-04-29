@@ -19,7 +19,7 @@ const Studies = ({ caseInfo, slideInfo }) => {
       : "-",
   };
 
-  // console.log(slideInfo);
+  console.log(slideInfo);
 
   const patientDetails = {
     UHID: `${caseInfo?.patient?.uhid}`,
@@ -48,9 +48,9 @@ const Studies = ({ caseInfo, slideInfo }) => {
     Size: "100 mb",
     "Stain Type": slideInfo?.stainType,
     "Marker Type" : slideInfo.bioMarkerType? slideInfo.bioMarkerType : "-",
-    "Gross Id" : "G1",
-    "Block Id" : "B1",
-    "Slide Id" : "A125/G1/B1/S1",
+    // "Gross Id" : "G1",
+    // "Block Id" : "B1",
+    // "Slide Id" : "A125/G1/B1/S1",
     Dimension: "1280 x 720 px",
     Resolution: "148 dpi",
     Scanner: "NanoZoomer S360",
@@ -63,7 +63,7 @@ const Studies = ({ caseInfo, slideInfo }) => {
     <Scrollbars
       style={{
         width: "100%",
-        height: "85vh",
+        height: "100%",
         borderWidth: "0px",
       }}
       renderThumbVertical={(props) => (
@@ -77,12 +77,13 @@ const Studies = ({ caseInfo, slideInfo }) => {
         w="100%"
         h="100%"
         pb="12px"
-        pt="5px"
+        // pt="5px"
       >
         <HStack
-          background="#FCFCFC"
-          boxShadow="0px 1px 2px rgba(176, 200, 214, 0.25)"
+          background="white"
+          position="fixed"
           h="2.5em"
+          w="340px"
           align="center"
           px="18px"
         >
@@ -104,7 +105,7 @@ const Studies = ({ caseInfo, slideInfo }) => {
           pr="16px"
           py="18px"
           h="4.4em"
-          mt="0.8em"
+          mt="2.8em"
         >
           <Text
             fontWeight="400"

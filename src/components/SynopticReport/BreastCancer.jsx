@@ -362,7 +362,7 @@ const BreastCancer = ({
           MACROSCOPY
         </Text>
       </Flex>
-      {/* <Flex w="100%" flex="1" flexWrap="wrap" justifyContent="space-between">
+      <Flex w="100%" flex="1" flexWrap="wrap" justifyContent="space-between">
         {reportData.slice(0, 13).map((inputField, index) => {
           return (
             <SRHelper
@@ -374,7 +374,7 @@ const BreastCancer = ({
             />
           );
         })}
-      </Flex> */}
+      </Flex>
       <Flex direction="column">
         <HStack flex="1" py="1vh" />
         <Text fontWeight="600" py="1vh">
@@ -452,7 +452,7 @@ const BreastCancer = ({
             MM
           </Text>
         </HStack>
-        <Flex w="100%" flex="1" flexWrap="wrap" justifyContent="space-between">
+        <Flex  flex="1" flexWrap="wrap" justifyContent="space-between">
           {reportData.slice(13, 22).map((inputField, index) => {
             return (
               <SRHelper
@@ -491,7 +491,7 @@ const BreastCancer = ({
           />{" "}
           MM IN MAXIMUM EXTENT
         </Text>
-        <Flex w="100%" flex="1" flexWrap="wrap" justifyContent="space-between">
+        {/* <Flex w="100%" flex="1" flexWrap="wrap" justifyContent="space-between">
           {reportData.slice(22, 29).map((inputField, index) => {
             return (
               <SRHelper
@@ -503,7 +503,7 @@ const BreastCancer = ({
               />
             );
           })}
-        </Flex>
+        </Flex> */}
       </Flex>
       {userInfo?.userType !== "technologist" && (
         <SubmitHelper

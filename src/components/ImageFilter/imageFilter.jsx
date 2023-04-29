@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { BsFilterSquare } from "react-icons/bs";
-import { Box, Text, IconButton, useMediaQuery } from "@chakra-ui/react";
+import { Box, Text, IconButton, useMediaQuery, Flex } from "@chakra-ui/react";
 import { rgb, lab } from "color-convert";
 import ToolbarButton from "../ViewerToolbar/button";
 import "./openseadragon-filtering";
@@ -9,13 +9,16 @@ import TooltipLabel from "../AdjustmentBar/ToolTipLabel";
 import { useEffect } from "react";
 import { IoNavigate } from "react-icons/io5";
 import axios from "axios";
+import { updateTool } from "../../state/actions/fabricOverlayActions";
+
 
 const ImageFilter = ({ viewerId, setToolSelected, navigatorCounter }) => {
-  const { fabricOverlayState } = useFabricOverlayState();
-  const { viewerWindow } = fabricOverlayState;
+  const { fabricOverlayState,setFabricOverlayState } = useFabricOverlayState();
+  const { viewerWindow, activeTool } = fabricOverlayState;
   const { viewer, fabricOverlay } = viewerWindow[viewerId];
   const [isActive, setIsActive] = useState(false);
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
+  const isActiveTool=activeTool === "Normalisation"
   const [concatArray, setConcatArray] = useState({});
 
   const targetMean = [56.35951712, 55.60842896, -40.15281677];
@@ -126,10 +129,13 @@ const ImageFilter = ({ viewerId, setToolSelected, navigatorCounter }) => {
     if (!viewer) return;
     if (isActive) {
       setToolSelected("");
+    setFabricOverlayState(updateTool({ tool: "Move" }));
       viewer.setFilterOptions(null);
       viewer.viewport.zoomBy(1.01);
       setIsActive(false);
     } else {
+    setFabricOverlayState(updateTool({ tool: "Normalisation" }));
+
       setToolSelected("Normalisation");
       viewer.setFilterOptions({
         filters: {
@@ -150,15 +156,15 @@ const ImageFilter = ({ viewerId, setToolSelected, navigatorCounter }) => {
   return (
     <Box
       w="82px"
-      pt="8px"
       h="100%"
       cursor="pointer"
       bg={isActive ? "rgba(157,195,226,0.4)" : ""}
       onClick={handleClick}
     >
-      <IconButton
+     <Flex direction="column" mt={ifScreenlessthan1536px? "1px" : "-2px"} justifyContent="center" alignItems="center" h="100%">
+     <IconButton
         width={ifScreenlessthan1536px ? "100%" : "100%"}
-        height={ifScreenlessthan1536px ? "50%" : "70%"}
+        height={ifScreenlessthan1536px ? "50%" : "50%"}
         
         // border="2px solid red"
         _hover={{ bgColor: "transparent" }}
@@ -169,9 +175,9 @@ const ImageFilter = ({ viewerId, setToolSelected, navigatorCounter }) => {
         }}
         backgroundColor="transparent"
         borderRadius={0}
-        mb="3px"
       />
       <Text align="center" fontFamily="inter" fontSize="10px">Normalisation</Text>
+     </Flex>
     </Box>
   );
 };

@@ -90,7 +90,7 @@ const SynopticReport = ({
               <VStack alignItems="flex-start" minW="33.3%">
                 <Text fontWeight="600">AGE</Text>
                 <Text mt="-0rem !important" color="#8F8F8F">
-                  {`${caseInfo?.patient?.age?.years} years`}
+                  {caseInfo?.patient?.age?.years?`${caseInfo?.patient?.age?.years} years`: "-"}
                 </Text>
               </VStack>
             </HStack>
