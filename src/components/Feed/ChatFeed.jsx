@@ -107,7 +107,7 @@ function ChatFeed({
         >
           Chat- Case No - {caseInfo?.caseName} - UHID
         </Text>
-        <Flex w="fit-content" justifyContent="flex-end" alignItems="center">
+        <Flex w="fit-content" justifyContent="flex-end" mr="20px" alignItems="center">
           {/* <BsFillPeopleFill size="23px" cursor="pointer" /> */}
           <GrFormClose
             size="23px"

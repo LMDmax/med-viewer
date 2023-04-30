@@ -81,35 +81,6 @@ const Til = ({
       },
     });
 
-  // ------------------------------
-  // ------------- To show the notification Toast when til is fetching
-  // ------------------
-  useEffect(() => {
-    if (!data || !tilSubscriptionData) {
-      // toast({
-      //   title: "TIL is processing",
-      //   description: "",
-      //   status: "success",
-      //   duration: 1500,
-      //   isClosable: true,
-      // });
-    }
-  }, []);
-  // ------------------------------
-  // ------------- To show the notification Toast when TIL is plotted
-  // ------------------
-
-  // useEffect(() => {
-  //   if (Tilloading === false) {
-  //     // toast({
-  //     //   title: "TIL can be run now",
-  //     //   description: "",
-  //     //   status: "success",
-  //     //   duration: 1500,
-  //     //   isClosable: true,
-  //     // });
-  //   }
-  // }, [Tilloading]);
 
   // ------------------------------
   // ------------- updating state if data found,if hideModification button clicked,if hook data recived

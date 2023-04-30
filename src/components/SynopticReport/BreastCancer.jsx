@@ -405,7 +405,7 @@ const BreastCancer = ({
                 ? synopticReportData?.comments
                 : inputData.comments
             }
-            style={{ width: '450px' }}
+            style={{ width: '340px' }}
           />
         </VStack>
         <Flex

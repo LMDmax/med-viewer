@@ -451,7 +451,7 @@ const ProstateCancer = ({
         </Flex>
 
         <Text fontWeight="600">4.RIGHT BASE</Text>
-        <HStack flex="1" alignItems="flex-start" my="1vh" mt="-0rem !important">
+        <HStack flex="1" flexDirection="column" alignItems="flex-start" my="1vh" mt="-0rem !important">
           <VStack w="50%" alignItems="flex-start">
             <Text fontWeight="600">NUMBER OF CORES</Text>
             <HStack mt="-0rem !important" color="#8F8F8F">
@@ -492,7 +492,7 @@ const ProstateCancer = ({
           </VStack>
         </HStack>
         <Text fontWeight="600">5.RIGHT MID</Text>
-        <HStack flex="1" alignItems="flex-start" my="1vh" mt="-0rem !important">
+        <HStack flex="1" flexDirection="column" alignItems="flex-start" my="1vh" mt="-0rem !important">
           <VStack minW="50%" alignItems="flex-start">
             <Text fontWeight="600">NUMBER OF CORES</Text>
             <HStack mt="-0rem !important" color="#8F8F8F">
@@ -533,7 +533,7 @@ const ProstateCancer = ({
           </VStack>
         </HStack>
         <Text fontWeight="600">6.RIGHT APEX</Text>
-        <HStack flex="1" alignItems="flex-start" my="1vh" mt="-0rem !important">
+        <HStack flex="1" flexDirection="column" alignItems="flex-start" my="1vh" mt="-0rem !important">
           <VStack minW="50%" alignItems="flex-start">
             <Text fontWeight="600">NUMBER OF CORES</Text>
             <HStack mt="-0rem !important" color="#8F8F8F">
@@ -577,10 +577,11 @@ const ProstateCancer = ({
           <Text fontWeight="600">COMMENT</Text>
           <Textarea
             resize="none"
-            w="50%"
+            w="90%"
             name="comments"
             defaultValue={synopticReportData?.comments}
             onChange={handleInput}
+
           />
         </VStack>
       </Flex>

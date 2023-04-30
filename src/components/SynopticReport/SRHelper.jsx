@@ -8,7 +8,7 @@ const SRHelper = ({ inputField, handleInput, synopticReportData }) => {
       <Text fontWeight="600" maxW="200px">{inputField.title}</Text>
       <Flex
         color="#8F8F8F"
-        w="450px"
+        w="340px"
         overflowX="auto"
         mt="12px !important"
         ml="-16px !important"
@@ -43,12 +43,12 @@ const SRHelper = ({ inputField, handleInput, synopticReportData }) => {
             })}
           </RadioGroup>
         ) : (
-          <Box w="400px" >
+          <Box w="300px" >
             <Input
             color="#000"
             w="100%"
             size="sm"
-            margin="25px"
+            ml="25px"
             borderRadius="0"
             name={inputField?.inputName}
             defaultValue={

@@ -624,8 +624,8 @@ const FunctionsMenu = ({
                 searchSelectedData={searchSelectedData}
               />
             ) : selectedOption === "report" ? (
-              <Flex w="100%" h="86vh" direction="column" bgColor="#FCFCFC">
-                <Flex w="100%" direction="row" p="5px 5px 0px 20px">
+              <Flex w="100%" alignItems="center" h="100%" direction="column" bgColor="#FCFCFC">
+                <Flex w="400px" alignItems="center"  direction="row" p="5px 5px 0px 20px">
                   <Text fontFamily="Inter" color="#3B5D7C" mr="60%">
                     Report
                   </Text>

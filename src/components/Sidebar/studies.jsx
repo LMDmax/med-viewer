@@ -55,7 +55,7 @@ const Studies = ({ caseInfo, slideInfo }) => {
     Resolution: "148 dpi",
     Scanner: "NanoZoomer S360",
     "Uploaded At": localDate ,
-    "Uploaded By": `Dr. ${slideInfo?.uploadedBy.firstName} ${slideInfo?.uploadedBy.lastName}`,
+    "Uploaded By": `Dr. ${slideInfo?.metadata.find(m => m.Key === 'uploaded by')?.Value}`,
     "Shared With": slideInfo?.metadata?.doctor || "Dr. Sharma",
   };
 
