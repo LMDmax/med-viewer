@@ -51,7 +51,7 @@ const DetailsCard = ({ cardTitle, details = [], ...restProps }) => {
               >
                 <Text flex={1}>{title}:</Text>
                 {title === "Title" ? (
-                  <Tooltip label={details[title]}>
+                  <Tooltip placement="left" hasArrow label={details[title]}>
                     <Text textTransform="capitalize" flex={1} whiteSpace="initial" overflowWrap="break-word">
                       {details[title]}
                     </Text>

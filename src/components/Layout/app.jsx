@@ -119,13 +119,7 @@ const LayoutApp = ({
     setUnit(UnitStore);
     // console.log(bottomZoomValue);
   }, [bottomZoomValue]);
-console.log("sssss");
-
-window.onload = function() {
-  document.addEventListener("scroll", function() {
-    console.log("The user has scrolled.");
-  });
-};
+// console.log("sssss");
 
 
   let runAiModel;

@@ -352,11 +352,11 @@ const BreastCancer = ({
     }
   };
   return synopticReportData === "Loading" ? (
-    <Flex w="100%" h="100%" justifyContent="center" alignItems="center">
+    <Flex w="100%" h="100%" justifyContent="center"  alignItems="center">
       <Loading />
     </Flex>
   ) : (
-    <Flex px="1.6vw" w="100%" fontSize="14px" direction="column">
+    <Flex px="1.6vw" h="100%" w="100%" fontSize="14px" direction="column">
       <Flex bg="#F7FBFD" h="3vh" minH="30px" w="100%" alignItems="center">
         <Text fontWeight="600" pl="0.3vw">
           MACROSCOPY

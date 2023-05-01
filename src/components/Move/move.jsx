@@ -262,6 +262,8 @@ function Move({
           setTilScore={setTilScore}
           setLymphocyteCount={setLymphocyteCount}
           pathStroma={pathStroma}
+          navigatorCounter={navigatorCounter}
+
         />
         <AiModels
           bottomZoomValue={bottomZoomValue}

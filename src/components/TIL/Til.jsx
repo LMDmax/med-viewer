@@ -29,6 +29,7 @@ const Til = ({
   setToolSelected,
   setStromaArea,
   setTumorArea,
+  navigatorCounter,
   setTilScore,
   setLymphocyteCount,
   hitTil,
@@ -138,7 +139,7 @@ const Til = ({
     // console.log("data",data);
     // console.log("eror",error);
     // getData();
-  }, [hitTil, tilSubscriptionData]);
+  }, [hitTil, tilSubscriptionData,navigatorCounter]);
 
   // console.log(tilSubscriptionData?.tilStatus);
 

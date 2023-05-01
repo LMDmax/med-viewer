@@ -418,9 +418,9 @@ console.log(filteredArr);
 
   useEffect(() => {
     if (responseData) {
-      console.log("====================================");
-      console.log("response...", responseData);
-      console.log("====================================");
+      // console.log("====================================");
+      // console.log("response...", responseData);
+      // console.log("====================================");
       if (responseData.getVhutAnalysis.message !== "No Analysis found" && annotationObject) {
         showAnalysisData(responseData);
         setLoadUI(true);
@@ -428,7 +428,7 @@ console.log(filteredArr);
         
       }
       if(!annotationObject){
-        console.log("");
+        // console.log("");
       }
       else {
         setToolSelected("MorphometryError");
@@ -893,7 +893,7 @@ console.log(filteredArr);
 
   useEffect(() => {
     if (vhutSubscriptionData) {
-      console.log("subscribed", vhutSubscriptionData);
+      // console.log("subscribed", vhutSubscriptionData);
       const {
         data,
         status,
@@ -951,7 +951,7 @@ console.log(filteredArr);
           });
         
           // remove enclosing annotation and add new one to canvas
-          console.log(feedMessage);
+          // console.log(feedMessage);
           canvas.remove(annotationObject);
           canvas.add(feedMessage.object).requestRenderAll();
 

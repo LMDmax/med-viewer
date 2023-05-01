@@ -17,37 +17,30 @@ const Report = ({
   caseInfo,
   reportData,
   handleReportData,
+  showReport,
+  setShowReport,
   handleUpload,
   annotedSlideImages,
   reportedData,
   userInfo,
 }) => {
   const [ifwidthLessthan1920] = useMediaQuery("(max-width:1920px)");
-  const handleReportClose = () => {
-    handleReport();
-  };
+
+
 
   return (
     <Flex
       fontSize="12px"
       fontFamily="inter"
       w="100%"
-      height="100%"
+      height="106%"
       bg="#FCFCFC"
       flexDirection="column"
       display="flex"
-      pb="30px"
+      // pb="30px"
     >
-      <Flex
-        bg="#fff"
-        minH="32px"
-        h="2.962vh"
-        justifyContent="center"
-        alignItems="center"
-        boxShadow="1px 1px 2px rgba(176, 200, 214, 0.25)"
-      >
-        {/* <Icon as={BiGridHorizontal} color="#AEAEAE" w="2vw" h="20vw" /> */}
-      </Flex>
+      
+     
       <Flex
         bg="#fff"
         mt="0.5vw"

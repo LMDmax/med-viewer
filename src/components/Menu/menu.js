@@ -10,6 +10,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
+import { GrFormClose } from "react-icons/gr";
 import axios from "axios";
 import {
   SlidesIcon,
@@ -112,7 +113,7 @@ const FunctionsMenu = ({
   const { tile, slideId, viewer, fabricOverlay } = viewerWindow[viewerId];
   const [activeObject, setActiveObject] = useState();
   const [updatedAnnotation, setUpdatedAnnotation] = useState(null);
-  
+
   const [selectedOption, setSelectedOption] = useState("slides");
   const [reportData, setReportData] = useState({
     clinicalStudy: "",
@@ -214,12 +215,10 @@ const FunctionsMenu = ({
     const canvas = fabricOverlay?.fabricCanvas();
     canvas?.on("mouse:down", (e) => {
       const clickedObject = canvas?.findTarget(e.e);
-      console.log(clickedObject);
+      // console.log(clickedObject);
       setActiveObject(clickedObject); // You can access the details of the clicked object here
     });
   }, [fabricOverlay]);
-
-  
 
   useEffect(() => {
     if (isMultiview) {
@@ -238,11 +237,10 @@ const FunctionsMenu = ({
     }
   }, [activeObject]);
 
-
   // useEffect(() => {
   //   if (updatedAnnotation) {
   //     // console.log('Updated annotation object: ', updatedAnnotation);
-  //   const canvas = fabricOverlay?.fabricCanvas();  
+  //   const canvas = fabricOverlay?.fabricCanvas();
   //     const width = updatedAnnotation.width;
   //     const height = updatedAnnotation.height;
   //     const left = updatedAnnotation.left;
@@ -258,11 +256,22 @@ const FunctionsMenu = ({
   //   }
   // }, [updatedAnnotation]);
 
+  const handleReportClose = () => {
+    setShowReport(!showReport);
+  };
+
+  useEffect(()=>{
+if(!isOpen){
+  setSelectedOption("slides");
+}
+  },[isOpen])
+
   return (
     <Box
       pos="absolute"
       right={0}
       background="#FFFFFF"
+      // border="1px solid red"
       zIndex={10}
       mt="2px"
       h={ifWidthLessthan1920 ? "calc(100vh - 18vh)" : "calc(100vh - 18vh)"}
@@ -581,8 +590,7 @@ const FunctionsMenu = ({
           <Flex
             w="100%"
             position="relative"
-            // h="82vh"
-            h={ifWidthLessthan1920 ? "82vh" : "82vh"}
+            h={ifWidthLessthan1920 ? "100%" : "calc(100vh - 10.033vh)"}
           >
             {selectedOption === "slides" ? (
               <SlidesMenu
@@ -624,11 +632,24 @@ const FunctionsMenu = ({
                 searchSelectedData={searchSelectedData}
               />
             ) : selectedOption === "report" ? (
-              <Flex w="100%" alignItems="center" h="100%" direction="column" bgColor="#FCFCFC">
-                <Flex w="400px" alignItems="center"  direction="row" p="5px 5px 0px 20px">
-                  <Text fontFamily="Inter" color="#3B5D7C" mr="60%">
+              <Flex
+                w="100%"
+                h="82vh"
+                direction="column"
+                bgColor="#FCFCFC"
+              >
+                <Flex
+                  w="100%"
+                  direction="row"
+                  alignItems="center"
+                  justifyContent="space-evenly"
+                  // border="1px solid red"
+                  // p="5px 5px 0px 20px"
+                >
+                 <Text fontFamily="Inter" color="#3B5D7C" mr="60%">
                     Report
                   </Text>
+             
                   <ShowReport
                     caseInfo={caseInfo}
                     application={application}
@@ -638,7 +659,6 @@ const FunctionsMenu = ({
                     mediaUpload={mediaUpload}
                     slideInfo={slideInfo}
                     handleReport={handleReport}
-                    showReport={showReport}
                     setShowReport={setShowReport}
                     userInfo={userInfo}
                     questions={questions}
@@ -659,6 +679,12 @@ const FunctionsMenu = ({
                     slideData={slideData}
                     setSlideData={setSlideData}
                   />
+                  {showReport ? (<GrFormClose
+                    size={16}
+                    cursor="pointer"
+                    onClick={handleReportClose}
+                    _hover={{ cursor: "pointer" }}
+                  />) : null}
                 </Flex>
                 <Flex>
                   {showReport ? (
@@ -667,6 +693,8 @@ const FunctionsMenu = ({
                       handleReport={handleReport}
                       report={showReport}
                       reportData={reportData}
+                      showReport={showReport}
+                      setShowReport={setShowReport}
                       handleReportData={handleReportData}
                       caseInfo={caseInfo}
                       handleUpload={handleUpload}
@@ -720,7 +748,7 @@ const FunctionsMenu = ({
                 setIsOpen={setIsOpen}
               />
             ) : (
-              <Flex w="100%" h="100%" pb="25px" bgColor="#FCFCFC" p="5px">
+              <Flex w="100%" h="95%" pb="25px" bgColor="#FCFCFC" p="5px">
                 <Timeline timelineData={timelineData} viewerId={viewerId} />
               </Flex>
             )}

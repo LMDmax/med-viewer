@@ -19,7 +19,7 @@ const Studies = ({ caseInfo, slideInfo }) => {
       : "-",
   };
 
-  console.log(slideInfo);
+  // console.log(slideInfo);
 
   const patientDetails = {
     UHID: `${caseInfo?.patient?.uhid}`,
@@ -62,8 +62,8 @@ const Studies = ({ caseInfo, slideInfo }) => {
   return caseInfo ? (
     <Scrollbars
       style={{
-        width: "100%",
-        height: "100%",
+        width: "450px",
+        height: "82vh",
         borderWidth: "0px",
       }}
       renderThumbVertical={(props) => (

@@ -14,6 +14,7 @@ import "../../styles/viewer.css";
 import ToolbarButton from "../ViewerToolbar/button";
 import IconSize from "../ViewerToolbar/IconSize";
 import TooltipLabel from "./ToolTipLabel";
+import Cancel from "../Cancel/Cancel";
 
 function AdjustmentBar({
   userInfo,
@@ -102,7 +103,7 @@ function AdjustmentBar({
       className="adjustmentbar"
       alignItems="center"
       w="100%"
-      justifyContent="flex-end"
+      justifyContent="space-between"
       height={ifWidthLessthan1920 ? "7vh" : "8vh"}
       // border="2px solid red"
       boxShadow="0px 0px 1px 0.1px"
@@ -136,7 +137,9 @@ function AdjustmentBar({
          Case No-{caseInfo?.caseName || caseInfo?.name}
         </Text>
       </Flex> */}
-      {/* <Box w="25%"  h="100%" /> */}
+      <Box w="25%"   h="100%" >
+      <Cancel />
+        </Box>
       <Move
         application={application}
         userInfo={userInfo}
