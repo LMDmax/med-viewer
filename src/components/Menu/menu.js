@@ -663,6 +663,7 @@ if(!isOpen){
                     userInfo={userInfo}
                     questions={questions}
                     app={app}
+                    showReport={showReport}
                     setSlideId={setSlideId}
                     responseHandler={responseHandler}
                     questionnaireResponse={questionnaireResponse}

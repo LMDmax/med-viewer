@@ -176,7 +176,7 @@ const ReportHelper = ({
   const { fabricOverlayState } = useFabricOverlayState();
   const { viewerWindow } = fabricOverlayState;
   const { slideId } = viewerWindow[viewerId];
-
+console.log(showReport)
   const toast = useToast();
 
   useEffect(() => {
@@ -259,95 +259,81 @@ const ReportHelper = ({
     }
   };
 
-  // console.log("cases",caseInfo?.organs[0].organName.includes("lymph"));
-  // console.log("cases",caseInfo);
-  // console.log("slide",slideData);
-
   // if (slideData) {
   //   return
   // }
 
+  console.log(showReport);
+
   return (
     <Box ml="-82px">
-         
-    {!showReport ? (
-      <Menu autoSelect={false}>
-        <MenuButton>
-          <OpenReportButton openReport={openReport} />
-        </MenuButton>
-        <MenuList
-          borderRadius="0"
-          px="1.2vw"
-          fontSize="14px"
-          fontFamily="inter"
-        >
-          <MenuItem
-            onClick={() => openReport()}
-            borderBottom="1px solid #DEDEDE"
-            _hover={{ bg: "#f6f6f6" }}
+      {!showReport ? (
+        <Menu autoSelect={false}>
+          <MenuButton>
+            <OpenReportButton openReport={openReport} />
+          </MenuButton>
+          <MenuList
+            borderRadius="0"
+            px="1.2vw"
+            fontSize="14px"
+            fontFamily="inter"
           >
-            Standard Report
-          </MenuItem>
-          <Accordion allowToggle>
-            <AccordionItem>
-              <AccordionButton
-                _focus={{ outline: "none" }}
-                justifyContent="space-between"
-                alignItems="center"
-                borderBottom="1px solid #DEDEDE"
-              >
-                <Text fontSize="14px">Synoptic Report</Text>
-                <AccordionIcon />
-              </AccordionButton>
-              <AccordionPanel pb={4} px="0">
-                <MenuItemOption
-                  value="breast-cancer"
-                  minH="32px"
-                  onClick={() => setSynopticType("breast-cancer")}
-                  _hover={{ bg: "#f6f6f6" }}
-                  isDisabled={!caseInfo?.organs[0].organName.includes("breast")}
-                  color={caseInfo?.organs[0].organName.includes("breast") ? "black" : "gray"}
-                  cursor={caseInfo?.organs[0].organName.includes("breast") ? "pointer" : "not-allowed"}
+            <MenuItem
+              onClick={() => openReport()}
+              borderBottom="1px solid #DEDEDE"
+              _hover={{ bg: "#f6f6f6" }}
+            >
+              Standard Report
+            </MenuItem>
+            <Accordion allowToggle>
+              <AccordionItem>
+                <AccordionButton
+                  _focus={{ outline: "none" }}
+                  justifyContent="space-between"
+                  alignItems="center"
+                  borderBottom="1px solid #DEDEDE"
                 >
-                  Breast cancer
-                </MenuItemOption>
-                <MenuItemOption
-                  value="prostate-cancer"
-                  minH="32px"
-                  onClick={() => setSynopticType("prostate-cancer")}
-                  _hover={{ bg: "#f6f6f6" }}
-                  isDisabled={!caseInfo?.organs[0].organName.includes("prostate")}
-                  color={caseInfo?.organs[0].organName.includes("prostate") ? "black" : "gray"}
-                  cursor={caseInfo?.organs[0].organName.includes("prostate") ? "pointer" : "not-allowed"}
-                >
-                  Prostate cancer
-                </MenuItemOption>
-                <MenuItemOption
-                  value="lymphoma"
-                  minH="32px"
-                  onClick={() => setSynopticType("lymphoma")}
-                  _hover={{ bg: "#f6f6f6" }}
-                  isDisabled={!caseInfo?.organs[0].organName.includes("lymph")}
-                  color={caseInfo?.organs[0].organName.includes("lymph") ? "black" : "gray"}
-                  cursor={caseInfo?.organs[0].organName.includes("lymph") ? "pointer" : "not-allowed"}
-                >
-                  Lymphoma
-                </MenuItemOption>
-              </AccordionPanel>
-            </AccordionItem>
-          </Accordion>
-        </MenuList>
-      </Menu>
-    ) : (
-      <SubmitReportButton
-        userInfo={userInfo}
-        reportData={reportData}
-        handleReportsubmit={handleReportsubmit}
-      />
-    )}
-  </Box>
-  
-  
+                  <Text fontSize="14px">Synoptic Report</Text>
+                  <AccordionIcon />
+                </AccordionButton>
+                <AccordionPanel pb={4} px="0">
+                  <MenuItemOption
+                    value="breast-cancer"
+                    minH="32px"
+                    onClick={() => setSynopticType("breast-cancer")}
+                    _hover={{ bg: "#f6f6f6" }}
+                  >
+                    Breast cancer
+                  </MenuItemOption>
+                  <MenuItemOption
+                    value="prostate-cancer"
+                    minH="32px"
+                    onClick={() => setSynopticType("prostate-cancer")}
+                    _hover={{ bg: "#f6f6f6" }}
+                  >
+                    Prostate cancer
+                  </MenuItemOption>
+                  <MenuItemOption
+                    value="lymphoma"
+                    minH="32px"
+                    onClick={() => setSynopticType("lymphoma")}
+                    _hover={{ bg: "#f6f6f6" }}
+                  >
+                    Lymphoma
+                  </MenuItemOption>
+                </AccordionPanel>
+              </AccordionItem>
+            </Accordion>
+          </MenuList>
+        </Menu>
+      ) : (
+        <SubmitReportButton
+          userInfo={userInfo}
+          reportData={reportData}
+          handleReportsubmit={handleReportsubmit}
+        />
+      )}
+    </Box>
   );
 };
 
