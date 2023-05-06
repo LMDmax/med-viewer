@@ -116,7 +116,7 @@ const Til = ({
 
   // console.log(tilSubscriptionData);
   useEffect(() => {
-    if (!tilSubscriptionData && hitTil === true) {
+    if (!tilSubscriptionData) {
       getTils({
         variables: {
           query: {
@@ -139,7 +139,7 @@ const Til = ({
     // console.log("data",data);
     // console.log("eror",error);
     // getData();
-  }, [hitTil, tilSubscriptionData,navigatorCounter]);
+  }, [ tilSubscriptionData,navigatorCounter]);
 
   // console.log(tilSubscriptionData?.tilStatus);
 
@@ -275,28 +275,28 @@ const Til = ({
   // ------------- fetching data only TIL for hideModification
   // ------------------
 
-  useEffect(() => {
-    if (TilHover === true) {
-      getTils1({
-        variables: {
-          query: {
-            key: `${getFileBucketFolder(viewerIds[0].originalFileUrl)}`,
-            bucket_name: "med-ai-image-processor",
-            slideId: `${slide?._id}`,
-            hilRemoved: true,
-          },
-        },
-        fetchPolicy: "network-only",
-      });
-      // console.log(data1);
-      // console.log(data);
-      setModifiedLymphocyte(data1?.getTils?.data?.lymphocyte_cords);
-      setModifiedTumor(data1?.getTils?.data?.tumor_cords);
-      setModifiedStroma(data1?.getTils?.data?.stroma_cords);
+  // useEffect(() => {
+  //   if (TilHover === true) {
+  //     getTils1({
+  //       variables: {
+  //         query: {
+  //           key: `${getFileBucketFolder(viewerIds[0].originalFileUrl)}`,
+  //           bucket_name: "med-ai-image-processor",
+  //           slideId: `${slide?._id}`,
+  //           hilRemoved: true,
+  //         },
+  //       },
+  //       fetchPolicy: "network-only",
+  //     });
+  //     // console.log(data1);
+  //     // console.log(data);
+  //     setModifiedLymphocyte(data1?.getTils?.data?.lymphocyte_cords);
+  //     setModifiedTumor(data1?.getTils?.data?.tumor_cords);
+  //     setModifiedStroma(data1?.getTils?.data?.stroma_cords);
 
-      // console.log(modifiedTumor);
-    }
-  }, [TilHover]);
+  //     // console.log(modifiedTumor);
+  //   }
+  // }, [TilHover]);
 
   // ------------------------------
   // ------------- updating state if data found
