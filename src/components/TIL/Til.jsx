@@ -882,7 +882,7 @@ const Til = ({
         }, 1000);
 
         setStromaArea(data?.getTils?.data?.stroma_area);
-        setTumorArea(0);
+        setTumorArea("-");
         setTilScore(data?.getTils?.data?.TILS_score);
         setLymphocyteCount(data?.getTils?.data?.lymphocyte_count);
       }
@@ -954,7 +954,7 @@ const Til = ({
           });
         }, 1000);
 
-        setStromaArea(0);
+        setStromaArea("-");
         setTumorArea(data?.getTils?.data?.tumor_area);
         setTilScore(data?.getTils?.data?.TILS_score);
         setLymphocyteCount(data?.getTils?.data?.lymphocyte_count);
@@ -1028,7 +1028,7 @@ const Til = ({
         setStromaArea(data?.getTils?.data?.stroma_area);
         setTumorArea(data?.getTils?.data?.tumor_area);
         setTilScore(data?.getTils?.data?.TILS_score);
-        setLymphocyteCount(0);
+        setLymphocyteCount("-");
       }
       if (
         TilHover &&
@@ -1195,7 +1195,7 @@ const Til = ({
           });
         }, 1000);
         setStromaArea(tilSubscriptionData?.tilStatus?.data?.stroma_area);
-        setTumorArea(0);
+        setTumorArea("-");
         setTilScore(tilSubscriptionData?.tilStatus?.data?.TILS_score);
         setLymphocyteCount(
           tilSubscriptionData?.tilStatus?.data?.lymphocyte_count
@@ -1272,7 +1272,7 @@ const Til = ({
             }, 4000);
           });
         }, 1000);
-        setStromaArea(0);
+        setStromaArea("-");
         setTumorArea(tilSubscriptionData?.tilStatus?.data?.tumor_area);
         setTilScore(tilSubscriptionData?.tilStatus?.data?.TILS_score);
         setLymphocyteCount(
@@ -1350,7 +1350,7 @@ const Til = ({
         setStromaArea(tilSubscriptionData?.tilStatus?.data?.stroma_area);
         setTumorArea(tilSubscriptionData?.tilStatus?.data?.tumor_area);
         setTilScore(tilSubscriptionData?.tilStatus?.data?.TILS_score);
-        setLymphocyteCount(0);
+        setLymphocyteCount("-");
       }
       if (
         TilHover &&
