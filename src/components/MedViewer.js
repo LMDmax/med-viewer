@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useReducer } from "react";
-import fabricOverlayReducer from "./state/reducers/fabricOverlayReducer";
-import { brandColors } from "./styles/brandPalette";
-import { addViewerWindow } from "./state/actions/fabricOverlayActions";
+import fabricOverlayReducer from "../state/reducers/fabricOverlayReducer";
+import { brandColors } from "../styles/brandPalette";
+import { addViewerWindow } from "../state/actions/fabricOverlayActions";
 import _ from "lodash";
-import { StoreProvider } from "./state/store";
-import LayoutApp from "./components/Layout/app";
+import { StoreProvider } from "../state/store";
+import LayoutApp from "./Layout/app";
 
 const Medviewer = ({ viewerIds, slideData, ...props }) => {
   const [isReady, setIsReady] = useState(false);
