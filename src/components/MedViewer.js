@@ -1,15 +1,12 @@
 import React, { useState, useEffect, useReducer } from "react";
+import fabricOverlayReducer from "./state/reducers/fabricOverlayReducer";
+import { brandColors } from "./styles/brandPalette";
+import { addViewerWindow } from "./state/actions/fabricOverlayActions";
 import _ from "lodash";
-import axios from "axios";
-import LayoutApp from "./Layout/app";
-import Loading from "./Loading/loading";
-import { StoreProvider } from "../state/store";
-import { addViewerWindow } from "../state/actions/fabricOverlayActions";
-import fabricOverlayReducer from "../state/reducers/fabricOverlayReducer";
-import { brandColors } from "../styles/brandPalette";
-import { getFileBucketFolder } from "../utility/utility";
+import { StoreProvider } from "./state/store";
+import LayoutApp from "./components/Layout/app";
 
-const MedViewer = ({ viewerIds, ...props }) => {
+const Medviewer = ({ viewerIds, slideData, ...props }) => {
   const [isReady, setIsReady] = useState(false);
   const [fabricOverlayState, setFabricOverlayState] = useReducer(
     fabricOverlayReducer,
@@ -24,7 +21,6 @@ const MedViewer = ({ viewerIds, ...props }) => {
       isViewportAnalysing: false,
     }
   );
-
   useEffect(() => {
     if (
       !fabricOverlayState?.viewerWindow ||
@@ -32,39 +28,26 @@ const MedViewer = ({ viewerIds, ...props }) => {
     )
       return;
     const viewerWindows = [];
-    viewerIds.forEach((slide) => {
-      viewerWindows.push({
-        id: slide._id,
-        tile: slide.awsImageBucketUrl,
-        slideName: slide.accessionId,
-        slideId: slide._id,
-        originalFileUrl: slide.originalFileUrl,
-      });
+    viewerWindows.push({
+      id: slideData?.id,
+      tile: slideData?.slide?.data.dzi_path,
+      slideId: slideData?._id,
+      originalFileUrl: slideData?.originalFileUrl,
     });
+    // console.log(viewerWindows);
     setFabricOverlayState(addViewerWindow(viewerWindows));
-    const key = getFileBucketFolder(viewerIds[0].originalFileUrl);
-    axios.post("https://development-morphometry-api.prr.ai/vhut/download", {
-      key,
-      bucket_name: "med-ai-image-processor",
-    });
     setIsReady(true);
-  }, [fabricOverlayState, viewerIds]);
+  }, [fabricOverlayState, slideData]);
 
-  // useEffect(() => {
-  //   return () => {
-  //     setFabricOverlayState(resetFabricOverlay());
-  //   };
-  // }, []);
-
-  return isReady && _.keys(fabricOverlayState?.viewerWindow).length > 0 ? (
-    <React.StrictMode>
-      <StoreProvider value={{ fabricOverlayState, setFabricOverlayState }}>
-        <LayoutApp viewerIds={viewerIds} {...props} />
-      </StoreProvider>
-    </React.StrictMode>
-  ) : (
-    <Loading />
+  return (
+    <StoreProvider value={{ fabricOverlayState, setFabricOverlayState }}>
+      <LayoutApp viewerIds={viewerIds} {...props} />
+    </StoreProvider>
   );
 };
 
-export default MedViewer;
+export default Medviewer;
+
+
+
+
