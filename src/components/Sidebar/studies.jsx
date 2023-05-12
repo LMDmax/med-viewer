@@ -20,6 +20,16 @@ const Studies = ({ caseInfo, slideInfo }) => {
   };
 
   // console.log(slideInfo);
+  // console.log("case",caseInfo);
+
+  const full = caseInfo?.caseId;
+const lastSlashIndex = full.lastIndexOf('/');
+const result = full.substring(lastSlashIndex + 1);
+
+// console.log(result); // Output: e43sl
+
+const searchBySlidename = slideInfo?.slideName;
+const index = caseInfo?.slides.findIndex(obj => obj.slideName === searchBySlidename);
 
   const patientDetails = {
     UHID: `${caseInfo?.patient?.uhid}`,
@@ -41,7 +51,8 @@ const Studies = ({ caseInfo, slideInfo }) => {
     "Accession Id" : slideInfo?.accessionId,
     Title: slideInfo?.slideName || slideInfo?.originalName?.split(".")?.[0],
     "Case Title": caseInfo?.caseName,
-    "Case Id" : "CID/20/04/23/A125",
+    "Case Id" : caseInfo?.caseId,
+    "Slide Id":`${result}/${slideInfo.grossId}/${slideInfo.blockId}/${index + 1}`,
     Location: "My Folder/Cases/203-11-22-22-UHID/SLIDE 1",
     Type: slideInfo?.originalName?.split(".")?.[1]?.toUpperCase(),
     "Orgininal Slide Name": slideInfo?.originalName,
