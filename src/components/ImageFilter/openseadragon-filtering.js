@@ -77,7 +77,7 @@ import OpenSeadragon from "openseadragon";
         const canvas = window.document.createElement("canvas");
         canvas.width = image.width;
         canvas.height = image.height;
-        const context = canvas.getContext("2d");
+        const context = canvas.getContext("2d", { willReadFrequently: true }); // Add the option here
         context.drawImage(image, 0, 0);
         tile._renderedContext = context;
         const callback = event.getCompletionCallback();
@@ -258,6 +258,8 @@ import OpenSeadragon from "openseadragon";
           context.canvas.width,
           context.canvas.height
         );
+        // console.log(imgData);
+        // console.log("cons",context);
         const pixels = imgData.data;
         for (let i = 0; i < pixels.length; i += 4) {
           const r = pixels[i];
@@ -285,6 +287,8 @@ import OpenSeadragon from "openseadragon";
           context.canvas.width,
           context.canvas.height
         );
+        // console.log("context",context);
+        // console.log("imgData",imgData);
         const pixels = imgData.data;
         for (let i = 0; i < pixels.length; i += 4) {
           pixels[i] = precomputedBrightness[pixels[i]];
