@@ -8,14 +8,18 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import modeImg from "../../assets/images/modeIcon.svg";
+import { ModeIcon } from "../Icons/CustomIcons";
 import modeImgSelect from "../../assets/images/modeIconSelect.svg";
+import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 
-const Mode = () => {
+const Mode = ({
+  setAdjustmentTool,
+  AdjustmentTool,
+  setImageFilter,
+  imageFilter,
+}) => {
+  const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
   const [isOpen, setIsOpen] = useState();
-  const handleModeClick = () => {
-    setIsOpen(!isOpen);
-  };
   const handleClick = () => {
     setIsOpen(!isOpen);
   };
@@ -26,42 +30,77 @@ const Mode = () => {
   };
   return (
     <Box
-      mr="8px"
-      w="28px"
-      h="26px"
+      w="60px"
+      h="100%"
+      // border="1px solid green"
+      // border="1px solid black"
       style={{ position: "relative", display: "inline-block" }}
+      _hover={{ bgColor: "transparent" }}
+      // border="2px solid red"
+      onClick={() => handleClick()}
+      sx={{
+        ":before": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          left: 0,
+          cursor: "pointer",
+          width: "100%",
+          height: "100%",
+          backgroundColor: isOpen ? "rgba(157,195,226,0.4)" : "transparent",
+          zIndex: 1,
+        },
+      }}
     >
-      <Tooltip bg="#E4E5E8" color="black" label="Mode" hasArrow>
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
+      <Flex
+        direction="column"
+        mt={ifScreenlessthan1536px ? "1px" : "-2px"}
+        justifyContent="center"
+        alignItems="center"
+        h="100%"
+      >
+        <IconButton
+          width={ifScreenlessthan1536px ? "100%" : "100%"}
+          height={ifScreenlessthan1536px ? "50%" : "50%"}
+          _hover={{ bgColor: "transparent" }}
+          icon={<ModeIcon transform="scale(1.5)" color="red" />}
+          _active={{
+            bgColor: "transparent",
+            outline: "none",
+          }}
+          // outline={TilHover ? " 0.5px solid rgba(0, 21, 63, 1)" : ""}
+          // _focus={{
+          // }}
+          backgroundColor="transparent"
+          // mr="7px"
+          // border="1px solid red"
+          borderRadius={0}
+        />
+        <Flex
+          justifyContent="space-evenly"
           w="100%"
-          h="100%"
-          pl="5px"
+          alignItems="center"
           cursor="pointer"
-          _hover={{ bgColor: "rgba(228, 229, 232, 1)" }}
-        outline={isOpen ? "0.5px solid rgba(0, 21, 63, 1)" : ""}
-          bg={isOpen ? "#D9D9D9" : "transparent"}
-          boxShadow={
-            isOpen
-              ? "inset -2px -2px 2px rgba(0, 0, 0, 0.1), inset 2px 2px 2px rgba(0, 0, 0, 0.1)"
-              : null
-          }
-          onClick={() => handleModeClick()}
         >
-          <img
-            src={ !isOpen ? modeImg : modeImgSelect}
-            alt="Measurement Icon"
-            style={{ width: "30px", height: "30px", marginRight: "5px" }}
-          />
-        </Box>
-      </Tooltip>
+          <Text
+            ml="3px"
+            fontFamily="inter"
+            fontSize="10px"
+            userSelect="none"
+            align="center"
+            color="black"
+          >
+            Mode
+          </Text>
+          <RiArrowDownSLine color="black" size="16px" />
+        </Flex>
+      </Flex>
+
       {isOpen && (
         <Box
           style={{
             position: "absolute",
-            top: "170%",
+            top: "120%",
             left: 0,
             width: "120px",
             backgroundColor: "#F5F5F5",
@@ -77,14 +116,32 @@ const Mode = () => {
                 cursor: "pointer",
               }}
               onMouseEnter={(e) => {
-                e.target.style.fontWeight = "bold";
+                e.target.style.color = "#3b5d7c";
               }}
               onMouseLeave={(e) => {
-                e.target.style.fontWeight = "normal";
+                e.target.style.color = "black";
               }}
-              onClick={() => handleOptionClick("A")}
+              onClick={() => setImageFilter(!imageFilter)}
             >
-              Show Grid
+              Normalisation
+            </li>
+            <li
+              style={{
+                padding: "5px",
+                backgroundColor: "transparent",
+                cursor: "pointer",
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.color = "#3b5d7c";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.color = "black";
+              }}
+              onClick={() => {
+                setAdjustmentTool(AdjustmentTool + 1);
+              }}
+            >
+              Adjustments
             </li>
           </ul>
         </Box>

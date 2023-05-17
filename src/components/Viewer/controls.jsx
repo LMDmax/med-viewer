@@ -292,39 +292,6 @@ const ViewerControls = ({
   };
 
   // console.log(annotationObject);
-
-//Onload ROI results
-
-const onLoadCallData= async()=>{
-  const canvas = fabricOverlay.fabricCanvas();
-  const allAnnotations = canvas.getObjects();
-
-  // const filteredArr = allAnnotations.filter(obj => obj.hasOwnProperty('analyzedROI'));
-  const filteredArr = allAnnotations.filter(obj => obj.analysedROI);
-  if (filteredArr) {
-    for (let i = 0; i < filteredArr.length; i++) {
-      try {
-        await onGetVhutAnalysis({
-          variables: {
-            query: {
-              analysisId: filteredArr[i].analysedROI,
-            },
-          },
-        });
-        // log the response from the API call
-      } catch (error) {
-        console.error(error); // log any errors that occur during the API call
-      }
-    }
-  }
-
-console.log(filteredArr); 
-}
-
-
-
-
-
   const showAnalysisData = async (resp) => {
     const canvas = fabricOverlay.fabricCanvas();
 
@@ -376,7 +343,7 @@ console.log(filteredArr);
     if (!annotationObject) return;
 
     const canvas = fabricOverlay.fabricCanvas();
-
+    console.log(annotationObject);
     onGetVhutAnalysis({
       variables: {
         query: {
@@ -421,7 +388,8 @@ console.log(filteredArr);
       // console.log("====================================");
       // console.log("response...", responseData);
       // console.log("====================================");
-      if (responseData.getVhutAnalysis.message !== "No Analysis found" && annotationObject) {
+      if (responseData.getVhutAnalysis.message !== "No Analysis found" && responseData.getVhutAnalysis.data.analysedData) {
+        // console.log("222222222222222");
         showAnalysisData(responseData);
         setLoadUI(true);
     localStorage.removeItem("ModelName");
@@ -430,9 +398,9 @@ console.log(filteredArr);
       if(!annotationObject){
         // console.log("");
       }
-      else {
-        setToolSelected("MorphometryError");
-      }
+      // else {
+      //   setToolSelected("MorphometryError");
+      // }
     }
   }, [responseData]);
 
@@ -454,16 +422,25 @@ console.log(filteredArr);
           const canvas = fabricOverlay.fabricCanvas();
           const { hash, analysedROI } = data;
           const annotation = canvas.getObjectByHash(hash);
+          setAnnotationObject(annotation);
+          console.log(annotation);
           if (annotation) {
             annotation.set({ isAnalysed: true, analysedROI });
           }
+          const ROI_ID = analysedROI;
+          console.log(ROI_ID);
+         if(annotation.analysedROI){
           onGetVhutAnalysis({
             variables: {
               query: {
-                analysisId: annotationObject?.analysedROI,
+                analysisId: ROI_ID,
               },
             },
           });
+         }
+         else{
+          console.log("Error here ");
+         }
         }
         // console.log(vhutSubscriptionData.analysisStatus);
         toast({
@@ -1024,15 +1001,16 @@ console.log(filteredArr);
     // setAnnotationObject(null);
   }, [runAiModel]);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      // handleShowAnalysis();
-    }, 4000);
-    return () => {
-      clearTimeout(timer);
-      setModelname("");
-    };
-  }, [analysis_data]);
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     // handleShowAnalysis();
+
+  //   }, 4000);
+  //   return () => {
+  //     clearTimeout(timer);
+  //     setModelname("");
+  //   };
+  // }, [analysis_data]);
 
   return (
     <Box>

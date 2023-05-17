@@ -35,6 +35,8 @@ function Move({
   enableAI,
   caseInfo,
   enableFilters,
+  setImageFilter,
+  imageFilter,
   hitTil,
   setStromaArea,
   setLoadUI,
@@ -74,6 +76,7 @@ function Move({
   const [popup, setPopup] = useState(false);
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { activeTool, viewerWindow } = fabricOverlayState;
+  const [AdjustmentTool,setAdjustmentTool] = useState(0);
   const { fabricOverlay } = viewerWindow[viewerId];
   let isActive = activeTool === "Move";
   const [activeAnnotations, setActiveAnnotations] = useState(false);
@@ -222,6 +225,7 @@ function Move({
         ) : null}
 
         {/* <Measuremnet /> */}
+        <Mode imageFilter={imageFilter} setImageFilter={setImageFilter} AdjustmentTool={AdjustmentTool} setAdjustmentTool={setAdjustmentTool} />
 
         <CommentBox
           userInfo={userInfo}
@@ -236,6 +240,7 @@ function Move({
           <FilterAdjustments
             setToolSelected={setToolSelected}
             viewerId={viewerId}
+            AdjustmentTool={AdjustmentTool}
             toolSelected={toolSelected}
             navigatorCounter={navigatorCounter}
           />
@@ -275,7 +280,7 @@ function Move({
           slide={slide}
           setToolSelected={setToolSelected}
         />
-        {/* <Mode /> */}
+  
       </Flex>
       <Flex
         top={
