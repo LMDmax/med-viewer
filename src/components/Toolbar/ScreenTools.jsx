@@ -37,6 +37,7 @@ function ScreenTools({
   setToolSelected,
   handleFeedBar,
   handleReport,
+  imageFilter,
   showReport,
   setShowReport,
   userInfo,
@@ -69,7 +70,7 @@ function ScreenTools({
 
   return (
     <Flex h="100%" w="25%"  alignItems="center" justifyContent="flex-end">
-      <ImageFilter navigatorCounter={navigatorCounter} setToolSelected={setToolSelected} viewerId={viewerId} />
+      <ImageFilter imageFilter={imageFilter} navigatorCounter={navigatorCounter} setToolSelected={setToolSelected} viewerId={viewerId} />
       <DownloadImage setToolSelected={setToolSelected} />
       {application === "hospital" && (
         <ViewerChat

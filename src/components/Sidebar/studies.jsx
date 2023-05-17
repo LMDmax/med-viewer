@@ -19,8 +19,8 @@ const Studies = ({ caseInfo, slideInfo }) => {
       : "-",
   };
 
-  // console.log(slideInfo);
-  // console.log("case",caseInfo);
+  console.log(slideInfo);
+  console.log("case",caseInfo);
 
   const full = caseInfo?.caseId;
 const lastSlashIndex = full.lastIndexOf('/');

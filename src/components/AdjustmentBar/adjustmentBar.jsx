@@ -88,6 +88,7 @@ function AdjustmentBar({
   const { viewerWindow, isAnnotationLoading } = fabricOverlayState;
   const { tile } = viewerWindow[currentViewer];
   const [mongoId, setMongoId] = useState("");
+  const [imageFilter, setImageFilter] = useState(false);
   const navigate = useNavigate();
 
   const handleSidebar = () => {
@@ -154,11 +155,13 @@ function AdjustmentBar({
         setNavigatorCounter={setNavigatorCounter}
         mongoId={mongoId}
         modelName={modelName}
+        setImageFilter={setImageFilter}
         refreshHil={refreshHil}
         hideModification={hideModification}
         handleTILFeedBar={handleTILFeedBar}
         zoomValue={zoomValue}
         annotations={annotations}
+        imageFilter={imageFilter}
         caseInfo={caseInfo}
         enableAI={enableAI}
         setToolSelected={setToolSelected}
@@ -199,6 +202,7 @@ function AdjustmentBar({
         chatHover={chatHover}
         chatFeedBar={chatFeedBar}
         handleFeedBar={handleFeedBar}
+        imageFilter={imageFilter}
         navigatorCounter={navigatorCounter}
         handleChatFeedbar={handleChatFeedbar}
         handleChatFeedBarClose={handleChatFeedBarClose}

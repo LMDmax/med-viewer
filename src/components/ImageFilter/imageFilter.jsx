@@ -12,7 +12,7 @@ import axios from "axios";
 import { updateTool } from "../../state/actions/fabricOverlayActions";
 
 
-const ImageFilter = ({ viewerId, setToolSelected, navigatorCounter }) => {
+const ImageFilter = ({ viewerId, setToolSelected, navigatorCounter, imageFilter }) => {
   const { fabricOverlayState,setFabricOverlayState } = useFabricOverlayState();
   const { viewerWindow, activeTool } = fabricOverlayState;
   const { viewer, fabricOverlay } = viewerWindow[viewerId];
@@ -74,6 +74,7 @@ const ImageFilter = ({ viewerId, setToolSelected, navigatorCounter }) => {
       context.canvas.height
     );
     const pixels = imgData.data;
+    // console.log(imgData);
 
     // let perc = []
     // for (let i = 0; i < 3; i++) {
@@ -123,17 +124,44 @@ const ImageFilter = ({ viewerId, setToolSelected, navigatorCounter }) => {
   };
 
 
+  useEffect(()=>{
+    // console.log(imageFilter);
+    if (!viewer) return;
+    if(imageFilter){
+      setFabricOverlayState(updateTool({ tool: "Normalisation" }));
+
+      setToolSelected("Normalisation");
+      viewer.setFilterOptions({
+        filters: {
+          processors: reinhardFilter,
+        },
+        loadMode: "async",
+      });
+      setIsActive(true);
+    }
+    else{
+      // console.log("sad");
+      setToolSelected("");
+    setFabricOverlayState(updateTool({ tool: "Move" }));
+      viewer?.setFilterOptions(null);
+      viewer?.viewport.zoomBy(1.01);
+      setIsActive(false);
+    }
+  },[imageFilter])
+
   
 
   const handleClick = () => {
     if (!viewer) return;
     if (isActive) {
+      console.log("sad");
       setToolSelected("");
     setFabricOverlayState(updateTool({ tool: "Move" }));
       viewer.setFilterOptions(null);
       viewer.viewport.zoomBy(1.01);
       setIsActive(false);
     } else {
+      console.log("aaaaasad");
     setFabricOverlayState(updateTool({ tool: "Normalisation" }));
 
       setToolSelected("Normalisation");
