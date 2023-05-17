@@ -20,7 +20,6 @@ function CLSReport({
 	loading,
 	isUpdating,
 }) {
-	console.log(questions);
 	const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
 
 	return (

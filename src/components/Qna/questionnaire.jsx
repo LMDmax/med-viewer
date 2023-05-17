@@ -15,7 +15,6 @@ function Questionnaire({
 	projectQnaType,
 	...restProps
 }) {
-	console.log(questions);
 	const setQnaResponse = ({
 		questionId = null,
 		choice = null,
