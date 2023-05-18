@@ -296,7 +296,7 @@ const ViewerControls = ({
     const canvas = fabricOverlay.fabricCanvas();
 
     if (resp && typeof resp === "object") {
-      console.log(resp.getVhutAnalysis.data.hash);
+      // console.log(resp.getVhutAnalysis.data.hash);
       const { data: vhut } = resp.getVhutAnalysis;
       const { left, top } = annotationObject;
       const { analysedData, cells, totalCells } = await getVhutAnalysisData({
@@ -870,6 +870,9 @@ const ViewerControls = ({
 
   useEffect(() => {
     if (vhutSubscriptionData) {
+      const canvas = fabricOverlay.fabricCanvas();
+      const annotation = canvas.getObjectByHash(vhutSubscriptionData.analysisStatus.data.hash);
+          setAnnotationObject(annotation);
       // console.log("subscribed", vhutSubscriptionData);
       const {
         data,
@@ -877,8 +880,8 @@ const ViewerControls = ({
         message,
         analysisType: type,
       } = vhutSubscriptionData.analysisStatus;
-
       if (type === "KI67_ANALYSIS") {
+        console.log(vhutSubscriptionData.analysisStatus.data.hash);
         const posContours = data.kiResults.pos_contours;
         const negContours = data.kiResults.neg_contours;
         const canvas = fabricOverlay.fabricCanvas();
