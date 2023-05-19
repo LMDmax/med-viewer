@@ -94,7 +94,7 @@ function Viewer({
   useEffect(() => {
     // Initialize OpenSeadragon instance and set to viewer
     if (viewer) viewer.destroy();
-
+    console.log("tile",tile);
     setViewer(
       OpenSeadragon({
         ...osdOptions,

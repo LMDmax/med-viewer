@@ -36,86 +36,134 @@ const ImageFilter = ({ viewerId, setToolSelected, navigatorCounter, imageFilter 
     return imgSd;
   };
 
-  const reinhardFilter = (context, callback) => {
-    const imgData = context.getImageData(
-      0,
-      0,
-      context.canvas.width,
-      context.canvas.height
-    );
-    const pixelsData = {
-      data: imgData.data,
-      width: imgData.width,
-      height: imgData.height,
-      colorSpace: "srgb",
-    };
-
-    console.log(pixelsData);
-  
-    axios.post("https://backup-quantize-vhut.prr.ai/filter", pixelsData).then((resp) => {
-      const newPixelsData = {
-        data: new Uint8ClampedArray(resp.data),
-        width: imgData.width,
-        height: imgData.height,
-        colorSpace: "srgb",
-      };
-      const imageData = new ImageData(newPixelsData.data, newPixelsData.width, newPixelsData.height);
-      context.putImageData(imageData, 0, 0);
-      // const newImgData = context.getImageData(0, 0, context.canvas.width, context.canvas.height);
-      // console.log("Modified image data: ", newImgData);
-      callback(); // call callback inside the then block
-    });
-  };
-
-
-
-  //working
   // const reinhardFilter = (context, callback) => {
-  //   // console.log(callback);
   //   const imgData = context.getImageData(
   //     0,
   //     0,
   //     context.canvas.width,
   //     context.canvas.height
   //   );
-  //   const pixels = imgData.data;
-  //   // console.log(imgData);
-  //   const l1 = [];
-  //   const l2 = [];
-  //   const l3 = [];
-  //   let imgMean = [0, 0, 0];
-  //   for (let i = 0; i < pixels.length; i += 4) {
-  //     const labl = rgb.lab(pixels[i], pixels[i + 1], pixels[i + 2]);
+  //   const pixelsData = {
+  //     data: imgData.data,
+  //     width: imgData.width,
+  //     height: imgData.height,
+  //     colorSpace: "srgb",
+  //   };
 
-  //     [pixels[i], pixels[i + 1], pixels[i + 2]] = labl;
-  //     l1.push(labl[0]);
-  //     l2.push(labl[1]);
-  //     l3.push(labl[2]);
-
-  //     imgMean = imgMean.map((x, k) => x + labl[k]);
-  //   }
-
-  //   imgMean = imgMean.map((x) => x / l1.length);
-
-  //   const imgSd = getStdev(l1, l2, l3, imgMean);
-
-  //   for (let i = 0; i < pixels.length; i += 4) {
-  //     const l =
-  //       (l1[i / 4] - imgMean[0]) * (targetSd[0] / imgSd[0]) + targetMean[0];
-  //     const a =
-  //       (l2[i / 4] - imgMean[1]) * (targetSd[1] / imgSd[1]) + targetMean[1];
-  //     const bl =
-  //       (l3[i / 4] - imgMean[2]) * (targetSd[2] / imgSd[2]) + targetMean[2];
-
-  //     const [r, g, b] = lab.rgb(l, a, bl);
-  //     pixels[i] = r;
-  //     pixels[i + 1] = g;
-  //     pixels[i + 2] = b;
-  //   }
-
-  //   context.putImageData(imgData, 0, 0);
-  //   callback();
+  //   console.log(pixelsData);
+  
+  //   axios.post("https://backup-quantize-vhut.prr.ai/filter", pixelsData).then((resp) => {
+  //     const newPixelsData = {
+  //       data: new Uint8ClampedArray(resp.data),
+  //       width: imgData.width,
+  //       height: imgData.height,
+  //       colorSpace: "srgb",
+  //     };
+  //     const imageData = new ImageData(newPixelsData.data, newPixelsData.width, newPixelsData.height);
+  //     context.putImageData(imageData, 0, 0);
+  //     // const newImgData = context.getImageData(0, 0, context.canvas.width, context.canvas.height);
+  //     // console.log("Modified image data: ", newImgData);
+  //     callback(); // call callback inside the then block
+  //   });
   // };
+
+
+
+  //working
+  const reinhardFilter = (context, callback) => {
+    // console.log(callback);
+    const imgData = context.getImageData(
+      0,
+      0,
+      context.canvas.width,
+      context.canvas.height
+    );
+    const pixels = imgData.data;
+    const l1 = [];
+    const l2 = [];
+    const l3 = [];
+    let imgMean = [0, 0, 0];
+    for (let i = 0; i < pixels.length; i += 4) {
+      const labl = rgb.lab(pixels[i], pixels[i + 1], pixels[i + 2]);
+
+      [pixels[i], pixels[i + 1], pixels[i + 2]] = labl;
+      l1.push(labl[0]);
+      l2.push(labl[1]);
+      l3.push(labl[2]);
+
+      imgMean = imgMean.map((x, k) => x + labl[k]);
+    }
+
+    imgMean = imgMean.map((x) => x / l1.length);
+
+    const imgSd = getStdev(l1, l2, l3, imgMean);
+
+    for (let i = 0; i < pixels.length; i += 4) {
+      const l =
+        (l1[i / 4] - imgMean[0]) * (targetSd[0] / imgSd[0]) + targetMean[0];
+      const a =
+        (l2[i / 4] - imgMean[1]) * (targetSd[1] / imgSd[1]) + targetMean[1];
+      const bl =
+        (l3[i / 4] - imgMean[2]) * (targetSd[2] / imgSd[2]) + targetMean[2];
+
+      const [r, g, b] = lab.rgb(l, a, bl);
+      pixels[i] = r;
+      pixels[i + 1] = g;
+      pixels[i + 2] = b;
+    }
+
+    const pixelsData = {
+          data: imgData.data,
+          width: imgData.width,
+          height: imgData.height,
+          colorSpace: "srgb",
+        };
+
+        console.log(pixelsData);
+
+    const socket = new WebSocket('wss://development-morphometry-api.prr.ai/quantize/vahadane');
+
+    socket.onopen = () => {
+          // Send the sendMessage object as JSON through the WebSocket
+          socket.send(JSON.stringify(pixelsData));
+        };
+
+        socket.onmessage = (event) => {
+          // Retrieve the response data from the WebSocket
+          const responseData = event.data;
+          // console.log(responseData);
+        
+          let dataArray;
+          
+          // Check if responseData is an array
+          if (responseData !== "Connection established!") {
+            // If responseData is an array, use it directly
+            dataArray = JSON.parse(responseData);
+          } else {
+            // If responseData is not an array, set dataArray to undefined
+            dataArray = undefined;
+          }
+        
+          // Perform conversion only if dataArray is defined
+          if (dataArray) {
+            // Convert the array to a Uint8ClampedArray
+            const convertedData = {
+              data: new Uint8ClampedArray(dataArray),
+              width: imgData.width,
+              height: imgData.height,
+              colorSpace: "srgb"
+            };
+            const imageData = new ImageData(convertedData.data, convertedData.width, convertedData.height);
+            console.log(imageData);
+            context.putImageData(imageData, 0, 0);
+            callback();
+          }
+        };
+        
+        
+    // context.putImageData(imgData, 0, 0);
+    // callback();
+  };
 
   // const reinhardFilter = (context, callback) => {
   //   // console.log(callback);
@@ -140,7 +188,7 @@ const ImageFilter = ({ viewerId, setToolSelected, navigatorCounter, imageFilter 
   //     socket.send(JSON.stringify(pixelsData));
   //   };
 
-  //   console.log(pixelsData);
+  //   console.log("original",imgData);
 
   
   //   socket.onmessage = (event) => {
@@ -172,9 +220,9 @@ const ImageFilter = ({ viewerId, setToolSelected, navigatorCounter, imageFilter 
   //       height: imgData.height,
   //       colorSpace: "srgb",
   //     };
-  //     console.log(newPixelsData);
+  //     console.log("newData",newPixelsData);
   //     const imageData = new ImageData(newPixelsData.data, newPixelsData.width, newPixelsData.height);
-  //     // context.putImageData(imageData, 0, 0);
+  //     context.putImageData(imageData, 0, 0);
     
   //     callback(); // Call the callback function
   //   };

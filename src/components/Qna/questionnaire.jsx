@@ -1,8 +1,6 @@
-import React from "react";
-
 import { Box, Stack, Text, VStack } from "@chakra-ui/react";
 import _ from "lodash";
-
+import React from "react";
 import QuestionType from "./questionType";
 
 function Questionnaire({
@@ -42,7 +40,7 @@ function Questionnaire({
 		>
 			{questions?.map((question, index) => (
 				<Stack
-					key={question?.Question?.id ? question?.Question?.id : index}
+					key={question?.questionId ? question?.questionId : index}
 					direction={direction}
 					spacing={4}
 					mt="15px"
@@ -50,11 +48,8 @@ function Questionnaire({
 					<Text
 						// whiteSpace="nowrap"
 						// fontSize="14px"
-						color={
-							question?.question?.Question?.id ===
-							questions[1]?.question?.Question?.id
-						}
-					>{`Q${index + 1}: ${question?.Question?.questionText}`}</Text>
+						color={question?.questionId === questions[1]?.questionId}
+					>{`Q${index + 1}: ${question?.questionText}`}</Text>
 					{response ? null : (
 						<Box>
 							<QuestionType

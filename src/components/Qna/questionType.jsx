@@ -1,15 +1,14 @@
 import React from "react";
-
-import CheckboxType from "./checkboxType";
 import RadioType from "./radioType";
 import TextType from "./textType";
+import CheckboxType from "./checkboxType";
 
 function QuestionType({ question, response, setQnaResponse, slideQna }) {
 	const handleChange = ({ questionId, choice }) => {
 		setQnaResponse({ questionId, choice });
 	};
 
-	if (question?.Question?.questionType === "multiple-choice")
+	if (question?.questionType === "multiple-choice")
 		return (
 			<RadioType
 				question={question}
@@ -19,10 +18,7 @@ function QuestionType({ question, response, setQnaResponse, slideQna }) {
 				// setQnaResponse={setQnaResponse}
 			/>
 		);
-	if (
-		question?.Question?.questionType === "one-word" ||
-		question?.Question?.questionType === "text"
-	)
+	if (question?.questionType === "text")
 		return (
 			<TextType
 				question={question}
@@ -32,7 +28,7 @@ function QuestionType({ question, response, setQnaResponse, slideQna }) {
 				// setQnaResponse={setQnaResponse}
 			/>
 		);
-	if (question?.Question?.questionType === "checkbox")
+	if (question?.questionType === "checkbox")
 		return (
 			<CheckboxType
 				question={question}
