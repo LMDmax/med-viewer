@@ -76,6 +76,9 @@ function AdjustmentBar({
   zoomValue,
   synopticType,
   setSynopticType,
+  setImageFilter,
+  imageFilter,
+  setShowRightPanel,
   getSynopticReport,
   handleChatFeedbar,
   handleChatFeedBarClose,
@@ -88,7 +91,7 @@ function AdjustmentBar({
   const { viewerWindow, isAnnotationLoading } = fabricOverlayState;
   const { tile } = viewerWindow[currentViewer];
   const [mongoId, setMongoId] = useState("");
-  const [imageFilter, setImageFilter] = useState(false);
+
   const navigate = useNavigate();
 
   const handleSidebar = () => {
@@ -203,6 +206,7 @@ function AdjustmentBar({
         chatFeedBar={chatFeedBar}
         handleFeedBar={handleFeedBar}
         imageFilter={imageFilter}
+        setShowRightPanel={setShowRightPanel}
         navigatorCounter={navigatorCounter}
         handleChatFeedbar={handleChatFeedbar}
         handleChatFeedBarClose={handleChatFeedBarClose}

@@ -50,6 +50,7 @@ function ScreenTools({
   setSynopticType,
   getSynopticReport,
   handleChatFeedbar,
+  setShowRightPanel,
   handleTILFeedBar,
   navigatorCounter,
   updateSynopticReport,
@@ -70,7 +71,7 @@ function ScreenTools({
 
   return (
     <Flex h="100%" w="25%"  alignItems="center" justifyContent="flex-end">
-      <ImageFilter imageFilter={imageFilter} navigatorCounter={navigatorCounter} setToolSelected={setToolSelected} viewerId={viewerId} />
+      <ImageFilter setShowRightPanel={setShowRightPanel} imageFilter={imageFilter} navigatorCounter={navigatorCounter} setToolSelected={setToolSelected} viewerId={viewerId} />
       <DownloadImage setToolSelected={setToolSelected} />
       {application === "hospital" && (
         <ViewerChat

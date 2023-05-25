@@ -109,6 +109,9 @@ const LayoutApp = ({
   const [isXmlAnnotations, setIsXmlAnnotations] = useState(false);
   const [loadUI, setLoadUI] = useState(true);
   const [unit, setUnit] = useState();
+  const [imageFilter, setImageFilter] = useState(false);
+  const [showRightPanel, setShowRightPanel] = useState(false);
+
 
   const [modelName, setModelname] = useState("");
 
@@ -119,8 +122,7 @@ const LayoutApp = ({
     setUnit(UnitStore);
     // console.log(bottomZoomValue);
   }, [bottomZoomValue]);
-// console.log("sssss");
-
+  // console.log("sssss");
 
   let runAiModel;
   switch (modelName) {
@@ -160,9 +162,8 @@ const LayoutApp = ({
       returnText =
         "Multiscreen view is active. Link slide to work on both slides simultaneously.";
       break;
-      case "OpenPath":
-      returnText =
-        "ROI Analysis can be done on closed annotations only.";
+    case "OpenPath":
+      returnText = "ROI Analysis can be done on closed annotations only.";
       break;
     case "Annotation":
       returnText = "Select annotation draw tool.";
@@ -229,7 +230,7 @@ const LayoutApp = ({
     case "TILLoading":
       returnText = "TIL will enable after sometime.";
       break;
-      case "pathError":
+    case "pathError":
       returnText = "Please draw a closed path to run ROI analysis.";
       break;
 
@@ -237,10 +238,9 @@ const LayoutApp = ({
       returnText =
         "KI67 analysis can only be run on stain type IHC and marker type must be KI67 .";
       break;
-      case "MorphometryError":
-        returnText =
-          "Something went wrong";
-        break;
+    case "MorphometryError":
+      returnText = "Something went wrong";
+      break;
     case "MorphometrySlideIssue":
       returnText = "Morphometry analysis can only be run on H&E slides.";
       break;
@@ -319,6 +319,9 @@ const LayoutApp = ({
           pathStroma={pathStroma}
           hitTil={hitTil}
           zoomValue={zoomValue}
+          imageFilter={imageFilter}
+          setImageFilter={setImageFilter}
+          setShowRightPanel={setShowRightPanel}
           setTumorArea={setTumorArea}
           setTilScore={setTilScore}
           setStromaArea={setStromaArea}
@@ -537,6 +540,7 @@ const LayoutApp = ({
             handleReport={handleReport}
             showReport={showReport}
             setShowReport={setShowReport}
+            showRightPanel={showRightPanel}
             questions={questions}
             app={application}
             setSlideId={setSlideId}
@@ -557,7 +561,15 @@ const LayoutApp = ({
             searchSelectedData={searchSelectedData}
           />
         </LayoutInnerBody>
-        <Flex bg="#FFFFFF" py="5px" boxShadow="0px 0px 1px 0.1px" pl="30px" w="100%" zIndex={99} h="32px">
+        <Flex
+          bg="#FFFFFF"
+          py="5px"
+          boxShadow="0px 0px 1px 0.1px"
+          pl="30px"
+          w="100%"
+          zIndex={99}
+          h="32px"
+        >
           <Flex justifyContent="space-between" alignItems="center">
             <Flex
               h="full"
@@ -581,7 +593,17 @@ const LayoutApp = ({
                 />
               )}
             </Flex>
-            <Text ml="10px" fontSize="14px" style={{ color: localStorage.getItem("ModelName") ? "#1B75BC" : toolSelected === "RunRoi" ? "#1B75BC" : "black" }}>
+            <Text
+              ml="10px"
+              fontSize="14px"
+              style={{
+                color: localStorage.getItem("ModelName")
+                  ? "#1B75BC"
+                  : toolSelected === "RunRoi"
+                  ? "#1B75BC"
+                  : "black",
+              }}
+            >
               {localStorage.getItem("ModelName")
                 ? `Running ${localStorage.getItem("ModelName")}`
                 : returnText}
@@ -592,12 +614,16 @@ const LayoutApp = ({
             </Flex>
             <Box pos="absolute" right="0" me="30px">
               <Flex>
-                <Text  fontSize="14px" mr="5px">{bottomZoomValue}X</Text>
+                <Text fontSize="14px" mr="5px">
+                  {bottomZoomValue}X
+                </Text>
                 <Image
                   src="https://i.ibb.co/7CtYTC2/bottom-Bar.png"
                   alt="Bottom Bar"
                 />
-                <Text ml="5px" fontSize="14px">{unit}</Text>
+                <Text ml="5px" fontSize="14px">
+                  {unit}
+                </Text>
               </Flex>
             </Box>
           </Flex>

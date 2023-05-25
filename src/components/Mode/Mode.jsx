@@ -63,7 +63,7 @@ const Mode = ({
           width={ifScreenlessthan1536px ? "100%" : "100%"}
           height={ifScreenlessthan1536px ? "50%" : "50%"}
           _hover={{ bgColor: "transparent" }}
-          icon={<ModeIcon transform="scale(1.5)" color="red" />}
+          icon={<ModeIcon transform="scale(1.5)" />}
           _active={{
             bgColor: "transparent",
             outline: "none",

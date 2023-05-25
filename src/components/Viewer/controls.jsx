@@ -44,6 +44,7 @@ import {
   getVhutAnalysisData,
   getPPMfromMPP,
   getZoomValue,
+  updateAnnotationInDB,
 } from "../../utility";
 import AnnotationChat from "../AnnotationChat/AnnotationChat";
 import ShowMetric from "../Annotations/ShowMetric";
@@ -101,6 +102,8 @@ const ViewerControls = ({
   const [isRightClickActive, setIsRightClickActive] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ left: 0, top: 0 });
   const [annotationObject, setAnnotationObject] = useState(null);
+  const [updatedAnnotation, setUpdatedAnnotation] = useState({});
+  const [manipulationComplete,setManipulationComplete] = useState(false);
   const [isMorphometryDisabled, setIsMorphometryDisabled] = useState(true);
   const [annotationText, setAnnotationText] = useState("");
   const [annotationShape, setAnnotationShape] = useState(null);
@@ -229,7 +232,70 @@ const ViewerControls = ({
     // annotationClose();
   };
 
- 
+
+
+  // update / resize annotation 
+
+  useEffect(() => {
+    const canvas = fabricOverlay?.fabricCanvas();
+    let clickedObject = null;
+  
+    canvas?.on("mouse:down", (e) => {
+      clickedObject = canvas?.findTarget(e.e);
+    });
+  
+    canvas?.on("object:modified", (e) => {
+      const modifiedObject = e.target;
+      if (modifiedObject === clickedObject) {
+        const { scaleX, scaleY, width, height, left, top, angle } = modifiedObject;
+        const updatedWidth = width * scaleX;
+        const updatedHeight = height * scaleY;
+        const updatedLeft = left;
+        const updatedTop = top;
+        const updatedAngle = angle;
+    
+        console.log("Updated width:", updatedWidth);
+        console.log("Updated height:", updatedHeight);
+    
+        // Create a new object with updated dimensions, position, and angle
+        const updatedObject = {
+          ...clickedObject,
+          width: updatedWidth,
+          height: updatedHeight,
+          left: updatedLeft,
+          top: updatedTop,
+          angle: updatedAngle,
+        };
+        // console.log(updatedObject);
+        setUpdatedAnnotation(updatedObject);
+        setAnnotationObject(updatedObject);
+        setManipulationComplete(true); // Set manipulation as complete
+      }
+    });
+  }, [fabricOverlay]);
+
+  useEffect(() => {
+    if (updatedAnnotation && manipulationComplete) {
+      // console.log('Updated annotation object: ', updatedAnnotation);
+    const canvas = fabricOverlay?.fabricCanvas();
+      const width = updatedAnnotation.width;
+      const height = updatedAnnotation.height;
+      const left = updatedAnnotation.left;
+      const top = updatedAnnotation.top;
+      const angle = updatedAnnotation.angle;
+      console.log(angle);
+      updateAnnotationInDB({
+        slideId,
+        hash: updatedAnnotation.hash,
+        updateObject: { width, height,left,top,angle },
+        onUpdateAnnotation,
+      });
+      // console.log("sss");
+      setManipulationComplete(false)
+    }
+  }, [updatedAnnotation]);
+
+ console.log(annotationObject);
 
   const handleVhutAnalysis = async () => {
     if (!fabricOverlay || !annotationObject) return;
@@ -357,7 +423,7 @@ const ViewerControls = ({
   // update Annotation in db
   const onUpdateAnnotation = (data) => {
     delete data?.slideId;
-    // console.log(data);
+    console.log(data);
     modifyAnnotation({
       variables: { body: { ...data } },
     });
@@ -536,7 +602,7 @@ const ViewerControls = ({
     } else {
       setAnnotatedData(
         xmlAnnotationData?.loadImportedAnnotation?.ImportedAnnotation[0]?.data
-      );
+      ); 
     }
   }, [xmlAnnotationData, annotationData]);
   useEffect(() => {
@@ -942,6 +1008,12 @@ const ViewerControls = ({
       }
     }
   }, [vhutSubscriptionData]);
+
+
+
+
+
+
 
   // console.log(annotationObject);
   useEffect(() => {

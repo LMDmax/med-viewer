@@ -125,14 +125,7 @@ const useCanvasHelpers = (viewerId) => {
         duration: 1000,
         isClosable: true,
       });
-    } else {
-      toast({
-        title: "Annotation updated",
-        status: "success",
-        duration: 1000,
-        isClosable: true,
-      });
-    }
+    } 
   };
   // delete annotation/object from canvas
   const deleteAnnotation = async (onDeleteAnnotation) => {

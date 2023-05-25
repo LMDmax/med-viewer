@@ -98,17 +98,23 @@ const Multiview = ({
         // mb="3px"
       />
       <Flex
-        justifyContent="center"
-        w="100%"
-        alignItems="center"
-        // border="1px solid red"
-        cursor="pointer"
-      >
-        <Text userSelect="none" fontFamily="inter" fontSize="10px" align="center">
-          View
-        </Text>
-        <RiArrowDownSLine color="black" size="12px" />
-      </Flex>
+          justifyContent="space-evenly"
+          w="100%"
+          alignItems="center"
+          cursor="pointer"
+        >
+          <Text
+            ml="3px"
+            fontFamily="inter"
+            fontSize="10px"
+            userSelect="none"
+            align="center"
+            color="black"
+          >
+            View
+          </Text>
+          <RiArrowDownSLine color="black" size="16px" />
+        </Flex>
 </Flex>
     </Box>
   );

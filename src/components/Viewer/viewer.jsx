@@ -81,7 +81,7 @@ function Viewer({
   const boxRef = useRef();
 
   // Customize Fabric selection handles
-  fabric.Object.prototype.set({
+   fabric.Object.prototype.set({
     borderColor: "#22a2f8",
     borderScaleFactor: 2, // selection stroke width
     cornerColor: "white",
@@ -89,12 +89,12 @@ function Viewer({
     transparentCorners: false,
     hasControls: true,
     evented: true,
-  });
+  }); 
 
   useEffect(() => {
     // Initialize OpenSeadragon instance and set to viewer
     if (viewer) viewer.destroy();
-    console.log("tile",tile);
+    // console.log("tile",tile);
     setViewer(
       OpenSeadragon({
         ...osdOptions,
@@ -133,6 +133,7 @@ function Viewer({
       );
     };
   }, [viewer]);
+
   return (
     <Box
       ref={boxRef}

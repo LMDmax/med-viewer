@@ -40,6 +40,7 @@ import SynopticReport from "../SynopticReport/SynopticReport";
 import Report from "../Report/Report";
 import Timeline from "../Timeline/Timeline";
 import ChatFeed from "../Feed/ChatFeed";
+import { ModeIcon } from "../Icons/CustomIcons";
 import Adjustments from "../Adjustments/Adjustments";
 
 import { BsSliders } from "react-icons/bs";
@@ -53,6 +54,7 @@ import { updateAnnotationInDB } from "../../utility";
 import { UPDATE_ANNOTATION } from "../../graphql/annotaionsQuery";
 import { useMutation } from "@apollo/client";
 import { debounce } from "lodash";
+import ModeMeanu from "./ModeMeanu";
 
 const FunctionsMenu = ({
   caseInfo,
@@ -79,6 +81,7 @@ const FunctionsMenu = ({
   userInfo,
   isXmlAnnotations,
   application,
+  showRightPanel,
   saveReport,
   saveSynopticReport,
   mediaUpload,
@@ -112,7 +115,8 @@ const FunctionsMenu = ({
   const { viewerWindow } = fabricOverlayState;
   const { tile, slideId, viewer, fabricOverlay } = viewerWindow[viewerId];
   const [activeObject, setActiveObject] = useState();
-  const [updatedAnnotation, setUpdatedAnnotation] = useState(null);
+  const [updatedAnnotation, setUpdatedAnnotation] = useState({});
+  const [manipulationComplete,setManipulationComplete] = useState(false);
 
   const [selectedOption, setSelectedOption] = useState("slides");
   const [reportData, setReportData] = useState({
@@ -213,12 +217,36 @@ const FunctionsMenu = ({
 
   useEffect(() => {
     const canvas = fabricOverlay?.fabricCanvas();
+    let clickedObject = null;
+  
     canvas?.on("mouse:down", (e) => {
-      const clickedObject = canvas?.findTarget(e.e);
-      // console.log(clickedObject);
-      setActiveObject(clickedObject); // You can access the details of the clicked object here
+      clickedObject = canvas?.findTarget(e.e);
+      setActiveObject(clickedObject);
+    });
+  
+    canvas?.on("object:scaling", (e) => {
+      const scaledObject = e.target;
+      if (scaledObject === clickedObject) {
+        const { scaleX, scaleY, width, height } = scaledObject;
+        const updatedWidth = width * scaleX;
+        const updatedHeight = height * scaleY;
+  
+        console.log("Updated width:", updatedWidth);
+        console.log("Updated height:", updatedHeight);
+  
+        // Create a new object with updated dimensions
+        const updatedObject = {
+          ...clickedObject,
+          width: updatedWidth,
+          height: updatedHeight,
+        };
+  
+        setUpdatedAnnotation(updatedObject);
+        setManipulationComplete(true); // Set manipulation as complete
+      }
     });
   }, [fabricOverlay]);
+  
 
   useEffect(() => {
     if (isMultiview) {
@@ -238,8 +266,8 @@ const FunctionsMenu = ({
   }, [activeObject]);
 
   // useEffect(() => {
-  //   if (updatedAnnotation) {
-  //     // console.log('Updated annotation object: ', updatedAnnotation);
+  //   if (updatedAnnotation && manipulationComplete) {
+  //     console.log('Updated annotation object: ', updatedAnnotation);
   //   const canvas = fabricOverlay?.fabricCanvas();
   //     const width = updatedAnnotation.width;
   //     const height = updatedAnnotation.height;
@@ -253,6 +281,7 @@ const FunctionsMenu = ({
   //       onUpdateAnnotation,
   //     });
   //     // console.log("sss");
+  //     setManipulationComplete(false)
   //   }
   // }, [updatedAnnotation]);
 
@@ -265,6 +294,14 @@ if(!isOpen){
   setSelectedOption("slides");
 }
   },[isOpen])
+
+  useEffect(()=>{
+    if(showRightPanel){
+      setIsOpen(true);
+  setSelectedOption("mode");
+
+    }
+  },[showRightPanel])
 
   return (
     <Box
@@ -586,6 +623,46 @@ if(!isOpen){
                 </Button>
               </Tooltip>
             ) : null}
+             {showRightPanel ? (
+              <Tooltip label=" Mode" placement="left">
+                <Button
+                  height="73px"
+                  w="73px"
+                  background="rgba(255, 255, 255, 0.5)"
+                  borderRadius={0}
+                  box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
+                  _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
+                  onClick={() => {
+                    setSelectedOption("mode");
+                    setIsOpen(true);
+                  }}
+                >
+                  <VStack>
+                    {selectedOption === "mode" ? (
+                      //  <adjustmentIconSelected />
+                      // <MessagesIconSelected />
+                      // <HiOutlineAdjustmentsHorizontal />
+                      <ModeIcon transform="scale(1.5)" color="#3B5D7C" />
+                    ) : (
+                      // <adjustmentIconSelected />
+                      <ModeIcon transform="scale(1.5)" color="red" />
+                    )}
+                    <Text
+                      fontFamily="Inter"
+                      fontStyle="normal"
+                      fontWeight="400"
+                      fontSize="10px"
+                      lineHeight="12px"
+                      letterSpacing="0.0025em"
+                      color={selectedOption === "mode" ? "#3B5D7C" : "fff"}
+                    >
+                      Modes
+                    </Text>
+                  </VStack>
+                </Button>
+              </Tooltip>
+            ) : null}
+            
           </Flex>
           <Flex
             w="100%"
@@ -748,7 +825,7 @@ if(!isOpen){
                 viewer={viewer}
                 setIsOpen={setIsOpen}
               />
-            ) : (
+            ) : selectedOption === "mode" ? (<ModeMeanu/>) :(
               <Flex w="100%" h="95%" pb="25px" bgColor="#FCFCFC" p="5px">
                 <Timeline timelineData={timelineData} viewerId={viewerId} />
               </Flex>
