@@ -32,6 +32,7 @@ function AdjustmentBar({
   setLoadUI,
   setNewHilData,
   application,
+  base64URL,
   viewerIds,
   enableAI,
   chatFeedBar,
@@ -205,6 +206,7 @@ function AdjustmentBar({
         chatHover={chatHover}
         chatFeedBar={chatFeedBar}
         handleFeedBar={handleFeedBar}
+        base64URL={base64URL}
         imageFilter={imageFilter}
         setShowRightPanel={setShowRightPanel}
         navigatorCounter={navigatorCounter}

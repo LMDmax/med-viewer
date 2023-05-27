@@ -82,6 +82,7 @@ const LayoutApp = ({
   const [stromaArea, setStromaArea] = useState();
   const [lymphocyteCount, setLymphocyteCount] = useState();
   const [navigatorCounter, setNavigatorCounter] = useState(0);
+  const [base64URL, setBase64URL] = useState("");
 
   const [ifBiggerScreen] = useMediaQuery("(min-width:1920px)");
   const [currentViewer, setCurrentViewer] = useState(
@@ -111,7 +112,6 @@ const LayoutApp = ({
   const [unit, setUnit] = useState();
   const [imageFilter, setImageFilter] = useState(false);
   const [showRightPanel, setShowRightPanel] = useState(false);
-
 
   const [modelName, setModelname] = useState("");
 
@@ -315,6 +315,7 @@ const LayoutApp = ({
           setToolSelected={setToolSelected}
           refreshHil={refreshHil}
           navigatorCounter={navigatorCounter}
+          base64URL={base64URL}
           setNavigatorCounter={setNavigatorCounter}
           pathStroma={pathStroma}
           hitTil={hitTil}
@@ -510,6 +511,7 @@ const LayoutApp = ({
           <FunctionsMenu
             caseInfo={caseInfo}
             slides={slides}
+            setBase64URL={setBase64URL}
             viewerId={currentViewer}
             setIsMultiview={setIsMultiview}
             setIsNavigatorActive={setIsNavigatorActive}
@@ -541,6 +543,8 @@ const LayoutApp = ({
             showReport={showReport}
             setShowReport={setShowReport}
             showRightPanel={showRightPanel}
+            setShowRightPanel={setShowRightPanel}
+            setImageFilter={setImageFilter}
             questions={questions}
             app={application}
             setSlideId={setSlideId}

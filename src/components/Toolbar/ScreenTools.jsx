@@ -26,6 +26,7 @@ function ScreenTools({
   report,
   toolSelected,
   chatFeedBar,
+  base64URL,
   application,
   handleAnnotationBar,
   caseInfo,
@@ -71,7 +72,7 @@ function ScreenTools({
 
   return (
     <Flex h="100%" w="25%"  alignItems="center" justifyContent="flex-end">
-      <ImageFilter setShowRightPanel={setShowRightPanel} imageFilter={imageFilter} navigatorCounter={navigatorCounter} setToolSelected={setToolSelected} viewerId={viewerId} />
+      <ImageFilter base64URL={base64URL} setShowRightPanel={setShowRightPanel} imageFilter={imageFilter} navigatorCounter={navigatorCounter} setToolSelected={setToolSelected} viewerId={viewerId} />
       <DownloadImage setToolSelected={setToolSelected} />
       {application === "hospital" && (
         <ViewerChat

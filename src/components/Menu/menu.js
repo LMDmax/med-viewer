@@ -40,7 +40,7 @@ import SynopticReport from "../SynopticReport/SynopticReport";
 import Report from "../Report/Report";
 import Timeline from "../Timeline/Timeline";
 import ChatFeed from "../Feed/ChatFeed";
-import { ModeIcon } from "../Icons/CustomIcons";
+import { ModeIcon, ModeIconSelected } from "../Icons/CustomIcons";
 import Adjustments from "../Adjustments/Adjustments";
 
 import { BsSliders } from "react-icons/bs";
@@ -63,9 +63,12 @@ const FunctionsMenu = ({
   setIsMultiview,
   hideTumor,
   setHideTumor,
+  setBase64URL,
   hideLymphocyte,
   navigatorCounter,
+  setShowRightPanel,
   setHideLymphocyte,
+  setImageFilter,
   setToolSelected,
   setHideStroma,
   hideStroma,
@@ -299,6 +302,10 @@ if(!isOpen){
     if(showRightPanel){
       setIsOpen(true);
   setSelectedOption("mode");
+    }
+    else{
+      setIsOpen(false);
+  setSelectedOption("slides");
 
     }
   },[showRightPanel])
@@ -642,10 +649,10 @@ if(!isOpen){
                       //  <adjustmentIconSelected />
                       // <MessagesIconSelected />
                       // <HiOutlineAdjustmentsHorizontal />
-                      <ModeIcon transform="scale(1.5)" color="#3B5D7C" />
-                    ) : (
-                      // <adjustmentIconSelected />
-                      <ModeIcon transform="scale(1.5)" color="red" />
+                      <ModeIconSelected transform="scale(1.5)" color="red" />
+                      ) : (
+                        // <adjustmentIconSelected />
+                        <ModeIcon transform="scale(1.5)" color="#3B5D7C" />
                     )}
                     <Text
                       fontFamily="Inter"
@@ -825,7 +832,7 @@ if(!isOpen){
                 viewer={viewer}
                 setIsOpen={setIsOpen}
               />
-            ) : selectedOption === "mode" ? (<ModeMeanu/>) :(
+            ) : selectedOption === "mode" ? (<ModeMeanu setBase64URL={setBase64URL} setImageFilter={setImageFilter} setShowRightPanel={setShowRightPanel}/>) :(
               <Flex w="100%" h="95%" pb="25px" bgColor="#FCFCFC" p="5px">
                 <Timeline timelineData={timelineData} viewerId={viewerId} />
               </Flex>

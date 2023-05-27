@@ -29,6 +29,7 @@ const ImageFilter = ({
   viewerId,
   setToolSelected,
   navigatorCounter,
+  base64URL,
   imageFilter,
   setShowRightPanel,
 }) => {
@@ -135,7 +136,7 @@ const ImageFilter = ({
     }
   }, []);
 
-  console.log("Open Connections:", connectionCountRef.current);
+  // console.log("Open Connections:", connectionCountRef.current);
   
   const sendRequest = (pixelsData) => {
     return new Promise((resolve) => {
@@ -159,14 +160,13 @@ const ImageFilter = ({
       context.canvas.width,
       context.canvas.height
     );
-    const pixels = imgData.data;
     // Modify pixels
-  
     const pixelsData = {
       data: imgData.data,
       width: imgData.width,
       height: imgData.height,
       colorSpace: "srgb",
+      targetImage: base64URL ? base64URL : ""
     };
   
     const modifiedImageData = await sendRequest(pixelsData);

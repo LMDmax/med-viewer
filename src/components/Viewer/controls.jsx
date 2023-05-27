@@ -295,7 +295,7 @@ const ViewerControls = ({
     }
   }, [updatedAnnotation]);
 
- console.log(annotationObject);
+//  console.log(annotationObject);
 
   const handleVhutAnalysis = async () => {
     if (!fabricOverlay || !annotationObject) return;
