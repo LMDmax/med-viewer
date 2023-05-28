@@ -129,7 +129,7 @@ const MagicWandTool = ({
     const createContours = async (body) => {
       // get cell data from the clicked position in viewer
       const resp = await axios.post(
-        "https://backup-quantize-vhut.prr.ai/vhut/click/xy",
+        "https://development-morphometry-api.prr.ai/vhut/click/xy",
         body
       );
         // console.log(body);

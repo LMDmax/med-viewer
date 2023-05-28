@@ -139,6 +139,7 @@ const ImageFilter = ({
   // console.log("Open Connections:", connectionCountRef.current);
   
   const sendRequest = (pixelsData) => {
+  console.log(pixelsData);
     return new Promise((resolve) => {
       const requestCallback = (imageData) => {
         resolve(imageData);
@@ -166,9 +167,10 @@ const ImageFilter = ({
       width: imgData.width,
       height: imgData.height,
       colorSpace: "srgb",
-      targetImage: base64URL ? base64URL : ""
+      // targetImage: base64URL ? base64URL : ""
     };
-  
+
+  // console.log(pixelsData);
     const modifiedImageData = await sendRequest(pixelsData);
     console.log("result", modifiedImageData);
     context.putImageData(modifiedImageData, 0, 0);

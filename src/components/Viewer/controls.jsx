@@ -103,7 +103,7 @@ const ViewerControls = ({
   const [menuPosition, setMenuPosition] = useState({ left: 0, top: 0 });
   const [annotationObject, setAnnotationObject] = useState(null);
   const [updatedAnnotation, setUpdatedAnnotation] = useState({});
-  const [manipulationComplete,setManipulationComplete] = useState(false);
+  const [manipulationComplete, setManipulationComplete] = useState(false);
   const [isMorphometryDisabled, setIsMorphometryDisabled] = useState(true);
   const [annotationText, setAnnotationText] = useState("");
   const [annotationShape, setAnnotationShape] = useState(null);
@@ -232,31 +232,30 @@ const ViewerControls = ({
     // annotationClose();
   };
 
-
-
-  // update / resize annotation 
+  // update / resize annotation
 
   useEffect(() => {
     const canvas = fabricOverlay?.fabricCanvas();
     let clickedObject = null;
-  
+
     canvas?.on("mouse:down", (e) => {
       clickedObject = canvas?.findTarget(e.e);
     });
-  
+
     canvas?.on("object:modified", (e) => {
       const modifiedObject = e.target;
       if (modifiedObject === clickedObject) {
-        const { scaleX, scaleY, width, height, left, top, angle } = modifiedObject;
+        const { scaleX, scaleY, width, height, left, top, angle } =
+          modifiedObject;
         const updatedWidth = width * scaleX;
         const updatedHeight = height * scaleY;
         const updatedLeft = left;
         const updatedTop = top;
         const updatedAngle = angle;
-    
+
         console.log("Updated width:", updatedWidth);
         console.log("Updated height:", updatedHeight);
-    
+
         // Create a new object with updated dimensions, position, and angle
         const updatedObject = {
           ...clickedObject,
@@ -277,25 +276,25 @@ const ViewerControls = ({
   useEffect(() => {
     if (updatedAnnotation && manipulationComplete) {
       // console.log('Updated annotation object: ', updatedAnnotation);
-    const canvas = fabricOverlay?.fabricCanvas();
+      const canvas = fabricOverlay?.fabricCanvas();
       const width = updatedAnnotation.width;
       const height = updatedAnnotation.height;
       const left = updatedAnnotation.left;
       const top = updatedAnnotation.top;
       const angle = updatedAnnotation.angle;
-      console.log(angle);
+      // console.log(angle);
       updateAnnotationInDB({
         slideId,
         hash: updatedAnnotation.hash,
-        updateObject: { width, height,left,top,angle },
+        updateObject: { width, height, left, top, angle },
         onUpdateAnnotation,
       });
       // console.log("sss");
-      setManipulationComplete(false)
+      setManipulationComplete(false);
     }
   }, [updatedAnnotation]);
 
-//  console.log(annotationObject);
+  //  console.log(annotationObject);
 
   const handleVhutAnalysis = async () => {
     if (!fabricOverlay || !annotationObject) return;
@@ -417,7 +416,6 @@ const ViewerControls = ({
         },
       },
     });
-
   };
 
   // update Annotation in db
@@ -454,25 +452,18 @@ const ViewerControls = ({
       // console.log("====================================");
       // console.log("response...", responseData);
       // console.log("====================================");
-      if (responseData.getVhutAnalysis.message !== "No Analysis found" && responseData.getVhutAnalysis.data.analysedData) {
-        // console.log("222222222222222");
+      if (
+        responseData.getVhutAnalysis.message !== "No Analysis found" &&
+        responseData.getVhutAnalysis.data.analysedData
+      ) {
         showAnalysisData(responseData);
         setLoadUI(true);
-    localStorage.removeItem("ModelName");
-        
+        localStorage.removeItem("ModelName");
       }
-      if(!annotationObject){
-        // console.log("");
-      }
-      // else {
-      //   setToolSelected("MorphometryError");
-      // }
     }
   }, [responseData]);
 
-
   //On load run roi for existing ones
-
 
   useEffect(() => {
     if (vhutSubscriptionData) {
@@ -483,38 +474,33 @@ const ViewerControls = ({
       } = vhutSubscriptionData.analysisStatus;
 
       if (type === "VHUT_ANALYSIS") {
+        console.log(data);
         if (data && data.hash) {
-          // console.log(data);
+          console.log(data);
           const canvas = fabricOverlay.fabricCanvas();
           const { hash, analysedROI } = data;
           const annotation = canvas.getObjectByHash(hash);
           setAnnotationObject(annotation);
-          console.log(annotation);
           if (annotation) {
             annotation.set({ isAnalysed: true, analysedROI });
+            console.log(annotation);
           }
+          console.log(annotation);
           const ROI_ID = analysedROI;
-          console.log(ROI_ID);
-         if(annotation.analysedROI){
-          onGetVhutAnalysis({
-            variables: {
-              query: {
-                analysisId: ROI_ID,
-              },
-            },
-          });
-         }
-         else{
-          console.log("Error here ");
-         }
+          // console.log(ROI_ID);
+          if (ROI_ID !== null && ROI_ID !== undefined) {
+            if (annotation && annotation.analysedROI) {
+              onGetVhutAnalysis({
+                variables: {
+                  query: {
+                    analysisId: ROI_ID,
+                  },
+                },
+              });
+              setToolSelected("MorphometryAnalysed");
+            }
+          }
         }
-        // console.log(vhutSubscriptionData.analysisStatus);
-        toast({
-          title: message,
-          status: "success",
-          duration: 1500,
-          isClosable: true,
-        });
       } else if (type === "KI67_ANALYSIS") {
         setModelname("KI67Analysed");
       } else if (type === "VIEWPORT_ANALYSIS") {
@@ -602,7 +588,7 @@ const ViewerControls = ({
     } else {
       setAnnotatedData(
         xmlAnnotationData?.loadImportedAnnotation?.ImportedAnnotation[0]?.data
-      ); 
+      );
     }
   }, [xmlAnnotationData, annotationData]);
   useEffect(() => {
@@ -628,7 +614,6 @@ const ViewerControls = ({
             setActiveFeed(feed);
             // console.log(feed);
             // onLoadCallData()
-          
           }
 
           canvas.requestRenderAll();
@@ -850,8 +835,8 @@ const ViewerControls = ({
       text,
       zoomLevel,
       points,
-      selectable:false,
-      evented:false,
+      selectable: false,
+      evented: false,
       path,
       timeStamp,
       isKI67Analysed: true,
@@ -920,7 +905,7 @@ const ViewerControls = ({
     try {
       // const resp = await onVhutAnalysis(body);
       const resp = await axios.post(
-        "https://backup-quantize-vhut.prr.ai/ki_six_seven_predict",
+        "https://development-morphometry-api.prr.ai/quantize/ki_six_seven_predict",
         originalBody
       );
     } catch (err) {
@@ -937,8 +922,10 @@ const ViewerControls = ({
   useEffect(() => {
     if (vhutSubscriptionData) {
       const canvas = fabricOverlay.fabricCanvas();
-      const annotation = canvas.getObjectByHash(vhutSubscriptionData.analysisStatus.data.hash);
-          setAnnotationObject(annotation);
+      const annotation = canvas.getObjectByHash(
+        vhutSubscriptionData.analysisStatus.data.hash
+      );
+      setAnnotationObject(annotation);
       // console.log("subscribed", vhutSubscriptionData);
       const {
         data,
@@ -995,7 +982,7 @@ const ViewerControls = ({
             circle.selectable = false;
             circle.evented = false;
           });
-        
+
           // remove enclosing annotation and add new one to canvas
           // console.log(feedMessage);
           canvas.remove(annotationObject);
@@ -1009,18 +996,12 @@ const ViewerControls = ({
     }
   }, [vhutSubscriptionData]);
 
-
-
-
-
-
-
   // console.log(annotationObject);
   useEffect(() => {
     if (annotationObject?.type === "path") {
       if (annotationObject?.isClosed === false) {
         //return from this block print a console out
-       setToolSelected("OpenPath")
+        setToolSelected("OpenPath");
         return;
       }
     }
@@ -1043,7 +1024,6 @@ const ViewerControls = ({
             //first time run morphometry
             if (!annotationObject?.isAnalysed) {
               handleVhutAnalysis();
-              setToolSelected("MorphometryAnalysed");
               setModelname("");
               //  setAnnotationObject(null);
               // console.log("iiiiiammmmm");
@@ -1107,7 +1087,6 @@ const ViewerControls = ({
               direction="column"
               boxShadow="1px 1px 2px rgba(176, 200, 214, 0.5)"
               zIndex="1"
-              
             >
               <VStack
                 className="drag-handle"
@@ -1120,7 +1099,9 @@ const ViewerControls = ({
                 h="15px"
               >
                 {/* <MoveBar/> */}
-                <MdOutlineDragIndicator  style={{ transform: 'rotate(90deg)' , color:"darkgrey" }}  />
+                <MdOutlineDragIndicator
+                  style={{ transform: "rotate(90deg)", color: "darkgrey" }}
+                />
               </VStack>
               <VStack
                 // w="fit-content"

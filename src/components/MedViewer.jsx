@@ -116,7 +116,7 @@ function MedViewer({ viewerIds, ...props }) {
 		const key = getFileBucketFolder(viewerIds[0].originalFileUrl);
 		// console.log(key);
 		const respPromise = axios.post(
-			"https://backup-quantize-vhut.prr.ai/vhut/download",
+			"https://development-morphometry-api.prr.ai/quantize/v1/download",
 			{
 				key,
 				bucket_name: "med-ai-image-processor",

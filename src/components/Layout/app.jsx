@@ -253,6 +253,9 @@ const LayoutApp = ({
     case "FilterSaved":
       returnText = "Adjusment saved successfully ";
       break;
+      case "Error":
+      returnText = "Something Went Wrong!";
+      break;
 
     default:
       returnText = "";
