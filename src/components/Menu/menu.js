@@ -681,6 +681,7 @@ if(!isOpen){
                 caseInfo={caseInfo}
                 slides={slides}
                 viewerId={viewerId}
+                setImageFilter={setImageFilter}
                 isMultiview={isMultiview}
                 tile={tile}
                 setIsMultiview={setIsMultiview}

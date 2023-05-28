@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { connectWebSocket } from '../../Socket/Socket';
 import {
   Box,
   Flex,
@@ -82,7 +83,7 @@ const LayoutApp = ({
   const [stromaArea, setStromaArea] = useState();
   const [lymphocyteCount, setLymphocyteCount] = useState();
   const [navigatorCounter, setNavigatorCounter] = useState(0);
-  const [base64URL, setBase64URL] = useState("");
+  const [base64URL, setBase64URL] = useState(false);
 
   const [ifBiggerScreen] = useMediaQuery("(min-width:1920px)");
   const [currentViewer, setCurrentViewer] = useState(
@@ -105,7 +106,7 @@ const LayoutApp = ({
   const [annotationObject, setAnnotationObject] = useState("");
   const [toolSelected, setToolSelected] = useState("");
   const [bottomZoomValue, setBottomZoomValue] = useState("");
-
+  const socketRef = useRef(null);
   // xml annotations check
   const [isXmlAnnotations, setIsXmlAnnotations] = useState(false);
   const [loadUI, setLoadUI] = useState(true);
@@ -122,7 +123,13 @@ const LayoutApp = ({
     setUnit(UnitStore);
     // console.log(bottomZoomValue);
   }, [bottomZoomValue]);
-  // console.log("sssss");
+
+  useEffect(()=>{
+    if(!imageFilter){
+      setShowRightPanel(false);
+    }
+  },[imageFilter])
+  // console.log("sssss", showRightPanel);
 
   let runAiModel;
   switch (modelName) {
@@ -299,6 +306,22 @@ const LayoutApp = ({
     setFeedBar(1);
   };
 
+
+  // connect websocket
+
+  useEffect(() => {
+    connectWebSocket()
+      .then((socket) => {
+        console.log('WebSocket connection established.');
+        socketRef.current = socket;
+    console.log(socketRef);
+
+      })
+      .catch((error) => {
+        console.error('WebSocket connection error:', error);
+      });
+  }, []);
+    console.log(socketRef);
   return (
     <Flex
       h={ifBiggerScreen ? "calc(100vh - 5.5vh)" : "100vh"}
@@ -332,6 +355,7 @@ const LayoutApp = ({
           setLymphocyteCount={setLymphocyteCount}
           slide={viewerIds?.[0]}
           slides={slides}
+          socketRef={socketRef}
           annotations={annotations}
           hideModification={hideModification}
           report={report}

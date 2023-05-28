@@ -31,6 +31,7 @@ const ImageFilter = ({
   navigatorCounter,
   base64URL,
   imageFilter,
+  socketRef,
   setShowRightPanel,
 }) => {
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
@@ -41,7 +42,6 @@ const ImageFilter = ({
   const isActiveTool = activeTool === "Normalisation";
   const [isConnected,setIsConnected] = useState();
   const [showDialog, setShowDialog] = useState(false);
-  const socketRef = useRef(null);
   const requestQueueRef = useRef([]);
   const connectionCountRef = useRef(0);
 
@@ -94,16 +94,8 @@ const ImageFilter = ({
   //working
   
   useEffect(() => {
-    if (!socketRef.current) {
-      socketRef.current = new WebSocket(
-        "wss://development-morphometry-api.prr.ai/quantize/vahadane"
-      );
-  
-      socketRef.current.onopen = () => {
-        connectionCountRef.current++; // Increment connection count
+    if (socketRef.current !== null) {
         setIsConnected(true);
-      };
-  
       socketRef.current.onmessage = (event) => {
         const responseData = event.data;
         let dataArray;
@@ -134,8 +126,15 @@ const ImageFilter = ({
         }
       };
     }
-  }, []);
+  }, [socketRef.current]);
 
+
+  useEffect(()=>{
+    if(base64URL && socketRef.current !== null){
+      handleOkay();
+      // console.log("2nd open");
+    }
+  },[base64URL])
   // console.log("Open Connections:", connectionCountRef.current);
   
   const sendRequest = (pixelsData) => {
@@ -146,11 +145,9 @@ const ImageFilter = ({
       };
   
       requestQueueRef.current.push(requestCallback);
-  
-      if (isConnected) {
+      console.log(isConnected);
         socketRef.current.send(JSON.stringify(pixelsData));
-        console.log(pixelsData);
-      }
+        // console.log(pixelsData);
     });
   };
   

@@ -60,6 +60,7 @@ function AdjustmentBar({
   setChatHover,
   slideInfo,
   handleFeedBar,
+  socketRef,
   handleReport,
   showReport,
   setShowReport,
@@ -165,6 +166,7 @@ function AdjustmentBar({
         handleTILFeedBar={handleTILFeedBar}
         zoomValue={zoomValue}
         annotations={annotations}
+        setShowRightPanel={setShowRightPanel}
         imageFilter={imageFilter}
         caseInfo={caseInfo}
         enableAI={enableAI}
@@ -206,6 +208,7 @@ function AdjustmentBar({
         chatHover={chatHover}
         chatFeedBar={chatFeedBar}
         handleFeedBar={handleFeedBar}
+        socketRef={socketRef}
         base64URL={base64URL}
         imageFilter={imageFilter}
         setShowRightPanel={setShowRightPanel}

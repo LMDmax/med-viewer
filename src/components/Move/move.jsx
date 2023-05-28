@@ -32,6 +32,7 @@ function Move({
   viewerId,
   refreshHil,
   annotations,
+  setShowRightPanel,
   enableAI,
   caseInfo,
   enableFilters,
@@ -225,7 +226,7 @@ function Move({
         ) : null}
 
         {/* <Measuremnet /> */}
-        <Mode imageFilter={imageFilter} setImageFilter={setImageFilter} AdjustmentTool={AdjustmentTool} setAdjustmentTool={setAdjustmentTool} />
+        <Mode setShowRightPanel={setShowRightPanel} imageFilter={imageFilter} setImageFilter={setImageFilter} AdjustmentTool={AdjustmentTool} setAdjustmentTool={setAdjustmentTool} />
 
         <CommentBox
           userInfo={userInfo}

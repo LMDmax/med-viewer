@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Box, Flex, Text, Tooltip, HStack, Button } from "@chakra-ui/react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { MdOutlineUpload, MdOutlineModeEditOutline } from "react-icons/md";
+import { sendRequest } from "../../Socket/Socket";
 
 const Normalisation = ({setBase64URL}) => {
   const [isChecked, setIsChecked] = useState(true);
@@ -11,27 +12,33 @@ const [showNormalisation, setShowNormalisation] = useState(true);
 
 
 
-const handleUpload=()=>{
-      //create base64URL url
-        fetch(selectedImage.url)
-        .then(response => response.blob())
-        .then(blob => {
-          // Read the Blob contents as Base64 data
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            // Retrieve the Base64 data
-            const base64Data = reader.result;
-            setBase64URL(base64Data);
-            // Send the Base64 data to the server
-            // ...
-          };
-          reader.readAsDataURL(blob);
-        })
-        .catch(error => {
-          console.log("Error fetching image data:", error);
-        });
-    setShowButtonGroup(false)
-}
+const handleUpload = () => {
+  // Create base64URL url
+  fetch(selectedImage.url)
+    .then(response => response.blob())
+    .then(blob => {
+      // Read the Blob contents as Base64 data
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        // Retrieve the Base64 data
+        const base64Data = reader.result;
+        setBase64URL(true);
+
+        const sendBase64Data = {
+          data: base64Data
+        }
+        console.log(JSON.stringify(sendBase64Data));
+        // Send the Base64 data to the server
+        sendRequest(sendBase64Data);
+      };
+      reader.readAsDataURL(blob);
+    })
+    .catch(error => {
+      console.log("Error fetching image data:", error);
+    });
+
+  setShowButtonGroup(false);
+};
 
   useEffect(() => {
     if (selectedImage) {

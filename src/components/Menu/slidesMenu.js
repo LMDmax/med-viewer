@@ -16,6 +16,7 @@ const SlidesMenu = ({
   viewerId,
   setToolSelected,
   isMultiview,
+  setImageFilter,
   setIsMultiview,
   tile,
   setIsNavigatorActive,
@@ -29,6 +30,7 @@ const SlidesMenu = ({
 
   const changeSlide = (slide) => {
     if (isMultiview) {
+      setImageFilter(false);
       const vKeys = Object.keys(viewerWindow);
       if (vKeys.length > 1) {
         const { viewer: v, fabricOverlay: fo } = viewerWindow[vKeys[1]];
@@ -65,6 +67,7 @@ const SlidesMenu = ({
       setToolSelected("MultiviewSlideChoosed")
       setIsMultiview(false);
     } else {
+      setImageFilter(false);
       setFabricOverlayState(
         changeTile({
           id: viewerId,

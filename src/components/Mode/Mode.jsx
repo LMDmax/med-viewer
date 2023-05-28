@@ -15,6 +15,7 @@ import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 const Mode = ({
   setAdjustmentTool,
   AdjustmentTool,
+  setShowRightPanel,
   setImageFilter,
   imageFilter,
 }) => {
