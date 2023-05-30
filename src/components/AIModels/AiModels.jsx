@@ -202,7 +202,8 @@ const AiModels = ({
           }}
         >
           <ul style={{ listStyleType: "none", margin: 0, padding: 0 }}>
-            <li
+          <Flex direction="column">
+          <li
               style={{
                 padding: "5px",
                 backgroundColor: "transparent",
@@ -252,6 +253,7 @@ const AiModels = ({
             >
               KI-67
             </li>
+          </Flex>
           </ul>
         </Box>
       )}

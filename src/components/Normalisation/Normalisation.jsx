@@ -25,7 +25,7 @@ const handleUpload = () => {
         setBase64URL(true);
 
         const sendBase64Data = {
-          data: base64Data
+          targetImage: base64Data
         }
         console.log(JSON.stringify(sendBase64Data));
         // Send the Base64 data to the server

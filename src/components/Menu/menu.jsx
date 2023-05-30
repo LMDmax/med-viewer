@@ -187,21 +187,21 @@ const FunctionsMenu = ({
     }
   }, [navigatorCounter]);
 
-  useEffect(async () => {
-    if (selectedOption === "timeline") {
-      // console.log("timeeeeeeeeeeeeeeeeeeeeeee");
-      const resp = await axios.post(`${Environment.USER_URL}/slide_timeline`, {
-        slideId: slide?._id,
-        caseId: caseInfo?._id,
-      });
-      if (resp) {
-        const sortedDataByTime = resp.data.sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-        );
-        setTimeLineData(sortedDataByTime);
-      }
-    }
-  }, [selectedOption]);
+  // useEffect(async () => {
+  //   if (selectedOption === "timeline") {
+  //     // console.log("timeeeeeeeeeeeeeeeeeeeeeee");
+  //     const resp = await axios.post(`${Environment.USER_URL}/slide_timeline`, {
+  //       slideId: slide?._id,
+  //       caseId: caseInfo?._id,
+  //     });
+  //     if (resp) {
+  //       const sortedDataByTime = resp.data.sort(
+  //         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  //       );
+  //       setTimeLineData(sortedDataByTime);
+  //     }
+  //   }
+  // }, [selectedOption]);
 
   useEffect(() => {
     if (searchSelectedData) {

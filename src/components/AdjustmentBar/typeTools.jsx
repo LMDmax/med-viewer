@@ -24,6 +24,7 @@ const TypeTools = ({
   viewerId,
   setToolSelected,
   setTotalCells,
+  lessonId,
   toolSelected,
   caseInfo,
   application,
@@ -67,7 +68,7 @@ const TypeTools = ({
           ...data,
           app: application,
           createdBy: `${userInfo?.firstName} ${userInfo?.lastName}`,
-          caseId,
+          ...(application === "hospital" ? { caseId } : { lessonId }),
         },
       },
     });

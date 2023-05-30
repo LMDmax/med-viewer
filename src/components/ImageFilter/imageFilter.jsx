@@ -100,10 +100,12 @@ const ImageFilter = ({
         const responseData = event.data;
         let dataArray;
   
-        if (responseData !== "Connection established!") {
+        if (responseData !== "Ping" ) {
           dataArray = JSON.parse(responseData);
         } else {
           dataArray = undefined;
+        console.log(responseData);
+
         }
   
         if (dataArray) {
