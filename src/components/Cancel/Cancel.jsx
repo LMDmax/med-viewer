@@ -44,7 +44,7 @@ const handleClick=()=>{
         borderRadius={0}
        
       />
-      <Text align="center" fontFamily="inter" fontSize="10px" color="black">Backs</Text>
+      <Text align="center" fontFamily="inter" fontSize="10px" color="black">Back</Text>
    </Flex>
     </Box>
     );

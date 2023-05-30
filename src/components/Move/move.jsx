@@ -63,7 +63,6 @@ function Move({
   application,
   hideTumor,
   zoomValue,
-  lessonId,
   viewerIds,
   setModelname,
   handleTILFeedBar,
@@ -305,7 +304,6 @@ function Move({
             toolSelected={toolSelected}
             setToolSelected={setToolSelected}
             userInfo={userInfo}
-            lessonId={lessonId}
             viewerId={viewerId}
             caseInfo={caseInfo}
             setTotalCells={setTotalCells}

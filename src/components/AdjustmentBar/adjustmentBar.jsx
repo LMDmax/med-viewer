@@ -62,7 +62,6 @@ function AdjustmentBar({
   handleFeedBar,
   socketRef,
   handleReport,
-  lessonId,
   showReport,
   setShowReport,
   clinicalStudy,
@@ -175,7 +174,6 @@ function AdjustmentBar({
         setLoadUI={setLoadUI}
         enableFilters={enableFilters}
         pathStroma={pathStroma}
-        lessonId={lessonId}
         setTumorArea={setTumorArea}
         setStromaArea={setStromaArea}
         setTilScore={setTilScore}
