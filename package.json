@@ -30,7 +30,7 @@
     "lodash": "^4.17.21",
     "md5": "^2.3.0",
     "moment": "^2.29.1",
-    "openseadragon": "^3.1.0",
+    "openseadragon": "^4.1.0",
     "openseadragon-fabricjs-overlay": "github:LMDmax/OpenseadragonFabricjsOverlay",
     "prop-types": "^15.7.2",
     "random-username-generator": "^1.0.4",
