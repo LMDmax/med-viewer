@@ -188,9 +188,9 @@ function FunctionsMenu({
     }
   }, [navigatorCounter]);
 
-  useEffect(async () => {
+
+  const fetchData = async () => {
     if (selectedOption === "timeline") {
-      // console.log("timeeeeeeeeeeeeeeeeeeeeeee");
       const resp = await axios.post(`${Environment.USER_URL}/slide_timeline`, {
         slideId: slide?._id,
         caseId: caseInfo?._id,
@@ -202,6 +202,10 @@ function FunctionsMenu({
         setTimeLineData(sortedDataByTime);
       }
     }
+  };
+  
+  useEffect(() => {
+    fetchData();
   }, [selectedOption]);
 
   useEffect(() => {

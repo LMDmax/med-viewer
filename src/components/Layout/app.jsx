@@ -94,7 +94,7 @@ const LayoutApp = ({
 
   console.log('slideInfo',slide);
   const [showAnnotationsBar, setShowAnnotationsBar] = useState(false);
-  const [slideName, setSlideName] = useState(slide.slideName)
+  const [slideName, setSlideName] = useState(slide?.slideName)
   const [showFeedBar, setShowFeedBar] = useState(false);
   const [chatFeedBar, setChatFeedBar] = useState(false);
   const [tILFedBar, setTILFedBar] = useState(false);
