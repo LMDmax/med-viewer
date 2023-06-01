@@ -2,15 +2,17 @@ import {
   Flex,
   IconButton,
   Menu,
+  Text,
   MenuButton,
+  Box,
   MenuList,
   MenuItem,
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { BiDotsVertical } from "react-icons/bi";
 import { AiOutlineLink, AiOutlineCloseCircle } from "react-icons/ai";
-import ChangeSlide from "../Case/changeSlide";
 import { useFabricOverlayState } from "../../state/store";
+import ChangeSlide from "../Case/changeSlide";
 import {
   removeViewerWindow,
   toggleSync,
@@ -26,12 +28,15 @@ const ViewerHeader = ({
   caseInfo,
   slides,
   viewerId,
+  slide,
+  slideName,
   slideUrl,
   setCurrentViewer,
 }) => {
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { viewerWindow, sync } = fabricOverlayState;
-
+  var vKeys = Object.keys(viewerWindow);
+  
   const handleClose = () => {
     const vKeys = Object.keys(viewerWindow);
     if (viewerId === vKeys[0]) {
@@ -52,20 +57,30 @@ const ViewerHeader = ({
       justify="space-between"
       // zIndex="2"
     >
-      <ChangeSlide
+ <ChangeSlide
         caseInfo={caseInfo}
         slides={slides}
+        slideName={slideName}
         viewerId={viewerId}
         slideUrl={slideUrl}
       />
-      <Menu placement="bottom-end" autoSelect={false}>
+      
+       <Flex w="100%" justifyContent="center" alignItems="center">
+       {viewerId === vKeys[0] && (
+            <Text color="gray">Current Viewer</Text>
+          )}
+       </Flex>
+     <Box>
+     <Menu placement="bottom-end" autoSelect={false}>
         <MenuButton
           as={IconButton}
           aria-label="Options"
           icon={<BiDotsVertical />}
           variant="unstyled"
           _focus={{ border: "none" }}
+          mr="85px"
         />
+       
         <MenuList
           fontWeight="400"
           fontSize="14px"
@@ -75,6 +90,7 @@ const ViewerHeader = ({
           borderRadius={0}
           py={0}
         >
+          
           <MenuItemCustom
             title={sync ? "Detach" : "Link to second WSI"}
             icon={<AiOutlineLink size={18} color="#212224" />}
@@ -87,6 +103,7 @@ const ViewerHeader = ({
           />
         </MenuList>
       </Menu>
+     </Box>
     </Flex>
   );
 };

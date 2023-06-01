@@ -98,7 +98,19 @@ function Viewer({
     setViewer(
       OpenSeadragon({
         ...osdOptions,
-        tileSources: tile,
+         tileSources: [
+          //  {
+          //    tileSource:
+          //    "https://d3fvaqnlz9wyiv.cloudfront.net/hospital/development/outputs/5dd98e10-3de9-46f5-963b-ea61e7f28ae4/output.dzi",
+          //    opacity: 1, // Set opacity to 0.5 for this DZI image
+          //   },
+           {
+            tileSource:  tile,
+            opacity:1,
+           }
+        
+        ],
+  
         id: `viewer${viewerId}`,
       })
     );
@@ -114,6 +126,8 @@ function Viewer({
 
     // Create the fabric.js overlay, and set it on a sharable context
     // viewer.open(tile.source);
+
+    console.log("123213",viewerId);
 
     setFabricOverlayState(
       updateOverlay({

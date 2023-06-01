@@ -32,6 +32,7 @@ function Move({
   viewerId,
   refreshHil,
   annotations,
+  lessonId,
   setShowRightPanel,
   enableAI,
   caseInfo,
@@ -302,10 +303,12 @@ function Move({
             application={application}
             enableAI={enableAI}
             toolSelected={toolSelected}
+            viewerIds={viewerIds}
             setToolSelected={setToolSelected}
             userInfo={userInfo}
             viewerId={viewerId}
             caseInfo={caseInfo}
+            lessonId={lessonId}
             setTotalCells={setTotalCells}
           />
         ) : null}

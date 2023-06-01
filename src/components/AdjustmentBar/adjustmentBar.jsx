@@ -58,6 +58,7 @@ function AdjustmentBar({
   mediaUpload,
   hideLymphocyte,
   setChatHover,
+  lessonId,
   slideInfo,
   handleFeedBar,
   socketRef,
@@ -155,6 +156,7 @@ function AdjustmentBar({
         hideStroma={hideStroma}
         setModelname={setModelname}
         toolSelected={toolSelected}
+        lessonId={lessonId}
         hideLymphocyte={hideLymphocyte}
         slide={slide}
         setNavigatorCounter={setNavigatorCounter}

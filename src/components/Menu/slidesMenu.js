@@ -14,6 +14,7 @@ const SlidesMenu = ({
   caseInfo,
   slides,
   viewerId,
+  setSlideName,
   setToolSelected,
   isMultiview,
   setImageFilter,
@@ -66,8 +67,10 @@ const SlidesMenu = ({
       }
       setToolSelected("MultiviewSlideChoosed")
       setIsMultiview(false);
-    } else {
+    } 
+    else {
       setImageFilter(false);
+      setSlideName(slide.slideName);
       setFabricOverlayState(
         changeTile({
           id: viewerId,

@@ -1,5 +1,4 @@
 import React from "react";
-
 import { useMutation } from "@apollo/client";
 import { Flex, SimpleGrid, useToast } from "@chakra-ui/react";
 import { fabric } from "openseadragon-fabricjs-overlay";
@@ -25,28 +24,25 @@ const TypeTools = ({
   setToolSelected,
   lessonId,
   setTotalCells,
+  viewerIds,
   toolSelected,
   caseInfo,
   application,
 }) => {
-  // save annotation in db
-  // console.log("====================================");
-  // console.log("application", application);
-  // console.log("====================================");
-
   const { fabricOverlayState } = useFabricOverlayState();
-  const { fabricOverlay } = fabricOverlayState.viewerWindow[viewerId];
   const toast = useToast();
 
+  const fabricOverlay = fabricOverlayState.viewerWindow[viewerId]?.fabricOverlay;
+  console.log(viewerId);
+  console.log("2",viewerIds);
   fabric.IText.prototype.onKeyDown = (e) => {
     if (e.ctrlKey === true && e.key === "Enter") {
-      fabricOverlay.fabricCanvas().discardActiveObject();
+      fabricOverlay?.fabricCanvas().discardActiveObject();
     }
   };
 
-  const [removeAnnotation, { data: deletedData, error: deleteError }] =
-    useMutation(DELETE_ANNOTATION);
-  if (deleteError)
+  const [removeAnnotation, { error: deleteError }] = useMutation(DELETE_ANNOTATION);
+  if (deleteError) {
     toast({
       title: "Annotation could not be deleted",
       description: "server error",
@@ -54,13 +50,15 @@ const TypeTools = ({
       duration: 1000,
       isClosable: true,
     });
+  }
 
-  // delete Annotation from db
   const onDeleteAnnotation = (data) => {
     removeAnnotation({ variables: { body: data } });
   };
+
   const caseData = JSON.parse(localStorage.getItem("caseData"));
   const caseId = caseInfo?._id;
+
   const onSaveAnnotation = (data) => {
     createAnnotation({
       variables: {
@@ -68,15 +66,14 @@ const TypeTools = ({
           ...data,
           app: application,
           createdBy: `${userInfo?.firstName} ${userInfo?.lastName}`,
-          ...(application === "hospital" ? { caseId } : { lessonId })
+          caseId: caseId? caseId : lessonId
         },
       },
     });
   };
-  const [createAnnotation, { data, error, loading }] =
-    useMutation(SAVE_ANNOTATION);
 
-  if (error)
+  const [createAnnotation, { error, loading }] = useMutation(SAVE_ANNOTATION);
+  if (error) {
     toast({
       title: "Annotation could not be created",
       description: "server error",
@@ -84,6 +81,7 @@ const TypeTools = ({
       duration: 1000,
       isClosable: true,
     });
+  }
 
   return (
     <Draggable
@@ -103,24 +101,23 @@ const TypeTools = ({
       >
         <Flex
           className="drag-handle"
-          // borderTop="5px solid black"
-          // borderBottom="5px solid black"
           bg="whitesmoke"
-          h="15px"  
-          // border="1px solid red"
+          h="15px"
           cursor="move"
           alignItems="center"
           justifyContent="center"
         >
-                        <MdOutlineDragIndicator  style={{ transform: 'rotate(90deg)'  , color:"darkgrey" }}  />
-                        </Flex>
+          <MdOutlineDragIndicator
+            style={{ transform: "rotate(90deg)", color: "darkgrey" }}
+          />
+        </Flex>
         <SimpleGrid columns={2} px="8px" bgColor="#FCFCFC" py="8px" spacing={2}>
           <Line
             setToolSelected={setToolSelected}
             viewerId={viewerId}
             onSaveAnnotation={onSaveAnnotation}
           />
-          {enableAI ? (
+          {enableAI && (
             <MagicWandTool
               userInfo={userInfo}
               toolSelected={toolSelected}
@@ -129,7 +126,7 @@ const TypeTools = ({
               setTotalCells={setTotalCells}
               onSaveAnnotation={onSaveAnnotation}
             />
-          ) : null}
+          )}
           <Square
             setToolSelected={setToolSelected}
             viewerId={viewerId}

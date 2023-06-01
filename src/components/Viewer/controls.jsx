@@ -154,6 +154,8 @@ const ViewerControls = ({
   const [removeAnnotation, { data: deletedData, error: deleteError }] =
     useMutation(DELETE_ANNOTATION);
 
+
+    // console.log("ssssssssssslidedeeeeeeee", slideId);
   // ############### ANNOTATION_SUBSCRIPTION ########################
   const { data: subscriptionData, error: subscription_error } = useSubscription(
     ANNOTATIONS_SUBSCRIPTION,
@@ -253,8 +255,8 @@ const ViewerControls = ({
         const updatedTop = top;
         const updatedAngle = angle;
 
-        console.log("Updated width:", updatedWidth);
-        console.log("Updated height:", updatedHeight);
+        // console.log("Updated width:", updatedWidth);
+        // console.log("Updated height:", updatedHeight);
 
         // Create a new object with updated dimensions, position, and angle
         const updatedObject = {
@@ -408,7 +410,7 @@ const ViewerControls = ({
     if (!annotationObject) return;
 
     const canvas = fabricOverlay.fabricCanvas();
-    console.log(annotationObject);
+    // console.log(annotationObject);
     onGetVhutAnalysis({
       variables: {
         query: {
@@ -421,7 +423,7 @@ const ViewerControls = ({
   // update Annotation in db
   const onUpdateAnnotation = (data) => {
     delete data?.slideId;
-    console.log(data);
+    // console.log(data);
     modifyAnnotation({
       variables: { body: { ...data } },
     });
@@ -474,18 +476,18 @@ const ViewerControls = ({
       } = vhutSubscriptionData.analysisStatus;
 
       if (type === "VHUT_ANALYSIS") {
-        console.log(data);
+        // console.log(data);
         if (data && data.hash) {
-          console.log(data);
+          // console.log(data);
           const canvas = fabricOverlay.fabricCanvas();
           const { hash, analysedROI } = data;
           const annotation = canvas.getObjectByHash(hash);
           setAnnotationObject(annotation);
           if (annotation) {
             annotation.set({ isAnalysed: true, analysedROI });
-            console.log(annotation);
+            // console.log(annotation);
           }
-          console.log(annotation);
+          // console.log(annotation);
           const ROI_ID = analysedROI;
           // console.log(ROI_ID);
           if (ROI_ID !== null && ROI_ID !== undefined) {
@@ -934,7 +936,7 @@ const ViewerControls = ({
         analysisType: type,
       } = vhutSubscriptionData.analysisStatus;
       if (type === "KI67_ANALYSIS") {
-        console.log(vhutSubscriptionData.analysisStatus.data.hash);
+        // console.log(vhutSubscriptionData.analysisStatus.data.hash);
         const posContours = data.kiResults.pos_contours;
         const negContours = data.kiResults.neg_contours;
         const canvas = fabricOverlay.fabricCanvas();

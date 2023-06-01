@@ -246,7 +246,7 @@ const Square = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
   useEffect(() => {
     if (!shape) return;
             setToolSelected("RunRoi");
-
+    // console.log(viewerId);
     const addToFeed = async () => {
       // console.log("added");
       const message = createAnnotationMessage({ slideId, shape, viewer, type:"rect",isClosed:true, });

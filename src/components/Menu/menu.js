@@ -56,7 +56,7 @@ import { useMutation } from "@apollo/client";
 import { debounce } from "lodash";
 import ModeMeanu from "./ModeMeanu";
 
-const FunctionsMenu = ({
+function FunctionsMenu({
   caseInfo,
   slides,
   viewerId,
@@ -65,6 +65,7 @@ const FunctionsMenu = ({
   setHideTumor,
   setBase64URL,
   hideLymphocyte,
+  setSlideName,
   navigatorCounter,
   setShowRightPanel,
   setHideLymphocyte,
@@ -111,7 +112,7 @@ const FunctionsMenu = ({
   getSynopticReport,
   updateSynopticReport,
   searchSelectedData,
-}) => {
+})  {
   const [isOpen, setIsOpen] = useState(false);
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
   const { fabricOverlayState } = useFabricOverlayState();
@@ -234,8 +235,8 @@ const FunctionsMenu = ({
         const updatedWidth = width * scaleX;
         const updatedHeight = height * scaleY;
   
-        console.log("Updated width:", updatedWidth);
-        console.log("Updated height:", updatedHeight);
+        // console.log("Updated width:", updatedWidth);
+        // console.log("Updated height:", updatedHeight);
   
         // Create a new object with updated dimensions
         const updatedObject = {
@@ -683,6 +684,7 @@ if(!isOpen){
                 viewerId={viewerId}
                 setImageFilter={setImageFilter}
                 isMultiview={isMultiview}
+                setSlideName={setSlideName}
                 tile={tile}
                 setIsMultiview={setIsMultiview}
                 setToolSelected={setToolSelected}
@@ -833,7 +835,7 @@ if(!isOpen){
                 viewer={viewer}
                 setIsOpen={setIsOpen}
               />
-            ) : selectedOption === "mode" ? (<ModeMeanu setBase64URL={setBase64URL} setImageFilter={setImageFilter} setShowRightPanel={setShowRightPanel}/>) :(
+            ) : selectedOption === "mode" ? (<ModeMeanu slide={slide} setIsMultiview={setIsMultiview} tile={tile} viewerId={viewerId} setBase64URL={setBase64URL} setImageFilter={setImageFilter} setShowRightPanel={setShowRightPanel}/>) :(
               <Flex w="100%" h="95%" pb="25px" bgColor="#FCFCFC" p="5px">
                 <Timeline timelineData={timelineData} viewerId={viewerId} />
               </Flex>

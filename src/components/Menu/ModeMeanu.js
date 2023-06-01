@@ -3,7 +3,15 @@ import { Box, Flex, Text } from "@chakra-ui/react";
 import { AiOutlineClose } from "react-icons/ai";
 import Normalisation from "../Normalisation/Normalisation";
 
-const ModeMeanu = ({ setShowRightPanel, setImageFilter, setBase64URL }) => {
+const ModeMeanu = ({
+  setShowRightPanel,
+  setImageFilter,
+  setBase64URL,
+  slide,
+  viewerId,
+  setIsMultiview,
+  tile,
+}) => {
   return (
     <Box w="100%" bg="white" h="82vh" px="5px">
       <Flex
@@ -32,7 +40,7 @@ const ModeMeanu = ({ setShowRightPanel, setImageFilter, setBase64URL }) => {
         </Box>
       </Flex>
       <Box mt="5px" w="100%">
-        <Normalisation setBase64URL={setBase64URL} />
+        <Normalisation slide={slide} setIsMultiview={setIsMultiview} viewerId={viewerId} tile={tile} setBase64URL={setBase64URL} />
       </Box>
     </Box>
   );

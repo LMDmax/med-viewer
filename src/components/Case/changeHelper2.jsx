@@ -7,7 +7,7 @@ import {
 import TooltipLabel from "../AdjustmentBar/ToolTipLabel";
 import { useFabricOverlayState } from "../../state/store";
 
-const ChangeHelper = ({
+const ChangeHelper2 = ({
   title,
   disabledLeft,
   disabledRight,
@@ -22,9 +22,9 @@ const ChangeHelper = ({
 }) => {
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { viewerWindow } = fabricOverlayState;
-  const abbreviatedName = slideName ? slideName.substring(0, 6) : "";
+  // const abbreviatedName = viewerWindow[vKeys[1]]?.slideName ? viewerWindow[vKeys[1]]?.slideName.substring(0, 4) : "";
   var vKeys = Object.keys(viewerWindow);
-console.log(viewerWindow[vKeys[0]].viewer);
+// console.log(viewerWindow[vKeys[0]].viewer);
   return (
     <Flex
       justifyContent="space-between"
@@ -66,7 +66,7 @@ console.log(viewerWindow[vKeys[0]].viewer);
         </Tooltip>
 
         <Tooltip
-          label={<TooltipLabel heading="Slide Title" paragraph={slideName} />}
+          label={<TooltipLabel heading="Slide Title" paragraph={viewerWindow[vKeys[1]]?.slideName} />}
           placement="bottom"
           openDelay={0}
           bg="#E4E5E8"
@@ -90,7 +90,7 @@ console.log(viewerWindow[vKeys[0]].viewer);
       isDisabled={isAnnotationLoading}
       isActive={isNavigatorActive}
     >
-      {`${abbreviatedName}...`}
+    {`${viewerWindow[vKeys[1]]?.slideName.substring(0, 6)}...`}
     </Text>
 
 
@@ -127,4 +127,4 @@ console.log(viewerWindow[vKeys[0]].viewer);
   );
 };
 
-export default ChangeHelper;
+export default ChangeHelper2;

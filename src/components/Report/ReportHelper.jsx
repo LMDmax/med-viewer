@@ -176,7 +176,7 @@ const ReportHelper = ({
   const { fabricOverlayState } = useFabricOverlayState();
   const { viewerWindow } = fabricOverlayState;
   const { slideId } = viewerWindow[viewerId];
-console.log(showReport)
+// console.log(showReport)
   const toast = useToast();
 
   useEffect(() => {
@@ -263,7 +263,7 @@ console.log(showReport)
   //   return
   // }
 
-  console.log(showReport);
+  // console.log(showReport);
 
   return (
     <Box ml="-82px">

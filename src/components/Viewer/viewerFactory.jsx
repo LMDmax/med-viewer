@@ -15,6 +15,7 @@ function ViewerFactory({
   setToolSelected,
   bottomZoomValue,
   slide,
+  slideName,
   slides,
   setBottomZoomValue,
   setCurrentViewer,
@@ -30,13 +31,15 @@ function ViewerFactory({
   Environment,
   accessToken,
   setIsXmlAnnotations,
-	handleAnnotationClick,
+  handleAnnotationClick,
 }) {
   const { fabricOverlayState } = useFabricOverlayState();
   const { viewerWindow, sync } = fabricOverlayState;
 
-// console.log(viewerWindow);
+  // console.log(viewerWindow);
 
+  const vKeys = Object.keys(viewerWindow);
+  // console.log("vkey", vKeys);
 
   useEffect(() => {
     if (!sync) return;
@@ -45,6 +48,7 @@ function ViewerFactory({
     let isLeading2 = false;
 
     const vKeys = Object.keys(viewerWindow);
+    // console.log("vkey", vKeys);
     const { viewer: viewer1 } = viewerWindow[vKeys[0]];
     const { viewer: viewer2 } = viewerWindow[vKeys[1]];
 
@@ -81,13 +85,15 @@ function ViewerFactory({
 
   return (
     <>
-      {Object.keys(viewerWindow).map((viewer) => (
+      {Object.keys(viewerWindow).map((viewer, index) => (
         <Flex w="100%" h="100%" direction="column" key={viewer}>
           {Object.keys(viewerWindow).length > 1 ? (
             <ViewerHeader
               caseInfo={caseInfo}
+              slide={slide}
               slides={slides}
               viewerId={viewer}
+              slideName={slideName}
               slideUrl={viewerWindow?.[viewer]?.tile}
               setCurrentViewer={setCurrentViewer}
             />

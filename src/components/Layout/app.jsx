@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { connectWebSocket } from '../../Socket/Socket';
+import { connectSocketIO } from '../../Socket/Socket';
 import {
   Box,
   Flex,
@@ -28,9 +28,9 @@ import LayoutAppBody from "./body";
 import LayoutInnerBody from "./innerbody";
 import LayoutOuterBody from "./outerbody";
 import LayoutAppSidebar from "./sidebar";
-import FunctionsMenu from "../Menu/menu";
 import ChangeSlide from "../Case/changeSlide";
 import { useFabricOverlayState } from "../../state/store";
+import FunctionsMenu from "../Menu/menu";
 
 const LayoutApp = ({
   userInfo,
@@ -41,8 +41,10 @@ const LayoutApp = ({
   report,
   application,
   hitTil,
+  lessonId,
   annotations,
   enableAI,
+  slide,
   enableFilters,
   userIdToQuery,
   response,
@@ -90,8 +92,9 @@ const LayoutApp = ({
     viewerIds?.[0]?._id || viewerIds?.[0]?.slideId
   );
 
-  // console.log('slideInfo',viewerIds);
+  console.log('slideInfo',slide);
   const [showAnnotationsBar, setShowAnnotationsBar] = useState(false);
+  const [slideName, setSlideName] = useState(slide.slideName)
   const [showFeedBar, setShowFeedBar] = useState(false);
   const [chatFeedBar, setChatFeedBar] = useState(false);
   const [tILFedBar, setTILFedBar] = useState(false);
@@ -269,6 +272,8 @@ const LayoutApp = ({
       break;
   }
 
+  console.log(slideInfo);
+
   const showSidebar = () => {
     setSidebar(!sidebar);
   };
@@ -309,19 +314,19 @@ const LayoutApp = ({
 
   // connect websocket
 
-  useEffect(() => {
-    connectWebSocket()
-      .then((socket) => {
-        console.log('WebSocket connection established.');
-        socketRef.current = socket;
-    console.log(socketRef);
+  // useEffect(() => {
+  //   connectSocketIO()
+  //     .then((socket) => {
+  //       console.log('Socket.io connection established.');
+  //       socketRef.current = socket;
+  //       console.log(socketRef);
+  //     })
+  //     .catch((error) => {
+  //       console.error('Socket.io connection error:', error);
+  //     });
+  // }, []);
 
-      })
-      .catch((error) => {
-        console.error('WebSocket connection error:', error);
-      });
-  }, []);
-    console.log(socketRef);
+  // console.log(currentViewer);
 
     let h;
 
@@ -343,6 +348,7 @@ const LayoutApp = ({
           userInfo={userInfo}
           hideStroma={hideStroma}
           hideTumor={hideTumor}
+          lessonId={lessonId}
           hideLymphocyte={hideLymphocyte}
           chatFeedBar={chatFeedBar}
           caseInfo={caseInfo}
@@ -533,6 +539,7 @@ const LayoutApp = ({
               setZoomValue={setZoomValue}
               zoomValue={zoomValue}
               setLoadUI={setLoadUI}
+              slideName={slideName}
               setModelname={setModelname}
               viewerIds={viewerIds}
               runAiModel={runAiModel}
@@ -566,6 +573,7 @@ const LayoutApp = ({
             navigatorCounter={navigatorCounter}
             Environment={Environment}
             tilScore={tilScore}
+            setSlideName={setSlideName}
             userInfo={userInfo}
             toolSelected={toolSelected}
             isXmlAnnotations={isXmlAnnotations}
@@ -625,6 +633,9 @@ const LayoutApp = ({
                   caseInfo={caseInfo}
                   slides={slides}
                   loadUI={loadUI}
+                  slide={slide}
+                  slideName={slideName}
+                  setSlideName={setSlideName}
                   viewerId={currentViewer}
                   setNavigatorCounter={setNavigatorCounter}
                   slideUrl={tile}
