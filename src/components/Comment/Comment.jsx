@@ -35,6 +35,7 @@ const CommentBox = ({
   viewerId,
   application,
   caseInfo,
+  lessonId,
   setToolSelected,
   navigatorCounter,
 }) => {
@@ -51,7 +52,7 @@ const CommentBox = ({
           ...data,
           app: application,
           createdBy: `${userInfo?.firstName} ${userInfo?.lastName}`,
-          caseId,
+          caseId: caseId? caseId : lessonId
         },
       },
     });

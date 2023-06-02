@@ -244,6 +244,7 @@ function Move({
 					setToolSelected={setToolSelected}
 					application={application}
 					caseInfo={caseInfo}
+					lessonId={lessonId}
 					navigatorCounter={navigatorCounter}
 				/>
 
