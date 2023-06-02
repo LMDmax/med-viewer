@@ -13,7 +13,7 @@ export const connectSocketIO = () => {
 
       socket.on('connect_error', (error) => {
         reject(error);
-        console.log("error", error);
+        // console.log("error", error);
       });
     } else {
       resolve(socket);
@@ -24,7 +24,7 @@ export const connectSocketIO = () => {
 
 export const sendRequest = (data) => {
   if (socket && socket.connected) {
-    console.log(data);
+    // console.log(data);
     socket.send(data);
   }
 };

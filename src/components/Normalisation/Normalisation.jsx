@@ -41,14 +41,14 @@ const Normalisation = ({
           const sendBase64Data = {
             targetImage: base64Data,
           };
-          console.log(JSON.stringify(sendBase64Data));
+          // console.log(JSON.stringify(sendBase64Data));
           // Send the Base64 data to the server
           sendRequest(sendBase64Data);
         };
         reader.readAsDataURL(blob);
       })
       .catch((error) => {
-        console.log("Error fetching image data:", error);
+        // console.log("Error fetching image data:", error);
       });
 
     setShowButtonGroup(false);
@@ -136,10 +136,10 @@ const Normalisation = ({
   
   useEffect(() => {
     const vKeys = Object.keys(viewerWindow);
-    console.log("55555", vKeys);
+    // console.log("55555", vKeys);
     if (vKeys.length > 1) {
       const { fabricOverlay: fo } = viewerWindow[vKeys[1]];
-      console.log(fo);
+      // console.log(fo);
       if (fo && fo.fabricCanvas) {
         const rect = new fabric.Rect({
           left: 1900,
@@ -181,7 +181,7 @@ const Normalisation = ({
         const zoomLevelString = `&zoom=${zoomLevel}`;
         const regionString = `&rect=${annotationLeftInImage},${annotationTopInImage},${annotationWidthInImage},${annotationHeightInImage}`;
         const imageUrl = `${dziUrl}?${zoomLevelString}${regionString}`;
-        console.log(imageUrl);
+        // console.log(imageUrl);
         // Create a fabric.Image object
         const image = new fabric.Image();
   
@@ -189,7 +189,7 @@ const Normalisation = ({
         image.setSrc(imageUrl, () => {
           // Get the base64 encoded image URL
           const base64ImageUrl = image.toDataURL();
-          console.log(base64ImageUrl);
+          // console.log(base64ImageUrl);
         });
       }
     }

@@ -24,6 +24,7 @@ const theme = extendTheme({
 				},
 			},
 		},
+		
 	},
 	breakpoints: {
 		sm: "768px",
@@ -95,6 +96,21 @@ function MedViewer({ viewerIds, ...props }) {
 			isViewportAnalysing: false,
 		}
 	);
+
+	useEffect(() => {
+		const handleKeyDown = (event) => {
+		  if (event.keyCode === 9) {
+			// Prevent the default tab focus behavior
+			event.preventDefault();
+		  }
+		};
+	
+		window.addEventListener("keydown", handleKeyDown);
+	
+		return () => {
+		  window.removeEventListener("keydown", handleKeyDown);
+		};
+	  },[]);
 
 	useEffect(() => {
 		if (

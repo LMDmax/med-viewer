@@ -24,7 +24,7 @@ const ChangeHelper = ({
   const { viewerWindow } = fabricOverlayState;
   const abbreviatedName = slideName ? slideName.substring(0, 6) : "";
   var vKeys = Object.keys(viewerWindow);
-console.log(viewerWindow[vKeys[0]].viewer);
+// console.log(viewerWindow[vKeys[0]].viewer);
   return (
     <Flex
       justifyContent="space-between"

@@ -3,6 +3,7 @@ import { RiFullscreenFill } from "react-icons/ri";
 import ToolbarButton from "../ViewerToolbar/button";
 import IconSize from "../ViewerToolbar/IconSize";
 import { useFabricOverlayState } from "../../state/store";
+// import "../../styles/styles.css"
 
 const Fullscreen = ({ viewerId }) => {
   const { fabricOverlayState } = useFabricOverlayState();
@@ -11,14 +12,16 @@ const Fullscreen = ({ viewerId }) => {
 
   const handleFullScreen = () => {
     if (!isFullscreen) {
-      // viewer.setControlsEnabled(true);
       setIsFullscreen(true);
+      document.body.style.backgroundColor = "white"; // Set background color to white
       document.body.requestFullscreen();
     } else {
       setIsFullscreen(false);
+      document.body.style.backgroundColor = ""; // Reset background color
       document.exitFullscreen();
     }
   };
+  
   return (
     <ToolbarButton
       icon={<RiFullscreenFill size={IconSize()} color="#151C25" />}

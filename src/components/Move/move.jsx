@@ -82,7 +82,7 @@ function Move({
   const { fabricOverlay } = viewerWindow[viewerId];
   let isActive = activeTool === "Move";
   const [activeAnnotations, setActiveAnnotations] = useState(false);
-
+console.log(AdjustmentTool);
   useEffect(() => {
     if (typeToolsToggle) {
       setToolSelected("Annotation");

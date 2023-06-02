@@ -33,8 +33,8 @@ const TypeTools = ({
   const toast = useToast();
 
   const fabricOverlay = fabricOverlayState.viewerWindow[viewerId]?.fabricOverlay;
-  console.log(viewerId);
-  console.log("2",viewerIds);
+  // console.log(viewerId);
+  // console.log("2",viewerIds);
   fabric.IText.prototype.onKeyDown = (e) => {
     if (e.ctrlKey === true && e.key === "Enter") {
       fabricOverlay?.fabricCanvas().discardActiveObject();

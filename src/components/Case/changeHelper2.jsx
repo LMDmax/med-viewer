@@ -17,6 +17,7 @@ const ChangeHelper2 = ({
   setIsNavigatorActive,
   slide,
   loadUI,
+  slideName2,
   isNavigatorActive,
   isAnnotationLoading,
 }) => {
@@ -24,7 +25,6 @@ const ChangeHelper2 = ({
   const { viewerWindow } = fabricOverlayState;
   // const abbreviatedName = viewerWindow[vKeys[1]]?.slideName ? viewerWindow[vKeys[1]]?.slideName.substring(0, 4) : "";
   var vKeys = Object.keys(viewerWindow);
-// console.log(viewerWindow[vKeys[0]].viewer);
   return (
     <Flex
       justifyContent="space-between"
@@ -66,7 +66,16 @@ const ChangeHelper2 = ({
         </Tooltip>
 
         <Tooltip
-          label={<TooltipLabel heading="Slide Title" paragraph={viewerWindow[vKeys[1]]?.slideName} />}
+          label={
+            <TooltipLabel
+              heading="Slide Title"
+              paragraph={
+                viewerWindow[vKeys[1]]?.slideName
+                  ? viewerWindow[vKeys[1]]?.slideName
+                  : slideName2
+              }
+            />
+          }
           placement="bottom"
           openDelay={0}
           bg="#E4E5E8"
@@ -77,23 +86,23 @@ const ChangeHelper2 = ({
           borderRadius="0px"
           size="20px"
         >
-    <Text
-      mr="24px"
-      fontWeight="400"
-      fontSize="14px"
-      lineHeight="25px"
-      letterSpacing="0.0025em"
-      fontFamily="Inter"
-      wordBreak="break-word"
-      noOfLines={1}
-      cursor="pointer"
-      isDisabled={isAnnotationLoading}
-      isActive={isNavigatorActive}
-    >
-    {`${viewerWindow[vKeys[1]]?.slideName.substring(0, 6)}...`}
-    </Text>
-
-
+          <Text
+            mr="24px"
+            fontWeight="400"
+            fontSize="14px"
+            lineHeight="25px"
+            letterSpacing="0.0025em"
+            fontFamily="Inter"
+            wordBreak="break-word"
+            noOfLines={1}
+            cursor="pointer"
+            isDisabled={isAnnotationLoading}
+            isActive={isNavigatorActive}
+          >
+            {viewerWindow[vKeys[1]]?.slideName
+              ? `${viewerWindow[vKeys[1]]?.slideName.substring(0, 6)}..`
+              : `${slideName2.substring(0, 6)}..`}
+          </Text>
         </Tooltip>
         <Tooltip
           label={

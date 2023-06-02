@@ -127,7 +127,7 @@ function Viewer({
     // Create the fabric.js overlay, and set it on a sharable context
     // viewer.open(tile.source);
 
-    console.log("123213",viewerId);
+    // console.log("123213",viewerId);
 
     setFabricOverlayState(
       updateOverlay({

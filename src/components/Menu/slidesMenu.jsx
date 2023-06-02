@@ -14,10 +14,12 @@ const SlidesMenu = ({
   caseInfo,
   slides,
   viewerId,
+  application,
   setSlideName,
   setToolSelected,
   isMultiview,
   setImageFilter,
+  setSlideName2,
   setIsMultiview,
   tile,
   setIsNavigatorActive,
@@ -31,6 +33,8 @@ const SlidesMenu = ({
 
   const changeSlide = (slide) => {
     if (isMultiview) {
+      // console.log(slide);
+      setSlideName2(slide.originalName)
       setImageFilter(false);
       const vKeys = Object.keys(viewerWindow);
       if (vKeys.length > 1) {
@@ -40,6 +44,7 @@ const SlidesMenu = ({
         fo.fabricCanvas().clear();
 
         // change tile
+        console.log(slide);
         setFabricOverlayState(
           changeTile({
             id: vKeys[1],
@@ -70,7 +75,11 @@ const SlidesMenu = ({
     } 
     else {
       setImageFilter(false);
-      setSlideName(slide.slideName);
+      if(application === "hospital"){
+        setSlideName(slide.slideName);
+      }else{
+        setSlideName(slide.originalName)
+      }
       setFabricOverlayState(
         changeTile({
           id: viewerId,

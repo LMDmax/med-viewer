@@ -24,8 +24,11 @@ const Adjustments = ({ setIsOpen, viewer, setToolSelected, setSelectedOption }) 
   const sliderStateRef = useRef(sliderInputs);
 
   const handleSliderChange = (name, value) => {
+    console.log(name,value);
     setSliderInputs({ ...sliderInputs, [name.toLowerCase()]: value });
   };
+
+  console.log(sliderInputs);
 
   const handleOnClose = () => {
     // setIsActive(false);
@@ -46,7 +49,7 @@ const Adjustments = ({ setIsOpen, viewer, setToolSelected, setSelectedOption }) 
 
   useEffect(() => {
     if (!viewer) return;
-
+    console.log(viewer);
     const filters = getFilters(sliderInputs);
 
     try {

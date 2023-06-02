@@ -16,6 +16,7 @@ const ChangeSlide = ({
   loadUI,
   slideName,
   setSlideName,
+  slideName2,
   slideUrl,
   viewerId,
   setIsMultiview,
@@ -36,7 +37,7 @@ const ChangeSlide = ({
 
   const maxIndex = slides?.length;
 
-  console.log(viewerId)
+  // console.log(viewerId)
 
   const disabledLeft =
     isAnnotationLoading ||
@@ -94,6 +95,7 @@ const ChangeSlide = ({
            setIsMultiview={setIsMultiview}
            loadUI={loadUI}
            slide={slide}
+           slideName2={slideName2}
            slideName={slideName}
            setIsNavigatorActive={setIsNavigatorActive}
            isNavigatorActive={isNavigatorActive}

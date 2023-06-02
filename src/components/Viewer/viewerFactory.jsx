@@ -10,6 +10,7 @@ function ViewerFactory({
   enableAI,
   caseInfo,
   runAiModel,
+  slideName2,
   navigatorCounter,
   userInfo,
   setToolSelected,
@@ -93,6 +94,7 @@ function ViewerFactory({
               slide={slide}
               slides={slides}
               viewerId={viewer}
+              slideName2={slideName2}
               slideName={slideName}
               slideUrl={viewerWindow?.[viewer]?.tile}
               setCurrentViewer={setCurrentViewer}

@@ -92,9 +92,10 @@ const LayoutApp = ({
     viewerIds?.[0]?._id || viewerIds?.[0]?.slideId
   );
 
-  console.log('slideInfo',slide);
+  // console.log('slideInfo',slide);
   const [showAnnotationsBar, setShowAnnotationsBar] = useState(false);
   const [slideName, setSlideName] = useState(slide?.slideName)
+  const [slideName2, setSlideName2] = useState(null);
   const [showFeedBar, setShowFeedBar] = useState(false);
   const [chatFeedBar, setChatFeedBar] = useState(false);
   const [tILFedBar, setTILFedBar] = useState(false);
@@ -126,6 +127,9 @@ const LayoutApp = ({
     setUnit(UnitStore);
     // console.log(bottomZoomValue);
   }, [bottomZoomValue]);
+
+
+  // console.log(slide);
 
   useEffect(()=>{
     if(!imageFilter){
@@ -272,7 +276,7 @@ const LayoutApp = ({
       break;
   }
 
-  console.log(slideInfo);
+  // console.log(slideInfo);
 
   const showSidebar = () => {
     setSidebar(!sidebar);
@@ -538,6 +542,7 @@ const LayoutApp = ({
               client2={client2}
               setZoomValue={setZoomValue}
               zoomValue={zoomValue}
+              slideName2={slideName2}
               setLoadUI={setLoadUI}
               slideName={slideName}
               setModelname={setModelname}
@@ -570,6 +575,7 @@ const LayoutApp = ({
             setHideLymphocyte={setHideLymphocyte}
             setHideStroma={setHideStroma}
             hideStroma={hideStroma}
+            setSlideName2={setSlideName2}
             navigatorCounter={navigatorCounter}
             Environment={Environment}
             tilScore={tilScore}

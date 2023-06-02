@@ -65,6 +65,7 @@ function FunctionsMenu({
   setHideTumor,
   setBase64URL,
   hideLymphocyte,
+  setSlideName2,
   setSlideName,
   navigatorCounter,
   setShowRightPanel,
@@ -135,7 +136,8 @@ function FunctionsMenu({
     modifyAnnotation,
     { data: updatedData, error: updateError, loading: updateLoading },
   ] = useMutation(UPDATE_ANNOTATION);
-
+// console.log(caseInfo);
+// console.log(slide);
   const onUpdateAnnotation = (data) => {
     // console.log("====================================");
     // console.log("activity feed update");
@@ -207,6 +209,13 @@ function FunctionsMenu({
   useEffect(() => {
     fetchData();
   }, [selectedOption]);
+
+  useEffect(()=>{
+    if(application=== "education"){
+      setSlideName(slide?.originalName)
+      // console.log(slide?.originalName);
+    }
+  },[slide])
 
   useEffect(() => {
     if (searchSelectedData) {
@@ -686,6 +695,8 @@ if(!isOpen){
                 caseInfo={caseInfo}
                 slides={slides}
                 viewerId={viewerId}
+                setSlideName2={setSlideName2}
+                application={application}
                 setImageFilter={setImageFilter}
                 isMultiview={isMultiview}
                 setSlideName={setSlideName}

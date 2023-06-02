@@ -27,6 +27,7 @@ const MenuItemCustom = ({ title, ...restProps }) => (
 const ViewerHeader = ({
   caseInfo,
   slides,
+  slideName2,
   viewerId,
   slide,
   slideName,
@@ -36,7 +37,7 @@ const ViewerHeader = ({
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { viewerWindow, sync } = fabricOverlayState;
   var vKeys = Object.keys(viewerWindow);
-  
+
   const handleClose = () => {
     const vKeys = Object.keys(viewerWindow);
     if (viewerId === vKeys[0]) {
@@ -57,53 +58,51 @@ const ViewerHeader = ({
       justify="space-between"
       // zIndex="2"
     >
- <ChangeSlide
+      <ChangeSlide
         caseInfo={caseInfo}
         slides={slides}
         slideName={slideName}
         viewerId={viewerId}
+        slideName2={slideName2}
         slideUrl={slideUrl}
       />
-      
-       <Flex w="100%" justifyContent="center" alignItems="center">
-       {viewerId === vKeys[0] && (
-            <Text color="gray">Current Viewer</Text>
-          )}
-       </Flex>
-     <Box>
-     <Menu placement="bottom-end" autoSelect={false}>
-        <MenuButton
-          as={IconButton}
-          aria-label="Options"
-          icon={<BiDotsVertical />}
-          variant="unstyled"
-          _focus={{ border: "none" }}
-          mr="85px"
-        />
-       
-        <MenuList
-          fontWeight="400"
-          fontSize="14px"
-          lineHeight="17px"
-          letterSpacing="0.005em"
-          fontFamily="Inter"
-          borderRadius={0}
-          py={0}
-        >
-          
-          <MenuItemCustom
-            title={sync ? "Detach" : "Link to second WSI"}
-            icon={<AiOutlineLink size={18} color="#212224" />}
-            onClick={handleSync}
+
+      <Flex w="100%" justifyContent="center" alignItems="center">
+        {viewerId === vKeys[0] && <Text color="gray">Current Viewer</Text>}
+      </Flex>
+      <Box>
+        <Menu placement="bottom-end" autoSelect={false}>
+          <MenuButton
+            as={IconButton}
+            aria-label="Options"
+            icon={<BiDotsVertical />}
+            variant="unstyled"
+            _focus={{ border: "none" }}
+            mr="85px"
           />
-          <MenuItemCustom
-            title="Close"
-            icon={<AiOutlineCloseCircle size={18} color="#212224" />}
-            onClick={handleClose}
-          />
-        </MenuList>
-      </Menu>
-     </Box>
+
+          <MenuList
+            fontWeight="400"
+            fontSize="14px"
+            lineHeight="17px"
+            letterSpacing="0.005em"
+            fontFamily="Inter"
+            borderRadius={0}
+            py={0}
+          >
+            <MenuItemCustom
+              title={sync ? "Detach" : "Link to second WSI"}
+              icon={<AiOutlineLink size={18} color="#212224" />}
+              onClick={handleSync}
+            />
+            <MenuItemCustom
+              title="Close"
+              icon={<AiOutlineCloseCircle size={18} color="#212224" />}
+              onClick={handleClose}
+            />
+          </MenuList>
+        </Menu>
+      </Box>
     </Flex>
   );
 };
