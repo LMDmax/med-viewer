@@ -928,7 +928,7 @@ const ViewerControls = ({
         vhutSubscriptionData.analysisStatus.data.hash
       );
       setAnnotationObject(annotation);
-      // console.log("subscribed", vhutSubscriptionData);
+      console.log("subscribed", vhutSubscriptionData);
       const {
         data,
         status,
@@ -936,7 +936,7 @@ const ViewerControls = ({
         analysisType: type,
       } = vhutSubscriptionData.analysisStatus;
       if (type === "KI67_ANALYSIS") {
-        // console.log(vhutSubscriptionData.analysisStatus.data.hash);
+        console.log(vhutSubscriptionData.analysisStatus.data.hash);
         const posContours = data.kiResults.pos_contours;
         const negContours = data.kiResults.neg_contours;
         const canvas = fabricOverlay.fabricCanvas();
