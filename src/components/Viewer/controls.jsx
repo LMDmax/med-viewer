@@ -1008,7 +1008,7 @@ const ViewerControls = ({
       }
     }
     if (bottomZoomValue > 39) {
-      if (runAiModel === "KI67") {
+      if (runAiModel === "KI67" || application==="education") {
         if (!annotationObject && runAiModel === "KI67") {
           setToolSelected("MorphometryError");
           setModelname("");
@@ -1020,7 +1020,7 @@ const ViewerControls = ({
           setModelname("");
         }
       }
-      if (slide?.stainType === "H&E") {
+      if (slide?.stainType === "H&E" || application==="education") {
         if (runAiModel === "Morphometry") {
           if (annotationObject) {
             //first time run morphometry

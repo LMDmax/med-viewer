@@ -202,7 +202,7 @@ export function CustomMenu({
           <MenuItem _hover={{ bgColor: "#DEDEDE" }}>
             <DisplayMenu setZoom={setZoom} />
           </MenuItem>
-          {enableAI && slide?.stainType !== "IHC" ? (
+          {enableAI && slide?.stainType !== "IHC" || application === "education" ? (
             <MenuItem
               _hover={{ bgColor: "#DEDEDE" }}
               onClick={() => {
@@ -216,7 +216,7 @@ export function CustomMenu({
               Run Morphometry
             </MenuItem>
           ) : null}
-          {enableAI && slide?.stainType === "IHC" && slide.bioMarkerType==="kI67" ? (
+          {enableAI && slide?.stainType === "IHC" && slide.bioMarkerType==="kI67" || application === "education" ? (
             !isKI67Analysed ? (
               <MenuItem
                 _hover={{ bgColor: "#DEDEDE" }}

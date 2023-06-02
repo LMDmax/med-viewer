@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { connectSocketIO } from '../../Socket/Socket';
+import "../../styles/styles.css"
 import {
   Box,
   Flex,
