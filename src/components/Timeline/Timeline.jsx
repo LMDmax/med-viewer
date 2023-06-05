@@ -37,7 +37,7 @@ const Timeline = ({ timelineData, viewerId }) => {
       canvas.renderAll();
     }
   };
-  // console.log(timelineData);
+  console.log(timelineData);
   return (
     <ScrollBar>
       <Box>
