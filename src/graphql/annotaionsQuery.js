@@ -63,6 +63,7 @@ export const GET_ANNOTATION = gql`
         isDeleted
         belongsToApp
         createdAt
+        createdBy
         updatedAt
       }
     }
