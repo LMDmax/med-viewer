@@ -55,6 +55,7 @@ import { GET_ANNOTATION, UPDATE_ANNOTATION } from "../../graphql/annotaionsQuery
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { debounce } from "lodash";
 import ModeMeanu from "./ModeMeanu";
+import Studies2 from "../Sidebar/studies2";
 
 function FunctionsMenu({
 	caseInfo,
@@ -721,7 +722,7 @@ function FunctionsMenu({
 							/>
 						) : selectedOption === "information" ? (
 							<Flex w="100%" bg="#FCFCFC">
-								<Studies caseInfo={caseInfo} slideInfo={slide} />
+								{application === "hospital" ? <Studies caseInfo={caseInfo} slideInfo={slide} /> : <Studies2 caseInfo={caseInfo} slideInfo={slide} ></Studies2>}
 							</Flex>
 						) : selectedOption === "annotations" ? (
 							<ActivityFeed
@@ -869,7 +870,7 @@ function FunctionsMenu({
 							/>
 						) : (
 							<Flex w="100%" h="95%" pb="25px" bgColor="#FCFCFC" p="5px">
-								<Timeline timelineData={timelineData} viewerId={viewerId} />
+								<Timeline application={application} timelineData={timelineData} viewerId={viewerId} />
 							</Flex>
 						)}
 					</Flex>
