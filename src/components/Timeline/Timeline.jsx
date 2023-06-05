@@ -22,7 +22,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { useFabricOverlayState } from "../../state/store";
 dayjs.extend(relativeTime);
 
-const Timeline = ({ timelineData, viewerId }) => {
+const Timeline = ({ timelineData, viewerId, application }) => {
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { activeTool, viewerWindow } = fabricOverlayState;
   const { fabricOverlay } = viewerWindow[viewerId];
@@ -37,7 +37,7 @@ const Timeline = ({ timelineData, viewerId }) => {
       canvas.renderAll();
     }
   };
-  // console.log(timelineData);
+  // console.log(dayjs("1685956343748").fromNow());
   return (
     <ScrollBar>
       <Box>
@@ -75,7 +75,7 @@ const Timeline = ({ timelineData, viewerId }) => {
                   height: "fit-content",
                 }}
                 contentArrowStyle={{ display: "none" }}
-                date={
+                date={application === "hospital" && (
                   <div
                     style={{
                       textAlign: "left",
@@ -86,7 +86,7 @@ const Timeline = ({ timelineData, viewerId }) => {
                   >
                     {dayjs(data.createdAt).fromNow()}
                   </div>
-                }
+                )}
                 iconStyle={{
                   top: "20px",
                   left: "10px",
@@ -102,7 +102,7 @@ const Timeline = ({ timelineData, viewerId }) => {
                   <Flex flexDirection="column">
                     <Flex justifyContent="flex-start" alignItems="center">
                       <Avatar mt="15px" mr="5px" size="xs" />
-                      <Text fontWeight="name-user">Dr. {data.createdBy}</Text>
+                      {application === "hospital" ? <Text fontWeight="name-user">Dr. {data.createdBy}</Text> : application === "education" ? <Text fontWeight="name-user">{data.createdBy.split(' ')[0]}</Text>  : ""}
                     </Flex>
                     <Text className="detail">
                       Added a comment{" "}

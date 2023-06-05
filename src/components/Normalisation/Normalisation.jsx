@@ -10,6 +10,7 @@ import {
   updateTool,
   addViewerWindow,
 } from "../../state/actions/fabricOverlayActions";
+import { zoomToLevel } from "../../utility";
 
 const Normalisation = ({
   setBase64URL,
@@ -43,7 +44,7 @@ const Normalisation = ({
           };
           // console.log(JSON.stringify(sendBase64Data));
           // Send the Base64 data to the server
-          sendRequest(sendBase64Data);
+          sendRequest(JSON.stringify(sendBase64Data));
         };
         reader.readAsDataURL(blob);
       })
@@ -54,16 +55,6 @@ const Normalisation = ({
     setShowButtonGroup(false);
   };
 
-  useEffect(() => {
-    if (selectedImage) {
-      setShowButtonGroup(true);
-
-      //create blob url
-    } else {
-      setShowButtonGroup(false);
-    }
-  }, [selectedImage]);
-
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (
@@ -72,6 +63,7 @@ const Normalisation = ({
         file.type === "image/jpg" ||
         file.type === "image/png")
     ) {
+      setShowButtonGroup(true);
       setSelectedImage({
         name: file.name,
         url: URL.createObjectURL(file),
@@ -101,12 +93,13 @@ const Normalisation = ({
   };
 
   const handelCancel = (slide) => {
+    setSelectedImage(null)
+    setShowButtonGroup(true)
     const vKeys = Object.keys(viewerWindow);
     if (vKeys.length > 1) {
       const { viewer: v, fabricOverlay: fo } = viewerWindow[vKeys[1]];
       // clear canvas (remove all annotations)
       fo.fabricCanvas().clear();
-  
       // change tile
       setFabricOverlayState(
         changeTile({
@@ -119,6 +112,7 @@ const Normalisation = ({
       );
       v.open(slide.awsImageBucketUrl);
     } else {
+      zoomToLevel({ viewer, value: 40 });
       const id = uuidv4();
       setFabricOverlayState(
         addViewerWindow([
@@ -181,16 +175,7 @@ const Normalisation = ({
         const zoomLevelString = `&zoom=${zoomLevel}`;
         const regionString = `&rect=${annotationLeftInImage},${annotationTopInImage},${annotationWidthInImage},${annotationHeightInImage}`;
         const imageUrl = `${dziUrl}?${zoomLevelString}${regionString}`;
-        // console.log(imageUrl);
-        // Create a fabric.Image object
-        const image = new fabric.Image();
-  
-        // Set the source of the image to the desired URL
-        image.setSrc(imageUrl, () => {
-          // Get the base64 encoded image URL
-          const base64ImageUrl = image.toDataURL();
-          // console.log(base64ImageUrl);
-        });
+        console.log(imageUrl)
       }
     }
   }, [viewerWindow]);
@@ -278,11 +263,12 @@ const Normalisation = ({
             </Flex>
             <Flex w="25%" ml="2px" justifyContent="space-evenly">
               <MdOutlineModeEditOutline
-                onClick={() => {
-                  handelCancel(slide);
-                }}
+                // onClick={() => {
+                //   handelCancel(slide);
+                // }}
                 color="black"
                 size="20px"
+                cursor="not-allowed"
               />
               <label>
                 <MdOutlineUpload cursor="Pointer" size="23px" />

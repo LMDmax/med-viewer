@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { connectSocketIO } from '../../Socket/Socket';
-import "../../styles/styles.css"
+import { connectWebSocket } from '../../Socket/Socket';
 import {
   Box,
   Flex,
@@ -75,7 +74,7 @@ const LayoutApp = ({
   const [zoomValue, setZoomValue] = useState(1);
   const [isNavigatorActive, setIsNavigatorActive] = useState(false);
   const [isMultiview, setIsMultiview] = useState(false);
-  const { fabricOverlayState } = useFabricOverlayState();
+  const { fabricOverlayState, fabricOverlay } = useFabricOverlayState();
   const { viewerWindow, isAnnotationLoading } = fabricOverlayState;
   const [newHilData, setNewHilData] = useState(false);
   const [refreshHil, setRefreshHil] = useState(0);
@@ -118,6 +117,7 @@ const LayoutApp = ({
   const [unit, setUnit] = useState();
   const [imageFilter, setImageFilter] = useState(false);
   const [showRightPanel, setShowRightPanel] = useState(false);
+  const [MouseDown, setMouseDown] = useState(false);
 
   const [modelName, setModelname] = useState("");
 
@@ -130,7 +130,7 @@ const LayoutApp = ({
   }, [bottomZoomValue]);
 
 
-  // console.log(slide);
+  // console.log(MouseDown);
 
   useEffect(()=>{
     if(!imageFilter){
@@ -319,18 +319,18 @@ const LayoutApp = ({
 
   // connect websocket
 
-  // useEffect(() => {
-  //   connectSocketIO()
-  //     .then((socket) => {
-  //       console.log('Socket.io connection established.');
-  //       socketRef.current = socket;
-  //       console.log(socketRef);
-  //     })
-  //     .catch((error) => {
-  //       console.error('Socket.io connection error:', error);
-  //     });
-  // }, []);
+  useEffect(() => {
+    connectWebSocket()
+      .then((socket) => {
+        console.log('WebSocket connection established.');
+        socketRef.current = socket;
+    console.log(socketRef);
 
+      })
+      .catch((error) => {
+        console.error('WebSocket connection error:', error);
+      });
+  },[]);
   // console.log(currentViewer);
 
     let h;
@@ -342,7 +342,8 @@ const LayoutApp = ({
   } else {
     // Handle other cases or provide a default value for h
   }
-
+ 
+ 
   return (
     <Flex
     style={{height: h}}
@@ -358,6 +359,7 @@ const LayoutApp = ({
           chatFeedBar={chatFeedBar}
           caseInfo={caseInfo}
           loadUI={loadUI}
+          MouseDown={MouseDown}
           setLoadUI={setLoadUI}
           toolSelected={toolSelected}
           setToolSelected={setToolSelected}
@@ -568,6 +570,7 @@ const LayoutApp = ({
             setIsNavigatorActive={setIsNavigatorActive}
             isNavigatorActive={isNavigatorActive}
             isMultiview={isMultiview}
+            setMouseDown={setMouseDown}
             slide={viewerIds?.[0]}
             hideTumor={hideTumor}
             setHideTumor={setHideTumor}

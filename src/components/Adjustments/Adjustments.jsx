@@ -24,19 +24,45 @@ const Adjustments = ({ setIsOpen, viewer, setToolSelected, setSelectedOption }) 
   const sliderStateRef = useRef(sliderInputs);
 
   const handleSliderChange = (name, value) => {
-    console.log(name,value);
+    // console.log(name,value);
     setSliderInputs({ ...sliderInputs, [name.toLowerCase()]: value });
   };
 
-  console.log(sliderInputs);
+  // console.log(sliderInputs);
 
   const handleOnClose = () => {
-    // setIsActive(false);
     // setIsOpen(false);
-    // if (sliderStateRef.current) setSliderInputs(sliderStateRef.current);
-    // onClose();
     setToolSelected("");
     setSelectedOption("slides");
+  
+    // Reset the slider inputs to their default values
+    const defaultSliderInputs = {
+      contrast: 1,
+      brightness: 0,
+      thresholding: -1,
+      gamma: 1,
+      exposure: 0,
+    };
+  
+    setSliderInputs(defaultSliderInputs);
+  
+    // Call viewer.setFilterOptions with the default values
+    const filters = getFilters(defaultSliderInputs);
+    try {
+      viewer?.setFilterOptions({
+        filters: {
+          processors: [
+            ...filters,
+            OpenSeadragon.Filters.CONTRAST(defaultSliderInputs.contrast),
+            OpenSeadragon.Filters.BRIGHTNESS(defaultSliderInputs.brightness),
+            OpenSeadragon.Filters.GAMMA(defaultSliderInputs.gamma),
+          ],
+        },
+        loadMode: "async",
+      });
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleSave = () => {
@@ -49,7 +75,7 @@ const Adjustments = ({ setIsOpen, viewer, setToolSelected, setSelectedOption }) 
 
   useEffect(() => {
     if (!viewer) return;
-    console.log(viewer);
+    // console.log(viewer);
     const filters = getFilters(sliderInputs);
 
     try {
