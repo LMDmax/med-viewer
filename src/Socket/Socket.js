@@ -1,30 +1,31 @@
-import io from 'socket.io-client';
-
 let socket;
 
-export const connectSocketIO = () => {
+export const connectWebSocket = () => {
   return new Promise((resolve, reject) => {
-    if (!socket || !socket.connected) {
-      socket = io("https://development-morphometry-api.prr.ai/quantize/vahadane");
+    if (!socket) {
+      socket = new WebSocket("wss://development-morphometry-api.prr.ai/quantize/vahadane");
 
-      socket.on('connect', () => {
+      socket.onopen = () => {
         resolve(socket);
-      });
+      };
 
-      socket.on('connect_error', (error) => {
+      socket.onerror = (error) => {
         reject(error);
-        // console.log("error", error);
-      });
-    } else {
+      };
+      socket.onmessage = (event) => {
+        // Handle received message
+        const messageData = event.data;
+        console.log("Received message:", messageData);
+      };
+    } else if (socket.readyState === WebSocket.OPEN) {
       resolve(socket);
     }
   });
 };
 
-
 export const sendRequest = (data) => {
-  if (socket && socket.connected) {
-    // console.log(data);
+  if (socket && socket.readyState === WebSocket.OPEN) {
+    console.log(data);
     socket.send(data);
   }
 };

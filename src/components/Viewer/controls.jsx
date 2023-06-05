@@ -928,7 +928,7 @@ const ViewerControls = ({
         vhutSubscriptionData.analysisStatus.data.hash
       );
       setAnnotationObject(annotation);
-      console.log("subscribed", vhutSubscriptionData);
+      // console.log("subscribed", vhutSubscriptionData);
       const {
         data,
         status,
@@ -936,7 +936,7 @@ const ViewerControls = ({
         analysisType: type,
       } = vhutSubscriptionData.analysisStatus;
       if (type === "KI67_ANALYSIS") {
-        console.log(vhutSubscriptionData.analysisStatus.data.hash);
+        // console.log(vhutSubscriptionData.analysisStatus.data.hash);
         const posContours = data.kiResults.pos_contours;
         const negContours = data.kiResults.neg_contours;
         const canvas = fabricOverlay.fabricCanvas();
@@ -1008,7 +1008,7 @@ const ViewerControls = ({
       }
     }
     if (bottomZoomValue > 39) {
-      if (runAiModel === "KI67" || application==="education") {
+      if (runAiModel === "KI67") {
         if (!annotationObject && runAiModel === "KI67") {
           setToolSelected("MorphometryError");
           setModelname("");
@@ -1020,7 +1020,7 @@ const ViewerControls = ({
           setModelname("");
         }
       }
-      if (slide?.stainType === "H&E" || application==="education") {
+      if (slide?.stainType === "H&E") {
         if (runAiModel === "Morphometry") {
           if (annotationObject) {
             //first time run morphometry

@@ -64,6 +64,7 @@ function FunctionsMenu({
   hideTumor,
   setHideTumor,
   setBase64URL,
+  setMouseDown,
   hideLymphocyte,
   setSlideName2,
   setSlideName,
@@ -113,7 +114,7 @@ function FunctionsMenu({
   getSynopticReport,
   updateSynopticReport,
   searchSelectedData,
-})  {
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
   const { fabricOverlayState } = useFabricOverlayState();
@@ -121,7 +122,7 @@ function FunctionsMenu({
   const { tile, slideId, viewer, fabricOverlay } = viewerWindow[viewerId];
   const [activeObject, setActiveObject] = useState();
   const [updatedAnnotation, setUpdatedAnnotation] = useState({});
-  const [manipulationComplete,setManipulationComplete] = useState(false);
+  const [manipulationComplete, setManipulationComplete] = useState(false);
 
   const [selectedOption, setSelectedOption] = useState("slides");
   const [reportData, setReportData] = useState({
@@ -136,8 +137,8 @@ function FunctionsMenu({
     modifyAnnotation,
     { data: updatedData, error: updateError, loading: updateLoading },
   ] = useMutation(UPDATE_ANNOTATION);
-// console.log(caseInfo);
-// console.log(slide);
+  // console.log(caseInfo);
+  // console.log(slide);
   const onUpdateAnnotation = (data) => {
     // console.log("====================================");
     // console.log("activity feed update");
@@ -190,7 +191,6 @@ function FunctionsMenu({
     }
   }, [navigatorCounter]);
 
-
   const fetchData = async () => {
     if (selectedOption === "timeline") {
       const resp = await axios.post(`${Environment.USER_URL}/slide_timeline`, {
@@ -205,17 +205,17 @@ function FunctionsMenu({
       }
     }
   };
-  
+
   useEffect(() => {
     fetchData();
   }, [selectedOption]);
 
-  useEffect(()=>{
-    if(application=== "education"){
-      setSlideName(slide?.originalName)
+  useEffect(() => {
+    if (application === "education") {
+      setSlideName(slide?.originalName);
       // console.log(slide?.originalName);
     }
-  },[slide])
+  }, [slide]);
 
   useEffect(() => {
     if (searchSelectedData) {
@@ -235,35 +235,36 @@ function FunctionsMenu({
   useEffect(() => {
     const canvas = fabricOverlay?.fabricCanvas();
     let clickedObject = null;
-  
+    // Track mouse Events here
     canvas?.on("mouse:down", (e) => {
       clickedObject = canvas?.findTarget(e.e);
+      setMouseDown(true);
       setActiveObject(clickedObject);
     });
-  
+    canvas?.on("mouse:up", (e) => {
+      // clickedObject = canvas?.findTarget(e.e);
+      setMouseDown(false);
+    });
+
     canvas?.on("object:scaling", (e) => {
       const scaledObject = e.target;
       if (scaledObject === clickedObject) {
         const { scaleX, scaleY, width, height } = scaledObject;
         const updatedWidth = width * scaleX;
         const updatedHeight = height * scaleY;
-  
-        // console.log("Updated width:", updatedWidth);
-        // console.log("Updated height:", updatedHeight);
-  
+
         // Create a new object with updated dimensions
         const updatedObject = {
           ...clickedObject,
           width: updatedWidth,
           height: updatedHeight,
         };
-  
+
         setUpdatedAnnotation(updatedObject);
         setManipulationComplete(true); // Set manipulation as complete
       }
     });
   }, [fabricOverlay]);
-  
 
   useEffect(() => {
     if (isMultiview) {
@@ -306,23 +307,21 @@ function FunctionsMenu({
     setShowReport(!showReport);
   };
 
-  useEffect(()=>{
-if(!isOpen){
-  setSelectedOption("slides");
-}
-  },[isOpen])
+  useEffect(() => {
+    if (!isOpen) {
+      setSelectedOption("slides");
+    }
+  }, [isOpen]);
 
-  useEffect(()=>{
-    if(showRightPanel){
+  useEffect(() => {
+    if (showRightPanel) {
       setIsOpen(true);
-  setSelectedOption("mode");
-    }
-    else{
+      setSelectedOption("mode");
+    } else {
       setIsOpen(false);
-  setSelectedOption("slides");
-
+      setSelectedOption("slides");
     }
-  },[showRightPanel])
+  }, [showRightPanel]);
 
   return (
     <Box
@@ -644,7 +643,7 @@ if(!isOpen){
                 </Button>
               </Tooltip>
             ) : null}
-             {showRightPanel ? (
+            {showRightPanel ? (
               <Tooltip label=" Mode" placement="left">
                 <Button
                   height="73px"
@@ -664,9 +663,9 @@ if(!isOpen){
                       // <MessagesIconSelected />
                       // <HiOutlineAdjustmentsHorizontal />
                       <ModeIconSelected transform="scale(1.5)" color="red" />
-                      ) : (
-                        // <adjustmentIconSelected />
-                        <ModeIcon transform="scale(1.5)" color="#3B5D7C" />
+                    ) : (
+                      // <adjustmentIconSelected />
+                      <ModeIcon transform="scale(1.5)" color="#3B5D7C" />
                     )}
                     <Text
                       fontFamily="Inter"
@@ -683,7 +682,6 @@ if(!isOpen){
                 </Button>
               </Tooltip>
             ) : null}
-            
           </Flex>
           <Flex
             w="100%"
@@ -734,12 +732,7 @@ if(!isOpen){
                 searchSelectedData={searchSelectedData}
               />
             ) : selectedOption === "report" ? (
-              <Flex
-                w="100%"
-                h="82vh"
-                direction="column"
-                bgColor="#FCFCFC"
-              >
+              <Flex w="100%" h="82vh" direction="column" bgColor="#FCFCFC">
                 <Flex
                   w="100%"
                   direction="row"
@@ -748,10 +741,10 @@ if(!isOpen){
                   // border="1px solid red"
                   // p="5px 5px 0px 20px"
                 >
-                 <Text fontFamily="Inter" color="#3B5D7C" mr="60%">
+                  <Text fontFamily="Inter" color="#3B5D7C" mr="60%">
                     Report
                   </Text>
-             
+
                   <ShowReport
                     caseInfo={caseInfo}
                     application={application}
@@ -782,12 +775,14 @@ if(!isOpen){
                     slideData={slideData}
                     setSlideData={setSlideData}
                   />
-                  {showReport ? (<GrFormClose
-                    size={16}
-                    cursor="pointer"
-                    onClick={handleReportClose}
-                    _hover={{ cursor: "pointer" }}
-                  />) : null}
+                  {showReport ? (
+                    <GrFormClose
+                      size={16}
+                      cursor="pointer"
+                      onClick={handleReportClose}
+                      _hover={{ cursor: "pointer" }}
+                    />
+                  ) : null}
                 </Flex>
                 <Flex>
                   {showReport ? (
@@ -837,20 +832,26 @@ if(!isOpen){
                 Environment={Environment}
                 addUsersToCase={addUsersToCase}
               />
-            ) : // <Adjustments
-            //   setSelectedOption={setSelectedOption}
-            //   setToolSelected={setToolSelected}
-            //   viewer={viewer}
-            //   setIsOpen={setIsOpen}
-            // />
-            selectedOption === "adjustments" ? (
+            ) : selectedOption === "adjustments" ? (
               <Adjustments
                 setSelectedOption={setSelectedOption}
                 setToolSelected={setToolSelected}
                 viewer={viewer}
                 setIsOpen={setIsOpen}
               />
-            ) : selectedOption === "mode" ? (<ModeMeanu slide={slide} setIsMultiview={setIsMultiview} tile={tile} viewerId={viewerId} setBase64URL={setBase64URL} setImageFilter={setImageFilter} setShowRightPanel={setShowRightPanel}/>) :(
+            ) : selectedOption === "mode" ? (
+              <ModeMeanu
+                slide={slide}
+                setIsMultiview={setIsMultiview}
+                tile={tile}
+                setSlideName2={setSlideName2}
+                setSlideName={setSlideName}
+                viewerId={viewerId}
+                setImageFilter={setImageFilter}
+                setBase64URL={setBase64URL}
+                setShowRightPanel={setShowRightPanel}
+              />
+            ) : (
               <Flex w="100%" h="95%" pb="25px" bgColor="#FCFCFC" p="5px">
                 <Timeline timelineData={timelineData} viewerId={viewerId} />
               </Flex>
@@ -860,6 +861,6 @@ if(!isOpen){
       </motion.div>
     </Box>
   );
-};
+}
 
 export default FunctionsMenu;

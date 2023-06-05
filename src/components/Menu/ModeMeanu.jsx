@@ -9,6 +9,8 @@ const ModeMeanu = ({
   setBase64URL,
   slide,
   viewerId,
+  setSlideName2,
+  setSlideName,
   setIsMultiview,
   tile,
 }) => {
@@ -40,7 +42,16 @@ const ModeMeanu = ({
         </Box>
       </Flex>
       <Box mt="5px" w="100%">
-        <Normalisation slide={slide} setIsMultiview={setIsMultiview} viewerId={viewerId} tile={tile} setBase64URL={setBase64URL} />
+        <Normalisation
+          setSlideName2={setSlideName2}
+          setSlideName={setSlideName}
+          slide={slide}
+          setIsMultiview={setIsMultiview}
+          viewerId={viewerId}
+          tile={tile}
+          setImageFilter={setImageFilter}
+          setBase64URL={setBase64URL}
+        />
       </Box>
     </Box>
   );
