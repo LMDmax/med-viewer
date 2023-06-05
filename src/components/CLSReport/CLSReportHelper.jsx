@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+
 import { Button, Tooltip, useToast } from "@chakra-ui/react";
 import _ from "lodash";
+
 import { useFabricOverlayState } from "../../state/store";
 import CLSReport from "./CLSReport";
 
@@ -36,16 +38,16 @@ function CLSReportHelper({
 			const response = await questionnaireResponse({
 				slideId,
 			});
-			setQuestionsResponse(response?.data?.data?.finalQuestionnaireResponse);
+			setQuestionsResponse(response?.data?.data);
 		}
 		fetchResponse();
 
-		async function fetchQuestions() {
-			const response = await questions({ slideId });
-			setSlideQuestions(response?.data?.data?.finalQuestionnaireResponse);
-			setIsUpdating(false);
-		}
-		fetchQuestions();
+		// async function fetchQuestions() {
+		// 	const response = await questions({ slideId });
+		// 	setSlideQuestions(response?.data?.data?.finalQuestionnaireResponse);
+		// 	setIsUpdating(false);
+		// }
+		// fetchQuestions();
 	}, [slideId, showCLSreport]);
 
 	const handleCLSReport = () => {
@@ -142,7 +144,9 @@ function CLSReportHelper({
 						fontWeight="500"
 						{...restProps}
 						onClick={submitQnaReport}
-						disabled={slideQuestions?.length !== response?.length}
+						disabled={
+							questions[0]?.LessonQuestions?.length !== response?.length
+						}
 					>
 						Submit Report
 					</Button>
@@ -151,7 +155,7 @@ function CLSReportHelper({
 			{showCLSreport && (
 				<CLSReport
 					isUpdating={isUpdating}
-					questions={slideQuestions}
+					questions={questions}
 					caseInfo={caseInfo}
 					userInfo={userInfo}
 					responseHandler={responseHandler}
