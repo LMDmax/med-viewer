@@ -22,7 +22,8 @@ function CLSReportHelper({
 	const { slideId } = viewerWindow[viewerId];
 	const [showCLSreport, setShowCLSReport] = useState(false);
 	const [questionsResponse, setQuestionsResponse] = useState();
-	const [slideQuestions, setSlideQuestions] = useState();
+	const [errorResponse, setErrorResponse] = useState();
+	// const [slideQuestions, setSlideQuestions] = useState();
 	const [loading, setLoading] = useState(false);
 	const [isUpdating, setIsUpdating] = useState(false);
 	const toast = useToast();
@@ -39,6 +40,9 @@ function CLSReportHelper({
 				slideId,
 			});
 			setQuestionsResponse(response?.data?.data);
+			if (response.status === "error") {
+				setErrorResponse(response?.error?.response?.data);
+			}
 		}
 		fetchResponse();
 
@@ -59,7 +63,7 @@ function CLSReportHelper({
 		try {
 			setLoading(true);
 			await responseHandler({
-				slideId,
+				slideId: caseInfo?.id,
 				response,
 			});
 			setShowCLSReport(!showCLSreport);
@@ -145,7 +149,7 @@ function CLSReportHelper({
 						{...restProps}
 						onClick={submitQnaReport}
 						disabled={
-							questions[0]?.LessonQuestions?.length !== response?.length
+							questions?.[0]?.LessonQuestions?.length !== response?.length
 						}
 					>
 						Submit Report
@@ -165,6 +169,7 @@ function CLSReportHelper({
 					questionsResponse={questionsResponse}
 					slideId={slideId}
 					loading={loading}
+					errorResponse={errorResponse}
 				/>
 			)}
 		</>

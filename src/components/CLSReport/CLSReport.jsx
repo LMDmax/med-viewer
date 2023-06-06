@@ -19,9 +19,10 @@ function CLSReport({
 	questionsResponse,
 	loading,
 	isUpdating,
+	errorResponse,
 }) {
 	const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
-
+	console.log(questions);
 	return (
 		<Flex
 			fontSize="12px"
@@ -33,6 +34,18 @@ function CLSReport({
 			right="0px"
 			bg="#FCFCFC"
 			flexDirection="column"
+			css={{
+				"&::-webkit-scrollbar": {
+					width: "0px",
+				},
+				"&::-webkit-scrollbar-track": {
+					width: "0px",
+					border: "1px solid #DEDEDE",
+				},
+				"&::-webkit-scrollbar-thumb": {
+					background: "#DEDEDE",
+				},
+			}}
 		>
 			{/* {loading || isUpdating ? (
 				<Flex
@@ -45,33 +58,46 @@ function CLSReport({
 				</Flex>
 			) : ( */}
 			<>
-				<Flex w="100%" justifyContent="flex-end">
-					<IconButton
-						icon={<AiOutlineClose />}
-						onClick={handleCLSReport}
-						borderRadius="0"
-						background="#fcfcfc"
-						size="sm"
-						_focus={{}}
-					/>
-				</Flex>
-				<Flex
-					w="100%"
-					justifyContent="center"
-					alignItems="center"
-					// h="4vh"
-					minH="5vh"
-					border="1px solid #000"
-				>
-					<Text fontSize="16px">Questions</Text>
-				</Flex>
+				{questions === undefined ? (
+					<Flex w="100%" h="100%" alignItems="center" justifyContent="center">
+						{"No questions added"}
+					</Flex>
+				) : questions && errorResponse?.message?.includes("not publish yet") ? (
+					<Flex w="100%" h="100%" alignItems="center" justifyContent="center">
+						{"Result is not yet published"}
+					</Flex>
+				) : (
+					<>
+						<Flex w="100%" justifyContent="flex-end">
+							<IconButton
+								icon={<AiOutlineClose />}
+								onClick={handleCLSReport}
+								borderRadius="0"
+								background="#fcfcfc"
+								size="sm"
+								_focus={{}}
+							/>
+						</Flex>
+						<Flex
+							w="100%"
+							justifyContent="center"
+							alignItems="center"
+							// h="4vh"
+							minH="5vh"
+							border="1px solid #000"
+						>
+							<Text fontSize="16px">Questions</Text>
+						</Flex>
 
-				<Questionnaire
-					questions={questions}
-					slideQna={slideQna}
-					setSlideQna={setSlideQna}
-					response={questionsResponse}
-				/>
+						<Questionnaire
+							questions={questions}
+							slideQna={slideQna}
+							setSlideQna={setSlideQna}
+							response={questionsResponse}
+							errorResponse={errorResponse}
+						/>
+					</>
+				)}
 			</>
 			{/* )} */}
 		</Flex>
