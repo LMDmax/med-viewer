@@ -12,6 +12,7 @@ function CLSReportHelper({
 	viewerId,
 	questions,
 	userInfo,
+	application,
 	app,
 	setSlideId,
 	responseHandler,
@@ -84,6 +85,12 @@ function CLSReportHelper({
 			});
 		}
 	};
+
+	useEffect(() => {
+		if(application === "education"){
+			setShowCLSReport(true);
+		}
+	}, []);
 	return (
 		<>
 			{!showCLSreport ? (
