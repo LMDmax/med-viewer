@@ -38,7 +38,7 @@ const AiModels = ({
       setModelname("");
       setInfoBox(false);
     }
-  },[TilHover]);
+  }, [TilHover]);
 
   useEffect(() => {
     if (navigatorCounter > 0) {
@@ -53,9 +53,10 @@ const AiModels = ({
 
   const handleKI67 = () => {
     if (
-      slide?.stainType === "IHC" &&
-      bottomZoomValue > 39 &&
-      slide?.bioMarkerType === "kI67"
+      (slide?.stainType === "IHC" &&
+        bottomZoomValue > 39 &&
+        slide?.bioMarkerType === "kI67") ||
+      application === "education"
     ) {
       // console.log("1");
       setModelname("KI67");
@@ -76,7 +77,7 @@ const AiModels = ({
 
   const handleMorphometry = () => {
     // console.log("2");
-    if (slide.stainType === "H&E" && bottomZoomValue >= 40) {
+    if (slide.stainType === "H&E" && bottomZoomValue >= 40 || application ==="education") {
       setModelname("Morphometry");
     }
     if (slide.stainType !== "H&E") {
@@ -88,22 +89,19 @@ const AiModels = ({
   };
 
   // console.log(slide);
-  useEffect(()=>{
-    if(slide.stainType ==="H&E"){
-        if(TilActiveState / 2 !== 0){
-            setModelname("TIL")
-        }
-        else{
-            setModelname("TILClear")
-        }
-        // console.log("object");
+  useEffect(() => {
+    if (slide.stainType === "H&E") {
+      if (TilActiveState / 2 !== 0) {
+        setModelname("TIL");
+      } else {
+        setModelname("TILClear");
+      }
+      // console.log("object");
+    } else {
+      setToolSelected("TILError");
+      // console.log("object2");
     }
-    else{
-        setToolSelected("TILError");
-        // console.log("object2");
-
-    }
-  },[TilActiveState])
+  }, [TilActiveState]);
 
   useEffect(() => {
     if (toolSelected === "RunRoi") {
@@ -330,47 +328,53 @@ const AiModels = ({
             }}
           >
             {infoItem === "tils" ? (
-             <Box>
-            <Box lineHeight="1.2" marginBottom="8px">
-              Here we are finding Tumor infiltrating lymphocytes (TILS).
-            </Box>
-            <Box lineHeight="1.2" marginBottom="8px">
-              <strong>Model Info</strong>: It segments Tumor regions and tumor-associated Stroma. Detection of lymphocytes within tumor-associated stroma.
-            </Box>
-            <Box lineHeight="1.2" marginBottom="8px">
-              <strong>Model Output</strong>: Tumor Area, Tumor percentage, Stroma Area, Stroma percentage, bounding boxes around cells (units for area: micron^2).
-            </Box>
-             </Box>
+              <Box>
+                <Box lineHeight="1.2" marginBottom="8px">
+                  Here we are finding Tumor infiltrating lymphocytes (TILS).
+                </Box>
+                <Box lineHeight="1.2" marginBottom="8px">
+                  <strong>Model Info</strong>: It segments Tumor regions and
+                  tumor-associated Stroma. Detection of lymphocytes within
+                  tumor-associated stroma.
+                </Box>
+                <Box lineHeight="1.2" marginBottom="8px">
+                  <strong>Model Output</strong>: Tumor Area, Tumor percentage,
+                  Stroma Area, Stroma percentage, bounding boxes around cells
+                  (units for area: micron^2).
+                </Box>
+              </Box>
             ) : infoItem === "morphometry" ? (
               <Box>
-           <Box lineHeight="1.2" marginBottom="8px">
-             <strong>Model Info</strong>: 
-           </Box>
-           <Box lineHeight="1.2" marginBottom="8px">
-             <strong>Method Used</strong>: 
-           </Box>
-           <Box lineHeight="1.2" marginBottom="8px">
-             <strong>Method Input</strong>: Image(ROI).
-           </Box>
-           <Box lineHeight="1.2" marginBottom="8px">
-             <strong>Model Output</strong>: 
-           </Box>
-           </Box>
+                <Box lineHeight="1.2" marginBottom="8px">
+                  <strong>Model Info</strong>:
+                </Box>
+                <Box lineHeight="1.2" marginBottom="8px">
+                  <strong>Method Used</strong>:
+                </Box>
+                <Box lineHeight="1.2" marginBottom="8px">
+                  <strong>Method Input</strong>: Image(ROI).
+                </Box>
+                <Box lineHeight="1.2" marginBottom="8px">
+                  <strong>Model Output</strong>:
+                </Box>
+              </Box>
             ) : infoItem === "ki67" ? (
               <Box>
-           <Box lineHeight="1.2" marginBottom="8px">
-             <strong>Model Info</strong>: It detects the positve cells(appear brown) and negative cells(appear blue).
-           </Box>
-           <Box lineHeight="1.2" marginBottom="8px">
-             <strong>Method Used</strong>: OpenCV.
-           </Box>
-           <Box lineHeight="1.2" marginBottom="8px">
-             <strong>Method Input</strong>: Image(ROI).
-           </Box>
-           <Box lineHeight="1.2" marginBottom="8px">
-             <strong>Model Output</strong>: Location of centers of cells, proliferation score.
-           </Box>
-           </Box>
+                <Box lineHeight="1.2" marginBottom="8px">
+                  <strong>Model Info</strong>: It detects the positve
+                  cells(appear brown) and negative cells(appear blue).
+                </Box>
+                <Box lineHeight="1.2" marginBottom="8px">
+                  <strong>Method Used</strong>: OpenCV.
+                </Box>
+                <Box lineHeight="1.2" marginBottom="8px">
+                  <strong>Method Input</strong>: Image(ROI).
+                </Box>
+                <Box lineHeight="1.2" marginBottom="8px">
+                  <strong>Model Output</strong>: Location of centers of cells,
+                  proliferation score.
+                </Box>
+              </Box>
             ) : (
               ""
             )}
