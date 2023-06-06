@@ -14,8 +14,6 @@ function TextType({
 		if (!isLastDisable) return;
 		handleChange({ questionId: question?.Question?.id });
 	}, [isLastDisable]);
-	console.log(slideQna);
-	console.log(response);
 
 	return isLastDisable ? null : (
 		<Input
@@ -34,7 +32,7 @@ function TextType({
 			onChange={(e) =>
 				handleChange({
 					questionId: e.target.name,
-					choice: e.target.value,
+					choice: [`${e.target.value}`],
 					choiceType: "text",
 				})
 			}

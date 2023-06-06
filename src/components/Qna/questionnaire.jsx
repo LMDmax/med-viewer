@@ -7,6 +7,7 @@ function Questionnaire({
 	direction,
 	questions,
 	slidetype,
+	errorResponse,
 	response,
 	slideQna,
 	setSlideQna,
@@ -20,6 +21,7 @@ function Questionnaire({
 			return { qna: newQna };
 		});
 	};
+
 	return (
 		<VStack
 			spacing={6}
@@ -33,45 +35,43 @@ function Questionnaire({
 			fontSize="14px"
 			px="10px"
 		>
-			{questions[0].LessonQuestions?.map((question, index) => {
-				// console.log(response?.responses[index + 1]?.Question?.correctAnswer[0]);
-				return (
-					<Stack
-						key={question?.Question?.id ? question?.Question?.id : index}
-						direction={direction}
-						spacing={4}
-						mt="15px"
-					>
-						<Text
-							// whiteSpace="nowrap"
-							// fontSize="14px"
-							color={question?.Question?.id === questions[1]?.questionId}
-						>{`Q${index + 1}: ${question?.Question?.questionText}`}</Text>
-						{response ? null : (
-							<Box>
-								<QuestionType
-									question={question}
-									direction={direction}
-									response={response}
-									setQnaResponse={setQnaResponse}
-									projectQnaType={projectQnaType}
-									slideQna={slideQna}
-								/>
-							</Box>
-						)}
-						{response && (
-							<Text>
-								Your response:{" "}
-								{response?.responses[index + 1]?.Question?.correctAnswer[0]}
-							</Text>
-						)}
-					</Stack>
-				);
-			})}
-			{/* {questions[0].LessonQuestions?.map((question, index) => (
-				
-				
-			))} */}
+			{questions !== undefined
+				? questions?.[0].LessonQuestions?.map((question, index) => {
+						// console.log(response?.responses[index + 1]?.Question?.correctAnswer[0]);
+						return (
+							<Stack
+								key={question?.Question?.id ? question?.Question?.id : index}
+								direction={direction}
+								spacing={4}
+								mt="15px"
+							>
+								<Text
+									// whiteSpace="nowrap"
+									// fontSize="14px"
+									color={question?.Question?.id === questions[1]?.questionId}
+								>{`Q${index + 1}: ${question?.Question?.questionText}`}</Text>
+								{response ? null : (
+									<Box>
+										<QuestionType
+											question={question}
+											direction={direction}
+											response={response}
+											setQnaResponse={setQnaResponse}
+											projectQnaType={projectQnaType}
+											slideQna={slideQna}
+										/>
+									</Box>
+								)}
+								{response && (
+									<Text>
+										Your response:{" "}
+										{response?.responses[index + 1]?.Question?.correctAnswer[0]}
+									</Text>
+								)}
+							</Stack>
+						);
+				  })
+				: "no questions yet"}
 		</VStack>
 	);
 }
