@@ -1,4 +1,4 @@
-import { Box, Stack, Text, VStack } from "@chakra-ui/react";
+import { Box, Flex, Stack, Text, VStack } from "@chakra-ui/react";
 import _ from "lodash";
 import React from "react";
 import QuestionType from "./questionType";
@@ -13,18 +13,13 @@ function Questionnaire({
 	projectQnaType,
 	...restProps
 }) {
-	const setQnaResponse = ({
-		questionId = null,
-		choice = null,
-		choiceType = null,
-	}) => {
+	const setQnaResponse = ({ questionId = null, choice = null, choiceType }) => {
 		setSlideQna((state) => {
 			const { qna } = state;
 			const newQna = { ...qna, [questionId]: { questionId, choice } };
 			return { qna: newQna };
 		});
 	};
-
 	return (
 		<VStack
 			spacing={6}
@@ -38,33 +33,45 @@ function Questionnaire({
 			fontSize="14px"
 			px="10px"
 		>
-			{questions?.map((question, index) => (
-				<Stack
-					key={question?.questionId ? question?.questionId : index}
-					direction={direction}
-					spacing={4}
-					mt="15px"
-				>
-					<Text
-						// whiteSpace="nowrap"
-						// fontSize="14px"
-						color={question?.questionId === questions[1]?.questionId}
-					>{`Q${index + 1}: ${question?.questionText}`}</Text>
-					{response ? null : (
-						<Box>
-							<QuestionType
-								question={question}
-								direction={direction}
-								response={response}
-								setQnaResponse={setQnaResponse}
-								projectQnaType={projectQnaType}
-								slideQna={slideQna}
-							/>
-						</Box>
-					)}
-					{response && <Text>Your response: {response[index]?.response}</Text>}
-				</Stack>
-			))}
+			{questions[0].LessonQuestions?.map((question, index) => {
+				// console.log(response?.responses[index + 1]?.Question?.correctAnswer[0]);
+				return (
+					<Stack
+						key={question?.Question?.id ? question?.Question?.id : index}
+						direction={direction}
+						spacing={4}
+						mt="15px"
+					>
+						<Text
+							// whiteSpace="nowrap"
+							// fontSize="14px"
+							color={question?.Question?.id === questions[1]?.questionId}
+						>{`Q${index + 1}: ${question?.Question?.questionText}`}</Text>
+						{response ? null : (
+							<Box>
+								<QuestionType
+									question={question}
+									direction={direction}
+									response={response}
+									setQnaResponse={setQnaResponse}
+									projectQnaType={projectQnaType}
+									slideQna={slideQna}
+								/>
+							</Box>
+						)}
+						{response && (
+							<Text>
+								Your response:{" "}
+								{response?.responses[index + 1]?.Question?.correctAnswer[0]}
+							</Text>
+						)}
+					</Stack>
+				);
+			})}
+			{/* {questions[0].LessonQuestions?.map((question, index) => (
+				
+				
+			))} */}
 		</VStack>
 	);
 }
