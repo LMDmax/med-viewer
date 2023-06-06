@@ -881,7 +881,7 @@ const ViewerControls = ({
     if (annotationObject.type === "path") {
       body = { ...body, path: annotationObject.path };
 
-      if (slide?.isIHC === false) {
+      if (slide?.isIHC === false || application === "education") {
         isKI67Open();
       }
     } else if (annotationObject.type === "ellipse") {
@@ -1020,7 +1020,7 @@ const ViewerControls = ({
           setModelname("");
         }
       }
-      if (slide?.stainType === "H&E") {
+      if (slide?.stainType === "H&E" || application === "education") {
         if (runAiModel === "Morphometry") {
           if (annotationObject) {
             //first time run morphometry
