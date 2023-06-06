@@ -20,6 +20,7 @@ const AiModels = ({
   setToolSelected,
   setModelname,
   toolSelected,
+  application,
   bottomZoomValue,
   bottombottomZoomValue,
   navigatorCounter,
