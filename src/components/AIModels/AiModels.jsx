@@ -52,22 +52,28 @@ const AiModels = ({
   }, [navigatorCounter]);
 
   const handleKI67 = () => {
-    if (
-      (slide?.stainType === "IHC" &&
-        bottomZoomValue > 39 &&
-        slide?.bioMarkerType === "kI67") ||
-      application === "education"
-    ) {
-      // console.log("1");
+    if (application === "education") {
       setModelname("KI67");
-      // console.log("1");
     }
-    if (slide?.stainType !== "IHC" || slide?.bioMarkerType !== "kI67") {
-      setToolSelected("KI67Error");
-      // console.log("1");
-      // console.log("3");
-      setModelname("");
+    if (application === "hospital") {
+      if (
+        (slide?.stainType === "IHC" &&
+          bottomZoomValue > 39 &&
+          slide?.bioMarkerType === "kI67") ||
+        application === "education"
+      ) {
+        // console.log("1");
+        setModelname("KI67");
+        // console.log("1");
+      }
+      if (slide?.stainType !== "IHC" || slide?.bioMarkerType !== "kI67") {
+        setToolSelected("KI67Error");
+        // console.log("1");
+        // console.log("3");
+        setModelname("");
+      }
     }
+
     if (bottomZoomValue < 39) {
       setToolSelected("ZoomError");
       // console.log("1");
@@ -77,11 +83,16 @@ const AiModels = ({
 
   const handleMorphometry = () => {
     // console.log("2");
-    if (slide.stainType === "H&E" && bottomZoomValue >= 40 || application ==="education") {
+    if (application === "education") {
       setModelname("Morphometry");
     }
-    if (slide.stainType !== "H&E") {
-      setToolSelected("MorphometrySlideIssue");
+    if (application === "hospital") {
+      if (slide.stainType === "H&E" && bottomZoomValue >= 40) {
+        setModelname("Morphometry");
+      }
+      if (slide.stainType !== "H&E") {
+        setToolSelected("MorphometrySlideIssue");
+      }
     }
     if (bottomZoomValue < 40) {
       setToolSelected("ZoomError");
@@ -90,6 +101,14 @@ const AiModels = ({
 
   // console.log(slide);
   useEffect(() => {
+    if(application === "education"){
+      if (TilActiveState / 2 !== 0) {
+        setModelname("TIL");
+      } else {
+        setModelname("TILClear");
+      }
+    }
+   if(application === "hospital"){
     if (slide.stainType === "H&E") {
       if (TilActiveState / 2 !== 0) {
         setModelname("TIL");
@@ -97,10 +116,12 @@ const AiModels = ({
         setModelname("TILClear");
       }
       // console.log("object");
-    } else {
-      setToolSelected("TILError");
-      // console.log("object2");
-    }
+    } 
+   }
+   else {
+    setToolSelected("TILError");
+    // console.log("object2");
+  }
   }, [TilActiveState]);
 
   useEffect(() => {
