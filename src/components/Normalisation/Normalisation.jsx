@@ -58,7 +58,7 @@ const Normalisation = ({
   };
 
   const handleFileUpload = (event) => {
-    setFabricOverlayState(removeViewerWindow({ id: vKeys[1] }));
+    // setFabricOverlayState(removeViewerWindow({ id: vKeys[1] }));
     const file = event.target.files[0];
     if (
       file &&

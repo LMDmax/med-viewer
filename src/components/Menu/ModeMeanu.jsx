@@ -46,7 +46,7 @@ const ModeMeanu = ({
               setShowRightPanel(false);
               setImageFilter(false);
               setEditView(false);
-              setFabricOverlayState(removeViewerWindow({ id: vKeys[1] }));
+              // setFabricOverlayState(removeViewerWindow({ id: vKeys[1] }));
             }}
             size={24}
             color="gray"

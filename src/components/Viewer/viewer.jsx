@@ -102,7 +102,7 @@ function Viewer({
           //  {
           //    tileSource:
           //    "https://d3fvaqnlz9wyiv.cloudfront.net/hospital/development/outputs/5dd98e10-3de9-46f5-963b-ea61e7f28ae4/output.dzi",
-          //    opacity: 1, // Set opacity to 0.5 for this DZI image
+          //    opacity: 0.5, // Set opacity to 0.5 for this DZI image
           //   },
            {
             tileSource:  tile,
