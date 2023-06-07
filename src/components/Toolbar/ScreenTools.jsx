@@ -31,7 +31,6 @@ function ScreenTools({
   handleAnnotationBar,
   caseInfo,
   slide,
-  MouseDown,
   saveReport,
   saveSynopticReport,
   mediaUpload,
@@ -74,7 +73,7 @@ function ScreenTools({
 
   return (
     <Flex h="100%" w="25%"  alignItems="center" justifyContent="flex-end">
-      <ImageFilter MouseDown={MouseDown} socketRef={socketRef} base64URL={base64URL} setShowRightPanel={setShowRightPanel} imageFilter={imageFilter} navigatorCounter={navigatorCounter} setToolSelected={setToolSelected} viewerId={viewerId} />
+      <ImageFilter socketRef={socketRef} base64URL={base64URL} setShowRightPanel={setShowRightPanel} imageFilter={imageFilter} navigatorCounter={navigatorCounter} setToolSelected={setToolSelected} viewerId={viewerId} />
       <DownloadImage setToolSelected={setToolSelected} />
       {application === "hospital" && (
         <ViewerChat

@@ -390,7 +390,8 @@ const MagicWandTool = ({
       borderRadius={0}
       bg={isActive ? "#DEDEDE" : "#F6F6F6"}
       title="Magic Wand"
-      disabled={zoomValue < 20}
+      // disabled={zoomValue < 20}
+      disabled={true}
       _focus={{ border: "none" }}
       boxShadow={
         isActive

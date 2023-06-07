@@ -166,7 +166,7 @@ export const createAnnotation = (annotation) => {
         top: annotation.top,
         width: annotation.width,
         height: annotation.height,
-        color: annotation.color,
+        color: "black",
         fill: annotation.fill,
         stroke: "#000",
         strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
@@ -205,7 +205,7 @@ export const createAnnotation = (annotation) => {
         top: annotation.top,
         width: annotation.width,
         height: annotation.height,
-        color: annotation.color,
+        color: "black",
         fill: annotation.fill,
         stroke: "#000",
         strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
@@ -232,7 +232,7 @@ export const createAnnotation = (annotation) => {
 
     case "path":
       shape = new fabric.Path(annotation.path, {
-        color: annotation.color,
+        color: "black",
         stroke: "#000",
         strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         strokeUniform: annotation.strokeUniform,
@@ -246,7 +246,7 @@ export const createAnnotation = (annotation) => {
 
     case "line":
       shape = new fabric.Line(annotation.cords, {
-        color: annotation.color,
+        color: "black",
         stroke: "#000",
         strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         strokeUniform: annotation.strokeUniform,
@@ -277,7 +277,7 @@ export const createAnnotation = (annotation) => {
           annotation.Points[1][1],
         ],
         {
-          stroke: annotation?.color ? annotation?.color : "#00ff00",
+          stroke: "black",
           strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         }
       );
@@ -288,9 +288,9 @@ export const createAnnotation = (annotation) => {
           { x: -100, y: 50 },
         ],
         {
-          stroke: annotation?.color ? annotation?.color : "#00ff00",
+          stroke: "black",
           strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
-          fill: annotation?.color ? annotation?.color : "#00ff00",
+          fill: "black",
           top: annotation.Points[0][1],
           left: annotation.Points[0][0],
           originX: "center",
@@ -325,7 +325,7 @@ export const createAnnotation = (annotation) => {
           annotation.Points[0][1] - 150,
         ],
         {
-          stroke: annotation?.color ? annotation?.color : "#00ff00",
+          stroke: "black",
           strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         }
       );
@@ -337,7 +337,7 @@ export const createAnnotation = (annotation) => {
           annotation.Points[0][1] + 150,
         ],
         {
-          stroke: annotation?.color ? annotation?.color : "#00ff00",
+          stroke: "black",
           strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         }
       );
@@ -349,7 +349,7 @@ export const createAnnotation = (annotation) => {
           annotation.Points[0][1] - 10,
         ],
         {
-          stroke: annotation?.color ? annotation?.color : "#00ff00",
+          stroke: "black",
           strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         }
       );
@@ -361,7 +361,7 @@ export const createAnnotation = (annotation) => {
           annotation.Points[0][1] - 10,
         ],
         {
-          stroke: annotation?.color ? annotation?.color : "#00ff00",
+          stroke: "black",
           strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         }
       );

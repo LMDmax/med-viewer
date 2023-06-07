@@ -22,7 +22,7 @@ function RadioType({ question, response, handleChange, slideQna }) {
 						onChange={(e) => {
 							handleChange({
 								questionId: question?.Question?.id,
-								choice: [`${e.target.value}`],
+								choice: e.target.value,
 							});
 						}}
 						checked

@@ -65,7 +65,6 @@ function FunctionsMenu({
 	hideTumor,
 	setHideTumor,
 	setBase64URL,
-	setMouseDown,
 	hideLymphocyte,
 	setSlideName2,
 	setSlideName,
@@ -124,6 +123,7 @@ function FunctionsMenu({
 	const [activeObject, setActiveObject] = useState();
 	const [updatedAnnotation, setUpdatedAnnotation] = useState({});
 	const [manipulationComplete, setManipulationComplete] = useState(false);
+	const [editView, setEditView] = useState(false);
 	const [getAnnotation, { data: annotationData, loading, error }] =
 		useLazyQuery(GET_ANNOTATION);
 	const [selectedOption, setSelectedOption] = useState("slides");
@@ -255,12 +255,7 @@ function FunctionsMenu({
 		// Track mouse Events here
 		canvas?.on("mouse:down", (e) => {
 			clickedObject = canvas?.findTarget(e.e);
-			setMouseDown(true);
 			setActiveObject(clickedObject);
-		});
-		canvas?.on("mouse:up", (e) => {
-			// clickedObject = canvas?.findTarget(e.e);
-			setMouseDown(false);
 		});
 
 		canvas?.on("object:scaling", (e) => {
@@ -284,13 +279,13 @@ function FunctionsMenu({
 	}, [fabricOverlay]);
 
 	useEffect(() => {
-		if (isMultiview) {
+		if (isMultiview || editView) {
 			setSelectedOption("slides");
 			setIsOpen(true);
 		} else {
 			setIsOpen(false);
 		}
-	}, [isMultiview]);
+	}, [isMultiview, editView]);
 
 	useEffect(() => {
 		if (activeObject?.type !== "textbox" && activeObject) {
@@ -710,9 +705,12 @@ function FunctionsMenu({
 								caseInfo={caseInfo}
 								slides={slides}
 								viewerId={viewerId}
+								editView={editView}
+								setSelectedOption={setSelectedOption}
 								setSlideName2={setSlideName2}
 								application={application}
 								setImageFilter={setImageFilter}
+								setIsOpen={setIsOpen}
 								isMultiview={isMultiview}
 								setSlideName={setSlideName}
 								tile={tile}
@@ -864,8 +862,12 @@ function FunctionsMenu({
 								setSlideName2={setSlideName2}
 								setSlideName={setSlideName}
 								viewerId={viewerId}
+								editView={editView}
+								setEditView={setEditView}
 								setImageFilter={setImageFilter}
+								application={application}
 								setBase64URL={setBase64URL}
+								setIsNavigatorActive={setIsNavigatorActive}
 								setShowRightPanel={setShowRightPanel}
 							/>
 						) : (

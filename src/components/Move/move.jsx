@@ -32,6 +32,7 @@ function Move({
   viewerId,
   refreshHil,
   annotations,
+  socketIsConnected,
   lessonId,
   setShowRightPanel,
   enableAI,
@@ -227,7 +228,7 @@ function Move({
         ) : null}
 
         {/* <Measuremnet /> */}
-        <Mode setShowRightPanel={setShowRightPanel} imageFilter={imageFilter} setImageFilter={setImageFilter} AdjustmentTool={AdjustmentTool} setAdjustmentTool={setAdjustmentTool} />
+        <Mode socketIsConnected={socketIsConnected} setShowRightPanel={setShowRightPanel} imageFilter={imageFilter} setImageFilter={setImageFilter} AdjustmentTool={AdjustmentTool} setAdjustmentTool={setAdjustmentTool} />
 
         <CommentBox
           userInfo={userInfo}
@@ -276,7 +277,6 @@ function Move({
           bottomZoomValue={bottomZoomValue}
           toolSelected={toolSelected}
           zoomValue={zoomValue}
-          application={application}
           viewerId={viewerIds}
           setModelname={setModelname}
           navigatorCounter={navigatorCounter}

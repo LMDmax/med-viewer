@@ -2,18 +2,29 @@ import React from "react";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { AiOutlineClose } from "react-icons/ai";
 import Normalisation from "../Normalisation/Normalisation";
+import { useFabricOverlayState } from "../../state/store";
+import { removeViewerWindow } from "../../state/actions/fabricOverlayActions";
 
 const ModeMeanu = ({
   setShowRightPanel,
   setImageFilter,
+  setIsNavigatorActive,
   setBase64URL,
   slide,
+  setEditView,
+  application,
+  editView,
   viewerId,
   setSlideName2,
   setSlideName,
   setIsMultiview,
   tile,
 }) => {
+  const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
+  const { viewerWindow } = fabricOverlayState;
+  console.log(viewerId);
+  const vKeys = Object.keys(viewerWindow);
+  // console.log(vKeys[1]);
   return (
     <Box w="100%" bg="white" h="82vh" px="5px">
       <Flex
@@ -34,6 +45,8 @@ const ModeMeanu = ({
             onClick={() => {
               setShowRightPanel(false);
               setImageFilter(false);
+              setEditView(false);
+              setFabricOverlayState(removeViewerWindow({ id: vKeys[1] }));
             }}
             size={24}
             color="gray"
@@ -48,7 +61,11 @@ const ModeMeanu = ({
           slide={slide}
           setIsMultiview={setIsMultiview}
           viewerId={viewerId}
+          application={application}
+          setEditView={setEditView}
+          editView={editView}
           tile={tile}
+          setIsNavigatorActive={setIsNavigatorActive}
           setImageFilter={setImageFilter}
           setBase64URL={setBase64URL}
         />

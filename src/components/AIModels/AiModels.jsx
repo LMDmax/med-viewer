@@ -10,7 +10,7 @@ import {
   Image,
 } from "@chakra-ui/react";
 import TooltipLabel from "../AdjustmentBar/ToolTipLabel";
-import { BsInfoCircleFill } from "react-icons/bs";
+import { BiInfoCircle } from "react-icons/bi";
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import IconSize from "../ViewerToolbar/IconSize";
 import { AiIcon } from "../Icons/CustomIcons";
@@ -20,7 +20,6 @@ const AiModels = ({
   setToolSelected,
   setModelname,
   toolSelected,
-  application,
   bottomZoomValue,
   bottombottomZoomValue,
   navigatorCounter,
@@ -34,12 +33,12 @@ const AiModels = ({
 
   // console.log(slide);
 
-  useEffect(() => {
-    if (!TilHover) {
-      setModelname("");
-      setInfoBox(false);
-    }
-  }, [TilHover]);
+  // useEffect(() => {
+  //   if (!TilHover) {
+  //     setModelname("");
+  //     setInfoBox(false);
+  //   }
+  // },[TilHover]);
 
   useEffect(() => {
     if (navigatorCounter > 0) {
@@ -53,28 +52,21 @@ const AiModels = ({
   }, [navigatorCounter]);
 
   const handleKI67 = () => {
-    if (application === "education") {
+    if (
+      slide?.stainType === "IHC" &&
+      bottomZoomValue > 39 &&
+      slide?.bioMarkerType === "kI67"
+    ) {
+      // console.log("1");
       setModelname("KI67");
+      // console.log("1");
     }
-    if (application === "hospital") {
-      if (
-        (slide?.stainType === "IHC" &&
-          bottomZoomValue > 39 &&
-          slide?.bioMarkerType === "kI67") ||
-        application === "education"
-      ) {
-        // console.log("1");
-        setModelname("KI67");
-        // console.log("1");
-      }
-      if (slide?.stainType !== "IHC" || slide?.bioMarkerType !== "kI67") {
-        setToolSelected("KI67Error");
-        // console.log("1");
-        // console.log("3");
-        setModelname("");
-      }
+    if (slide?.stainType !== "IHC" || slide?.bioMarkerType !== "kI67") {
+      setToolSelected("KI67Error");
+      // console.log("1");
+      // console.log("3");
+      setModelname("");
     }
-
     if (bottomZoomValue < 39) {
       setToolSelected("ZoomError");
       // console.log("1");
@@ -84,16 +76,11 @@ const AiModels = ({
 
   const handleMorphometry = () => {
     // console.log("2");
-    if (application === "education") {
+    if (slide.stainType === "H&E" && bottomZoomValue >= 40) {
       setModelname("Morphometry");
     }
-    if (application === "hospital") {
-      if (slide.stainType === "H&E" && bottomZoomValue >= 40) {
-        setModelname("Morphometry");
-      }
-      if (slide.stainType !== "H&E") {
-        setToolSelected("MorphometrySlideIssue");
-      }
+    if (slide.stainType !== "H&E") {
+      setToolSelected("MorphometrySlideIssue");
     }
     if (bottomZoomValue < 40) {
       setToolSelected("ZoomError");
@@ -101,29 +88,22 @@ const AiModels = ({
   };
 
   // console.log(slide);
-  useEffect(() => {
-    if(application === "education"){
-      if (TilActiveState / 2 !== 0) {
-        setModelname("TIL");
-      } else {
-        setModelname("TILClear");
-      }
-    }
-   if(application === "hospital"){
-    if (slide.stainType === "H&E") {
-      if (TilActiveState / 2 !== 0) {
-        setModelname("TIL");
-      } else {
-        setModelname("TILClear");
-      }
-      // console.log("object");
-    } 
-   }
-   else {
-    setToolSelected("TILError");
-    // console.log("object2");
-  }
-  }, [TilActiveState]);
+  // useEffect(()=>{
+  //   if(slide.stainType ==="H&E"){
+  //       if(TilActiveState / 2 !== 0){
+  //           setModelname("TIL")
+  //       }
+  //       else{
+  //           setModelname("TILClear")
+  //       }
+  //       // console.log("object");
+  //   }
+  //   else{
+  //       setToolSelected("TILError");
+  //       // console.log("object2");
+
+  //   }
+  // },[TilActiveState])
 
   useEffect(() => {
     if (toolSelected === "RunRoi") {
@@ -255,7 +235,7 @@ const AiModels = ({
                   >
                     Morphometry
                   </li>
-                  <BsInfoCircleFill
+                  <BiInfoCircle
                     onMouseEnter={() => {
                       setInfoBox(true);
                       setInfoItem("morphometry");
@@ -290,7 +270,7 @@ const AiModels = ({
                   >
                     TILS
                   </li>
-                  <BsInfoCircleFill
+                  <BiInfoCircle
                     onMouseEnter={() => {
                       setInfoBox(true);
                       setInfoItem("tils");
@@ -319,10 +299,39 @@ const AiModels = ({
                   >
                     KI-67
                   </li>
-                  <BsInfoCircleFill
+                  <BiInfoCircle
                     onMouseEnter={() => {
                       setInfoBox(true);
                       setInfoItem("ki67");
+                    }}
+                    onMouseLeave={() => {
+                      setInfoBox(false);
+                      setInfoItem("");
+                    }}
+                    cursor="pointer"
+                    color="gray"
+                  />
+                </Flex>
+                <Flex alignItems="center" justifyContent="space-between">
+                  <li
+                    style={{
+                      backgroundColor: "transparent",
+                      cursor: "pointer",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.color = "#3b5d7c";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.color = "black";
+                    }}
+                    // onClick={() => handleKI67()}
+                  >
+                    Detect Tumor
+                  </li>
+                  <BiInfoCircle
+                    onMouseEnter={() => {
+                      setInfoBox(true);
+                      setInfoItem("detect_tumor");
                     }}
                     onMouseLeave={() => {
                       setInfoBox(false);
@@ -355,12 +364,12 @@ const AiModels = ({
                   Here we are finding Tumor infiltrating lymphocytes (TILS).
                 </Box>
                 <Box lineHeight="1.2" marginBottom="8px">
-                  <strong>Model Info</strong>: It segments Tumor regions and
+                  <strong>Model info</strong>: It segments Tumor regions and
                   tumor-associated Stroma. Detection of lymphocytes within
                   tumor-associated stroma.
                 </Box>
                 <Box lineHeight="1.2" marginBottom="8px">
-                  <strong>Model Output</strong>: Tumor Area, Tumor percentage,
+                  <strong>Model output</strong>: Tumor Area, Tumor percentage,
                   Stroma Area, Stroma percentage, bounding boxes around cells
                   (units for area: micron^2).
                 </Box>
@@ -368,33 +377,53 @@ const AiModels = ({
             ) : infoItem === "morphometry" ? (
               <Box>
                 <Box lineHeight="1.2" marginBottom="8px">
-                  <strong>Model Info</strong>:
+                  <strong>Model info</strong>: It detects and classify cell using state of the art model (best result on colon tissue).
                 </Box>
                 <Box lineHeight="1.2" marginBottom="8px">
-                  <strong>Method Used</strong>:
+                  <strong>Method input</strong>: Image(ROI).
                 </Box>
                 <Box lineHeight="1.2" marginBottom="8px">
-                  <strong>Method Input</strong>: Image(ROI).
-                </Box>
-                <Box lineHeight="1.2" marginBottom="8px">
-                  <strong>Model Output</strong>:
+                  <strong>Model output</strong>: Cell boundary, cell class
+                  among(lymphocytes, eosinophils, neutrophils, plasma,
+                  connective,epithelial cells).
                 </Box>
               </Box>
             ) : infoItem === "ki67" ? (
               <Box>
                 <Box lineHeight="1.2" marginBottom="8px">
-                  <strong>Model Info</strong>: It detects the positve
+                  <strong>Model info</strong>: It detects the positve
                   cells(appear brown) and negative cells(appear blue).
                 </Box>
                 <Box lineHeight="1.2" marginBottom="8px">
-                  <strong>Method Used</strong>: OpenCV.
+                  <strong>Method used</strong>: OpenCV.
                 </Box>
                 <Box lineHeight="1.2" marginBottom="8px">
-                  <strong>Method Input</strong>: Image(ROI).
+                  <strong>Method input</strong>: Image(ROI).
                 </Box>
                 <Box lineHeight="1.2" marginBottom="8px">
-                  <strong>Model Output</strong>: Location of centers of cells,
+                  <strong>Model output</strong>: Location of centers of cells,
                   proliferation score.
+                </Box>
+              </Box>
+            ) : infoItem === "detect_tumor" ? (
+              <Box>
+                <Box lineHeight="1.2" marginBottom="8px">
+                  <Text>
+                    <strong>Tumor Detection</strong>: The main goal is to
+                    segment the tumour region. This model mainly detects her2+
+                    and tnbc(tripple negative) tumors
+                  </Text>
+                </Box>
+                <Box lineHeight="1.2" marginBottom="8px">
+                  <strong>Model used</strong>: SEGGPT + VAN
+                </Box>
+                <Box lineHeight="1.2" marginBottom="8px">
+                  <strong>Model output</strong>: segmented mask of tumor
+                </Box>
+
+                <Box lineHeight="1.2" marginBottom="8px">
+                  <strong>Analysis return</strong>: Tissue area,Tumor area,
+                  slide area, tumor percentage .
                 </Box>
               </Box>
             ) : (

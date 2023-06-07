@@ -17,6 +17,7 @@ const Mode = ({
   AdjustmentTool,
   setShowRightPanel,
   setImageFilter,
+  socketIsConnected,
   imageFilter,
 }) => {
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
@@ -114,7 +115,7 @@ const Mode = ({
               style={{
                 padding: "5px",
                 backgroundColor: "transparent",
-                cursor: "pointer",
+                cursor: socketIsConnected ? "pointer" : "not-allowed",
               }}
               onMouseEnter={(e) => {
                 e.target.style.color = "#3b5d7c";
@@ -122,7 +123,11 @@ const Mode = ({
               onMouseLeave={(e) => {
                 e.target.style.color = "black";
               }}
-              onClick={() => setImageFilter(!imageFilter)}
+              onClick={() => {
+                if(socketIsConnected){
+                  setImageFilter(!imageFilter)
+                }
+              }}
             >
               Normalisation
             </li>

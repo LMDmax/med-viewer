@@ -5,8 +5,8 @@ import RadioType from "./radioType";
 import TextType from "./textType";
 
 function QuestionType({ question, response, setQnaResponse, slideQna }) {
-	const handleChange = ({ questionId, choice }) => {
-		setQnaResponse({ questionId, choice });
+	const handleChange = ({ questionId, choice, choiceType = null }) => {
+		setQnaResponse({ questionId, choice, choiceType });
 	};
 
 	if (question?.Question?.questionType === "multiple-choice")

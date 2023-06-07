@@ -37,7 +37,7 @@ const ViewerHeader = ({
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { viewerWindow, sync } = fabricOverlayState;
   var vKeys = Object.keys(viewerWindow);
-
+console.log(viewerId);
   const handleClose = () => {
     const vKeys = Object.keys(viewerWindow);
     if (viewerId === vKeys[0]) {

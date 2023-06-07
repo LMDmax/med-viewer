@@ -4,17 +4,19 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { MdOutlineUpload, MdOutlineModeEditOutline } from "react-icons/md";
 import { sendRequest } from "../../Socket/Socket";
 import { useFabricOverlayState } from "../../state/store";
-import { v4 as uuidv4 } from "uuid";
-import {
-  changeTile,
-  updateTool,
-  addViewerWindow,
-} from "../../state/actions/fabricOverlayActions";
-import { zoomToLevel } from "../../utility";
+import { removeViewerWindow } from "../../state/actions/fabricOverlayActions";
 
 const Normalisation = ({
   setBase64URL,
   tile,
+  setImageFilter,
+  setSlideName,
+  editView,
+  application,
+  setEditView,
+  setIsNavigatorActive,
+  setSlideName2,
+  isMultiview,
   viewerId,
   setIsMultiview,
   slide,
@@ -26,7 +28,7 @@ const Normalisation = ({
   const [selectedImage, setSelectedImage] = useState(null);
   const [showButtonsGroup, setShowButtonGroup] = useState(false);
   const [showNormalisation, setShowNormalisation] = useState(true);
-
+  const vKeys = Object.keys(viewerWindow);
   const handleUpload = () => {
     // Create base64URL url
     fetch(selectedImage.url)
@@ -56,6 +58,7 @@ const Normalisation = ({
   };
 
   const handleFileUpload = (event) => {
+    setFabricOverlayState(removeViewerWindow({ id: vKeys[1] }));
     const file = event.target.files[0];
     if (
       file &&
@@ -92,98 +95,6 @@ const Normalisation = ({
     alignItems: "center",
   };
 
-  const handelCancel = (slide) => {
-    setSelectedImage(null)
-    setShowButtonGroup(true)
-    const vKeys = Object.keys(viewerWindow);
-    if (vKeys.length > 1) {
-      const { viewer: v, fabricOverlay: fo } = viewerWindow[vKeys[1]];
-      // clear canvas (remove all annotations)
-      fo.fabricCanvas().clear();
-      // change tile
-      setFabricOverlayState(
-        changeTile({
-          id: vKeys[1],
-          tile: tile,
-          slideName: slide.slideName,
-          slideId: slide?._id || slide?.slideId,
-          originalFileUrl: slide.originalFileUrl,
-        })
-      );
-      v.open(slide.awsImageBucketUrl);
-    } else {
-      zoomToLevel({ viewer, value: 40 });
-      const id = uuidv4();
-      setFabricOverlayState(
-        addViewerWindow([
-          {
-            id,
-            tile: tile,
-            slideName: slide.slideName,
-            slideId: slide?._id || slide?.slideId,
-            originalFileUrl: slide.originalFileUrl,
-          },
-        ])
-      );
-    }
-  };
-  
-  useEffect(() => {
-    const vKeys = Object.keys(viewerWindow);
-    // console.log("55555", vKeys);
-    if (vKeys.length > 1) {
-      const { fabricOverlay: fo } = viewerWindow[vKeys[1]];
-      // console.log(fo);
-      if (fo && fo.fabricCanvas) {
-        const rect = new fabric.Rect({
-          left: 1900,
-          top: 900,
-          width: 500,
-          height: 600,
-          fill: "",
-          stroke: "black",
-          strokeWidth: 10,
-          selectable: true,
-          lockRotation: true,
-          lockScalingX: true,
-          lockScalingY: true,
-          lockSkewingX: true,
-          lockSkewingY: true,
-          hasControls: false,
-          hasBorders: false,
-          hoverCursor: "move",
-          contextMenu: false,
-        });
-  
-        const canvas = fo.fabricCanvas();
-        canvas.add(rect);
-        canvas.renderAll();
-  
-        const zoomLevel = canvas.getZoom();
-        const viewportTransform = canvas.viewportTransform;
-        const viewportLeft = viewportTransform[4];
-        const viewportTop = viewportTransform[5];
-  
-        const annotationLeftInImage = (rect.left - viewportLeft) / zoomLevel;
-        const annotationTopInImage = (rect.top - viewportTop) / zoomLevel;
-        const annotationWidthInImage = rect.width / zoomLevel;
-        const annotationHeightInImage = rect.height / zoomLevel;
-  
-        // Placeholder DZI image URL, replace with your actual DZI image URL
-        const dziUrl = "https://d3fvaqnlz9wyiv.cloudfront.net/hospital/development/outputs/eb6589e8-1def-47d0-8062-81cfef38ad00/output.dzi";
-  
-        const zoomLevelString = `&zoom=${zoomLevel}`;
-        const regionString = `&rect=${annotationLeftInImage},${annotationTopInImage},${annotationWidthInImage},${annotationHeightInImage}`;
-        const imageUrl = `${dziUrl}?${zoomLevelString}${regionString}`;
-        console.log(imageUrl)
-      }
-    }
-  }, [viewerWindow]);
-  
-  
-  
-  
-  
 
   return (
     <Box>
@@ -263,9 +174,10 @@ const Normalisation = ({
             </Flex>
             <Flex w="25%" ml="2px" justifyContent="space-evenly">
               <MdOutlineModeEditOutline
-                // onClick={() => {
-                //   handelCancel(slide);
-                // }}
+                onClick={() => {
+                  // setShowButtonGroup(true)
+                  // setEditView(true);
+                }}
                 color="black"
                 size="20px"
                 cursor="not-allowed"

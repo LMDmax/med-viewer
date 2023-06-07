@@ -65,7 +65,6 @@ const ShowReport = ({
       <CLSReportHelper
         questions={questions}
         caseInfo={caseInfo}
-        application={application}
         userInfo={userInfo}
         responseHandler={responseHandler}
         viewerId={viewerId}

@@ -117,7 +117,7 @@ const LayoutApp = ({
   const [unit, setUnit] = useState();
   const [imageFilter, setImageFilter] = useState(false);
   const [showRightPanel, setShowRightPanel] = useState(false);
-  const [MouseDown, setMouseDown] = useState(false);
+  const [socketIsConnected, setSocketIsConnected] = useState(false);
 
   const [modelName, setModelname] = useState("");
 
@@ -134,7 +134,7 @@ const LayoutApp = ({
 
   useEffect(()=>{
     if(!imageFilter){
-      setShowRightPanel(false);
+      // setShowRightPanel(false);
     }
   },[imageFilter])
   // console.log("sssss", showRightPanel);
@@ -322,9 +322,10 @@ const LayoutApp = ({
   useEffect(() => {
     connectWebSocket()
       .then((socket) => {
-        console.log('WebSocket connection established.');
+        // console.log('WebSocket connection established.');
         socketRef.current = socket;
-    console.log(socketRef);
+    // console.log(socketRef);
+    setSocketIsConnected(true)
 
       })
       .catch((error) => {
@@ -359,7 +360,6 @@ const LayoutApp = ({
           chatFeedBar={chatFeedBar}
           caseInfo={caseInfo}
           loadUI={loadUI}
-          MouseDown={MouseDown}
           setLoadUI={setLoadUI}
           toolSelected={toolSelected}
           setToolSelected={setToolSelected}
@@ -378,6 +378,7 @@ const LayoutApp = ({
           setStromaArea={setStromaArea}
           setLymphocyteCount={setLymphocyteCount}
           slide={viewerIds?.[0]}
+          socketIsConnected={socketIsConnected}
           slides={slides}
           socketRef={socketRef}
           annotations={annotations}
@@ -570,7 +571,6 @@ const LayoutApp = ({
             setIsNavigatorActive={setIsNavigatorActive}
             isNavigatorActive={isNavigatorActive}
             isMultiview={isMultiview}
-            setMouseDown={setMouseDown}
             slide={viewerIds?.[0]}
             hideTumor={hideTumor}
             setHideTumor={setHideTumor}

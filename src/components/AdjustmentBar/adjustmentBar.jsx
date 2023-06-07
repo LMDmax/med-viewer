@@ -62,6 +62,7 @@ function AdjustmentBar({
   slideInfo,
   handleFeedBar,
   socketRef,
+  socketIsConnected,
   handleReport,
   showReport,
   setShowReport,
@@ -78,7 +79,6 @@ function AdjustmentBar({
   questionnaireResponse,
   zoomValue,
   synopticType,
-  MouseDown,
   setSynopticType,
   setImageFilter,
   imageFilter,
@@ -174,6 +174,7 @@ function AdjustmentBar({
         caseInfo={caseInfo}
         enableAI={enableAI}
         setToolSelected={setToolSelected}
+        socketIsConnected={socketIsConnected}
         setLoadUI={setLoadUI}
         enableFilters={enableFilters}
         pathStroma={pathStroma}
@@ -209,7 +210,6 @@ function AdjustmentBar({
         mediaUpload={mediaUpload}
         slideInfo={slideInfo}
         chatHover={chatHover}
-        MouseDown={MouseDown}
         chatFeedBar={chatFeedBar}
         handleFeedBar={handleFeedBar}
         socketRef={socketRef}

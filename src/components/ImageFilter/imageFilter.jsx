@@ -31,7 +31,6 @@ const ImageFilter = ({
   navigatorCounter,
   base64URL,
   imageFilter,
-  MouseDown,
   socketRef,
   setShowRightPanel,
 }) => {
@@ -95,16 +94,17 @@ const ImageFilter = ({
   // };
 
   //working
+  // console.log("sentReques--->", array.length);
 
   useEffect(() => {
     if (socketRef.current !== null) {
       setIsConnected(true);
       socketRef.current.onmessage = (event) => {
         const responseData = event.data;
-        console.log("result",typeof responseData);
+        // console.log("result--->", responseData);
         let dataArray;
 
-        if (responseData !== "Ping") {
+        if (responseData !== "Ping" || responseData !== "Connection established" ) {
           if(responseData !== "Target Image Intialized"){
             dataArray = JSON.parse(responseData);
           }
@@ -134,7 +134,7 @@ const ImageFilter = ({
           }
       };
       socketRef.current.onclose = () => {
-        console.log("Socket closed");
+        // console.log("Socket closed");
       };
     }
   }, [socketRef.current]);
@@ -161,11 +161,11 @@ const ImageFilter = ({
       requestQueueRef.current.push(requestCallback);
       // console.log(isConnected);
       if(array.length > 0){
-        console.log("sending");
+        // console.log("sending");
         socketRef.current.send(JSON.stringify(pixelsData));
       }
       else{
-        console.log("NOT");
+        // console.log("NOT");
 
       }
       // console.log(pixelsData);
@@ -191,7 +191,7 @@ const ImageFilter = ({
     // console.log(array);
 
     const modifiedImageData = await sendRequest(pixelsData);
-    console.log("result", modifiedImageData);
+    // console.log("result", modifiedImageData);
     context.putImageData(modifiedImageData, 0, 0);
     callback();
     // console.log(array);
@@ -202,13 +202,13 @@ const ImageFilter = ({
     if (array.length > 0) {
       const interval = setInterval(() => {
         const object = array.shift();
-        console.log(object);
+        // console.log(object);
         const modifiedImageData = sendRequest(object);
 
         if (array.length === 0) {
           clearInterval(interval); // Clear the interval when all objects have been logged
         }
-      }, 1000); // Log each object with a 5-second interval
+      }, 5000); // Log each object with a 5-second interval
 
       return () => {
         clearInterval(interval); // Clear the interval on component unmount (optional)

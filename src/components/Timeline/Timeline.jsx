@@ -43,7 +43,7 @@ const Timeline = ({ timelineData, viewerId, application }) => {
       <Box>
         <Text>Slide Activity</Text>
       </Box>
-      <Box w="340px" overflow="hidden" overflowY="auto" bg="#FFFFFF" h="100%">
+      <Box w="340px" overflow="hidden" overflowY="auto" bg="#FFFFFF" h="80vh">
         <VerticalTimeline
           layout="1-column-left"
           lineColor="#DEDEDE"
