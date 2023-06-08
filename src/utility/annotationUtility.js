@@ -292,6 +292,7 @@ export const createAnnotation = (annotation) => {
           left: annotation.left,
           originX: "center",
           originY: "center",
+          angle: -90,
         }
       );
       arrowHead.angle = -90;
