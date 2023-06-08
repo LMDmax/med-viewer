@@ -270,8 +270,8 @@ export const createAnnotation = (annotation) => {
         [
           annotation.left,
           annotation.top,
-          annotation.left,
-          annotation.top + 150,
+          annotation.left + 200,
+          annotation.top,
         ],
         {
           stroke: "#00ff00",
