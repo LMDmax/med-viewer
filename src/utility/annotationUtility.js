@@ -294,17 +294,18 @@ export const createAnnotation = (annotation) => {
           originY: "center",
         }
       );
-      if (pointerX >= startPointX) {
-        if (pointerY <= startPointY) {
-          arrowHead.angle = 180 - angle;
-        } else if (pointerY > startPointY) {
-          arrowHead.angle = 360 - angle;
-        }
-      } else if (pointerY <= startPointY) {
-        arrowHead.angle = angle;
-      } else if (pointerY > startPointY) {
-        arrowHead.angle = angle;
-      }
+      arrowHead.angle = -90;
+      // if (pointerX >= startPointX) {
+      //   if (pointerY <= startPointY) {
+      //     arrowHead.angle = 180 - angle;
+      //   } else if (pointerY > startPointY) {
+      //     arrowHead.angle = 360 - angle;
+      //   }
+      // } else if (pointerY <= startPointY) {
+      //   arrowHead.angle = angle;
+      // } else if (pointerY > startPointY) {
+      //   arrowHead.angle = angle;
+      // }
       var objs = [line, arrowHead];
       shape = new fabric.Group(objs, {
         hasControls: annotation.hash,
