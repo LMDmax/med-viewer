@@ -137,7 +137,6 @@ export const createAnnotationMessage = ({
         text: "",
         maskType: maskType || "",
         type: type || "",
-        
       };
     } else {
       message.object.set({
@@ -148,7 +147,7 @@ export const createAnnotationMessage = ({
         text: message.object.text,
         maskType: maskType || "",
         type: type || "",
-        isClosed:isClosed,
+        isClosed: isClosed,
       });
     }
   }
@@ -259,23 +258,16 @@ export const createAnnotation = (annotation) => {
       break;
     case "arrow":
       // need to remove declaration in case bloack
-      const pointerX = annotation.Points[1][0];
-      const pointerY = annotation.Points[1][1];
-      const width = Math.abs(annotation.Points[1][0] - annotation.Points[0][0]);
-      const height = Math.abs(
-        annotation.Points[1][1] - annotation.Points[0][1]
-      );
-      const startPointX = annotation.Points[0][0];
-      const startPointY = annotation.Points[0][1];
+      const pointerX = annotation.left;
+      const pointerY = annotation.top;
+      const width = annotation.width;
+      const height = annotation.height;
+      const startPointX = annotation.left;
+      const startPointY = annotation.top;
       const ratio = height / width;
       const angle = (Math.atan(ratio) / Math.PI) * 100;
       const line = new fabric.Line(
-        [
-          annotation.Points[0][0],
-          annotation.Points[0][1],
-          annotation.Points[1][0],
-          annotation.Points[1][1],
-        ],
+        [annotation.left, annotation.top, annotation.left, annotation.top],
         {
           stroke: "black",
           strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
@@ -291,8 +283,8 @@ export const createAnnotation = (annotation) => {
           stroke: "black",
           strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
           fill: "black",
-          top: annotation.Points[0][1],
-          left: annotation.Points[0][0],
+          top: annotation.top,
+          left: annotation.left,
           originX: "center",
           originY: "center",
         }
@@ -319,10 +311,10 @@ export const createAnnotation = (annotation) => {
     case "marker":
       const line1 = new fabric.Line(
         [
-          annotation.Points[0][0],
-          annotation.Points[0][1] - 20,
-          annotation.Points[0][0],
-          annotation.Points[0][1] - 150,
+          annotation.left,
+          annotation.top - 20,
+          annotation.left,
+          annotation.top - 150,
         ],
         {
           stroke: "black",
@@ -331,10 +323,10 @@ export const createAnnotation = (annotation) => {
       );
       const line2 = new fabric.Line(
         [
-          annotation.Points[0][0],
-          annotation.Points[0][1] + 30,
-          annotation.Points[0][0],
-          annotation.Points[0][1] + 150,
+          annotation.left,
+          annotation.top + 30,
+          annotation.left,
+          annotation.top + 150,
         ],
         {
           stroke: "black",
@@ -343,10 +335,10 @@ export const createAnnotation = (annotation) => {
       );
       const line3 = new fabric.Line(
         [
-          annotation.Points[0][0] - 10,
-          annotation.Points[0][1] - 10,
-          annotation.Points[0][0] - 150,
-          annotation.Points[0][1] - 10,
+          annotation.left - 10,
+          annotation.top - 10,
+          annotation.left - 150,
+          annotation.top - 10,
         ],
         {
           stroke: "black",
@@ -355,10 +347,10 @@ export const createAnnotation = (annotation) => {
       );
       const line4 = new fabric.Line(
         [
-          annotation.Points[0][0] + 40,
-          annotation.Points[0][1] - 10,
-          annotation.Points[0][0] + 170,
-          annotation.Points[0][1] - 10,
+          annotation.left + 40,
+          annotation.top - 10,
+          annotation.left + 170,
+          annotation.top - 10,
         ],
         {
           stroke: "black",
@@ -366,8 +358,8 @@ export const createAnnotation = (annotation) => {
         }
       );
       const Id = new fabric.Textbox(`${annotation.localId}`, {
-        left: annotation.Points[0][0] - 150,
-        top: annotation.Points[0][1] - 200,
+        left: annotation.left - 150,
+        top: annotation.top - 200,
         color: annotation?.color ? annotation?.color : "#00ff00",
         backgroundColor: "rgba(0,0,0,0.6)",
         fill: annotation?.color ? annotation?.color : "#00ff00",
