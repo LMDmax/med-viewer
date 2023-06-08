@@ -269,9 +269,9 @@ export const createAnnotation = (annotation) => {
       const line = new fabric.Line(
         [
           annotation.left,
-          annotation.top,
-          annotation.left + 200,
-          annotation.top,
+          annotation.top - 10,
+          annotation.left + 300,
+          annotation.top - 10,
         ],
         {
           stroke: "#00ff00",
