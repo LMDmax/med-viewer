@@ -281,8 +281,8 @@ export const createAnnotation = (annotation) => {
       const arrowHead = new fabric.Polygon(
         [
           { x: 0, y: 0 },
-          { x: -100, y: -50 },
-          { x: -100, y: 50 },
+          { x: 100, y: -50 },
+          { x: 100, y: 50 },
         ],
         {
           stroke: "#00ff00",
@@ -292,10 +292,8 @@ export const createAnnotation = (annotation) => {
           left: annotation.left,
           originX: "center",
           originY: "center",
-          angle: -90,
         }
       );
-      arrowHead.angle = -90;
       // if (pointerX >= startPointX) {
       //   if (pointerY <= startPointY) {
       //     arrowHead.angle = 180 - angle;
