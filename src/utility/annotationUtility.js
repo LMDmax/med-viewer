@@ -270,7 +270,7 @@ export const createAnnotation = (annotation) => {
         [
           annotation.left,
           annotation.top,
-          annotation.left + 150,
+          annotation.left,
           annotation.top + 150,
         ],
         {
