@@ -216,7 +216,7 @@ const ActivityFeed = ({
   const [accordionState, setAccordionState] = useState(
     activityFeed.map(() => ({ isOpen: false, isFocused: false }))
   );
-
+console.log(activityFeed);
   useEffect(() => {
     if (scrollbar.current) scrollbar.current.scrollToBottom();
     if (activityFeed.length === 0) setAnnotationsDetails(null);
