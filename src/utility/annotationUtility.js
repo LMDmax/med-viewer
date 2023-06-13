@@ -173,10 +173,10 @@ export const createAnnotation = (annotation) => {
         rx: annotation.rx,
         ry: annotation.ry,
         angle: annotation.angle,
-        hasControls: annotation.hash,
-        hasRotatingPoint: annotation.hash,
-        lockMovementX: !annotation.hash,
-        lockMovementY: !annotation.hash,
+        hasControls: annotation.globalCompositeOperation,
+        hasRotatingPoint: annotation.globalCompositeOperation,
+        lockMovementX: !annotation.globalCompositeOperation,
+        lockMovementY: !annotation.globalCompositeOperation,
       });
       break;
 
@@ -209,10 +209,10 @@ export const createAnnotation = (annotation) => {
         stroke: "#000",
         strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         strokeUniform: annotation.strokeUniform,
-        hasControls: annotation.hash,
-        hasRotatingPoint: annotation.hash,
-        lockMovementX: !annotation.hash,
-        lockMovementY: !annotation.hash,
+        hasControls: annotation.globalCompositeOperation,
+        hasRotatingPoint: annotation.globalCompositeOperation,
+        lockMovementX: !annotation.globalCompositeOperation,
+        lockMovementY: !annotation.globalCompositeOperation,
       });
       break;
 
@@ -222,10 +222,10 @@ export const createAnnotation = (annotation) => {
         strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         fill: annotation.fill,
         strokeUniform: annotation.strokeUniform,
-        hasControls: annotation.hash,
-        hasRotatingPoint: annotation.hash,
-        lockMovementX: !annotation.hash,
-        lockMovementY: !annotation.hash,
+        hasControls: annotation.globalCompositeOperation,
+        hasRotatingPoint: annotation.globalCompositeOperation,
+        lockMovementX: !annotation.globalCompositeOperation,
+        lockMovementY: !annotation.globalCompositeOperation,
       });
       break;
 
@@ -236,10 +236,10 @@ export const createAnnotation = (annotation) => {
         strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         strokeUniform: annotation.strokeUniform,
         fill: annotation.fill,
-        hasControls: annotation.hash,
-        hasRotatingPoint: annotation.hash,
-        lockMovementX: !annotation.hash,
-        lockMovementY: !annotation.hash,
+        hasControls: annotation.globalCompositeOperation,
+        hasRotatingPoint: annotation.globalCompositeOperation,
+        lockMovementX: !annotation.globalCompositeOperation,
+        lockMovementY: !annotation.globalCompositeOperation,
       });
       break;
 
@@ -250,10 +250,10 @@ export const createAnnotation = (annotation) => {
         strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         strokeUniform: annotation.strokeUniform,
         fill: annotation.fill,
-        hasControls: annotation.hash,
-        hasRotatingPoint: annotation.hash,
-        lockMovementX: !annotation.hash,
-        lockMovementY: !annotation.hash,
+        hasControls: annotation.globalCompositeOperation,
+        hasRotatingPoint: annotation.globalCompositeOperation,
+        lockMovementX: !annotation.globalCompositeOperation,
+        lockMovementY: !annotation.globalCompositeOperation,
       });
       break;
     case "arrow":
@@ -307,10 +307,10 @@ export const createAnnotation = (annotation) => {
       // }
       var objs = [line, arrowHead];
       shape = new fabric.Group(objs, {
-        hasControls: annotation.hash,
-        hasRotatingPoint: annotation.hash,
-        lockMovementX: !annotation.hash,
-        lockMovementY: !annotation.hash,
+        hasControls: false,
+        hasRotatingPoint:false,
+        lockMovementX: false,
+        lockMovementY: false,
       });
       break;
     case "marker":
@@ -373,10 +373,10 @@ export const createAnnotation = (annotation) => {
         ? [line1, line2, line3, line4, Id]
         : [line1, line2, line3, line4];
       shape = new fabric.Group(objs, {
-        hasControls: annotation.hash,
-        hasRotatingPoint: annotation.hash,
-        lockMovementX: !annotation.hash,
-        lockMovementY: !annotation.hash,
+        hasControls: false,
+        hasRotatingPoint:false,
+        lockMovementX: false,
+        lockMovementY: false,
       });
       break;
     case "viewport":
