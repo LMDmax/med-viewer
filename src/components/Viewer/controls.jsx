@@ -22,6 +22,7 @@ import {
   GET_ANNOTATION,
   GET_VHUT_ANALYSIS,
   GET_XMLANNOTATION,
+  TUMOR_DETECTION_SUBSCRIPTION,
   UPDATE_ANNOTATION,
   VHUT_ANALTSIS,
   VHUT_ANALYSIS_SUBSCRIPTION,
@@ -67,6 +68,7 @@ const ViewerControls = ({
   runAiModel,
   setToolSelected,
   viewerIds,
+  setNewTile,
   setBottomZoomValue,
   enableAI,
   slide,
@@ -106,6 +108,7 @@ const ViewerControls = ({
   const [manipulationComplete, setManipulationComplete] = useState(false);
   const [isMorphometryDisabled, setIsMorphometryDisabled] = useState(true);
   const [annotationText, setAnnotationText] = useState("");
+  const [showTumor, setShowTumor] = useState(false);
   const [annotationShape, setAnnotationShape] = useState(null);
   const [activeFeed, setActiveFeed] = useState([]);
   const [xmlLink, setXmlLink] = useState("");
@@ -166,6 +169,23 @@ const ViewerControls = ({
     }
   );
 
+
+//#####################DETECT_TUMOR_SUBSCRIPTION######################################
+  const slideid = slide?._id;
+  const { data: subscription, error: subscription_error2 } = useSubscription(
+    TUMOR_DETECTION_SUBSCRIPTION,
+    {
+      variables: {
+        body: {
+          data: {
+          slideid,
+          },
+        },
+      },
+    }
+  );
+
+
   // #################### VHUT_ANALYSIS_SUBSCRIPTION ##############
   const { data: vhutSubscriptionData, error: vhutSubscription_error } =
     useSubscription(VHUT_ANALYSIS_SUBSCRIPTION, {
@@ -186,7 +206,59 @@ const ViewerControls = ({
 
   // console.log(x);
   // console.log(y);
+  const reinhardFilter = async (context, callback) => {
+    console.log("object");
+    const imgData = context.getImageData(
+      0,
+      0,
+      context.canvas.width,
+      context.canvas.height
+    );
+  
+    const pixelsData = imgData.data;
+    const length = pixelsData.length;
+  
+    for (let i = 0; i < length; i += 4) {
+      const red = pixelsData[i];
+      const green = pixelsData[i + 1];
+      const blue = pixelsData[i + 2];
+      const alpha = pixelsData[i + 3];
+  
+      // Check if the pixel is black (RGB: 0, 0, 0) or inside the red range (adjust the threshold values as needed)
+      if ((red === 0 && green === 0 && blue === 0) || (red < 100 && green < 100 && blue < 100)) {
+        // Set alpha to 0 for black pixels or pixels inside the red range
+        pixelsData[i + 3] = 0;
+      }
+    }
+  
+    context.putImageData(imgData, 0, 0);
+    callback();
+  };
 
+
+  useEffect(()=>{
+    if(showTumor){
+      console.log("object");
+      viewer.setFilterOptions({
+        filters: {
+          processors: reinhardFilter,
+        },
+        loadMode: "async",
+      });
+    }
+  },[showTumor])
+
+  useEffect(() => {
+    if (subscription) {
+      setNewTile("https://d3fvaqnlz9wyiv.cloudfront.net/hospital/staging/outputs/9cbf2141-efc5-4ff8-a691-05b5fb80b811/output.dzi");
+      const timeout = setTimeout(() => {
+        setShowTumor(true);
+      }, 6000); // Delay of 6000 milliseconds (6 seconds)
+  
+      return () => clearTimeout(timeout);
+    }
+  }, [subscription]);
+  
   const handleZoomIn = () => {
     try {
       const value1 = Math.ceil(
@@ -469,6 +541,7 @@ const ViewerControls = ({
 
   useEffect(() => {
     if (vhutSubscriptionData) {
+      console.log(vhutSubscriptionData);
       const {
         data,
         message,

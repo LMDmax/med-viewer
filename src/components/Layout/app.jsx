@@ -322,9 +322,9 @@ const LayoutApp = ({
   useEffect(() => {
     connectWebSocket()
       .then((socket) => {
-        // console.log('WebSocket connection established.');
+        console.log('WebSocket connection established.');
         socketRef.current = socket;
-    // console.log(socketRef);
+    console.log(socketRef);
     setSocketIsConnected(true)
 
       })

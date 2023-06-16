@@ -14,6 +14,12 @@ import { BiInfoCircle } from "react-icons/bi";
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import IconSize from "../ViewerToolbar/IconSize";
 import { AiIcon } from "../Icons/CustomIcons";
+import { useLazyQuery, useMutation, useSubscription } from "@apollo/client";
+import {
+  TUMOR_ANALYSIS,
+  TUMOR_DETECTION_SUBSCRIPTION,
+} from "../../graphql/annotaionsQuery";
+import { getFileBucketFolder } from "../../utility";
 
 const AiModels = ({
   slide,
@@ -21,6 +27,7 @@ const AiModels = ({
   setModelname,
   toolSelected,
   bottomZoomValue,
+  viewerIds,
   bottombottomZoomValue,
   navigatorCounter,
 }) => {
@@ -30,8 +37,29 @@ const AiModels = ({
   const [TilActiveState, setTilActiveState] = useState(0);
   const [infoBox, setInfoBox] = useState(false);
   const [infoItem, setInfoItem] = useState("");
+  const [onTumorAnalysis, { data: analysis_data, error: analysis_error }] =
+    useMutation(TUMOR_ANALYSIS);
+  const slideid = slide?._id;
+  const dziUrl = "https://d3fvaqnlz9wyiv.cloudfront.net/hospital/staging/outputs/9cbf2141-efc5-4ff8-a691-05b5fb80b811/output.dzi"
+  const { data: subscription, error: subscription_error } = useSubscription(
+    TUMOR_DETECTION_SUBSCRIPTION,
+    {
+      variables: {
+        body: {
+          data: {
+          slideid,
+          },
+        },
+      },
+    }
+  );
+  console.log(analysis_data);
+  console.log(subscription);
+  // console.log(subscription_error);
 
-  // console.log(slide);
+  useEffect(() => {
+    console.log(subscription);
+  }, [subscription]);
 
   // useEffect(() => {
   //   if (!TilHover) {
@@ -40,16 +68,16 @@ const AiModels = ({
   //   }
   // },[TilHover]);
 
-  useEffect(() => {
-    if (navigatorCounter > 0) {
-      setTilHover(false);
-      if (TilActiveState > 0) {
-        setTilActiveState(0);
-      }
-      setToolSelected("");
-      setModelname("");
-    }
-  }, [navigatorCounter]);
+  // useEffect(() => {
+  //   if (navigatorCounter > 0) {
+  //     setTilHover(false);
+  //     if (TilActiveState > 0) {
+  //       setTilActiveState(0);
+  //     }
+  //     setToolSelected("");
+  //     setModelname("");
+  //   }
+  // }, [navigatorCounter]);
 
   const handleKI67 = () => {
     if (
@@ -104,6 +132,16 @@ const AiModels = ({
 
   //   }
   // },[TilActiveState])
+
+  const handleDetectTumor = () => {
+    const body = {
+      key: `${getFileBucketFolder(viewerIds[0].originalFileUrl)}`,
+      slideId: slideid,
+    };
+    onTumorAnalysis({
+      variables: { body: { ...body } },
+    });
+  };
 
   useEffect(() => {
     if (toolSelected === "RunRoi") {
@@ -324,7 +362,7 @@ const AiModels = ({
                     onMouseLeave={(e) => {
                       e.target.style.color = "black";
                     }}
-                    // onClick={() => handleKI67()}
+                    onClick={() => handleDetectTumor()}
                   >
                     Detect Tumor
                   </li>
@@ -377,7 +415,8 @@ const AiModels = ({
             ) : infoItem === "morphometry" ? (
               <Box>
                 <Box lineHeight="1.2" marginBottom="8px">
-                  <strong>Model info</strong>: It detects and classify cell using state of the art model (best result on colon tissue).
+                  <strong>Model info</strong>: It detects and classify cell
+                  using state of the art model (best result on colon tissue).
                 </Box>
                 <Box lineHeight="1.2" marginBottom="8px">
                   <strong>Method input</strong>: Image(ROI).
