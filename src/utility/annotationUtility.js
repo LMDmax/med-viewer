@@ -5,9 +5,6 @@ import { normalizeUnits } from "./utility";
 /** Get annotation JSON */
 export const getAnnotationJSON = (annotation) => {
   if (!annotation) return null;
-  // console.log("====================================");
-  // console.log("annotationssss", annotation);
-  // console.log("====================================");
   if (annotation.type === "viewport") return annotation;
   return annotation.toJSON([
     "slide",
@@ -16,16 +13,13 @@ export const getAnnotationJSON = (annotation) => {
     "title",
     "zoomLevel",
     "points",
-    "cords",
     "timeStamp",
-    "isClosed",
     "area",
     "perimeter",
     "centroid",
     "end_points",
     "isAnalysed",
     "analysedROI",
-    "timeStamp",
   ]);
 };
 
@@ -54,15 +48,13 @@ export const createAnnotationMessage = ({
   slideId,
   shape,
   viewer,
-  userInfo,
+  user,
   annotation,
-  maskType,
-  type,
-  isClosed,
 }) => {
   if (!viewer || !shape) return null;
+
   const message = {
-    username: userInfo ? `${userInfo.firstName} ${userInfo.lastName}` : "",
+    username: user ? `${user.firstName} ${user.lastName}` : "",
     object: shape,
     image: null,
   };
@@ -77,7 +69,6 @@ export const createAnnotationMessage = ({
       title,
       zoomLevel,
       points,
-      isClosed,
       timeStamp,
       area,
       perimeter,
@@ -113,7 +104,6 @@ export const createAnnotationMessage = ({
         zoomLevel,
         points,
         timeStamp,
-        isClosed,
         area,
         perimeter,
         centroid,
@@ -135,8 +125,6 @@ export const createAnnotationMessage = ({
         slide: slideId,
         zoomLevel: viewer.viewport.getZoom(),
         text: "",
-        maskType: maskType || "",
-        type: type || "",
       };
     } else {
       message.object.set({
@@ -144,10 +132,7 @@ export const createAnnotationMessage = ({
         hash,
         slide: slideId,
         zoomLevel: viewer.viewport.getZoom(),
-        text: message.object.text,
-        maskType: maskType || "",
-        type: type || "",
-        isClosed: isClosed,
+        text: "",
       });
     }
   }
@@ -165,36 +150,14 @@ export const createAnnotation = (annotation) => {
         top: annotation.top,
         width: annotation.width,
         height: annotation.height,
-        color: "black",
+        color: annotation.color,
         fill: annotation.fill,
-        stroke: "#000",
-        strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
+        stroke: annotation.stroke,
+        strokeWidth: annotation.strokeWidth,
         strokeUniform: annotation.strokeUniform,
         rx: annotation.rx,
         ry: annotation.ry,
         angle: annotation.angle,
-        hasControls: annotation.globalCompositeOperation,
-        hasRotatingPoint: annotation.globalCompositeOperation,
-        lockMovementX: !annotation.globalCompositeOperation,
-        lockMovementY: !annotation.globalCompositeOperation,
-      });
-      break;
-
-    case "textbox":
-      shape = new fabric.Textbox(`${annotation.text}`, {
-        left: annotation.left,
-        top: annotation.top,
-        width: 450,
-        color: annotation.color,
-        backgroundColor: "#B0C8D6",
-        opacity: annotation.opacity,
-        title: annotation.title,
-        text: annotation.text,
-        hasBorders: false,
-        hasControls: false,
-        hasRotatingPoint: false,
-        lockMovementX: true,
-        lockMovementY: true,
       });
       break;
 
@@ -204,181 +167,43 @@ export const createAnnotation = (annotation) => {
         top: annotation.top,
         width: annotation.width,
         height: annotation.height,
-        color: "black",
+        color: annotation.color,
         fill: annotation.fill,
-        stroke: "#000",
-        strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
+        stroke: annotation.stroke,
+        strokeWidth: annotation.strokeWidth,
         strokeUniform: annotation.strokeUniform,
-        hasControls: annotation.globalCompositeOperation,
-        hasRotatingPoint: annotation.globalCompositeOperation,
-        lockMovementX: !annotation.globalCompositeOperation,
-        lockMovementY: !annotation.globalCompositeOperation,
       });
       break;
 
     case "polygon":
       shape = new fabric.Polygon(annotation.points, {
-        stroke: "#000",
-        strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
+        stroke: annotation.stroke,
+        strokeWidth: annotation.strokeWidth,
         fill: annotation.fill,
         strokeUniform: annotation.strokeUniform,
-        hasControls: annotation.globalCompositeOperation,
-        hasRotatingPoint: annotation.globalCompositeOperation,
-        lockMovementX: !annotation.globalCompositeOperation,
-        lockMovementY: !annotation.globalCompositeOperation,
       });
       break;
 
     case "path":
       shape = new fabric.Path(annotation.path, {
-        color: "black",
-        stroke: "#000",
-        strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
+        color: annotation.color,
+        stroke: annotation.stroke,
+        strokeWidth: annotation.strokeWidth,
         strokeUniform: annotation.strokeUniform,
         fill: annotation.fill,
-        hasControls: annotation.globalCompositeOperation,
-        hasRotatingPoint: annotation.globalCompositeOperation,
-        lockMovementX: !annotation.globalCompositeOperation,
-        lockMovementY: !annotation.globalCompositeOperation,
       });
       break;
 
     case "line":
-      shape = new fabric.Line(annotation.cords, {
-        color: "black",
-        stroke: "#000",
-        strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
+      shape = new fabric.Line(annotation.points, {
+        color: annotation.color,
+        stroke: annotation.stroke,
+        strokeWidth: annotation.strokeWidth,
         strokeUniform: annotation.strokeUniform,
         fill: annotation.fill,
-        hasControls: annotation.globalCompositeOperation,
-        hasRotatingPoint: annotation.globalCompositeOperation,
-        lockMovementX: !annotation.globalCompositeOperation,
-        lockMovementY: !annotation.globalCompositeOperation,
       });
       break;
-    case "arrow":
-      // need to remove declaration in case bloack
-      const pointerX = annotation.left;
-      const pointerY = annotation.top;
-      const width = annotation.width;
-      const height = annotation.height;
-      const startPointX = annotation.left;
-      const startPointY = annotation.top;
-      const ratio = height / width;
-      const angle = (Math.atan(ratio) / Math.PI) * 100;
-      const line = new fabric.Line(
-        [
-          annotation.left,
-          annotation.top - 10,
-          annotation.left + 300,
-          annotation.top - 10,
-        ],
-        {
-          stroke: "#00ff00",
-          strokeWidth: 30,
-        }
-      );
-      const arrowHead = new fabric.Polygon(
-        [
-          { x: 0, y: 0 },
-          { x: 100, y: -50 },
-          { x: 100, y: 50 },
-        ],
-        {
-          stroke: "#00ff00",
-          strokeWidth: 30,
-          fill: "#00ff00",
-          top: annotation.top,
-          left: annotation.left,
-          originX: "center",
-          originY: "center",
-        }
-      );
-      // if (pointerX >= startPointX) {
-      //   if (pointerY <= startPointY) {
-      //     arrowHead.angle = 180 - angle;
-      //   } else if (pointerY > startPointY) {
-      //     arrowHead.angle = 360 - angle;
-      //   }
-      // } else if (pointerY <= startPointY) {
-      //   arrowHead.angle = angle;
-      // } else if (pointerY > startPointY) {
-      //   arrowHead.angle = angle;
-      // }
-      var objs = [line, arrowHead];
-      shape = new fabric.Group(objs, {
-        hasControls: false,
-        hasRotatingPoint:false,
-        lockMovementX: false,
-        lockMovementY: false,
-      });
-      break;
-    case "marker":
-      const line1 = new fabric.Line(
-        [
-          annotation.left,
-          annotation.top - 20,
-          annotation.left,
-          annotation.top - 150,
-        ],
-        {
-          stroke: "#00ff00",
-          strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
-        }
-      );
-      const line2 = new fabric.Line(
-        [
-          annotation.left,
-          annotation.top + 30,
-          annotation.left,
-          annotation.top + 150,
-        ],
-        {
-          stroke: "#00ff00",
-          strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
-        }
-      );
-      const line3 = new fabric.Line(
-        [
-          annotation.left - 10,
-          annotation.top - 10,
-          annotation.left - 150,
-          annotation.top - 10,
-        ],
-        {
-          stroke: "#00ff00",
-          strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
-        }
-      );
-      const line4 = new fabric.Line(
-        [
-          annotation.left + 40,
-          annotation.top - 10,
-          annotation.left + 170,
-          annotation.top - 10,
-        ],
-        {
-          stroke: "#00ff00",
-          strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
-        }
-      );
-      const Id = new fabric.Textbox(`${annotation.localId}`, {
-        left: annotation.left - 150,
-        top: annotation.top - 200,
-        color: "#00ff00",
-        backgroundColor: "rgba(0,0,0,0.6)",
-        fill: "#00ff00",
-      });
-      var objs = annotation.localId
-        ? [line1, line2, line3, line4, Id]
-        : [line1, line2, line3, line4];
-      shape = new fabric.Group(objs, {
-        hasControls: false,
-        hasRotatingPoint:false,
-        lockMovementX: false,
-        lockMovementY: false,
-      });
-      break;
+
     case "viewport":
       shape = { ...annotation };
       break;
@@ -389,31 +214,12 @@ export const createAnnotation = (annotation) => {
   return shape;
 };
 
-export const addAnnotationToCanvas = ({ canvas, user, viewer, annotation }) => {
-  if (!canvas || !annotation || !viewer) return null;
-
-  const shape = createAnnotation(annotation);
-
-  // add shape to canvas and to activity feed
-  if (shape && shape.type !== "viewport") canvas.add(shape);
-
-  const message = createAnnotationMessage({
-    shape,
-    viewer,
-    annotation,
-    user,
-  });
-
-  return message;
-};
-
 // add annotation to the canvas
 export const addAnnotationsToCanvas = ({
   canvas,
   viewer,
   user,
   annotations = [],
-  userInfo,
 }) => {
   if (!canvas || !viewer || annotations.length === 0) return null;
   // remove render on each add annotation
@@ -424,30 +230,6 @@ export const addAnnotationsToCanvas = ({
 
   annotations.forEach((annotation) => {
     const shape = createAnnotation(annotation);
-    canvas.on("mouse:over", function (e) {
-      if (e?.target?.type === "textBox" || e?.target?.type === "textbox")
-        return;
-      const zoomLevel = viewer.viewport.getZoom();
-      const fontSize = zoomLevel <= 1 ? 250 : 250 / zoomLevel;
-      const textHeight = e?.target?.height / 2; // height of target
-      const title = new fabric.Text(`${e?.target?.title}`, {
-        left: e?.target?.left + e?.target?.width + 20, // positining text
-        top: e?.target?.top + textHeight,
-        backgroundColor: "rgba(0,0,0,0.6)",
-        fill: e?.taget?.color ? e?.taget?.color : "#00ff00",
-        selectable: false,
-        textAlign: "center",
-        fontWeight: 600,
-        fontFamily: "inter",
-      });
-      if (e?.target === shape && e?.target?.title) {
-        if (shape && shape.type !== "viewport") canvas.add(title);
-        title.fontSize = fontSize;
-      }
-      canvas.on("mouse:out", function (e) {
-        canvas.remove(title).requestRenderAll();
-      });
-    });
 
     // add shape to canvas and to activity feed
     if (shape && shape.type !== "viewport") canvas.add(shape);
@@ -457,7 +239,6 @@ export const addAnnotationsToCanvas = ({
       viewer,
       annotation,
       user,
-      userInfo,
     });
 
     feed.push(message);
@@ -465,9 +246,7 @@ export const addAnnotationsToCanvas = ({
 
   // restore render on each add annotation
   canvas.renderOnAddRemove = originalRender;
-
   canvas.requestRenderAll();
-
   viewer.viewport.zoomBy(1.01);
 
   return feed;
@@ -529,7 +308,7 @@ export const groupAnnotationAndCells = ({
 
   // check if optionalData is available and also is not empty
   if (optionalData && Object.keys(optionalData).length > 0) {
-    group.set({ analysedData: optionalData, roiType: optionalData.roiType });
+    group.set({ analysedData: optionalData });
   }
 
   const message = {
@@ -546,15 +325,11 @@ export const deleteAnnotationFromDB = async ({
   slideId,
   hash,
   onDeleteAnnotation,
-  type,
 }) => {
   if (!onDeleteAnnotation) return false;
   try {
-    // const resp = await onDeleteAnnotation({ hash, slideId });
-    onDeleteAnnotation({ hash, slideId, type });
-
-    // if (resp.data.success) return true;
-    return true;
+    const resp = await onDeleteAnnotation({ hash, slideId });
+    if (resp.data.success) return true;
   } catch (error) {
     console.error(error);
   }
@@ -568,23 +343,9 @@ export const saveAnnotationToDB = async ({
   onSaveAnnotation,
 }) => {
   if (!slideId || !annotation || !onSaveAnnotation) return false;
-  // console.log(annotation);
   const annotationJSON = getAnnotationJSON(annotation);
-  // console.log(annotationJSON);
   try {
-    if (annotationJSON.type === "line") {
-      annotationJSON.x1 = annotationJSON.cords[0];
-      annotationJSON.y1 = annotationJSON.cords[1];
-      annotationJSON.x2 = annotationJSON.cords[2];
-      annotationJSON.y2 = annotationJSON.cords[3];
-    }
-    annotationJSON.strokeWidth = annotationJSON.strokeWidth.toString();
-    delete annotationJSON?.strokeDashArray;
-    delete annotationJSON?.slide;
-    delete annotationJSON?.shadow;
-    delete annotationJSON?.timeStamp;
-
-    onSaveAnnotation({ slideId, data: annotationJSON });
+    await onSaveAnnotation({ slideId, data: annotationJSON });
   } catch (error) {
     return false;
   }
@@ -616,7 +377,6 @@ export const updateAnnotationInDB = async ({
   updateObject,
   onUpdateAnnotation,
 }) => {
-  // console.log("updateObject",updateObject);
   if (!hash || !updateObject || !onUpdateAnnotation) return false;
   try {
     await onUpdateAnnotation({
@@ -635,22 +395,17 @@ export const loadAnnotationsFromDB = async ({
   slideId,
   canvas,
   viewer,
-  // onLoadAnnotations,
-  data,
-  success,
-  userInfo,
+  onLoadAnnotations,
 }) => {
-  // if (!slideId || !canvas || !viewer || !onLoadAnnotations)
-  if (!slideId || !canvas || !viewer)
+  if (!slideId || !canvas || !viewer || !onLoadAnnotations)
     return { feed: null, status: "error", message: "Invalid parameters" };
   try {
-    // const { data, success } = await onLoadAnnotations({ slideId }).unwrap();
+    const { data, success } = await onLoadAnnotations({ slideId }).unwrap();
     if (success) {
       const feed = addAnnotationsToCanvas({
         canvas,
         viewer,
         annotations: data,
-        userInfo,
       });
 
       return { feed, status: "success" };
@@ -706,12 +461,12 @@ export const getVhutAnalysisData = async ({ canvas, vhut, left, top }) => {
   let totalCells = 0;
 
   const cellColor = {
-    Neutrophil: { hex: "#FFFF00" },
-    Epithelial: { hex: "#FF0000" },
-    Lymphocyte: { hex: "#00FFFF" },
-    Plasma: { hex: "#8FED66" },
-    Eosinohil: { hex: "#FF00FF" },
-    Connective: { hex: "#FFA500" },
+    Neutrophil: { hex: "#9800FF" },
+    Epithelial: { hex: "#0008FF" },
+    Lymphocyte: { hex: "#00F6FF" },
+    Plasma: { hex: "#2AFF00" },
+    Eosinohil: { hex: "#FAFF00" },
+    Connective: { hex: "#478C9E" },
   };
 
   data.forEach((item) => {
@@ -769,20 +524,7 @@ export const getAnnotationMetric = (annotation, mpp) => {
   let metric = { type: "", value: "", unit: "μm" };
 
   if (annotation.type === "line") {
-    let x1;
-    let y1;
-    let x2;
-    let y2;
-    if (annotation.cords) {
-      [x1, y1, x2, y2] = annotation.cords;
-    } else {
-      //  var {x1, y1, x2, y2} = annotation
-      x1 = annotation.x1;
-      x2 = annotation.x2;
-      y1 = annotation.y1;
-      y2 = annotation.y2;
-    }
-    // const [x1, y1, x2, y2] = annotation.cords || annotation;
+    const [x1, y1, x2, y2] = annotation.points;
     metric = { type: "length", value: Math.hypot(x2 - x1, y2 - y1) * mpp };
   } else if (annotation.type === "rectang") {
     metric = {

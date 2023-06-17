@@ -1,18 +1,10 @@
-
 .activeButton {
   border: 1px solid green;
-}
-
-::backdrop
-{
-    background-color: white;
 }
 
 .highlight {
   border: 2px solid yellow;
 }
-
-
 
 .crosshairs {
   position: absolute;

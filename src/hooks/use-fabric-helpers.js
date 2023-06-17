@@ -2,13 +2,10 @@ import { useState, useEffect } from "react";
 import { useToast } from "@chakra-ui/react";
 import { useFabricOverlayState } from "../state/store";
 import {
-  addAnnotationsToCanvas,
-  addAnnotationToCanvas,
   deleteAnnotationFromDB,
   updateAnnotationInDB,
 } from "../utility/annotationUtility";
 import {
-  addToActivityFeed,
   removeFromActivityFeed,
   updateActivityFeed,
 } from "../state/actions/fabricOverlayActions";
@@ -16,7 +13,7 @@ import {
 const useCanvasHelpers = (viewerId) => {
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { viewerWindow } = fabricOverlayState;
-  const { fabricOverlay, viewer, slideId } = viewerWindow[viewerId];
+  const { fabricOverlay, slideId } = viewerWindow[viewerId];
 
   const [canvas, setCanvas] = useState(null);
   const toast = useToast();
@@ -32,106 +29,11 @@ const useCanvasHelpers = (viewerId) => {
     canvas.clear();
   };
 
-  // subscription sync delete annotation from canvas
-  const subscriptionDeleteAnnotation = (hash) => {
-    if (!canvas || !hash) return;
-    const target = canvas.getObjectByHash(hash);
-    setFabricOverlayState(
-      removeFromActivityFeed({ id: viewerId, hash: target?.hash })
-    );
-
-    canvas.remove(target).requestRenderAll();
-
-    if (target.type === "textbox") {
-      toast({
-        title: "Comment deleted",
-        status: "success",
-        duration: 1000,
-        isClosable: true,
-      });
-    } else {
-      toast({
-        title: "Annotation deleted",
-        status: "success",
-        duration: 1000,
-        isClosable: true,
-      });
-    }
-  };
-
-  //subscription sync clear annotations from canvas
-  const subscriptionClearAnnotations = (deleteType) => {
-    if (!canvas) return;
-
-    let objects = canvas.getObjects();
-    for (let i = 0; i < objects.length; i++) {
-      if (deleteType.includes(objects[i].type)) {
-        canvas.remove(objects[i]).requestRenderAll();
-        setFabricOverlayState(
-          removeFromActivityFeed({ id: viewerId, hash: objects[i].hash })
-        );
-      }
-    }
-
-    if (deleteType.includes("textbox")) {
-      toast({
-        title: "Comments deleted",
-        status: "success",
-        duration: 1000,
-        isClosable: true,
-      });
-      // console.log("comments");
-    } else {
-      toast({
-        title: "Annotations deleted",
-        status: "success",
-        duration: 1000,
-        isClosable: true,
-      });
-    }
-  };
-
-  // subscription sync add annotation to canvas
-  const subscriptionAddAnnotation = (annotation) => {
-    if (!canvas || !annotation) return;
-
-    const target = canvas.getObjectByHash(annotation?.hash);
-    if (target) return;
-    const feed = addAnnotationToCanvas({ canvas, viewer, annotation });
-
-    setFabricOverlayState(addToActivityFeed({ id: viewerId, feed }));
-
-    canvas.requestRenderAll();
-
-    toast({
-      title: "Annotation created",
-      status: "success",
-      duration: 1000,
-      isClosable: true,
-    });
-  };
-
-  // subscription sync update annotation
-  const subscriptionUpdateAnnotation = (annotation) => {
-    if (!canvas || !annotation) return;
-
-    const target = canvas.getObjectByHash(annotation?.hash);
-    target?.set(annotation);
-
-    if (target?.type === "textbox") {
-      toast({
-        title: "Comment updated",
-        status: "success",
-        duration: 1000,
-        isClosable: true,
-      });
-    } 
-  };
   // delete annotation/object from canvas
   const deleteAnnotation = async (onDeleteAnnotation) => {
     if (!canvas || !onDeleteAnnotation) return;
     const activeObject = canvas.getActiveObject();
-    // console.log("active....", activeObject);
+
     // // Object has children (ie. arrow has children objects triangle and line)
     // if (activeObject.getObjects) {
     //   const objs = activeObject.getObjects();
@@ -141,13 +43,26 @@ const useCanvasHelpers = (viewerId) => {
     // }
 
     if (
-      !(await deleteAnnotationFromDB({
+      await deleteAnnotationFromDB({
         slideId,
-        type: [],
         hash: activeObject?.hash,
         onDeleteAnnotation,
-      }))
+      })
     ) {
+      setFabricOverlayState(
+        removeFromActivityFeed({ id: viewerId, hash: activeObject?.hash })
+      );
+
+      canvas.remove(activeObject);
+      canvas.renderAll();
+
+      toast({
+        title: "Annotation deleted",
+        status: "success",
+        duration: 1000,
+        isClosable: true,
+      });
+    } else {
       toast({
         title: "Annotation could not be deleted",
         description: "server error",
@@ -181,37 +96,27 @@ const useCanvasHelpers = (viewerId) => {
     if (!canvas || !onDeleteAnnotation) return;
 
     if (
-      !(await deleteAnnotationFromDB({
+      await deleteAnnotationFromDB({
         slideId,
-        type: ["ellipse", "rect", "polygon", "path", "line"],
         onDeleteAnnotation,
-      }))
+      })
     ) {
+      setFabricOverlayState(updateActivityFeed({ id: viewerId, fullFeed: [] }));
+
+      canvas.clear().requestRenderAll();
+
+      toast({
+        title: "Annotations deleted",
+        status: "success",
+        duration: 1000,
+        isClosable: true,
+      });
+    } else {
       toast({
         title: "Annotations could not be deleted",
         description: "server error",
         status: "error",
         duration: 1000,
-        isClosable: true,
-      });
-    }
-  };
-
-  const deleteAllComments = async (onDeleteAnnotation) => {
-    if (!canvas || !onDeleteAnnotation) return;
-
-    if (
-      !(await deleteAnnotationFromDB({
-        slideId,
-        type: ["textbox"],
-        onDeleteAnnotation,
-      }))
-    ) {
-      toast({
-        title: "Comments could not be deleted",
-        description: "server error",
-        status: "error",
-        duration: 2000,
         isClosable: true,
       });
     }
@@ -277,11 +182,6 @@ const useCanvasHelpers = (viewerId) => {
     toggleAnnotationVisibility,
     isAnnotationSelected,
     deleteAllAnnotations,
-    subscriptionAddAnnotation,
-    subscriptionClearAnnotations,
-    subscriptionDeleteAnnotation,
-    subscriptionUpdateAnnotation,
-    deleteAllComments,
   };
 };
 
