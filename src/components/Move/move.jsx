@@ -277,8 +277,7 @@ function Move({
           bottomZoomValue={bottomZoomValue}
           toolSelected={toolSelected}
           zoomValue={zoomValue}
-          viewerIds={viewerIds}
-          viewerId={viewerId}
+          viewerId={viewerIds}
           setModelname={setModelname}
           navigatorCounter={navigatorCounter}
           slide={slide}

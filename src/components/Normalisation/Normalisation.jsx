@@ -176,11 +176,11 @@ const Normalisation = ({
               <MdOutlineModeEditOutline
                 onClick={() => {
                   // setShowButtonGroup(true)
-                  setEditView(true);
+                  // setEditView(true);
                 }}
                 color="black"
                 size="20px"
-                // cursor="not-allowed"
+                cursor="not-allowed"
               />
               <label>
                 <MdOutlineUpload cursor="Pointer" size="23px" />

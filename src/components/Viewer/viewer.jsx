@@ -79,9 +79,9 @@ function Viewer({
   const { setFabricOverlayState } = useFabricOverlayState();
   const [viewer, setViewer] = useState(null);
   const boxRef = useRef();
-const [newTile, setNewTile] = useState(null);
+
   // Customize Fabric selection handles
-  fabric.Object.prototype.set({
+   fabric.Object.prototype.set({
     borderColor: "#22a2f8",
     borderScaleFactor: 2, // selection stroke width
     cornerColor: "white",
@@ -89,44 +89,36 @@ const [newTile, setNewTile] = useState(null);
     transparentCorners: false,
     hasControls: true,
     evented: true,
-  });
+  }); 
 
   useEffect(() => {
     // Initialize OpenSeadragon instance and set to viewer
     if (viewer) viewer.destroy();
-  
-    const tileSources = [
-      // Tile source 1
-      {
-        tileSource: newTile,
-        opacity: 1,
-      },
-      // Tile source 2 (example)
-      {
-        tileSource: tile, // Assuming `tile` is the URL of the new tile source
-        opacity: 0.7,
-      },
-
-    ];
-  
+    // console.log("tile",tile);
     setViewer(
       OpenSeadragon({
         ...osdOptions,
-        tileSources: tileSources.map(source => ({
-          tileSource: source.tileSource,
-          opacity: source.opacity,
-        })),
+         tileSources: [
+          //  {
+          //    tileSource:
+          //    "https://d3fvaqnlz9wyiv.cloudfront.net/hospital/development/outputs/5dd98e10-3de9-46f5-963b-ea61e7f28ae4/output.dzi",
+          //    opacity: 0.5, // Set opacity to 0.5 for this DZI image
+          //   },
+           {
+            tileSource:  tile,
+            opacity:1,
+           }
+        
+        ],
+  
         id: `viewer${viewerId}`,
       })
     );
-  
     initFabricJSOverlay(OpenSeadragon, fabric);
-  
     return () => {
       if (viewer) viewer.destroy();
     };
-  }, [newTile]);
-  
+  }, []);
 
   // Show the results.
   useEffect(() => {
@@ -183,7 +175,6 @@ const [newTile, setNewTile] = useState(null);
           viewerIds={viewerIds}
           setBottomZoomValue={setBottomZoomValue}
           setToolSelected={setToolSelected}
-          setNewTile={setNewTile}
           mentionUsers={mentionUsers}
           caseInfo={caseInfo}
           addUsersToCase={addUsersToCase}

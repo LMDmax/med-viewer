@@ -137,7 +137,6 @@ export const createAnnotationMessage = ({
         text: "",
         maskType: maskType || "",
         type: type || "",
-        
       };
     } else {
       message.object.set({
@@ -148,7 +147,7 @@ export const createAnnotationMessage = ({
         text: message.object.text,
         maskType: maskType || "",
         type: type || "",
-        isClosed:isClosed,
+        isClosed: isClosed,
       });
     }
   }
@@ -174,10 +173,10 @@ export const createAnnotation = (annotation) => {
         rx: annotation.rx,
         ry: annotation.ry,
         angle: annotation.angle,
-        hasControls: annotation.hash,
-        hasRotatingPoint: annotation.hash,
-        lockMovementX: !annotation.hash,
-        lockMovementY: !annotation.hash,
+        hasControls: annotation.globalCompositeOperation,
+        hasRotatingPoint: annotation.globalCompositeOperation,
+        lockMovementX: !annotation.globalCompositeOperation,
+        lockMovementY: !annotation.globalCompositeOperation,
       });
       break;
 
@@ -210,10 +209,10 @@ export const createAnnotation = (annotation) => {
         stroke: "#000",
         strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         strokeUniform: annotation.strokeUniform,
-        hasControls: annotation.hash,
-        hasRotatingPoint: annotation.hash,
-        lockMovementX: !annotation.hash,
-        lockMovementY: !annotation.hash,
+        hasControls: annotation.globalCompositeOperation,
+        hasRotatingPoint: annotation.globalCompositeOperation,
+        lockMovementX: !annotation.globalCompositeOperation,
+        lockMovementY: !annotation.globalCompositeOperation,
       });
       break;
 
@@ -223,10 +222,10 @@ export const createAnnotation = (annotation) => {
         strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         fill: annotation.fill,
         strokeUniform: annotation.strokeUniform,
-        hasControls: annotation.hash,
-        hasRotatingPoint: annotation.hash,
-        lockMovementX: !annotation.hash,
-        lockMovementY: !annotation.hash,
+        hasControls: annotation.globalCompositeOperation,
+        hasRotatingPoint: annotation.globalCompositeOperation,
+        lockMovementX: !annotation.globalCompositeOperation,
+        lockMovementY: !annotation.globalCompositeOperation,
       });
       break;
 
@@ -237,10 +236,10 @@ export const createAnnotation = (annotation) => {
         strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         strokeUniform: annotation.strokeUniform,
         fill: annotation.fill,
-        hasControls: annotation.hash,
-        hasRotatingPoint: annotation.hash,
-        lockMovementX: !annotation.hash,
-        lockMovementY: !annotation.hash,
+        hasControls: annotation.globalCompositeOperation,
+        hasRotatingPoint: annotation.globalCompositeOperation,
+        lockMovementX: !annotation.globalCompositeOperation,
+        lockMovementY: !annotation.globalCompositeOperation,
       });
       break;
 
@@ -251,135 +250,133 @@ export const createAnnotation = (annotation) => {
         strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         strokeUniform: annotation.strokeUniform,
         fill: annotation.fill,
-        hasControls: annotation.hash,
-        hasRotatingPoint: annotation.hash,
-        lockMovementX: !annotation.hash,
-        lockMovementY: !annotation.hash,
+        hasControls: annotation.globalCompositeOperation,
+        hasRotatingPoint: annotation.globalCompositeOperation,
+        lockMovementX: !annotation.globalCompositeOperation,
+        lockMovementY: !annotation.globalCompositeOperation,
       });
       break;
     case "arrow":
       // need to remove declaration in case bloack
-      const pointerX = annotation.Points[1][0];
-      const pointerY = annotation.Points[1][1];
-      const width = Math.abs(annotation.Points[1][0] - annotation.Points[0][0]);
-      const height = Math.abs(
-        annotation.Points[1][1] - annotation.Points[0][1]
-      );
-      const startPointX = annotation.Points[0][0];
-      const startPointY = annotation.Points[0][1];
+      const pointerX = annotation.left;
+      const pointerY = annotation.top;
+      const width = annotation.width;
+      const height = annotation.height;
+      const startPointX = annotation.left;
+      const startPointY = annotation.top;
       const ratio = height / width;
       const angle = (Math.atan(ratio) / Math.PI) * 100;
       const line = new fabric.Line(
         [
-          annotation.Points[0][0],
-          annotation.Points[0][1],
-          annotation.Points[1][0],
-          annotation.Points[1][1],
+          annotation.left,
+          annotation.top - 10,
+          annotation.left + 300,
+          annotation.top - 10,
         ],
         {
-          stroke: "black",
-          strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
+          stroke: "#00ff00",
+          strokeWidth: 30,
         }
       );
       const arrowHead = new fabric.Polygon(
         [
           { x: 0, y: 0 },
-          { x: -100, y: -50 },
-          { x: -100, y: 50 },
+          { x: 100, y: -50 },
+          { x: 100, y: 50 },
         ],
         {
-          stroke: "black",
-          strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
-          fill: "black",
-          top: annotation.Points[0][1],
-          left: annotation.Points[0][0],
+          stroke: "#00ff00",
+          strokeWidth: 30,
+          fill: "#00ff00",
+          top: annotation.top,
+          left: annotation.left,
           originX: "center",
           originY: "center",
         }
       );
-      if (pointerX >= startPointX) {
-        if (pointerY <= startPointY) {
-          arrowHead.angle = 180 - angle;
-        } else if (pointerY > startPointY) {
-          arrowHead.angle = 360 - angle;
-        }
-      } else if (pointerY <= startPointY) {
-        arrowHead.angle = angle;
-      } else if (pointerY > startPointY) {
-        arrowHead.angle = angle;
-      }
+      // if (pointerX >= startPointX) {
+      //   if (pointerY <= startPointY) {
+      //     arrowHead.angle = 180 - angle;
+      //   } else if (pointerY > startPointY) {
+      //     arrowHead.angle = 360 - angle;
+      //   }
+      // } else if (pointerY <= startPointY) {
+      //   arrowHead.angle = angle;
+      // } else if (pointerY > startPointY) {
+      //   arrowHead.angle = angle;
+      // }
       var objs = [line, arrowHead];
       shape = new fabric.Group(objs, {
-        hasControls: annotation.hash,
-        hasRotatingPoint: annotation.hash,
-        lockMovementX: !annotation.hash,
-        lockMovementY: !annotation.hash,
+        hasControls: false,
+        hasRotatingPoint:false,
+        lockMovementX: false,
+        lockMovementY: false,
       });
       break;
     case "marker":
       const line1 = new fabric.Line(
         [
-          annotation.Points[0][0],
-          annotation.Points[0][1] - 20,
-          annotation.Points[0][0],
-          annotation.Points[0][1] - 150,
+          annotation.left,
+          annotation.top - 20,
+          annotation.left,
+          annotation.top - 150,
         ],
         {
-          stroke: "black",
+          stroke: "#00ff00",
           strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         }
       );
       const line2 = new fabric.Line(
         [
-          annotation.Points[0][0],
-          annotation.Points[0][1] + 30,
-          annotation.Points[0][0],
-          annotation.Points[0][1] + 150,
+          annotation.left,
+          annotation.top + 30,
+          annotation.left,
+          annotation.top + 150,
         ],
         {
-          stroke: "black",
+          stroke: "#00ff00",
           strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         }
       );
       const line3 = new fabric.Line(
         [
-          annotation.Points[0][0] - 10,
-          annotation.Points[0][1] - 10,
-          annotation.Points[0][0] - 150,
-          annotation.Points[0][1] - 10,
+          annotation.left - 10,
+          annotation.top - 10,
+          annotation.left - 150,
+          annotation.top - 10,
         ],
         {
-          stroke: "black",
+          stroke: "#00ff00",
           strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         }
       );
       const line4 = new fabric.Line(
         [
-          annotation.Points[0][0] + 40,
-          annotation.Points[0][1] - 10,
-          annotation.Points[0][0] + 170,
-          annotation.Points[0][1] - 10,
+          annotation.left + 40,
+          annotation.top - 10,
+          annotation.left + 170,
+          annotation.top - 10,
         ],
         {
-          stroke: "black",
+          stroke: "#00ff00",
           strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         }
       );
       const Id = new fabric.Textbox(`${annotation.localId}`, {
-        left: annotation.Points[0][0] - 150,
-        top: annotation.Points[0][1] - 200,
-        color: annotation?.color ? annotation?.color : "#00ff00",
+        left: annotation.left - 150,
+        top: annotation.top - 200,
+        color: "#00ff00",
         backgroundColor: "rgba(0,0,0,0.6)",
-        fill: annotation?.color ? annotation?.color : "#00ff00",
+        fill: "#00ff00",
       });
       var objs = annotation.localId
         ? [line1, line2, line3, line4, Id]
         : [line1, line2, line3, line4];
       shape = new fabric.Group(objs, {
-        hasControls: annotation.hash,
-        hasRotatingPoint: annotation.hash,
-        lockMovementX: !annotation.hash,
-        lockMovementY: !annotation.hash,
+        hasControls: false,
+        hasRotatingPoint:false,
+        lockMovementX: false,
+        lockMovementY: false,
       });
       break;
     case "viewport":

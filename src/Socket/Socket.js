@@ -12,6 +12,11 @@ export const connectWebSocket = () => {
       socket.onerror = (error) => {
         reject(error);
       };
+      socket.onmessage = (event) => {
+        // Handle received message
+        const messageData = event.data;
+        console.log("Received message:", messageData);
+      };
     } else if (socket.readyState === WebSocket.OPEN) {
       resolve(socket);
     }

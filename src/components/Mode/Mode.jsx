@@ -124,9 +124,9 @@ const Mode = ({
                 e.target.style.color = "black";
               }}
               onClick={() => {
-                // if(socketIsConnected){
+                if(socketIsConnected){
                   setImageFilter(!imageFilter)
-                // }
+                }
               }}
             >
               Normalisation

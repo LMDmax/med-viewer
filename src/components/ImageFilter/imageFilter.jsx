@@ -101,10 +101,10 @@ const ImageFilter = ({
       setIsConnected(true);
       socketRef.current.onmessage = (event) => {
         const responseData = event.data;
-        console.log("result--->", responseData);
+        // console.log("result--->", responseData);
         let dataArray;
 
-        if (!responseData.startsWith("C") ) {
+        if (responseData !== "Ping" || responseData !== "Connection established" ) {
           if(responseData !== "Target Image Intialized"){
             dataArray = JSON.parse(responseData);
           }
@@ -134,7 +134,7 @@ const ImageFilter = ({
           }
       };
       socketRef.current.onclose = () => {
-        console.log("Socket closed");
+        // console.log("Socket closed");
       };
     }
   }, [socketRef.current]);
@@ -152,7 +152,7 @@ const ImageFilter = ({
   // console.log("Open Connections:", connectionCountRef.current);
 
   const sendRequest = (pixelsData) => {
-    console.log(pixelsData);
+    // console.log(pixelsData);
     return new Promise((resolve) => {
       const requestCallback = (imageData) => {
         resolve(imageData);
@@ -171,33 +171,6 @@ const ImageFilter = ({
       // console.log(pixelsData);
     });
   };
-  // const reinhardFilter = async (context, callback) => {
-  //   const imgData = context.getImageData(
-  //     0,
-  //     0,
-  //     context.canvas.width,
-  //     context.canvas.height
-  //   );
-
-  //   // Modify pixels
-  //   const pixelsData = {
-  //     data: imgData.data,
-  //     width: imgData.width,
-  //     height: imgData.height,
-  //     colorSpace: "srgb",
-  //   };
-
-  //   setArray((prevArray) => [...prevArray, pixelsData]);
-  //   // console.log(array);
-
-  //   const modifiedImageData = await sendRequest(pixelsData);
-  //   // console.log("result", modifiedImageData);
-  //   context.putImageData(modifiedImageData, 0, 0);
-  //   callback();
-  //   // console.log(array);
-  // };
-
-
   const reinhardFilter = async (context, callback) => {
     const imgData = context.getImageData(
       0,
@@ -205,29 +178,24 @@ const ImageFilter = ({
       context.canvas.width,
       context.canvas.height
     );
-  
-    const pixelsData = imgData.data;
-    const length = pixelsData.length;
-  
-    for (let i = 0; i < length; i += 4) {
-      const red = pixelsData[i];
-      const green = pixelsData[i + 1];
-      const blue = pixelsData[i + 2];
-      const alpha = pixelsData[i + 3];
-  
-      // Check if the pixel is black (RGB: 0, 0, 0) or inside the red range (adjust the threshold values as needed)
-      if ((red === 0 && green === 0 && blue === 0) || (red < 100 && green < 100 && blue < 100)) {
-        // Set alpha to 0 for black pixels or pixels inside the red range
-        pixelsData[i + 3] = 0;
-      }
-    }
-  
-    context.putImageData(imgData, 0, 0);
+
+    // Modify pixels
+    const pixelsData = {
+      data: imgData.data,
+      width: imgData.width,
+      height: imgData.height,
+      colorSpace: "srgb",
+    };
+
+    setArray((prevArray) => [...prevArray, pixelsData]);
+    // console.log(array);
+
+    const modifiedImageData = await sendRequest(pixelsData);
+    // console.log("result", modifiedImageData);
+    context.putImageData(modifiedImageData, 0, 0);
     callback();
+    // console.log(array);
   };
-  
-
-
 
   useEffect(() => {
     // console.log(array.length);
@@ -259,7 +227,7 @@ const ImageFilter = ({
       // console.log("sad");
       setToolSelected("");
       setFabricOverlayState(updateTool({ tool: "Move" }));
-      // viewer?.setFilterOptions(null);
+      viewer?.setFilterOptions(null);
       viewer?.viewport.zoomBy(1.01);
       setIsActive(false);
     }
@@ -292,8 +260,6 @@ const ImageFilter = ({
     setIsActive(true);
     setShowRightPanel(true);
   };
-
-  
   return (
     <>
       {showDialog && (

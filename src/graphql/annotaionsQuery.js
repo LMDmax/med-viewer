@@ -483,23 +483,3 @@ export const GET_TILS_ANALYSIS = gql`
     }
   }
 `;
-export const TUMOR_ANALYSIS = gql`
-  mutation Mutation($body: segGptMutationInput!) {
-    segGpt(body: $body)
-  }
-`;
-
-export const TUMOR_DETECTION_SUBSCRIPTION = gql`
-  subscription ConversionStatus($body: ConversionInput!) {
-    conversionStatus(body: $body) {
-      status
-      message
-      data {
-        dziUrl
-        originalUrl
-        key
-        slideid
-      }
-    }
-  }
-`;
