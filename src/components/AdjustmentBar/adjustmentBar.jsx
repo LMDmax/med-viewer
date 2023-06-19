@@ -69,6 +69,7 @@ function AdjustmentBar({
   clinicalStudy,
   modelName,
   questions,
+  setBinaryMask,
   hideModification,
   setNavigatorCounter,
   app,
@@ -156,6 +157,7 @@ function AdjustmentBar({
         hideTumor={hideTumor}
         hideStroma={hideStroma}
         setModelname={setModelname}
+        setBinaryMask={setBinaryMask}
         toolSelected={toolSelected}
         lessonId={lessonId}
         hideLymphocyte={hideLymphocyte}

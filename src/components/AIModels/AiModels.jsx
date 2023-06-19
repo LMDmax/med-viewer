@@ -14,35 +14,129 @@ import { BiInfoCircle } from "react-icons/bi";
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import IconSize from "../ViewerToolbar/IconSize";
 import { AiIcon } from "../Icons/CustomIcons";
+import { useLazyQuery, useMutation, useSubscription } from "@apollo/client";
+import {
+  TUMOR_ANALYSIS,
+  TUMOR_DETECTION_SUBSCRIPTION,
+} from "../../graphql/annotaionsQuery";
+import { getFileBucketFolder } from "../../utility";
+import { useFabricOverlayState } from "../../state/store";
 
 const AiModels = ({
   slide,
   setToolSelected,
   setModelname,
   toolSelected,
+  setBinaryMask,
+  viewerIds,
+  viewerId,
   bottomZoomValue,
   bottombottomZoomValue,
+  setLoadUI,
   navigatorCounter,
 }) => {
+  const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
+  const { viewerWindow, isViewportAnalysing } = fabricOverlayState;
+  const { viewer, fabricOverlay, slideId, originalFileUrl, tile } =
+    viewerWindow[viewerId];
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
   const [TilHover, setTilHover] = useState(false);
   const [animationActive, setAnimationActive] = useState(true);
   const [TilActiveState, setTilActiveState] = useState(0);
   const [infoBox, setInfoBox] = useState(false);
   const [infoItem, setInfoItem] = useState("");
+  const [showTumor, setShowTumor] = useState(false);
+  const [detectTumor, setDetectTumor] = useState(false);
+  const [onTumorAnalysis, { data: analysis_data, error: analysis_error }] =
+  useMutation(TUMOR_ANALYSIS);
+const slideid = slide?._id;
+const dziUrl = "https://d3fvaqnlz9wyiv.cloudfront.net/hospital/staging/outputs/9cbf2141-efc5-4ff8-a691-05b5fb80b811/output.dzi"
+const { data: subscription, error: subscription_error } = useSubscription(
+  TUMOR_DETECTION_SUBSCRIPTION,
+  {
+    variables: {
+      body: {
+        data: {
+        slideid,
+        },
+      },
+    },
+  }
+);
+console.log(analysis_data);
+console.log(subscription);
+// console.log(subscription_error);
 
-  // console.log(slide);
+const reinhardFilter = async (context, callback) => {
+  console.log("object");
+  const imgData = context.getImageData(
+    0,
+    0,
+    context.canvas.width,
+    context.canvas.height
+  );
 
-  // useEffect(() => {
-  //   if (!TilHover) {
-  //     setModelname("");
-  //     setInfoBox(false);
-  //   }
-  // },[TilHover]);
+  const pixelsData = imgData.data;
+  const length = pixelsData.length;
+
+  for (let i = 0; i < length; i += 4) {
+    const red = pixelsData[i];
+    const green = pixelsData[i + 1];
+    const blue = pixelsData[i + 2];
+    const alpha = pixelsData[i + 3];
+
+    // Check if the pixel is black (RGB: 0, 0, 0) or inside the red range (adjust the threshold values as needed)
+    if ((red === 0 && green === 0 && blue === 0) || (red < 100 && green < 100 && blue < 100)) {
+      // Set alpha to 0 for black pixels or pixels inside the red range
+      pixelsData[i + 3] = 0;
+    }
+  }
+
+  context.putImageData(imgData, 0, 0);
+  callback();
+};
+
+
+useEffect(()=>{
+  if(showTumor){
+    // console.log("object");
+    viewer.setFilterOptions({
+      filters: {
+        processors: reinhardFilter,
+      },
+      loadMode: "async",
+    });
+    setLoadUI(true)
+  }
+},[showTumor])
+
+
+
+useEffect(() => {
+  if (subscription && localStorage.getItem("detect_tumor")) {
+    setBinaryMask(dziUrl);
+    setTimeout(() => {
+      setShowTumor(true);
+    }, 2000); // Change the duration (in milliseconds) as per your requirement
+  }
+  else{
+    setShowTumor(false);
+  }
+}, [subscription]);
+
+
+  useEffect(() => {
+    if (!TilHover) {
+      setModelname("");
+      setInfoBox(false);
+    }
+  },[TilHover]);
 
   useEffect(() => {
     if (navigatorCounter > 0) {
       setTilHover(false);
+      setShowTumor(false);
+      setDetectTumor(false);
       if (TilActiveState > 0) {
         setTilActiveState(0);
       }
@@ -87,23 +181,23 @@ const AiModels = ({
     }
   };
 
-  // console.log(slide);
-  // useEffect(()=>{
-  //   if(slide.stainType ==="H&E"){
-  //       if(TilActiveState / 2 !== 0){
-  //           setModelname("TIL")
-  //       }
-  //       else{
-  //           setModelname("TILClear")
-  //       }
-  //       // console.log("object");
-  //   }
-  //   else{
-  //       setToolSelected("TILError");
-  //       // console.log("object2");
+  console.log(slide);
+  useEffect(()=>{
+    if(slide.stainType ==="H&E"){
+        if(TilActiveState / 2 !== 0){
+            setModelname("TIL")
+        }
+        else{
+            setModelname("TILClear")
+        }
+        // console.log("object");
+    }
+    else{
+        setToolSelected("TILError");
+        // console.log("object2");
 
-  //   }
-  // },[TilActiveState])
+    }
+  },[TilActiveState])
 
   useEffect(() => {
     if (toolSelected === "RunRoi") {
@@ -116,6 +210,30 @@ const AiModels = ({
       setAnimationActive(false); // stop the animation if the condition is not met
     }
   }, [toolSelected]);
+
+
+  const handleDetectTumor = () => {
+    setLoadUI(false);
+    const body = {
+      key: `${getFileBucketFolder(viewerIds[0].originalFileUrl)}`,
+      slideId: slideid,
+    };
+    onTumorAnalysis({
+      variables: { body: { ...body } },
+    });
+  };
+
+  useEffect(()=>{
+    if(detectTumor){
+      localStorage.setItem("detect_tumor" , true)
+      handleDetectTumor();
+    }
+    else{
+      localStorage.removeItem("detect_tumor");
+      setBinaryMask("")
+      setShowTumor(false);
+    }
+  },[detectTumor])
 
   return (
     <>
@@ -324,7 +442,7 @@ const AiModels = ({
                     onMouseLeave={(e) => {
                       e.target.style.color = "black";
                     }}
-                    // onClick={() => handleKI67()}
+                    onClick={() => {setDetectTumor(!detectTumor)}}
                   >
                     Detect Tumor
                   </li>

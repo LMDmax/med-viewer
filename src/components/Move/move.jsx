@@ -34,6 +34,7 @@ function Move({
   annotations,
   socketIsConnected,
   lessonId,
+  setBinaryMask,
   setShowRightPanel,
   enableAI,
   caseInfo,
@@ -277,8 +278,11 @@ function Move({
           bottomZoomValue={bottomZoomValue}
           toolSelected={toolSelected}
           zoomValue={zoomValue}
-          viewerId={viewerIds}
+          viewerId={viewerId}
+          setLoadUI={setLoadUI}
+          viewerIds={viewerIds}
           setModelname={setModelname}
+          setBinaryMask={setBinaryMask}
           navigatorCounter={navigatorCounter}
           slide={slide}
           setToolSelected={setToolSelected}

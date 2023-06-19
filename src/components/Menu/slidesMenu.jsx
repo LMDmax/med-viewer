@@ -284,7 +284,13 @@ const SlidesMenu = ({
                         }
                         if(editView){
                           changeSlideEdit(slide)
+                        } 
+                        if(!isMultiview && !editView){
+                          changeSlide(slide)
                         }
+
+                        console.log(editView);
+                        console.log(isMultiview);
                       }}
                       cursor="pointer"
                     />

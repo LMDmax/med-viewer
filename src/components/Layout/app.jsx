@@ -115,10 +115,10 @@ const LayoutApp = ({
   const [isXmlAnnotations, setIsXmlAnnotations] = useState(false);
   const [loadUI, setLoadUI] = useState(true);
   const [unit, setUnit] = useState();
-  const [imageFilter, setImageFilter] = useState(false);
+  const [imageFilter,  setImageFilter] = useState(false);
   const [showRightPanel, setShowRightPanel] = useState(false);
   const [socketIsConnected, setSocketIsConnected] = useState(false);
-
+    const [binaryMask, setBinaryMask] = useState("");
   const [modelName, setModelname] = useState("");
 
   const { tile, viewer } = viewerWindow[currentViewer];
@@ -359,6 +359,7 @@ const LayoutApp = ({
           hideLymphocyte={hideLymphocyte}
           chatFeedBar={chatFeedBar}
           caseInfo={caseInfo}
+          setBinaryMask={setBinaryMask}
           loadUI={loadUI}
           setLoadUI={setLoadUI}
           toolSelected={toolSelected}
@@ -548,6 +549,7 @@ const LayoutApp = ({
               zoomValue={zoomValue}
               slideName2={slideName2}
               setLoadUI={setLoadUI}
+              binaryMask={binaryMask}
               slideName={slideName}
               setModelname={setModelname}
               viewerIds={viewerIds}
@@ -562,6 +564,7 @@ const LayoutApp = ({
               handleAnnotationClick={handleAnnotationClick}
             />
           </LayoutAppBody>
+        
           <FunctionsMenu
             caseInfo={caseInfo}
             slides={slides}

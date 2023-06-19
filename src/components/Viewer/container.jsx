@@ -42,6 +42,7 @@ const ViewerContainer = ({
 	Environment,
   viewerIds,
 	accessToken,
+  binaryMask,
 	setIsXmlAnnotations,
 	handleAnnotationClick,
 }) => {
@@ -103,6 +104,7 @@ const ViewerContainer = ({
       setZoomValue={setZoomValue}
       zoomValue={zoomValue}
       setModelname={setModelname}
+      binaryMask={binaryMask}
 			userInfo={userInfo}
 			client2={client2}
       setBottomZoomValue={setBottomZoomValue}

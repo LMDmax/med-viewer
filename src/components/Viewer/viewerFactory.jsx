@@ -17,6 +17,7 @@ function ViewerFactory({
   bottomZoomValue,
   slide,
   slideName,
+  binaryMask,
   slides,
   setBottomZoomValue,
   setCurrentViewer,
@@ -110,6 +111,7 @@ function ViewerFactory({
             setZoomValue={setZoomValue}
             zoomValue={zoomValue}
             setLoadUI={setLoadUI}
+            binaryMask={binaryMask}
             bottomZoomValue={bottomZoomValue}
             viewerIds={viewerIds}
             client2={client2}

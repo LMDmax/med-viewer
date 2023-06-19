@@ -104,7 +104,7 @@ const ImageFilter = ({
         // console.log("result--->", responseData);
         let dataArray;
 
-        if (responseData !== "Ping" || responseData !== "Connection established" ) {
+        if (!responseData.startsWith("C") ) {
           if(responseData !== "Target Image Intialized"){
             dataArray = JSON.parse(responseData);
           }
@@ -223,7 +223,8 @@ const ImageFilter = ({
     if (!viewer) return;
     if (imageFilter) {
       setShowDialog(true);
-    } else {
+    } 
+    if(!imageFilter || !localStorage.getItem("detect_tumor")) {
       // console.log("sad");
       setToolSelected("");
       setFabricOverlayState(updateTool({ tool: "Move" }));
@@ -238,6 +239,7 @@ const ImageFilter = ({
       setIsActive(false);
       viewer.setFilterOptions(null);
       viewer.viewport.zoomBy(1.01);
+      localStorage.removeItem("detect_tumor")
     }
   }, [navigatorCounter]);
 
