@@ -110,6 +110,7 @@ const AiModels = ({
         loadMode: "async",
       });
       setLoadUI(true);
+    localStorage.removeItem("ModelName");
     }
   }, [showTumor]);
 
@@ -219,6 +220,7 @@ const AiModels = ({
 
   const handleDetectTumor = () => {
     setLoadUI(false);
+    localStorage.setItem("ModelName", "Detect Tumor")
     const body = {
       key: `${getFileBucketFolder(viewerIds[0].originalFileUrl)}`,
       slideId: slideid,
