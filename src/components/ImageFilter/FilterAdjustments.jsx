@@ -27,7 +27,7 @@ import AdjustmentRow from "./AdjustmentRow";
 import { updateTool } from "../../state/actions/fabricOverlayActions";
 
 const getFilters = (sliderInputs) => {
-  console.log(sliderInputs);
+  // console.log(sliderInputs);
   const filters = [];
   if (sliderInputs.thresholding > -1)
     filters.push(OpenSeadragon.Filters.THRESHOLDING(sliderInputs.thresholding));

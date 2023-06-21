@@ -144,7 +144,7 @@ const fabricOverlayReducer = (state, action) => {
           newViewerWindow[id] = state.viewerWindow[id];
       });
       const { viewer } = state.viewerWindow[action.payload.id];
-      viewer.destroy();
+      viewer?.destroy();
       return { ...state, viewerWindow: { ...newViewerWindow } };
     }
 

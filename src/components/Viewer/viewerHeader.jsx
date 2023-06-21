@@ -29,7 +29,6 @@ const ViewerHeader = ({
   slides,
   slideName2,
   viewerId,
-  slide,
   slideName,
   slideUrl,
   setCurrentViewer,
@@ -37,7 +36,7 @@ const ViewerHeader = ({
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { viewerWindow, sync } = fabricOverlayState;
   var vKeys = Object.keys(viewerWindow);
-console.log(viewerId);
+// console.log(viewerId);
   const handleClose = () => {
     const vKeys = Object.keys(viewerWindow);
     if (viewerId === vKeys[0]) {
@@ -50,6 +49,7 @@ console.log(viewerId);
   const handleSync = () => {
     setFabricOverlayState(toggleSync());
   };
+
 
   return (
     <Flex

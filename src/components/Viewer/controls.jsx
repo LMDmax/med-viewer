@@ -696,9 +696,7 @@ const ViewerControls = ({
 
       // set annotationObject if right click is on annotation
       if (annotation) {
-        // console.log(annotation);
         setAnnotationObject(annotation);
-        // console.log(annotationObject);
         const zoomValue = convertToZoomValue({
           level: annotation.zoomLevel,
           viewer,
@@ -1074,7 +1072,7 @@ const ViewerControls = ({
       {!isAnnotationLoaded || isViewportAnalysing ? (
         <Loading position="absolute" w="100%" zIndex="3" h="79vh" />
       ) : null}
-      <Box position="absolute" left="2vw" top="5vh">
+      <Box position="absolute"  left="2vw" top="5vh">
         <Flex direction="column" alignItems="end" mr="23px">
           <Draggable
             bounds={{

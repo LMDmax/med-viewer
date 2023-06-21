@@ -7,13 +7,18 @@ import { removeViewerWindow } from "../../state/actions/fabricOverlayActions";
 
 const ModeMeanu = ({
   setShowRightPanel,
-  setImageFilter,
   setIsNavigatorActive,
   setBase64URL,
   slide,
+  setCurrentViewer,
   setEditView,
+  viewerIds,
+  setShowNormalisation,
   application,
+  targetAnnotation,
+  setNormalizeDefault,
   editView,
+  showNormalisation,
   viewerId,
   setSlideName2,
   setSlideName,
@@ -44,8 +49,8 @@ const ModeMeanu = ({
           <AiOutlineClose
             onClick={() => {
               setShowRightPanel(false);
-              setImageFilter(false);
               setEditView(false);
+              localStorage.removeItem("mode");
               // setFabricOverlayState(removeViewerWindow({ id: vKeys[1] }));
             }}
             size={24}
@@ -60,13 +65,18 @@ const ModeMeanu = ({
           setSlideName={setSlideName}
           slide={slide}
           setIsMultiview={setIsMultiview}
+          showNormalisation={showNormalisation}
           viewerId={viewerId}
           application={application}
+          setNormalizeDefault={setNormalizeDefault}
+          targetAnnotation={targetAnnotation}
           setEditView={setEditView}
+          viewerIds={viewerIds}
           editView={editView}
+          setShowNormalisation={setShowNormalisation}
           tile={tile}
+          setShowRightPanel={setShowRightPanel}
           setIsNavigatorActive={setIsNavigatorActive}
-          setImageFilter={setImageFilter}
           setBase64URL={setBase64URL}
         />
       </Box>

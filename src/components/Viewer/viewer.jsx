@@ -58,7 +58,6 @@ function Viewer({
   enableAI,
   navigatorCounter,
   bottomZoomValue,
-  binaryMask,
   zoomValue,
   setZoomValue,
   viewerIds,
@@ -95,45 +94,25 @@ function Viewer({
   useEffect(() => {
     // Initialize OpenSeadragon instance and set to viewer
     if (viewer) viewer.destroy();
-  
-    let tileSources = [
-      // Tile source 1
-  
-      // Tile source 2 (example)
-      {
-        tileSource: tile, // Assuming `tile` is the URL of the new tile source
-        opacity: 1,
-        zIndex: 999,
-      },
-    ];
-  
-    if (binaryMask.length > 1) {
-      tileSources.push({
-        tileSource: binaryMask,
-        opacity: 0.5,
-        zIndex: 1,
-      });
-    }
-  
     setViewer(
       OpenSeadragon({
         ...osdOptions,
-        tileSources: tileSources.map(source => ({
-          tileSource: source.tileSource,
-          opacity: source.opacity,
-          zIndex: source.zIndex,
-        })),
+         tileSources: [
+           {
+            tileSource:  tile,
+           }
+        
+        ],
+  
         id: `viewer${viewerId}`,
       })
     );
-  
     initFabricJSOverlay(OpenSeadragon, fabric);
-  
     return () => {
       if (viewer) viewer.destroy();
     };
-  }, [binaryMask]);
-  
+  }, []);
+
   // Show the results.
   useEffect(() => {
     if (!viewer) return;

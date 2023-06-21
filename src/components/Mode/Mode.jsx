@@ -7,29 +7,50 @@ import {
   Box,
   Text,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ModeIcon } from "../Icons/CustomIcons";
 import modeImgSelect from "../../assets/images/modeIconSelect.svg";
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
+import { useFabricOverlayState } from "../../state/store";
 
 const Mode = ({
   setAdjustmentTool,
   AdjustmentTool,
+  
+  showRightPanel,
   setShowRightPanel,
+  viewerId,
   setImageFilter,
   socketIsConnected,
-  imageFilter,
 }) => {
+  const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
+  const { viewerWindow, activeTool } = fabricOverlayState;
+  const { viewer, fabricOverlay } = viewerWindow[viewerId];
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
   const [isOpen, setIsOpen] = useState();
+  const [showNormalisationCount, setShowNormalisationCount] = useState(0);
   const handleClick = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleOptionClick = (option) => {
-    // console.log(`Option ${option} selected`);
-    setIsOpen(false);
-  };
+  useEffect(() => {
+    if (showNormalisationCount % 2 == 0) {
+      localStorage.removeItem("mode");
+      setShowRightPanel(false);
+      setImageFilter(false)
+    } else {
+      localStorage.setItem("mode", "normalisation");
+      setShowRightPanel(true);
+      setImageFilter(true)
+
+    }
+  }, [showNormalisationCount]);
+
+  useEffect(() => {
+    if (!localStorage.getItem("mode")) {
+      setShowNormalisationCount(0);
+    }
+  });
   return (
     <Box
       w="60px"
@@ -124,8 +145,8 @@ const Mode = ({
                 e.target.style.color = "black";
               }}
               onClick={() => {
-                if(socketIsConnected){
-                  setImageFilter(!imageFilter)
+                if (socketIsConnected) {
+                  setShowNormalisationCount(showNormalisationCount + 1);
                 }
               }}
             >

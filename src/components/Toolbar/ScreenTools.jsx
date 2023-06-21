@@ -25,10 +25,12 @@ function ScreenTools({
   viewerId,
   report,
   toolSelected,
+  setLoadUI,
   chatFeedBar,
   base64URL,
   application,
   handleAnnotationBar,
+  imageFilter,
   caseInfo,
   slide,
   saveReport,
@@ -39,12 +41,12 @@ function ScreenTools({
   setToolSelected,
   handleFeedBar,
   handleReport,
-  imageFilter,
   showReport,
   setShowReport,
   userInfo,
   questions,
   app,
+  normalizeDefault,
   setSlideId,
   responseHandler,
   questionnaireResponse,
@@ -52,7 +54,6 @@ function ScreenTools({
   setSynopticType,
   getSynopticReport,
   handleChatFeedbar,
-  setShowRightPanel,
   handleTILFeedBar,
   navigatorCounter,
   updateSynopticReport,
@@ -72,8 +73,17 @@ function ScreenTools({
   } = useDisclosure();
 
   return (
-    <Flex h="100%" w="25%"  alignItems="center" justifyContent="flex-end">
-      <ImageFilter socketRef={socketRef} base64URL={base64URL} setShowRightPanel={setShowRightPanel} imageFilter={imageFilter} navigatorCounter={navigatorCounter} setToolSelected={setToolSelected} viewerId={viewerId} />
+    <Flex h="100%" w="25%" alignItems="center" justifyContent="flex-end">
+      <ImageFilter
+        imageFilter={imageFilter}
+        normalizeDefault={normalizeDefault}
+        socketRef={socketRef}
+        base64URL={base64URL}
+        setLoadUI={setLoadUI}
+        navigatorCounter={navigatorCounter}
+        setToolSelected={setToolSelected}
+        viewerId={viewerId}
+      />
       <DownloadImage setToolSelected={setToolSelected} />
       {application === "hospital" && (
         <ViewerChat
@@ -85,8 +95,8 @@ function ScreenTools({
           handleChatFeedbar={handleChatFeedbar}
           navigatorCounter={navigatorCounter}
         />
-        )}
-        {/* <Cancel /> */}
+      )}
+      {/* <Cancel /> */}
       {/* <Divider orientation="vertical" ml="5px" border="1px solid gray" /> */}
       {/* {report ? (
         <ShowReport

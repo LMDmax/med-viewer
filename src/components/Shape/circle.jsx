@@ -90,9 +90,11 @@ function Circle({ viewerId, onSaveAnnotation, setToolSelected }) {
 	/**
 	 * Add shapes and handle mouse events
 	 */
-	useEffect(() => {
-		if (!fabricOverlay || !isActive) return;
-		const canvas = fabricOverlay.fabricCanvas();
+	 // Set zIndex of the canvas element
+	 useEffect(() => {
+		 if (!fabricOverlay || !isActive) return;
+		 const canvas = fabricOverlay.fabricCanvas();
+		 canvas.wrapperEl.style.zIndex = "999";
 
 		/**
 		 * Mouse down

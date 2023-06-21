@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { connectWebSocket } from '../../Socket/Socket';
+import { connectWebSocket } from "../../Socket/Socket";
 import {
   Box,
   Flex,
@@ -20,6 +20,7 @@ import {
 import AdjustmentBar from "../AdjustmentBar/adjustmentBar";
 import ChatFeed from "../Feed/ChatFeed";
 import SlideFeed from "../Feed/feed";
+import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 import TILFeedBar from "../Feed/TILFeedBar";
 import ProgressBar from "../Loading/ProgressBar";
 import Navigator from "../Navigator/navigator";
@@ -31,6 +32,7 @@ import LayoutAppSidebar from "./sidebar";
 import ChangeSlide from "../Case/changeSlide";
 import { useFabricOverlayState } from "../../state/store";
 import FunctionsMenu from "../Menu/menu";
+import ToolbarButton from "../ViewerToolbar/button";
 
 const LayoutApp = ({
   userInfo,
@@ -86,7 +88,8 @@ const LayoutApp = ({
   const [lymphocyteCount, setLymphocyteCount] = useState();
   const [navigatorCounter, setNavigatorCounter] = useState(0);
   const [base64URL, setBase64URL] = useState(false);
-
+  const [normalizeDefault, setNormalizeDefault] = useState(false);
+  const [imageFilter, setImageFilter] = useState(false);
   const [ifBiggerScreen] = useMediaQuery("(min-width:1920px)");
   const [currentViewer, setCurrentViewer] = useState(
     viewerIds?.[0]?._id || viewerIds?.[0]?.slideId
@@ -94,7 +97,7 @@ const LayoutApp = ({
 
   // console.log('slideInfo',slide);
   const [showAnnotationsBar, setShowAnnotationsBar] = useState(false);
-  const [slideName, setSlideName] = useState(slide?.slideName)
+  const [slideName, setSlideName] = useState(slide?.slideName);
   const [slideName2, setSlideName2] = useState(null);
   const [showFeedBar, setShowFeedBar] = useState(false);
   const [chatFeedBar, setChatFeedBar] = useState(false);
@@ -115,11 +118,11 @@ const LayoutApp = ({
   const [isXmlAnnotations, setIsXmlAnnotations] = useState(false);
   const [loadUI, setLoadUI] = useState(true);
   const [unit, setUnit] = useState();
-  const [imageFilter,  setImageFilter] = useState(false);
-  const [showRightPanel, setShowRightPanel] = useState(false);
   const [socketIsConnected, setSocketIsConnected] = useState(false);
-    const [binaryMask, setBinaryMask] = useState("");
+  const [binaryMask, setBinaryMask] = useState("");
   const [modelName, setModelname] = useState("");
+  const [showRightPanel, setShowRightPanel] = useState(false);
+  const [editView, setEditView] = useState(false);
 
   const { tile, viewer } = viewerWindow[currentViewer];
 
@@ -129,14 +132,8 @@ const LayoutApp = ({
     // console.log(bottomZoomValue);
   }, [bottomZoomValue]);
 
-
   // console.log(MouseDown);
 
-  useEffect(()=>{
-    if(!imageFilter){
-      // setShowRightPanel(false);
-    }
-  },[imageFilter])
   // console.log("sssss", showRightPanel);
 
   let runAiModel;
@@ -268,7 +265,7 @@ const LayoutApp = ({
     case "FilterSaved":
       returnText = "Adjusment saved successfully ";
       break;
-      case "Error":
+    case "Error":
       returnText = "Something Went Wrong!";
       break;
 
@@ -316,7 +313,6 @@ const LayoutApp = ({
     setFeedBar(1);
   };
 
-
   // connect websocket
 
   useEffect(() => {
@@ -324,17 +320,16 @@ const LayoutApp = ({
       .then((socket) => {
         // console.log('WebSocket connection established.');
         socketRef.current = socket;
-    // console.log(socketRef);
-    setSocketIsConnected(true)
-
+        // console.log(socketRef);
+        setSocketIsConnected(true);
       })
       .catch((error) => {
-        console.error('WebSocket connection error:', error);
+        console.error("WebSocket connection error:", error);
       });
-  },[]);
+  }, []);
   // console.log(currentViewer);
 
-    let h;
+  let h;
 
   if (application === "education") {
     h = ifBiggerScreen ? "calc(100vh - 5.5vh)" : "93vh";
@@ -343,13 +338,9 @@ const LayoutApp = ({
   } else {
     // Handle other cases or provide a default value for h
   }
- 
- 
+
   return (
-    <Flex
-    style={{height: h}}
-      direction="column"
-    >
+    <Flex style={{ height: h }} direction="column">
       <LayoutOuterBody>
         <AdjustmentBar
           userInfo={userInfo}
@@ -357,13 +348,17 @@ const LayoutApp = ({
           hideTumor={hideTumor}
           lessonId={lessonId}
           hideLymphocyte={hideLymphocyte}
+          imageFilter={imageFilter}
           chatFeedBar={chatFeedBar}
+          setImageFilter={setImageFilter}
           caseInfo={caseInfo}
           setBinaryMask={setBinaryMask}
+          normalizeDefault={normalizeDefault}
           loadUI={loadUI}
           setLoadUI={setLoadUI}
           toolSelected={toolSelected}
           setToolSelected={setToolSelected}
+          setShowRightPanel={setShowRightPanel}
           refreshHil={refreshHil}
           navigatorCounter={navigatorCounter}
           base64URL={base64URL}
@@ -371,9 +366,6 @@ const LayoutApp = ({
           pathStroma={pathStroma}
           hitTil={hitTil}
           zoomValue={zoomValue}
-          imageFilter={imageFilter}
-          setImageFilter={setImageFilter}
-          setShowRightPanel={setShowRightPanel}
           setTumorArea={setTumorArea}
           setTilScore={setTilScore}
           setStromaArea={setStromaArea}
@@ -428,27 +420,6 @@ const LayoutApp = ({
           updateSynopticReport={updateSynopticReport}
           isXmlAnnotations={isXmlAnnotations}
         />
-
-        {/* {isNavigatorActive && (
-          <Navigator
-            caseInfo={caseInfo}
-            slides={slides}
-            viewerId={currentViewer}
-            isActive={isNavigatorActive}
-            setIsNavigatorActive={setIsNavigatorActive}
-          />
-        )} */}
-        {/* {isMultiview && (
-          <Navigator
-            caseInfo={caseInfo}
-            slides={slides}
-            viewerId={currentViewer}
-            isActive={isMultiview}
-            setToolSelected={setToolSelected}
-            isMultiview={isMultiview}
-            setIsMultiview={setIsMultiview}
-          />
-        )} */}
         <LayoutInnerBody>
           {sidebar ? (
             <LayoutAppSidebar
@@ -465,74 +436,6 @@ const LayoutApp = ({
               setSidebar={setSidebar}
             />
           ) : null}
-          {/* {showFeedBar ? (
-            <SlideFeed
-              viewerId={currentViewer}
-              showFeedBar={showFeedBar}
-              handleFeedBarClose={handleFeedBarClose}
-              showReport={showReport}
-              feedTab={feedTab}
-              synopticType={synopticType}
-              isXmlAnnotations={isXmlAnnotations}
-              annotationObject={annotationObject}
-            />
-          ) : null} */}
-          {/* {chatFeedBar ? (
-            <ChatFeed
-              viewerId={currentViewer}
-              chatFeedBar={chatFeedBar}
-              handleChatFeedBarClose={handleChatFeedBarClose}
-              showReport={showReport}
-              feedTab={feedTab}
-              userInfo={userInfo}
-              caseInfo={caseInfo}
-              synopticType={synopticType}
-              application={application}
-              app={application}
-              users={users}
-              client2={client2}
-              mentionUsers={mentionUsers}
-              Environment={Environment}
-              addUsersToCase={addUsersToCase}
-            />
-          ) : null} */}
-          {/* {tILFedBar ? (
-            <TILFeedBar
-              viewerId={currentViewer}
-              hideTumor={hideTumor}
-              setHideTumor={setHideTumor}
-              hideLymphocyte={hideLymphocyte}
-              setHideLymphocyte={setHideLymphocyte}
-              setHideStroma={setHideStroma}
-              hideStroma={hideStroma}
-              chatFeedBar={chatFeedBar}
-              setHideModification={setHideModification}
-              hideModification={hideModification}
-              handleFeedBarClose={handleFeedBarClose}
-              showReport={showReport}
-              setRefreshHil={setRefreshHil}
-              setLoadUI={setLoadUI}
-              refreshHil={refreshHil}
-              tumorArea={tumorArea}
-              stromaArea={stromaArea}
-              tilScore={tilScore}
-              lymphocyteCount={lymphocyteCount}
-              feedTab={feedTab}
-              newHilData={newHilData}
-              setPathStroma={setPathStroma}
-              pathStroma={pathStroma}
-              userInfo={userInfo}
-              caseInfo={caseInfo}
-              synopticType={synopticType}
-              application={application}
-              app={application}
-              showFeedBar={showFeedBar}
-              users={users}
-              client2={client2}
-              mentionUsers={mentionUsers}
-              Environment={Environment}
-            />
-          ) : null} */}
           <LayoutAppBody>
             <ViewerFactory
               application={application}
@@ -564,7 +467,7 @@ const LayoutApp = ({
               handleAnnotationClick={handleAnnotationClick}
             />
           </LayoutAppBody>
-        
+
           <FunctionsMenu
             caseInfo={caseInfo}
             slides={slides}
@@ -576,6 +479,7 @@ const LayoutApp = ({
             isMultiview={isMultiview}
             slide={viewerIds?.[0]}
             hideTumor={hideTumor}
+            viewerIds={viewerIds}
             setHideTumor={setHideTumor}
             setToolSelected={setToolSelected}
             hideLymphocyte={hideLymphocyte}
@@ -601,9 +505,9 @@ const LayoutApp = ({
             handleReport={handleReport}
             showReport={showReport}
             setShowReport={setShowReport}
+            setCurrentViewer={setCurrentViewer}
             showRightPanel={showRightPanel}
             setShowRightPanel={setShowRightPanel}
-            setImageFilter={setImageFilter}
             questions={questions}
             app={application}
             setSlideId={setSlideId}
@@ -614,9 +518,12 @@ const LayoutApp = ({
             getSynopticReport={getSynopticReport}
             updateSynopticReport={updateSynopticReport}
             chatFeedBar={chatFeedBar}
+            setEditView={setEditView}
+            editView={editView}
             handleChatFeedBarClose={handleChatFeedBarClose}
             setChatFeedBar={setChatFeedBar}
             feedTab={feedTab}
+            setNormalizeDefault={setNormalizeDefault}
             users={users}
             client2={client2}
             mentionUsers={mentionUsers}
@@ -631,7 +538,7 @@ const LayoutApp = ({
           pl="30px"
           w="100%"
           zIndex={99}
-          h={application === "hospital" ? "32px" :"25px"}
+          h={application === "hospital" ? "32px" : "25px"}
         >
           <Flex justifyContent="space-between" alignItems="center">
             <Flex

@@ -29,10 +29,11 @@ const ImageFilter = ({
   viewerId,
   setToolSelected,
   navigatorCounter,
-  base64URL,
+  setLoadUI,
   imageFilter,
+  normalizeDefault,
+  base64URL,
   socketRef,
-  setShowRightPanel,
 }) => {
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { viewerWindow, activeTool } = fabricOverlayState;
@@ -41,60 +42,8 @@ const ImageFilter = ({
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
   const isActiveTool = activeTool === "Normalisation";
   const [isConnected, setIsConnected] = useState();
-  const [showDialog, setShowDialog] = useState(false);
   const requestQueueRef = useRef([]);
-  const connectionCountRef = useRef(0);
   const [array, setArray] = useState([]);
-  const [data, setData] = useState();
-  const [response, setResponse] = useState();
-
-  const targetMean = [56.35951712, 55.60842896, -40.15281677];
-
-  const targetSd = [16.75495379, 13.53081669, 10.56340324];
-
-  const getStdev = (l1, l2, l3, imgMean) => {
-    let imgSd = [0, 0, 0];
-    for (let i = 0; i < l1.length; i++) {
-      imgSd[0] += (l1[i] - imgMean[0]) ** 2;
-      imgSd[1] += (l2[i] - imgMean[1]) ** 2;
-      imgSd[2] += (l3[i] - imgMean[2]) ** 2;
-    }
-    imgSd = imgSd.map((x) => Math.sqrt(x / l1.length));
-    return imgSd;
-  };
-
-  //   const imgData = context.getImageData(
-  //     0,
-  //     0,
-  //     context.canvas.width,
-  //     context.canvas.height
-  //   );
-  //   const pixelsData = {
-  //     data: imgData.data,
-  //     width: imgData.width,
-  //     height: imgData.height,
-  //     colorSpace: "srgb",
-  //   };
-
-  //   console.log(pixelsData);
-
-  //   axios.post("https://backup-quantize-vhut.prr.ai/filter", pixelsData).then((resp) => {
-  //     const newPixelsData = {
-  //       data: new Uint8ClampedArray(resp.data),
-  //       width: imgData.width,
-  //       height: imgData.height,
-  //       colorSpace: "srgb",
-  //     };
-  //     const imageData = new ImageData(newPixelsData.data, newPixelsData.width, newPixelsData.height);
-  //     context.putImageData(imageData, 0, 0);
-  //     // const newImgData = context.getImageData(0, 0, context.canvas.width, context.canvas.height);
-  //     // console.log("Modified image data: ", newImgData);
-  //     callback(); // call callback inside the then block
-  //   });
-  // };
-
-  //working
-  // console.log("sentReques--->", array.length);
 
   useEffect(() => {
     if (socketRef.current !== null) {
@@ -104,37 +53,39 @@ const ImageFilter = ({
         // console.log("result--->", responseData);
         let dataArray;
 
-        if (!responseData.startsWith("C") ) {
-          if(responseData !== "Target Image Intialized"){
+        if (!responseData.startsWith("C")) {
+          if (responseData !== "Target Image Intialized") {
             dataArray = JSON.parse(responseData);
-          }
-          else{
-          dataArray = undefined;
+          } else {
+            dataArray = undefined;
           }
         } else {
           dataArray = undefined;
         }
 
-          if (dataArray) {
-            const convertedData = {
-              data: new Uint8ClampedArray(dataArray.data),
-              width: dataArray.width,
-              height: dataArray.height,
-              colorSpace: "srgb",
-            };
-            const imageData = new ImageData(
-              convertedData.data,
-              convertedData.width,
-              convertedData.height
-            );
-            const requestCallback = requestQueueRef.current.shift();
-            if (requestCallback) {
-              requestCallback(imageData);
-            }
+        if (dataArray) {
+          const convertedData = {
+            data: new Uint8ClampedArray(dataArray.data),
+            width: dataArray.width,
+            height: dataArray.height,
+            colorSpace: "srgb",
+          };
+          const imageData = new ImageData(
+            convertedData.data,
+            convertedData.width,
+            convertedData.height
+          );
+          const requestCallback = requestQueueRef.current.shift();
+          if (requestCallback) {
+            requestCallback(imageData);
           }
+          setLoadUI(true);
+          localStorage.removeItem("ModelName");
+          setToolSelected("Normalisation");
+        }
       };
       socketRef.current.onclose = () => {
-        // console.log("Socket closed");
+        console.log("Socket closed");
       };
     }
   }, [socketRef.current]);
@@ -145,7 +96,7 @@ const ImageFilter = ({
         handleOkay();
         // console.log("2nd open");
       }, 3000);
-  
+
       return () => clearTimeout(timeout);
     }
   }, [base64URL]);
@@ -160,15 +111,11 @@ const ImageFilter = ({
 
       requestQueueRef.current.push(requestCallback);
       // console.log(isConnected);
-      if(array.length > 0){
+      if (array.length > 0) {
         // console.log("sending");
+        // setLoadUI(false);
         socketRef.current.send(JSON.stringify(pixelsData));
       }
-      else{
-        // console.log("NOT");
-
-      }
-      // console.log(pixelsData);
     });
   };
   const reinhardFilter = async (context, callback) => {
@@ -214,45 +161,42 @@ const ImageFilter = ({
         clearInterval(interval); // Clear the interval on component unmount (optional)
       };
     }
-   
   }, [array]);
 
-// console.log("00length",array.length);
+  // console.log("00length",array.length);
   useEffect(() => {
     // console.log(imageFilter);
     if (!viewer) return;
-    if (imageFilter) {
-      setShowDialog(true);
-    } 
-    if(!imageFilter || !localStorage.getItem("detect_tumor")) {
+    if (!imageFilter) {
       // console.log("sad");
-      setToolSelected("");
+      window.location.reload();
+      // setToolSelected("");
       setFabricOverlayState(updateTool({ tool: "Move" }));
-      viewer?.setFilterOptions(null);
+      // viewer?.setFilterOptions(null);
       viewer?.viewport.zoomBy(1.01);
-      setIsActive(false);
     }
   }, [imageFilter]);
+
+  useEffect(() => {
+    if (normalizeDefault) {
+      handleOkay();
+     
+    }
+  }, [normalizeDefault]);
 
   useEffect(() => {
     if (navigatorCounter > 0) {
       setIsActive(false);
       viewer.setFilterOptions(null);
       viewer.viewport.zoomBy(1.01);
-      localStorage.removeItem("detect_tumor")
+      localStorage.removeItem("mode");
     }
   }, [navigatorCounter]);
 
-  const handleCancel = () => {
-    setShowDialog(false);
-    setShowRightPanel(true);
-
-    // Perform other actions when cancel is clicked
-  };
   const handleOkay = () => {
-    setShowDialog(false);
+    setLoadUI(false);
+    localStorage.setItem("ModelName", "Normalisation");
     setFabricOverlayState(updateTool({ tool: "Normalisation" }));
-    setToolSelected("Normalisation");
     viewer.setFilterOptions({
       filters: {
         processors: reinhardFilter,
@@ -260,34 +204,8 @@ const ImageFilter = ({
       loadMode: "async",
     });
     setIsActive(true);
-    setShowRightPanel(true);
   };
-  return (
-    <>
-      {showDialog && (
-        <Modal isOpen={true} isCentered>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Normalisation</ModalHeader>
-            <ModalBody>
-              <p>
-                Are you sure you want to apply normalisation with default target
-                image?
-              </p>
-            </ModalBody>
-            <ModalFooter>
-              <Button mr={3} onClick={handleCancel}>
-                Cancel
-              </Button>
-              <Button bg="#3f5f7e" color="black" onClick={handleOkay}>
-                Okay
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-      )}
-    </>
-  );
+  return <></>;
 };
 
 export default ImageFilter;

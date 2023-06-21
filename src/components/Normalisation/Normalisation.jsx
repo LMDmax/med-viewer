@@ -8,30 +8,29 @@ import { removeViewerWindow } from "../../state/actions/fabricOverlayActions";
 
 const Normalisation = ({
   setBase64URL,
-  tile,
-  setImageFilter,
-  setSlideName,
   editView,
-  application,
+  setShowRightPanel,
   setEditView,
-  setIsNavigatorActive,
-  setSlideName2,
-  isMultiview,
+  setNormalizeDefault,
+  targetAnnotation,
+  showNormalisation,
+  setShowNormalisation,
   viewerId,
-  setIsMultiview,
-  slide,
 }) => {
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { viewerWindow } = fabricOverlayState;
   const { viewer, fabricOverlay } = viewerWindow[viewerId];
   const [isChecked, setIsChecked] = useState(true);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [normalisationTab, setNormalisationTab] = useState(true);
   const [showButtonsGroup, setShowButtonGroup] = useState(false);
-  const [showNormalisation, setShowNormalisation] = useState(true);
-  const vKeys = Object.keys(viewerWindow);
+
+
+  // console.log(tile);
   const handleUpload = () => {
     // Create base64URL url
-    fetch(selectedImage.url)
+    if(selectedImage){
+      fetch(selectedImage.url)
       .then((response) => response.blob())
       .then((blob) => {
         // Read the Blob contents as Base64 data
@@ -53,8 +52,18 @@ const Normalisation = ({
       .catch((error) => {
         // console.log("Error fetching image data:", error);
       });
+    }
+    if(editView){
+      const sendAnnotationData = {
+        targetAnnotation
+      }
+      // sendRequest(JSON.stringify(sendAnnotationData));
+      setBase64URL(true);
+      console.log(sendAnnotationData);
+    }
 
     setShowButtonGroup(false);
+    setShowRightPanel(false)
   };
 
   const handleFileUpload = (event) => {
@@ -95,7 +104,6 @@ const Normalisation = ({
     alignItems: "center",
   };
 
-
   return (
     <Box>
       <Flex
@@ -121,14 +129,14 @@ const Normalisation = ({
           </Text>
         </Flex>
         <Box
-          onClick={() => setShowNormalisation(!showNormalisation)}
+          onClick={() => setNormalisationTab(!normalisationTab)}
           cursor="pointer"
           mr="5px"
         >
-          {showNormalisation ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
+          {normalisationTab ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
         </Box>
       </Flex>
-      {showNormalisation ? (
+      {normalisationTab ? showNormalisation ? (
         <Box
           mt="5px"
           w="83%"
@@ -157,8 +165,112 @@ const Normalisation = ({
               alignItems="center"
               justifyContent="flex-start"
               css={{ whiteSpace: "normal", wordBreak: "break-word" }}
-              w="50%"
+              w={showButtonsGroup ? "80%" : "50%"}
               ml="2px"
+              textOverflow="ellipsis"
+            >
+              <Tooltip
+                label={selectedImage ? selectedImage.name : ""}
+                aria-label="A tooltip"
+              >
+                <Text>
+                  {selectedImage
+                    ? truncateText(selectedImage.name, 25)
+                    : editView
+                    ? "Annotation Marked"
+                    : "No image selected"}
+                </Text>
+              </Tooltip>
+            </Flex>
+            {!showButtonsGroup && !editView ? (
+              <Flex w="25%" ml="2px" justifyContent="space-evenly">
+                <MdOutlineModeEditOutline
+                  onClick={() => {
+                    setShowButtonGroup(true);
+                    setEditView(true);
+                  }}
+                  color="black"
+                  size="20px"
+                />
+                <label>
+                  <MdOutlineUpload cursor="Pointer" size="23px" />
+                  <input
+                    type="file"
+                    style={{ display: "none" }}
+                    accept=".jpeg,.jpg,.png"
+                    onChange={handleFileUpload}
+                  />
+                </label>
+              </Flex>
+            ) : null}
+          </Flex>
+          {showButtonsGroup || editView ? (
+            <Flex w="100%" justifyContent="space-between" mt="10px" h="35px">
+              <Button
+                onClick={() => {
+                  setShowButtonGroup(false);
+                  setSelectedImage(null);
+                  setShowNormalisation(true);
+                  setEditView(false)
+                }}
+                w="50%"
+                mr="12px"
+                h="100%"
+                borderRadius="0"
+                borderColor="#1B75BC40"
+                color="black "
+                variant="outline"
+              >
+                Cancels
+              </Button>
+              <Button
+                w="50%"
+                h="100%"
+                color="#3987c5"
+                borderRadius="0"
+                borderColor="#c6dcee"
+                bg="#c6dcee"
+                variant="solid"
+                onClick={() =>{
+                  handleUpload()
+                }}
+              >
+                Upload
+              </Button>
+            </Flex>
+          ) : null}
+        </Box>
+      ) : (
+        <Box
+          mt="5px"
+          w="83%"
+          h="72px"
+          borderRadius="5px"
+          border="1px solid #C4C4C4"
+          mx="32px"
+        >
+          <Flex p="5px" justifyContent="space-between">
+            <HStack
+              backgroundColor={selectedImage ? "" : "rgb(214,214,215,0.5)"}
+              w="20%"
+              h="60px"
+              border="1px solid rgb(214,214,215,0.5)"
+              style={{ overflow: "hidden" }}
+            >
+              {selectedImage && (
+                <img
+                  src={selectedImage.url}
+                  alt={selectedImage.name}
+                  style={{ width: "100%", height: "auto" }}
+                />
+              )}
+            </HStack>
+            <Flex
+              alignItems="center"
+              justifyContent="flex-start"
+              css={{ whiteSpace: "normal", wordBreak: "break-word" }}
+              w="80%"
+              ml="5px"
               textOverflow="ellipsis"
             >
               <Tooltip
@@ -172,58 +284,40 @@ const Normalisation = ({
                 </Text>
               </Tooltip>
             </Flex>
-            <Flex w="25%" ml="2px" justifyContent="space-evenly">
-              <MdOutlineModeEditOutline
-                onClick={() => {
-                  // setShowButtonGroup(true)
-                  // setEditView(true);
-                }}
-                color="black"
-                size="20px"
-                cursor="not-allowed"
-              />
-              <label>
-                <MdOutlineUpload cursor="Pointer" size="23px" />
-                <input
-                  type="file"
-                  style={{ display: "none" }}
-                  accept=".jpeg,.jpg,.png"
-                  onChange={handleFileUpload}
-                />
-              </label>
-            </Flex>
           </Flex>
-          {showButtonsGroup ? (
-            <Flex w="100%" justifyContent="space-between" mt="10px" h="35px">
-              <Button
-                onClick={() => {
-                  setShowButtonGroup(false);
-                  setSelectedImage(null);
-                }}
-                w="50%"
-                mr="12px"
-                h="100%"
-                borderRadius="0"
-                borderColor="#1B75BC40"
-                color="black "
-                variant="outline"
-              >
-                Cancel
-              </Button>
-              <Button
-                w="50%"
-                h="100%"
-                color="#3987c5"
-                borderRadius="0"
-                borderColor="#c6dcee"
-                bg="#c6dcee"
-                variant="solid"
-                onClick={() => handleUpload()}
-              >
-                Upload
-              </Button>
-            </Flex>
-          ) : null}
+
+          <Flex w="100%" justifyContent="space-between" mt="10px" h="35px">
+            <Button
+              onClick={() => {
+                setShowNormalisation(true);
+                setNormalizeDefault(false);
+              }}
+              w="50%"
+              mr="12px"
+              h="100%"
+              borderRadius="0"
+              borderColor="#1B75BC40"
+              color="black "
+              variant="outline"
+            >
+              Cancel
+            </Button>
+            <Button
+              w="50%"
+              h="100%"
+              color="#3987c5"
+              borderRadius="0"
+              borderColor="#c6dcee"
+              bg="#c6dcee"
+              variant="solid"
+              onClick={() => {
+                setNormalizeDefault(true);
+                setShowRightPanel(false);
+              }}
+            >
+              Normalize
+            </Button>
+          </Flex>
         </Box>
       ) : null}
     </Box>

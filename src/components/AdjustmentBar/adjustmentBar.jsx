@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState } from "react";
-import {useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 import { Flex, Text, useMediaQuery, Box } from "@chakra-ui/react";
 import axios from "axios";
 import { GoChevronLeft } from "react-icons/go";
@@ -41,7 +41,6 @@ function AdjustmentBar({
   enableFilters,
   currentViewer,
   annotations,
-  showSidebar,
   sidebar,
   isNavigatorActive,
   setIsNavigatorActive,
@@ -67,13 +66,17 @@ function AdjustmentBar({
   showReport,
   setShowReport,
   clinicalStudy,
+  imageFilter,
   modelName,
   questions,
   setBinaryMask,
   hideModification,
   setNavigatorCounter,
+  setImageFilter,
   app,
   setModelname,
+  setShowRightPanel,
+  normalizeDefault,
   setSlideId,
   responseHandler,
   bottomZoomValue,
@@ -81,9 +84,6 @@ function AdjustmentBar({
   zoomValue,
   synopticType,
   setSynopticType,
-  setImageFilter,
-  imageFilter,
-  setShowRightPanel,
   getSynopticReport,
   handleChatFeedbar,
   handleChatFeedBarClose,
@@ -99,14 +99,9 @@ function AdjustmentBar({
 
   const navigate = useNavigate();
 
-  const handleSidebar = () => {
-    // showSidebar();
-    navigate("/dashboard/cases");
-  };
-
-  useEffect(()=>{
-    localStorage.setItem("page","viewer");
-  },[])
+  useEffect(() => {
+    localStorage.setItem("page", "viewer");
+  }, []);
   return (
     <Flex
       className="adjustmentbar"
@@ -124,31 +119,9 @@ function AdjustmentBar({
       fontWeight="500"
       zIndex={2}
     >
-      {/* <Flex
-        borderRight="2px solid #E4E5E8"
-        alignItems="center" ml="18px" mr="22px" pr="20px" minW="150px">
-        {application === "hospital" ? (
-          <ToolbarButton
-            onClick={handleSidebar}
-            backgroundColor={sidebar ? "#E4E5E8" : ""}
-            outline={sidebar ? "0.5px solid rgba(0, 21, 63, 1)" : ""}
-            icon={<GoChevronLeft size={IconSize()} color="#151C25" />}
-            label={<TooltipLabel heading="Back" />}
-          />
-        ) : null}
-        <Text
-          color="#151C25"
-          ml="12px"
-          fontSize="14px"
-          fontFamily="inter"
-          fontWeight={600}
-        >
-         Case No-{caseInfo?.caseName || caseInfo?.name}
-        </Text>
-      </Flex> */}
-      <Box w="25%"   h="100%" >
-      <Cancel />
-        </Box>
+      <Box w="25%" h="100%">
+        <Cancel />
+      </Box>
       <Move
         application={application}
         userInfo={userInfo}
@@ -165,14 +138,12 @@ function AdjustmentBar({
         setNavigatorCounter={setNavigatorCounter}
         mongoId={mongoId}
         modelName={modelName}
-        setImageFilter={setImageFilter}
         refreshHil={refreshHil}
         hideModification={hideModification}
         handleTILFeedBar={handleTILFeedBar}
         zoomValue={zoomValue}
         annotations={annotations}
         setShowRightPanel={setShowRightPanel}
-        imageFilter={imageFilter}
         caseInfo={caseInfo}
         enableAI={enableAI}
         setToolSelected={setToolSelected}
@@ -181,6 +152,7 @@ function AdjustmentBar({
         enableFilters={enableFilters}
         pathStroma={pathStroma}
         setTumorArea={setTumorArea}
+        setImageFilter={setImageFilter}
         setStromaArea={setStromaArea}
         setTilScore={setTilScore}
         setLymphocyteCount={setLymphocyteCount}
@@ -208,16 +180,17 @@ function AdjustmentBar({
         setChatHover={setChatHover}
         toolSelected={toolSelected}
         saveReport={saveReport}
+        imageFilter={imageFilter}
+        setLoadUI={setLoadUI}
         saveSynopticReport={saveSynopticReport}
         mediaUpload={mediaUpload}
         slideInfo={slideInfo}
         chatHover={chatHover}
         chatFeedBar={chatFeedBar}
         handleFeedBar={handleFeedBar}
+        normalizeDefault={normalizeDefault}
         socketRef={socketRef}
         base64URL={base64URL}
-        imageFilter={imageFilter}
-        setShowRightPanel={setShowRightPanel}
         navigatorCounter={navigatorCounter}
         handleChatFeedbar={handleChatFeedbar}
         handleChatFeedBarClose={handleChatFeedBarClose}

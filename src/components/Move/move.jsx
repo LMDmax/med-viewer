@@ -35,12 +35,11 @@ function Move({
   socketIsConnected,
   lessonId,
   setBinaryMask,
-  setShowRightPanel,
+  setImageFilter,
   enableAI,
   caseInfo,
   enableFilters,
-  setImageFilter,
-  imageFilter,
+  setShowRightPanel,
   hitTil,
   setStromaArea,
   setLoadUI,
@@ -138,6 +137,7 @@ function Move({
       w="40%"
       h="100%"
       // border="2px solid red"
+      zIndex="99"
     >
       <Flex
         alignItems="center"
@@ -229,7 +229,7 @@ function Move({
         ) : null}
 
         {/* <Measuremnet /> */}
-        <Mode socketIsConnected={socketIsConnected} setShowRightPanel={setShowRightPanel} imageFilter={imageFilter} setImageFilter={setImageFilter} AdjustmentTool={AdjustmentTool} setAdjustmentTool={setAdjustmentTool} />
+        <Mode  setImageFilter={setImageFilter} viewerId={viewerId} setShowRightPanel={setShowRightPanel} socketIsConnected={socketIsConnected}  AdjustmentTool={AdjustmentTool} setAdjustmentTool={setAdjustmentTool} />
 
         <CommentBox
           userInfo={userInfo}
