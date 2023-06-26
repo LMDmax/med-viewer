@@ -123,6 +123,7 @@ const LayoutApp = ({
   const [modelName, setModelname] = useState("");
   const [showRightPanel, setShowRightPanel] = useState(false);
   const [editView, setEditView] = useState(false);
+  const [gleasonScoring, setGleasonScoring] = useState(false);
 
   const { tile, viewer } = viewerWindow[currentViewer];
 
@@ -354,6 +355,8 @@ const LayoutApp = ({
           caseInfo={caseInfo}
           setBinaryMask={setBinaryMask}
           normalizeDefault={normalizeDefault}
+          setGleasonScoring={setGleasonScoring}
+          gleasonScoring={gleasonScoring}
           loadUI={loadUI}
           setLoadUI={setLoadUI}
           toolSelected={toolSelected}
@@ -483,6 +486,7 @@ const LayoutApp = ({
             setHideTumor={setHideTumor}
             setToolSelected={setToolSelected}
             hideLymphocyte={hideLymphocyte}
+            gleasonScoring={gleasonScoring}
             setHideLymphocyte={setHideLymphocyte}
             setHideStroma={setHideStroma}
             hideStroma={hideStroma}

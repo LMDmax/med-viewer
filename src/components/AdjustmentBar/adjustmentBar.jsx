@@ -40,6 +40,7 @@ function AdjustmentBar({
   hideTumor,
   enableFilters,
   currentViewer,
+  setGleasonScoring,
   annotations,
   sidebar,
   isNavigatorActive,
@@ -76,6 +77,7 @@ function AdjustmentBar({
   app,
   setModelname,
   setShowRightPanel,
+  gleasonScoring,
   normalizeDefault,
   setSlideId,
   responseHandler,
@@ -135,10 +137,12 @@ function AdjustmentBar({
         lessonId={lessonId}
         hideLymphocyte={hideLymphocyte}
         slide={slide}
+        gleasonScoring={gleasonScoring}
         setNavigatorCounter={setNavigatorCounter}
         mongoId={mongoId}
         modelName={modelName}
         refreshHil={refreshHil}
+        setGleasonScoring={setGleasonScoring}
         hideModification={hideModification}
         handleTILFeedBar={handleTILFeedBar}
         zoomValue={zoomValue}

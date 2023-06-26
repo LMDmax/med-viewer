@@ -206,6 +206,7 @@ export const createAnnotation = (annotation) => {
         height: annotation.height,
         color: "black",
         fill: annotation.fill,
+        angle: annotation.angle,
         stroke: "#000",
         strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         strokeUniform: annotation.strokeUniform,
@@ -226,6 +227,8 @@ export const createAnnotation = (annotation) => {
         hasRotatingPoint: annotation.globalCompositeOperation,
         lockMovementX: !annotation.globalCompositeOperation,
         lockMovementY: !annotation.globalCompositeOperation,
+        angle: annotation.angle,
+
       });
       break;
 
@@ -240,6 +243,8 @@ export const createAnnotation = (annotation) => {
         hasRotatingPoint: annotation.globalCompositeOperation,
         lockMovementX: !annotation.globalCompositeOperation,
         lockMovementY: !annotation.globalCompositeOperation,
+        angle: annotation.angle,
+
       });
       break;
 
@@ -254,6 +259,8 @@ export const createAnnotation = (annotation) => {
         hasRotatingPoint: annotation.globalCompositeOperation,
         lockMovementX: !annotation.globalCompositeOperation,
         lockMovementY: !annotation.globalCompositeOperation,
+        angle: annotation.angle,
+
       });
       break;
     case "arrow":

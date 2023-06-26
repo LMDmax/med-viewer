@@ -25,10 +25,12 @@ import { useFabricOverlayState } from "../../state/store";
 const AiModels = ({
   slide,
   setToolSelected,
+  gleasonScoring,
   setModelname,
   toolSelected,
   setBinaryMask,
   viewerIds,
+  setGleasonScoring,
   viewerId,
   bottomZoomValue,
   bottombottomZoomValue,
@@ -50,8 +52,6 @@ const AiModels = ({
   const [onTumorAnalysis, { data: analysis_data, error: analysis_error }] =
     useMutation(TUMOR_ANALYSIS);
   const slideid = slide?._id;
-  const dziUrl =
-    "https://d3fvaqnlz9wyiv.cloudfront.net/hospital/staging/outputs/9cbf2141-efc5-4ff8-a691-05b5fb80b811/output.dzi";
   const { data: subscription, error: subscription_error } = useSubscription(
     TUMOR_DETECTION_SUBSCRIPTION,
     {
@@ -64,10 +64,8 @@ const AiModels = ({
       },
     }
   );
-  // console.log(analysis_data);
-  // console.log(subscription);
-  // console.log(subscription_error);
 
+    // Remove the black pixels from the subscription detect_tumor
   const reinhardFilter = async (context, callback) => {
     // console.log("object");
     const imgData = context.getImageData(
@@ -117,8 +115,11 @@ const AiModels = ({
   useEffect(() => {
     if (subscription && detectTumor) {
       // setBinaryMask(dziUrl);
-      // console.log("0000000");
-       viewer.addTiledImage({
+      console.log("00", subscription)
+      if(subscription.conversionStatus.data.data.dziUrl){
+      console.log("11", subscription.conversionStatus.data.dziUrl);
+      const dziUrl =subscription.conversionStatus.data.dziUrl
+      viewer.addTiledImage({
         tileSource: dziUrl,
         x: 0,
         y: 0,
@@ -128,6 +129,7 @@ const AiModels = ({
       setTimeout(() => {
         setShowTumor(true);
       }, 2000);
+    } 
       // console.log("1", tiledImage);
       // Change the duration (in milliseconds) as per your requirement
     } else {
@@ -191,20 +193,19 @@ const AiModels = ({
     }
   };
 
-  // console.log(slide);
-  useEffect(() => {
-    if (slide.stainType === "H&E") {
-      if (TilActiveState / 2 !== 0) {
-        setModelname("TIL");
-      } else {
-        setModelname("TILClear");
-      }
-      // console.log("object");
-    } else {
-      setToolSelected("TILError");
-      // console.log("object2");
-    }
-  }, [TilActiveState]);
+  // useEffect(() => {
+  //   if (slide.stainType === "H&E") {
+  //     if (TilActiveState / 2 !== 0) {
+  //       setModelname("TIL");
+  //     } else {
+  //       setModelname("TILClear");
+  //     }
+  //     // console.log("object");
+  //   } else {
+  //     setToolSelected("TILError");
+  //     // console.log("object2");
+  //   }
+  // }, [TilActiveState]);
 
   useEffect(() => {
     if (toolSelected === "RunRoi") {
@@ -458,6 +459,37 @@ const AiModels = ({
                     }}
                   >
                     Detect Tumor
+                  </li>
+                  <BiInfoCircle
+                    onMouseEnter={() => {
+                      setInfoBox(true);
+                      setInfoItem("detect_tumor");
+                    }}
+                    onMouseLeave={() => {
+                      setInfoBox(false);
+                      setInfoItem("");
+                    }}
+                    cursor="pointer"
+                    color="gray"
+                  />
+                </Flex>
+                <Flex alignItems="center" justifyContent="space-between">
+                  <li
+                    style={{
+                      backgroundColor: "transparent",
+                      cursor: "pointer",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.color = "#3b5d7c";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.color = "black";
+                    }}
+                    onClick={() => {
+                      setGleasonScoring(!gleasonScoring)
+                    }}
+                  >
+                    Gleason Scoring
                   </li>
                   <BiInfoCircle
                     onMouseEnter={() => {

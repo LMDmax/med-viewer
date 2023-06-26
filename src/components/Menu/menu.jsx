@@ -59,6 +59,7 @@ import { useLazyQuery, useMutation } from "@apollo/client";
 import { debounce } from "lodash";
 import ModeMeanu from "./ModeMeanu";
 import Studies2 from "../Sidebar/studies2";
+import { clearConfigCache } from "prettier";
 
 function FunctionsMenu({
   caseInfo,
@@ -69,6 +70,7 @@ function FunctionsMenu({
   hideTumor,
   setHideTumor,
   setNormalizeDefault,
+  gleasonScoring,
   setBase64URL,
   hideLymphocyte,
   setSlideName2,
@@ -256,6 +258,18 @@ function FunctionsMenu({
       }
     }
   }, [searchSelectedData]);
+
+  useEffect(() => {
+     if(gleasonScoring) {
+      setIsOpen(true);
+      setSelectedOption("annotations");
+     }
+     else{
+      setIsOpen(false);
+     }
+    }, [gleasonScoring]);
+
+    console.log(gleasonScoring);
 
   useEffect(() => {
     const canvas = fabricOverlay?.fabricCanvas();
@@ -727,6 +741,7 @@ function FunctionsMenu({
                 hideLymphocyte={hideLymphocyte}
                 setHideLymphocyte={setHideLymphocyte}
                 setSelectedOption={setSelectedOption}
+                gleasonScoring={gleasonScoring}
                 setHideStroma={setHideStroma}
                 hideStroma={hideStroma}
                 stromaArea={stromaArea}

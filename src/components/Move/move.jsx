@@ -37,6 +37,8 @@ function Move({
   setBinaryMask,
   setImageFilter,
   enableAI,
+  setGleasonScoring,
+  gleasonScoring,
   caseInfo,
   enableFilters,
   setShowRightPanel,
@@ -281,6 +283,8 @@ function Move({
           viewerId={viewerId}
           setLoadUI={setLoadUI}
           viewerIds={viewerIds}
+          gleasonScoring={gleasonScoring}
+          setGleasonScoring={setGleasonScoring}
           setModelname={setModelname}
           setBinaryMask={setBinaryMask}
           navigatorCounter={navigatorCounter}

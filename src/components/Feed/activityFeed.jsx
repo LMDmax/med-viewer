@@ -24,6 +24,7 @@ import {
   AccordionIcon,
   Circle,
   IconButton,
+  Collapse,
 } from "@chakra-ui/react";
 import { BiRectangle } from "react-icons/bi";
 
@@ -143,6 +144,7 @@ const ActivityFeed = ({
   setHideStroma,
   hideStroma,
   handlePopup,
+  gleasonScoring,
   setSelectedOption,
   popup,
   tumorArea,
@@ -213,15 +215,19 @@ const ActivityFeed = ({
   const [annotationDetails, setAnnotationsDetails] = useState(null);
   const [ifScreenlessthan1660px] = useMediaQuery("(max-width:1660px)");
   const [ki67Feed, setKi67Feed] = useState({});
+  const [collapseStates, setCollapseStates] = useState({
+    grade1: false,
+    grade2: false,
+    grade3: false,
+  });
   const [accordionState, setAccordionState] = useState(
     activityFeed.map(() => ({ isOpen: false, isFocused: false }))
   );
-console.log(activityFeed);
+  console.log(activityFeed);
   useEffect(() => {
     if (scrollbar.current) scrollbar.current.scrollToBottom();
     if (activityFeed.length === 0) setAnnotationsDetails(null);
   }, [activityFeed]);
-
 
   useEffect(() => {
     return () => {
@@ -246,7 +252,7 @@ console.log(activityFeed);
       newAccordionState[index].isFocused = true;
       setAccordionState(newAccordionState);
     }
-        setSelectedItemIndex(index);
+    setSelectedItemIndex(index);
     if (selectedItemIndex === index) {
       setSelectedItemIndex("");
     }
@@ -294,13 +300,13 @@ console.log(activityFeed);
   const handleSave = ({ text, title }) => {
     annotationObject.text = text;
     annotationObject.title = title;
-    
+
     updateAnnotationInDB({
-        slideId,
-        hash: annotationObject.hash,
-        updateObject: { text, title },
-        onUpdateAnnotation,
-      });
+      slideId,
+      hash: annotationObject.hash,
+      updateObject: { text, title },
+      onUpdateAnnotation,
+    });
     setAnnotationObject(null);
     onClose();
   };
@@ -322,6 +328,14 @@ console.log(activityFeed);
     }
   }, [isTILBoxVisible, annotationDetails]);
   // console.log(activityFeed);
+
+  // set the tabName of Gleasons score
+  const handleCollapseToggle = (grade) => {
+    setCollapseStates((prevState) => ({
+      ...prevState,
+      [grade]: !prevState[grade],
+    }));
+  };
   return (
     <Flex
       as="section"
@@ -648,8 +662,10 @@ console.log(activityFeed);
                                       py="5px"
                                     >
                                       <span as="b">Positive Count :</span>
-                                      {ki67Feed?.object?.analysedData?.num_positive
-                                        }
+                                      {
+                                        ki67Feed?.object?.analysedData
+                                          ?.num_positive
+                                      }
                                     </Text>
                                     <Text
                                       borderBottom="1px solid #C0C0C0"
@@ -666,11 +682,9 @@ console.log(activityFeed);
                                       py="5px"
                                     >
                                       <span as="b">Proliferation Score :</span>
-                                      {
-                                        ki67Feed?.object?.analysedData
-                                          ?.proliferation_score?.toString()
-                                          .substring(0, 4)
-                                      }
+                                      {ki67Feed?.object?.analysedData?.proliferation_score
+                                        ?.toString()
+                                        .substring(0, 4)}
                                     </Text>
                                   </Box>
                                 </Flex>
@@ -910,6 +924,183 @@ console.log(activityFeed);
                         Lymphocytes Count : {lymphocyteCount}
                       </Text>
                     </Box>
+                  </MotionBox>
+                )}
+              </Box>
+            ) : gleasonScoring ? (
+              <Box my="10px" cursor="pointer">
+                <Flex
+                  w="40%"
+                  onClick={() => setIsTilBoxVisible(!isTILBoxVisible)}
+                  justifyContent="flex-start"
+                  alignItems="center"
+                >
+                  <Box mr="6px">
+                    {isTILBoxVisible ? (
+                      <AiFillCaretDown color="#3B5D7C" />
+                    ) : (
+                      <AiFillCaretRight color="gray" />
+                    )}
+                  </Box>
+                  <Box>
+                    <GroupTil />
+                  </Box>
+                  <Text
+                    ml="0.8vw"
+                    style={{
+                      fontWeight:
+                        selectedItemIndex === "til" ? "bold" : "normal",
+                    }}
+                  >
+                    Gleason's Grades
+                  </Text>
+                </Flex>
+                {isTILBoxVisible && (
+                  <MotionBox
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.5 }}
+                    h="fit-content"
+                    w="100%"
+                    mt={2}
+                    //   onClick={handleBoxClick}
+                  >
+                    <Flex px="25px" flexDir="column" w="100%">
+                      <Flex
+                        borderBottom="1px solid lightgray"
+                        my="0"
+                        py="10px"
+                        alignItems="center"
+                        onClick={() => {
+                          handleCollapseToggle("grade1");
+                        }}
+                        // border="1px solid red"
+                      >
+                        {collapseStates.grade1 ? (
+                          <Icon
+                            as={AiFillCaretDown}
+                            color="#3B5D7C"
+                            boxSize={4}
+                          />
+                        ) : (
+                          <Icon
+                            as={AiFillCaretRight}
+                            color="gray"
+                            boxSize={4}
+                          />
+                        )}
+                        <Box ml="15px">
+                          <RiCheckboxBlankFill color="#E18B08" />
+                        </Box>
+                        <Text ml="5px">Grade 3</Text>
+                        <Box w="100%">
+                          <Text textAlign="end" mr="5px">
+                            54%
+                          </Text>
+                        </Box>
+                      </Flex>
+                      <Collapse in={collapseStates.grade1} animateOpacity>
+                        <Box bg="white" my="5px" p="10px" boxShadow="md">
+                          <Text>Grade 1 Collapse Content</Text>
+                          {/* Add more content here */}
+                        </Box>
+                      </Collapse>
+                      <Flex
+                        borderBottom="1px solid lightgray"
+                        my="0"
+                        py="10px"
+                        alignItems="center"
+                        onClick={() => {
+                          handleCollapseToggle("grade2");
+                        }}
+                      >
+                        {collapseStates.grade2 ? (
+                          <Icon
+                            as={AiFillCaretDown}
+                            color="#3B5D7C"
+                            boxSize={4}
+                          />
+                        ) : (
+                          <Icon
+                            as={AiFillCaretRight}
+                            color="gray"
+                            boxSize={4}
+                          />
+                        )}
+                        <Box ml="15px">
+                          <RiCheckboxBlankFill color="#189B77" />
+                        </Box>
+                        <Text ml="5px">Grade 4</Text>
+                        <Box w="100%">
+                          <Text textAlign="end" mr="5px">
+                            21%
+                          </Text>
+                        </Box>
+                      </Flex>
+                      <Collapse in={collapseStates.grade2} animateOpacity>
+                        <Box bg="white" my="5px" p="10px" boxShadow="md">
+                          <Text>Grade 2 Collapse Content</Text>
+                          {/* Add more content here */}
+                        </Box>
+                      </Collapse>
+                      <Flex
+                        borderBottom="1px solid lightgray"
+                        my="0"
+                        py="10px"
+                        alignItems="center"
+                        onClick={() => {
+                          handleCollapseToggle("grade3");
+                        }}
+                      >
+                        {collapseStates.grade3 ? (
+                          <Icon
+                            as={AiFillCaretDown}
+                            color="#3B5D7C"
+                            boxSize={4}
+                          />
+                        ) : (
+                          <Icon
+                            as={AiFillCaretRight}
+                            color="gray"
+                            boxSize={4}
+                          />
+                        )}
+                        <Box ml="15px">
+                          <RiCheckboxBlankFill color="#800000" />
+                        </Box>
+                        <Text ml="5px">Grade 5</Text>
+                        <Box w="100%">
+                          <Text textAlign="end" mr="5px">
+                            8%
+                          </Text>
+                        </Box>
+                      </Flex>
+                      <Collapse in={collapseStates.grade3} animateOpacity>
+                        <Box bg="white" my="5px" p="10px" boxShadow="md">
+                          <Text>Grade 3 Collapse Content</Text>
+                          {/* Add more content here */}
+                        </Box>
+                      </Collapse>
+                    </Flex>
+                    <Flex flexDir="column" alignItems="center" justifyContent="space-evenly" mt="15px" h="180px" bg="white" px="25px">
+                      <Flex w="100%" justifyContent="space-between">
+                        <Text>Gleason's Grades :</Text>
+                        <Text>7 (3+4)</Text>
+                      </Flex>
+                      <Flex w="100%" justifyContent="space-between">
+                        <Text>First Predominant Area :</Text>
+                        <Text>Grade 3</Text>
+                      </Flex>
+                      <Flex w="100%" justifyContent="space-between">
+                        <Text>Second Predominant Area :</Text>
+                        <Text>Grade 4</Text>
+                      </Flex>
+                      <Flex w="100%" justifyContent="space-between">
+                        <Text>Risk Category :</Text>
+                        <Text>intermediate</Text>
+                      </Flex>
+                    </Flex>
                   </MotionBox>
                 )}
               </Box>
