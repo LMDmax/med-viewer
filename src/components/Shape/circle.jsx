@@ -94,7 +94,6 @@ function Circle({ viewerId, onSaveAnnotation, setToolSelected }) {
 	 useEffect(() => {
 		 if (!fabricOverlay || !isActive) return;
 		 const canvas = fabricOverlay.fabricCanvas();
-		 canvas.wrapperEl.style.zIndex = "999";
 
 		/**
 		 * Mouse down
