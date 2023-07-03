@@ -26,7 +26,28 @@ const Report = ({
 }) => {
   const [ifwidthLessthan1920] = useMediaQuery("(max-width:1920px)");
 
-console.log(caseInfo);
+// console.log(caseInfo);
+
+const currentDate = new Date();
+
+// Convert the birthdate to a Date object
+const birthdate = new Date( caseInfo?.patient?.dateOfBirth);
+
+// Calculate the age
+let age = currentDate.getFullYear() - birthdate.getFullYear();
+
+// Check if the birthday has already occurred this year
+if (
+  currentDate.getMonth() < birthdate.getMonth() ||
+  (currentDate.getMonth() === birthdate.getMonth() &&
+    currentDate.getDate() < birthdate.getDate())
+) {
+  age--;
+}
+
+// Output the age
+// console.log(age);
+
 
   return (
     <Flex
@@ -95,11 +116,9 @@ console.log(caseInfo);
               mt="-0rem !important"
             >
               <HStack minW="50%" py="0.7vh" borderRight="1px solid #DEDEDE">
-                <Text pl="0.5208vw">Gender/Date of Birth:</Text>
+                <Text pl="0.5208vw">Gender/age:</Text>
                 <Text pr="0.5208vw">
-                  {`${caseInfo?.patient?.gender}/${
-                    caseInfo?.patient?.dateOfBirth ?? "-"
-                  }`}
+                  {`${caseInfo?.patient?.gender}/${age? age : "-"}`}
                 </Text>
               </HStack>
               <HStack minW="50%">
