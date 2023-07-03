@@ -176,7 +176,6 @@ const ReportHelper = ({
   const { fabricOverlayState } = useFabricOverlayState();
   const { viewerWindow } = fabricOverlayState;
   const { slideId } = viewerWindow[viewerId];
-// console.log(showReport)
   const toast = useToast();
 
   useEffect(() => {

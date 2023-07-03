@@ -26,7 +26,7 @@ const Report = ({
 }) => {
   const [ifwidthLessthan1920] = useMediaQuery("(max-width:1920px)");
 
-
+console.log(caseInfo);
 
   return (
     <Flex
@@ -95,10 +95,10 @@ const Report = ({
               mt="-0rem !important"
             >
               <HStack minW="50%" py="0.7vh" borderRight="1px solid #DEDEDE">
-                <Text pl="0.5208vw">Gender/Age:</Text>
+                <Text pl="0.5208vw">Gender/Date of Birth:</Text>
                 <Text pr="0.5208vw">
                   {`${caseInfo?.patient?.gender}/${
-                    caseInfo?.patient?.age?.years ?? "-"
+                    caseInfo?.patient?.dateOfBirth ?? "-"
                   }`}
                 </Text>
               </HStack>

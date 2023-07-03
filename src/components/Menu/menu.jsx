@@ -59,6 +59,7 @@ import { useLazyQuery, useMutation } from "@apollo/client";
 import { debounce } from "lodash";
 import ModeMeanu from "./ModeMeanu";
 import Studies2 from "../Sidebar/studies2";
+import { clearConfigCache } from "prettier";
 
 function FunctionsMenu({
   caseInfo,
