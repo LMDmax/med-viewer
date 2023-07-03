@@ -65,6 +65,10 @@ const AiModels = ({
     }
   );
 
+
+  console.log("sssssub", subscription)
+
+  const gleasonDZI = "https://d3fvaqnlz9wyiv.cloudfront.net/hospital/development/outputs/005d0b2f-d898-4917-99c5-7116784ecf29/output.dzi"
     // Remove the black pixels from the subscription detect_tumor
   const reinhardFilter = async (context, callback) => {
     // console.log("object");
@@ -76,6 +80,7 @@ const AiModels = ({
     );
 
     const pixelsData = imgData.data;
+    console.log(pixelsData)
     const length = pixelsData.length;
 
     for (let i = 0; i < length; i += 4) {
@@ -98,6 +103,18 @@ const AiModels = ({
     callback();
   };
 
+  useEffect(()=>{
+    if(gleasonScoring){
+      console.log("sadsadsad");
+      viewer.setFilterOptions({
+        filters: {
+          processors: reinhardFilter,
+        },
+        loadMode: "async",
+      });
+    }
+  },[gleasonScoring])
+
   useEffect(() => {
     if (showTumor) {
       // console.log("object");
@@ -116,7 +133,7 @@ const AiModels = ({
     if (subscription && detectTumor) {
       // setBinaryMask(dziUrl);
       console.log("00", subscription)
-      if(subscription.conversionStatus.data.data.dziUrl){
+      if(subscription.conversionStatus.data.dziUrl !== null){
       console.log("11", subscription.conversionStatus.data.dziUrl);
       const dziUrl =subscription.conversionStatus.data.dziUrl
       viewer.addTiledImage({
@@ -193,19 +210,19 @@ const AiModels = ({
     }
   };
 
-  // useEffect(() => {
-  //   if (slide.stainType === "H&E") {
-  //     if (TilActiveState / 2 !== 0) {
-  //       setModelname("TIL");
-  //     } else {
-  //       setModelname("TILClear");
-  //     }
-  //     // console.log("object");
-  //   } else {
-  //     setToolSelected("TILError");
-  //     // console.log("object2");
-  //   }
-  // }, [TilActiveState]);
+  useEffect(() => {
+    if (slide.stainType === "H&E") {
+      if (TilActiveState / 2 !== 0) {
+        setModelname("TIL");
+      } else {
+        setModelname("TILClear");
+      }
+      // console.log("object");
+    } else {
+      setToolSelected("TILError");
+      // console.log("object2");
+    }
+  }, [TilActiveState]);
 
   useEffect(() => {
     if (toolSelected === "RunRoi") {

@@ -124,7 +124,6 @@ const LayoutApp = ({
   const [showRightPanel, setShowRightPanel] = useState(false);
   const [editView, setEditView] = useState(false);
   const [gleasonScoring, setGleasonScoring] = useState(false);
-
   const { tile, viewer } = viewerWindow[currentViewer];
 
   useEffect(() => {

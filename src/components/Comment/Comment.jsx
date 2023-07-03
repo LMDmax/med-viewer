@@ -43,6 +43,7 @@ const CommentBox = ({
   const iconSize = IconSize();
   const toast = useToast();
   const caseData = JSON.parse(localStorage.getItem("caseData"));
+  const [textBoxData, setTextBoxData] = useState("")
   const caseId = caseInfo?._id;
   const onSaveAnnotation = (data) => {
     createAnnotation({
@@ -131,26 +132,48 @@ const CommentBox = ({
       const origX = pointer.x;
       const origY = pointer.y;
 
-      // Create new Shape instance
+    // Create a textbox with initial content and width
+    const initialContent = "";
+    const defaultWidth = 100;
+  
+    const text = new fabric.Textbox(initialContent, {
+      width: defaultWidth,
+      left: origX,
+      top: origY - 48,
+      styles: null,
+      backgroundColor: "#B0C8D6",
+      opacity: 0.75,
+      title: `${userInfo.firstName} ${userInfo.lastName}`,
+      hasControls: false,
+      hasRotatingPoint: false,
+      lockUniScaling: true,
+      lockMovementX: true,
+      lockMovementY: true,
+      cursorColor: "#000000", // Set the cursor color
+      cursorWidth: 2, // Set the cursor width
+      cursorDuration: 1000, // Set the blinking speed in milliseconds
+    });
+  
+    canvas.add(text);
 
-      // Stroke fill
+    
 
-      const text = new fabric.Textbox("Comment", {
-        width: 100,
-        left: origX,
-        top: origY,
-        styles: null,
-        backgroundColor: "#B0C8D6",
-        opacity: "0.75",
-        title: `${userInfo.firstName} ${userInfo.lastName}`,
+      // Event listener for keyup event
+      text.on("changed", function () {
+        const content = this.text;
+        const contentLength = content.length;
 
-        hasRotatingPoint: false,
-        lockMovementX: true,
-        lockMovementY: true,
+        // Calculate the width based on the content length
+        const calculatedWidth =
+          contentLength > 0 ? contentLength * 10 : defaultWidth;
+
+        // Set the width of the textbox
+        this.set("width", calculatedWidth);
+
+        setTextBoxData(this.text)
+
+        canvas.renderAll();
       });
-
-      // console.log(text);
-      canvas.add(text);
 
       // canvas.add(mousecursor);
       setMyState({
@@ -224,16 +247,17 @@ const CommentBox = ({
   useEffect(() => {
     const addToFeed = async () => {
       if (!shape) return;
-      // console.log(shape);
+      console.log(shape);
       const message = createAnnotationMessage({
         slideId,
         shape,
         viewer,
         userInfo,
         type: "textbox",
-        isClosed:true,
+        isClosed: true,
       });
 
+      console.log("m", message);
       saveAnnotationToDB({
         slideId,
         annotation: message.object,
@@ -252,25 +276,23 @@ const CommentBox = ({
   }, [shape]);
 
   const handleClick = () => {
-    if(addComments){
+    if (addComments) {
       setFabricOverlayState(updateTool({ tool: "Move" }));
-    }
-    else{
+    } else {
       setFabricOverlayState(updateTool({ tool: "Comment" }));
-
     }
   };
 
   useEffect(() => {
     if (addComments) {
       setToolSelected("AddComment");
-      toast({
-        title: "Comments can be added now",
-        description: "",
-        status: "success",
-        duration: 1500,
-        isClosable: true,
-      });
+      // toast({
+      //   title: "Comments can be added now",
+      //   description: "",
+      //   status: "success",
+      //   duration: 1500,
+      //   isClosable: true,
+      // });
     }
   }, [addComments]);
 
@@ -281,6 +303,9 @@ const CommentBox = ({
     }
   }, [navigatorCounter]);
 
+
+
+  
   return (
     <Box
       onClick={() => {
@@ -306,32 +331,40 @@ const CommentBox = ({
         },
       }}
     >
-      <Flex direction="column" mt={ifScreenlessthan1536px? "1px" : "-2px"} justifyContent="center" alignItems="center" h="100%">
-      <IconButton
-        width={ifScreenlessthan1536px ? "100%" : "100%"}
-        height={ifScreenlessthan1536px ? "50%" : "50%"}
-        // border="2px solid red"
-        _hover={{ bgColor: "transparent" }}
-        icon={
-          <RiChatQuoteLine
-            transform="scale(1.2)"
-            size={iconSize}
-            color="black"
-          />
-        }
-        _active={{
-          bgColor: "transparent",
-          outline: "none",
-        }}
-        // outline={TilHover ? " 0.5px solid rgba(0, 21, 63, 1)" : ""}
-        // _focus={{
-        // }}
-        backgroundColor="transparent"
-        // mr="7px"
-        // border="1px solid red"
-        borderRadius={0}
-      />
-      <Text align="center" fontFamily="inter" fontSize="10px">Comment</Text>
+      <Flex
+        direction="column"
+        mt={ifScreenlessthan1536px ? "1px" : "-2px"}
+        justifyContent="center"
+        alignItems="center"
+        h="100%"
+      >
+        <IconButton
+          width={ifScreenlessthan1536px ? "100%" : "100%"}
+          height={ifScreenlessthan1536px ? "50%" : "50%"}
+          // border="2px solid red"
+          _hover={{ bgColor: "transparent" }}
+          icon={
+            <RiChatQuoteLine
+              transform="scale(1.2)"
+              size={iconSize}
+              color="black"
+            />
+          }
+          _active={{
+            bgColor: "transparent",
+            outline: "none",
+          }}
+          // outline={TilHover ? " 0.5px solid rgba(0, 21, 63, 1)" : ""}
+          // _focus={{
+          // }}
+          backgroundColor="transparent"
+          // mr="7px"
+          // border="1px solid red"
+          borderRadius={0}
+        />
+        <Text align="center" fontFamily="inter" fontSize="10px">
+          Comment
+        </Text>
       </Flex>
     </Box>
   );

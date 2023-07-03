@@ -84,7 +84,7 @@ function ScreenTools({
         setToolSelected={setToolSelected}
         viewerId={viewerId}
       />
-      <DownloadImage setToolSelected={setToolSelected} />
+      <DownloadImage  viewerId={viewerId} setToolSelected={setToolSelected} />
       {application === "hospital" && (
         <ViewerChat
           chatHover={chatHover}

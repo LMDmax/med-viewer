@@ -141,6 +141,8 @@ function Viewer({
     };
   }, [viewer]);
 
+
+
   return (
     <Box
       ref={boxRef}

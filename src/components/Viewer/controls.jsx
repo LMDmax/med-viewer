@@ -165,7 +165,7 @@ const ViewerControls = ({
       },
     }
   );
-  console.log(annotationData);
+  // console.log(annotationData);
 
   // #################### VHUT_ANALYSIS_SUBSCRIPTION ##############
   const { data: vhutSubscriptionData, error: vhutSubscription_error } =
@@ -248,7 +248,7 @@ const ViewerControls = ({
     canvas?.on("object:modified", (e) => {
       const modifiedObject = e.target;
       if (modifiedObject === clickedObject) {
-        const { scaleX, scaleY, width, height, left, top, angle } =
+        const { scaleX, scaleY, width, height, left, top, angle, } =
           modifiedObject;
         const updatedWidth = width * scaleX;
         const updatedHeight = height * scaleY;
@@ -267,8 +267,9 @@ const ViewerControls = ({
           left: updatedLeft,
           top: updatedTop,
           angle: updatedAngle,
+
         };
-        // console.log(updatedObject);
+        console.log(updatedObject);
         setUpdatedAnnotation(updatedObject);
         setAnnotationObject(updatedObject);
         setManipulationComplete(true); // Set manipulation as complete
@@ -285,11 +286,13 @@ const ViewerControls = ({
       const left = updatedAnnotation.left;
       const top = updatedAnnotation.top;
       const angle = updatedAnnotation.angle;
+      const text = updatedAnnotation.text;
+      console.log(annotationObject);
       // console.log(angle);
       updateAnnotationInDB({
         slideId,
         hash: updatedAnnotation.hash,
-        updateObject: { width, height, left, top, angle },
+        updateObject: { width, height, left, top, angle, text },
         onUpdateAnnotation,
       });
       // console.log("sss");
@@ -617,7 +620,7 @@ const ViewerControls = ({
               updateActivityFeed({ id: viewerId, fullFeed: feed })
             );
             setActiveFeed(feed);
-            console.log(feed,"feeeeeeeeeeeeeeeeeeeeeeeed");
+            // console.log(feed,"feeeeeeeeeeeeeeeeeeeeeeeed");
             // onLoadCallData()
           }
 

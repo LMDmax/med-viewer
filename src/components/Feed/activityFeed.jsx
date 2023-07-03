@@ -133,7 +133,7 @@ const CustomTabPanel = ({
 
 const MotionBox = motion(Box);
 
-const ActivityFeed = ({
+const annotationFeed = ({
   userInfo,
   viewerId,
   totalCells,
@@ -157,7 +157,7 @@ const ActivityFeed = ({
   searchSelectedData,
 }) => {
   // const onUpdateAnnotation = (data) => {
-  //   console.log("activityfeed", data);
+  //   console.log("annotationFeed", data);
   // };
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
   const [isTILBoxVisible, setIsTilBoxVisible] = useState(false);
@@ -179,6 +179,7 @@ const ActivityFeed = ({
       variables: { body: { ...data } },
     });
   };
+
 
   const [removeAnnotation, { data: deletedData, error: deleteError }] =
     useMutation(DELETE_ANNOTATION);
@@ -220,14 +221,20 @@ const ActivityFeed = ({
     grade2: false,
     grade3: false,
   });
+const annotationFeed = activityFeed?.filter(eachAnnotation => eachAnnotation.object.type !== "textbox");
+
   const [accordionState, setAccordionState] = useState(
-    activityFeed.map(() => ({ isOpen: false, isFocused: false }))
+    annotationFeed.map(() => ({ isOpen: false, isFocused: false }))
   );
-  console.log(activityFeed);
+
+
+
+
+  console.log(annotationFeed);
   useEffect(() => {
     if (scrollbar.current) scrollbar.current.scrollToBottom();
-    if (activityFeed.length === 0) setAnnotationsDetails(null);
-  }, [activityFeed]);
+    if (annotationFeed.length === 0) setAnnotationsDetails(null);
+  }, [annotationFeed]);
 
   useEffect(() => {
     return () => {
@@ -327,7 +334,7 @@ const ActivityFeed = ({
       setSelectedItemIndex("til");
     }
   }, [isTILBoxVisible, annotationDetails]);
-  // console.log(activityFeed);
+  // console.log(annotationFeed);
 
   // set the tabName of Gleasons score
   const handleCollapseToggle = (grade) => {
@@ -336,6 +343,9 @@ const ActivityFeed = ({
       [grade]: !prevState[grade],
     }));
   };
+
+  console.log(annotationFeed);
+
   return (
     <Flex
       as="section"
@@ -367,7 +377,7 @@ const ActivityFeed = ({
               size="sm"
               variant="unstyled"
               cursor="pointer"
-              isDisabled={activityFeed.length === 0}
+              isDisabled={annotationFeed.length === 0}
               _focus={{ border: "none", outline: "none" }}
               onClick={onDeleteConfirmationOpen}
             />
@@ -375,7 +385,7 @@ const ActivityFeed = ({
         </HStack>
         <ScrollBar>
           <Flex direction="column" h="80vh">
-            {activityFeed.map((feed, index) => {
+            {annotationFeed.map((feed, index) => {
               return feed?.object && feed.object?.type !== "textbox" ? (
                 <Accordion key={index} allowToggle allowMultiple>
                   <AccordionItem
@@ -1128,4 +1138,4 @@ const ActivityFeed = ({
   );
 };
 
-export default ActivityFeed;
+export default annotationFeed;

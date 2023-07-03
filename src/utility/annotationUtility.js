@@ -184,7 +184,7 @@ export const createAnnotation = (annotation) => {
       shape = new fabric.Textbox(`${annotation.text}`, {
         left: annotation.left,
         top: annotation.top,
-        width: 450,
+        width: annotation.width,
         color: annotation.color,
         backgroundColor: "#B0C8D6",
         opacity: annotation.opacity,
@@ -430,6 +430,7 @@ export const addAnnotationsToCanvas = ({
   const feed = [];
 
   annotations.forEach((annotation) => {
+    console.log("abcd", annotation);
     const shape = createAnnotation(annotation);
     canvas.on("mouse:over", function (e) {
       if (e?.target?.type === "textBox" || e?.target?.type === "textbox")
@@ -440,6 +441,7 @@ export const addAnnotationsToCanvas = ({
       const title = new fabric.Text(`${e?.target?.title}`, {
         left: e?.target?.left + e?.target?.width + 20, // positining text
         top: e?.target?.top + textHeight,
+        width: e?.target?.width,
         backgroundColor: "rgba(0,0,0,0.6)",
         fill: e?.taget?.color ? e?.taget?.color : "#00ff00",
         selectable: false,

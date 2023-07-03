@@ -59,6 +59,7 @@ import { useLazyQuery, useMutation } from "@apollo/client";
 import { debounce } from "lodash";
 import ModeMeanu from "./ModeMeanu";
 import Studies2 from "../Sidebar/studies2";
+import { clearConfigCache } from "prettier";
 
 function FunctionsMenu({
   caseInfo,
@@ -259,16 +260,15 @@ function FunctionsMenu({
   }, [searchSelectedData]);
 
   useEffect(() => {
-     if(gleasonScoring) {
+    if (gleasonScoring) {
       setIsOpen(true);
       setSelectedOption("annotations");
-     }
-     else{
+    } else {
       setIsOpen(false);
-     }
-    }, [gleasonScoring]);
+    }
+  }, [gleasonScoring]);
 
-    console.log(gleasonScoring);
+  console.log(gleasonScoring);
 
   useEffect(() => {
     const canvas = fabricOverlay?.fabricCanvas();
@@ -330,7 +330,7 @@ function FunctionsMenu({
     if (showRightPanel && !editView) {
       setIsOpen(true);
       setSelectedOption("mode");
-    }else {
+    } else {
       setIsOpen(false);
       setSelectedOption("slides");
     }
@@ -873,7 +873,7 @@ function FunctionsMenu({
                 setCurrentViewer={setCurrentViewer}
                 viewerId={viewerId}
                 editView={editView}
-				targetAnnotation={targetAnnotation}
+                targetAnnotation={targetAnnotation}
                 viewerIds={viewerIds}
                 setEditView={setEditView}
                 setNormalizeDefault={setNormalizeDefault}

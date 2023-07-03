@@ -25,16 +25,17 @@ import { useFabricOverlayState } from "../state/store";
 import { updateTool } from "../state/actions/fabricOverlayActions";
 
 const DownloadImage = ({ setToolSelected }) => {
-  const { fabricOverlayState,setFabricOverlayState } = useFabricOverlayState();
-  const { activeTool, } = fabricOverlayState;
+  const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
+  const { activeTool } = fabricOverlayState;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [img, setImg] = useState();
   const [screenshotHover, setScreenshotHover] = useState(false);
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
   const modalRef = useRef(null);
-const isActive = activeTool === "Screenshot"
+  const isActive = activeTool === "Screenshot";
   const handleClick = () => {
-    html2canvas(document.querySelector(".openseadragon-canvas"), {
+    const targetImage = document.body;
+    html2canvas(targetImage, {
       backgroundColor: null,
       logging: true,
       allowTaint: false,
@@ -44,18 +45,14 @@ const isActive = activeTool === "Screenshot"
       setImg(canvas.toDataURL("image/png"));
     });
     onOpen();
-    
   };
-  useEffect(()=>{
-    if(screenshotHover){
-    setFabricOverlayState(updateTool({ tool: "Screenshot" }));
-
+  useEffect(() => {
+    if (screenshotHover) {
+      setFabricOverlayState(updateTool({ tool: "Screenshot" }));
+    } else {
+      setFabricOverlayState(updateTool({ tool: "Move" }));
     }
-    else{
-    setFabricOverlayState(updateTool({ tool: "Move" }));
-
-    }
-  },[screenshotHover])
+  }, [screenshotHover]);
   return (
     <>
       <Box
@@ -71,21 +68,29 @@ const isActive = activeTool === "Screenshot"
         // border="1px solid red"
         bg={screenshotHover ? "rgba(157,195,226,0.4)" : ""}
       >
-        <Flex direction="column" mt={ifScreenlessthan1536px? "1px" : "-2px"} justifyContent="center" alignItems="center" h="100%">
-        <IconButton
-        height={ifScreenlessthan1536px ? "50%" : "50%"}
-        width={ifScreenlessthan1536px ? "100%" : "100%"}
-          // border="2px solid red"
-          _hover={{ bgColor: "transparent" }}
-          icon={<ScreenshotIcon transform="scale(1.2)" color="#3B5D7C" />}
-          _active={{
-            bgColor: "transparent",
-            outline: "none",
-          }}
-          backgroundColor="transparent"
-          borderRadius={0}
-        />
-        <Text align="center" fontFamily="inter" fontSize="10px">Screenshot</Text>
+        <Flex
+          direction="column"
+          mt={ifScreenlessthan1536px ? "1px" : "-2px"}
+          justifyContent="center"
+          alignItems="center"
+          h="100%"
+        >
+          <IconButton
+            height={ifScreenlessthan1536px ? "50%" : "50%"}
+            width={ifScreenlessthan1536px ? "100%" : "100%"}
+            // border="2px solid red"
+            _hover={{ bgColor: "transparent" }}
+            icon={<ScreenshotIcon transform="scale(1.2)" color="#3B5D7C" />}
+            _active={{
+              bgColor: "transparent",
+              outline: "none",
+            }}
+            backgroundColor="transparent"
+            borderRadius={0}
+          />
+          <Text align="center" fontFamily="inter" fontSize="10px">
+            Screenshot
+          </Text>
         </Flex>
       </Box>
 
@@ -98,7 +103,17 @@ const isActive = activeTool === "Screenshot"
         finalFocusRef={modalRef}
       >
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent
+          style={{
+            right: 0,
+            left: "auto",
+            marginRight: "105px",
+            marginTop: "125px",
+            marginLeft: "auto",
+            maxWidth: "320px",
+            width: "100%",
+          }}
+        >
           <ModalHeader>Download image</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
