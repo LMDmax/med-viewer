@@ -51,10 +51,7 @@ import {
 import IconSize from "../ViewerToolbar/IconSize";
 import Navigator from "../Navigator/navigator";
 import { updateAnnotationInDB } from "../../utility";
-import {
-  GET_ANNOTATION,
-  UPDATE_ANNOTATION,
-} from "../../graphql/annotaionsQuery";
+
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { debounce } from "lodash";
 import ModeMeanu from "./ModeMeanu";
