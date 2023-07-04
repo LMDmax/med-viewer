@@ -17,57 +17,55 @@ const Report = ({
   caseInfo,
   reportData,
   handleReportData,
+  showReport,
+  setShowReport,
   handleUpload,
   annotedSlideImages,
   reportedData,
   userInfo,
 }) => {
   const [ifwidthLessthan1920] = useMediaQuery("(max-width:1920px)");
-  const handleReportClose = () => {
-    handleReport();
-  };
+
+// console.log(caseInfo);
+
+const currentDate = new Date();
+
+// Convert the birthdate to a Date object
+const birthdate = new Date( caseInfo?.patient?.dateOfBirth);
+
+// Calculate the age
+let age = currentDate.getFullYear() - birthdate.getFullYear();
+
+// Check if the birthday has already occurred this year
+if (
+  currentDate.getMonth() < birthdate.getMonth() ||
+  (currentDate.getMonth() === birthdate.getMonth() &&
+    currentDate.getDate() < birthdate.getDate())
+) {
+  age--;
+}
+
+// Output the age
+// console.log(age);
+
 
   return (
     <Flex
       fontSize="12px"
       fontFamily="inter"
-      minW="400px"
-      width="33.281vw"
-      height="100%"
-      top={ifwidthLessthan1920 ? "90px" : "9.999vh"}
-      pos="fixed"
-      right="0px"
+      w="100%"
+      height="106%"
       bg="#FCFCFC"
       flexDirection="column"
       display="flex"
+      // pb="30px"
     >
-      <Flex
-        py="0.5px"
-        justifyContent="flex-end"
-        alignItems="center"
-        background="#F6F6F6"
-      >
-        <GrFormClose
-          size={16}
-          cursor="pointer"
-          onClick={handleReportClose}
-          _hover={{ cursor: "pointer" }}
-        />
-      </Flex>
-      <Flex
-        bg="#fff"
-        minH="32px"
-        h="2.962vh"
-        justifyContent="center"
-        alignItems="center"
-        boxShadow="1px 1px 2px rgba(176, 200, 214, 0.25)"
-      >
-        {/* <Icon as={BiGridHorizontal} color="#AEAEAE" w="2vw" h="20vw" /> */}
-      </Flex>
+      
+     
       <Flex
         bg="#fff"
         mt="0.5vw"
-        h="77vh"
+        h="100%"
         mr="0.7333vw"
         pl="1.666vw"
         // pb="1vh"
@@ -118,11 +116,9 @@ const Report = ({
               mt="-0rem !important"
             >
               <HStack minW="50%" py="0.7vh" borderRight="1px solid #DEDEDE">
-                <Text pl="0.5208vw">Gender/Age:</Text>
+                <Text pl="0.5208vw">Gender/age:</Text>
                 <Text pr="0.5208vw">
-                  {`${caseInfo?.patient?.gender}/${
-                    caseInfo?.patient?.age?.years ?? "-"
-                  }`}
+                  {`${caseInfo?.patient?.gender}/${age? age : "-"}`}
                 </Text>
               </HStack>
               <HStack minW="50%">
@@ -187,7 +183,7 @@ const Report = ({
             <Text fontWeight="600" isTruncated>
               CASE NUMBER:
             </Text>
-            <Text ml="0.1rem !important">{caseInfo?.caseName}</Text>
+            <Text ml="0.1rem !important">{caseInfo?.caseId}</Text>
           </HStack>
           <HStack pt="1.29vh" spacing={2}>
             <HStack>
