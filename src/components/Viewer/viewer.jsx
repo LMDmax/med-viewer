@@ -32,7 +32,6 @@ const osdOptions = {
   navigatorPosition: "BOTTOM_LEFT",
   navigatorHeight: "126px",
   navigatorWidth: "247px",
-  navigatorAutoFade: true,
   navigatorAutoResize: false,
   navigatorOpacity: 0.8,
   navigatorBorderColor: "gray",
