@@ -29,6 +29,7 @@ const osdOptions = {
   },
   showNavigator: true,
   showNavigationControl: false,
+  navigatorAutoFade: false,
   navigatorPosition: "BOTTOM_LEFT",
   navigatorHeight: "126px",
   navigatorWidth: "247px",
