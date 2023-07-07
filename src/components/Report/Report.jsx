@@ -181,9 +181,9 @@ if (
           <Text fontWeight="600">HISTOPATHOLOGY FINAL DIAGNOSIS REPORT</Text>
           <HStack pt="1.29vh">
             <Text fontWeight="600" isTruncated>
-              CASE NUMBER:
+              CASE ID:
             </Text>
-            <Text ml="0.1rem !important">{caseInfo?.caseName}</Text>
+            <Text ml="0.1rem !important">{caseInfo?.caseId}</Text>
           </HStack>
           <HStack pt="1.29vh" spacing={2}>
             <HStack>

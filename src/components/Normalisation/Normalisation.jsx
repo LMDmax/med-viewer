@@ -59,7 +59,7 @@ const Normalisation = ({
       }
       // sendRequest(JSON.stringify(sendAnnotationData));
       setBase64URL(true);
-      console.log(sendAnnotationData);
+      // console.log(sendAnnotationData);
     }
 
     setShowButtonGroup(false);

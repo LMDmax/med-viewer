@@ -267,7 +267,7 @@ function FunctionsMenu({
     }
   }, [gleasonScoring]);
 
-  console.log(gleasonScoring);
+  // console.log(gleasonScoring);
 
   useEffect(() => {
     const canvas = fabricOverlay?.fabricCanvas();
@@ -308,7 +308,7 @@ function FunctionsMenu({
   }, [isMultiview, editView]);
 
   useEffect(() => {
-    if (activeObject?.type !== "textbox" && activeObject) {
+    if (activeObject?.type !== "textbox" && activeObject && activeObject?.type !== "group") {
       setIsOpen(true);
       setSelectedOption("annotations");
       // console.log(activeObject);

@@ -27,7 +27,7 @@ const ModeMeanu = ({
 }) => {
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { viewerWindow } = fabricOverlayState;
-  console.log(viewerId);
+  // console.log(viewerId);
   const vKeys = Object.keys(viewerWindow);
   // console.log(vKeys[1]);
   return (

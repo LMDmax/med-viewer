@@ -500,6 +500,7 @@ export const TUMOR_DETECTION_SUBSCRIPTION = gql`
         key
         slideid
       }
+      type
     }
   }
 `;

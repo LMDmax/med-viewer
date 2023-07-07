@@ -36,6 +36,7 @@ function Move({
   lessonId,
   setBinaryMask,
   setImageFilter,
+  Environment,
   enableAI,
   setGleasonScoring,
   gleasonScoring,
@@ -282,6 +283,7 @@ function Move({
           zoomValue={zoomValue}
           viewerId={viewerId}
           setLoadUI={setLoadUI}
+          Environment={Environment}
           viewerIds={viewerIds}
           gleasonScoring={gleasonScoring}
           setGleasonScoring={setGleasonScoring}

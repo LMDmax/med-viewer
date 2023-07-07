@@ -92,6 +92,8 @@ function AdjustmentBar({
   updateSynopticReport,
   chatHover,
   isXmlAnnotations,
+  Environment,
+
 }) {
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
   const { fabricOverlayState } = useFabricOverlayState();
@@ -136,6 +138,7 @@ function AdjustmentBar({
         toolSelected={toolSelected}
         lessonId={lessonId}
         hideLymphocyte={hideLymphocyte}
+        Environment={Environment}
         slide={slide}
         gleasonScoring={gleasonScoring}
         setNavigatorCounter={setNavigatorCounter}

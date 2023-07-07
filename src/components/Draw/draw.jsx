@@ -130,7 +130,6 @@ const Draw = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
   // first remove both from canvas then group them and then add group to canvas
   useEffect(() => {
     if (!path) return;
-    // console.log("ppppppppppppp",path.path.length);
     
     const canvas = fabricOverlay.fabricCanvas();
     const pathLength = path.path.length;

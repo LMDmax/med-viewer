@@ -42,7 +42,7 @@ const useCanvasHelpers = (viewerId) => {
 
     canvas.remove(target).requestRenderAll();
 
-    if (target.type === "textbox") {
+    if (target?.type === "textbox") {
       toast({
         title: "Comment deleted",
         status: "success",

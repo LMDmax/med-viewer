@@ -154,8 +154,7 @@ const ViewerControls = ({
   const [removeAnnotation, { data: deletedData, error: deleteError }] =
     useMutation(DELETE_ANNOTATION);
 
-
-    // console.log("ssssssssssslidedeeeeeeee", slideId);
+  // console.log("ssssssssssslidedeeeeeeee", slideId);
   // ############### ANNOTATION_SUBSCRIPTION ########################
   const { data: subscriptionData, error: subscription_error } = useSubscription(
     ANNOTATIONS_SUBSCRIPTION,
@@ -248,7 +247,7 @@ const ViewerControls = ({
     canvas?.on("object:modified", (e) => {
       const modifiedObject = e.target;
       if (modifiedObject === clickedObject) {
-        const { scaleX, scaleY, width, height, left, top, angle, } =
+        const { scaleX, scaleY, width, height, left, top, angle, text } =
           modifiedObject;
         const updatedWidth = width * scaleX;
         const updatedHeight = height * scaleY;
@@ -267,9 +266,8 @@ const ViewerControls = ({
           left: updatedLeft,
           top: updatedTop,
           angle: updatedAngle,
-
+          text,
         };
-        console.log(updatedObject);
         setUpdatedAnnotation(updatedObject);
         setAnnotationObject(updatedObject);
         setManipulationComplete(true); // Set manipulation as complete
@@ -391,6 +389,7 @@ const ViewerControls = ({
       // remove enclosing annotation
       // and group to canvas
       if (feedMessage.object) {
+        // console.log(feedMessage);
         // remove enclosing annotation and add new one to canvas
         feedMessage.object.selectable = false;
         feedMessage.object.evented = false;
@@ -398,9 +397,9 @@ const ViewerControls = ({
           circle.selectable = false;
           circle.evented = false;
         });
-        canvas.remove(annotationObject);
+        canvas.remove(annotationObject); // width, left and top
         // console.log(feedMessage);
-        canvas.add(feedMessage.object).requestRenderAll();
+        canvas.add(feedMessage.object).requestRenderAll(); // width, left and top + analysedData
 
         setFabricOverlayState(
           updateFeedInAnnotationFeed({ id: viewerId, feed: feedMessage })
@@ -600,10 +599,10 @@ const ViewerControls = ({
   useEffect(() => {
     if (!fabricOverlay) return;
     const canvas = fabricOverlay.fabricCanvas();
+
     const loadAnnotations = async () => {
       // check if the annotations is already loaded
       if (canvas.toJSON().objects.length === 0 && annotatedData) {
-        console.log(annotatedData,"sads")
         const { feed, status, error } = await loadAnnotationsFromDB({
           slideId,
           canvas,
@@ -613,9 +612,9 @@ const ViewerControls = ({
           success: annotatedData,
           userInfo,
         });
+
         if (status === "success") {
           if (feed) {
-
             setFabricOverlayState(
               updateActivityFeed({ id: viewerId, fullFeed: feed })
             );
@@ -633,6 +632,47 @@ const ViewerControls = ({
               duration: 1000,
               isClosable: true,
             });
+            for (let i = 0; i < annotatedData.length; i++) {
+              if (annotatedData[i].type === "textbox") {
+                const textbox = annotatedData[i];
+                const image = new fabric.Image();
+                image.setSrc("http://fabricjs.com/assets/pug_small.jpg", () => {
+                  image.set({
+                    left: textbox.left,
+                    top: textbox.top - 225,
+                    width: 200,
+                    height: 250,
+                    selectable: false,
+                    hasControls: false,
+                    hasBorders: false,
+                    hoverCursor: "pointer",
+                  });
+
+                  const triangle = new fabric.Triangle({
+                    left: image.left + 51,
+                    top: image.top + image.height - 30,
+                    width: 50,
+                    height: 50,
+                    fill: "blue",
+                    angle: 90,
+                    selectable: false,
+                    hasControls: false,
+                    hasBorders: false,
+                    hoverCursor: "pointer",
+                  });
+
+                  const group = new fabric.Group([triangle, image], {
+                    selectable: false,
+                    hasControls: false,
+                    hasBorders: false,
+                    hoverCursor: "pointer",
+                  });
+
+                  canvas.add(group);
+                  canvas.renderAll();
+                });
+              }
+            }
           }
         } else {
           setFabricOverlayState(
@@ -652,6 +692,34 @@ const ViewerControls = ({
     };
     loadAnnotations();
   }, [fabricOverlay, annotatedData, slideId]);
+
+  useEffect(() => {
+    const canvas = fabricOverlay?.fabricCanvas();
+
+    if (canvas) {
+      const imageObjects = canvas
+        .getObjects()
+        .filter((obj) => obj.type === "image");
+      const groupObjects = canvas
+        .getObjects()
+        .filter((obj) => obj.type === "group");
+      const textboxObjects = canvas
+        .getObjects()
+        .filter((obj) => obj.type === "textbox");
+
+      canvas.on("mouse:down", function (e) {
+        if (e.target && e.target.type === "group") {
+          groupObjects.forEach((group) => group.set("visible", false));
+          textboxObjects.forEach((textbox) => textbox.set("visible", true));
+          canvas.renderAll();
+        } else if (e.target === null) {
+          groupObjects.forEach((group) => group.set("visible", true));
+          textboxObjects.forEach((textbox) => textbox.set("visible", false));
+          canvas.renderAll();
+        }
+      });
+    }
+  });
 
   // check if annotation is loaded or not
   // and then update fabricOverlayState
@@ -724,9 +792,6 @@ const ViewerControls = ({
     };
   }, [viewer, fabricOverlay]);
 
-
-
-  
   useEffect(() => {
     if (!viewer || !fabricOverlay) return;
     const canvas = fabricOverlay.fabricCanvas();
@@ -1003,7 +1068,7 @@ const ViewerControls = ({
       {!isAnnotationLoaded || isViewportAnalysing ? (
         <Loading position="absolute" w="100%" zIndex="3" h="79vh" />
       ) : null}
-      <Box position="absolute"  left="2vw" top="5vh">
+      <Box position="absolute" left="2vw" top="5vh">
         <Flex direction="column" alignItems="end" mr="23px">
           <Draggable
             bounds={{

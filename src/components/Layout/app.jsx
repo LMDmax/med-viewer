@@ -216,7 +216,7 @@ const LayoutApp = ({
       returnText = "Please click on the slide to add comment.";
       break;
     case "SelectedComment":
-      returnText = "Comment selected. Type to add a comment.";
+      returnText = "Comment selected. Click in the textbox to add a comment.";
       break;
     case "HideAnnotation":
       returnText = "Annotations are hide.";
@@ -352,6 +352,7 @@ const LayoutApp = ({
           chatFeedBar={chatFeedBar}
           setImageFilter={setImageFilter}
           caseInfo={caseInfo}
+          Environment={Environment}
           setBinaryMask={setBinaryMask}
           normalizeDefault={normalizeDefault}
           setGleasonScoring={setGleasonScoring}

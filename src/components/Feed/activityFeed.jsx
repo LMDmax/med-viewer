@@ -180,7 +180,6 @@ const annotationFeed = ({
     });
   };
 
-
   const [removeAnnotation, { data: deletedData, error: deleteError }] =
     useMutation(DELETE_ANNOTATION);
   if (deleteError)
@@ -220,17 +219,17 @@ const annotationFeed = ({
     grade1: false,
     grade2: false,
     grade3: false,
+    grade4: false,
   });
-const annotationFeed = activityFeed?.filter(eachAnnotation => eachAnnotation.object.type !== "textbox");
+  const annotationFeed = activityFeed?.filter(
+    (eachAnnotation) => eachAnnotation.object.type !== "textbox"
+  );
 
   const [accordionState, setAccordionState] = useState(
     annotationFeed.map(() => ({ isOpen: false, isFocused: false }))
   );
 
-
-
-
-  console.log(annotationFeed);
+  // console.log(annotationFeed);
   useEffect(() => {
     if (scrollbar.current) scrollbar.current.scrollToBottom();
     if (annotationFeed.length === 0) setAnnotationsDetails(null);
@@ -344,7 +343,7 @@ const annotationFeed = activityFeed?.filter(eachAnnotation => eachAnnotation.obj
     }));
   };
 
-  console.log(annotationFeed);
+  // console.log(annotationFeed);
 
   return (
     <Flex
@@ -962,7 +961,7 @@ const annotationFeed = activityFeed?.filter(eachAnnotation => eachAnnotation.obj
                         selectedItemIndex === "til" ? "bold" : "normal",
                     }}
                   >
-                    Gleason's Grades
+                    Gleason Grades
                   </Text>
                 </Flex>
                 {isTILBoxVisible && (
@@ -1092,10 +1091,56 @@ const annotationFeed = activityFeed?.filter(eachAnnotation => eachAnnotation.obj
                           {/* Add more content here */}
                         </Box>
                       </Collapse>
+                      <Flex
+                        borderBottom="1px solid lightgray"
+                        my="0"
+                        py="10px"
+                        alignItems="center"
+                        onClick={() => {
+                          handleCollapseToggle("grade4");
+                        }}
+                      >
+                        {collapseStates.grade4 ? (
+                          <Icon
+                            as={AiFillCaretDown}
+                            color="#3B5D7C"
+                            boxSize={4}
+                          />
+                        ) : (
+                          <Icon
+                            as={AiFillCaretRight}
+                            color="gray"
+                            boxSize={4}
+                          />
+                        )}
+                        <Box ml="15px">
+                          <RiCheckboxBlankFill color="#800000" />
+                        </Box>
+                        <Text ml="5px">Benign Epithelial</Text>
+                        <Box w="100%">
+                          <Text textAlign="end" mr="5px">
+                            8%
+                          </Text>
+                        </Box>
+                      </Flex>
+                      <Collapse in={collapseStates.grade4} animateOpacity>
+                        <Box bg="white" my="5px" p="10px" boxShadow="md">
+                          <Text>Grade 4 Collapse Content</Text>
+                          {/* Add more content here */}
+                        </Box>
+                      </Collapse>
                     </Flex>
-                    <Flex flexDir="column" alignItems="center" justifyContent="space-evenly" mt="15px" h="180px" bg="white" px="25px">
+                    <Flex
+                      flexDir="column"
+                      alignItems="center"
+                      justifyContent="space-evenly"
+                      mt="15px"
+                      h="180px"
+                      bg="white"
+                      px="25px"
+                    >
                       <Flex w="100%" justifyContent="space-between">
-                        <Text>Gleason's Grades :</Text>
+                        <Text>Gleason Score :</Text>
                         <Text>7 (3+4)</Text>
                       </Flex>
                       <Flex w="100%" justifyContent="space-between">
@@ -1111,6 +1156,13 @@ const annotationFeed = activityFeed?.filter(eachAnnotation => eachAnnotation.obj
                         <Text>intermediate</Text>
                       </Flex>
                     </Flex>
+                    <Box h="85px">
+                     <Text fontSize="sm" >
+                        Note: Gleason score is determined by adding <br/> the first
+                        predominant region with highest  area  <br/> and second
+                        predominant region with highest  <br/> grade.
+                      </Text> 
+                    </Box>
                   </MotionBox>
                 )}
               </Box>

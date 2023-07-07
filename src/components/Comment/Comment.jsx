@@ -14,7 +14,10 @@ import {
 import { fabric } from "openseadragon-fabricjs-overlay";
 import { RiChatQuoteLine } from "react-icons/ri";
 
-import { SAVE_ANNOTATION } from "../../graphql/annotaionsQuery";
+import {
+  DELETE_ANNOTATION,
+  SAVE_ANNOTATION,
+} from "../../graphql/annotaionsQuery";
 import {
   addToActivityFeed,
   updateTool,
@@ -43,7 +46,7 @@ const CommentBox = ({
   const iconSize = IconSize();
   const toast = useToast();
   const caseData = JSON.parse(localStorage.getItem("caseData"));
-  const [textBoxData, setTextBoxData] = useState("")
+  const [textBoxData, setTextBoxData] = useState("");
   const caseId = caseInfo?._id;
   const onSaveAnnotation = (data) => {
     createAnnotation({
@@ -66,10 +69,14 @@ const CommentBox = ({
   const { fabricOverlay, viewer, activityFeed, slideId } =
     viewerWindow[viewerId];
 
+  const [removeAnnotation, { data: deletedData, error: deleteError }] =
+    useMutation(DELETE_ANNOTATION);
+
   const isActive = activeTool === "Comment";
 
   const [shape, setShape] = useState(null);
   const [textbox, setTextbox] = useState(false);
+  const [lastCommentAdded, setLastCommentAdded] = useState("");
 
   const [myState, setState] = useState({
     activeShape: null, // active shape in event Panel
@@ -132,32 +139,68 @@ const CommentBox = ({
       const origX = pointer.x;
       const origY = pointer.y;
 
-    // Create a textbox with initial content and width
-    const initialContent = "";
-    const defaultWidth = 100;
-  
-    const text = new fabric.Textbox(initialContent, {
-      width: defaultWidth,
-      left: origX,
-      top: origY - 48,
-      styles: null,
-      backgroundColor: "#B0C8D6",
-      opacity: 0.75,
-      title: `${userInfo.firstName} ${userInfo.lastName}`,
-      hasControls: false,
-      hasRotatingPoint: false,
-      lockUniScaling: true,
-      lockMovementX: true,
-      lockMovementY: true,
-      cursorColor: "#000000", // Set the cursor color
-      cursorWidth: 2, // Set the cursor width
-      cursorDuration: 1000, // Set the blinking speed in milliseconds
-    });
-  
-    canvas.add(text);
+      // Create a textbox with initial content and width
+      const initialContent = "";
+      const defaultWidth = 100;
 
-    
+      const text = new fabric.Textbox(initialContent, {
+        width: defaultWidth,
+        left: origX,
+        top: origY - 48,
+        styles: null,
+        backgroundColor: "#B0C8D6",
+        opacity: 0.75,
+        title: `${userInfo.firstName} ${userInfo.lastName}`,
+        hasControls: false,
+        hasRotatingPoint: false,
+        lockUniScaling: true,
+        lockMovementX: true,
+        lockMovementY: true,
+        cursorColor: "#000000", // Set the cursor color
+        cursorWidth: 2, // Set the cursor width
+        cursorDuration: 1000, // Set the blinking speed in milliseconds
+        blinkingCursor: true, // Enable blinking cursor
+        hoverCursor: "pointer",
+      });
+      canvas.add(text);
+      const image = new fabric.Image();
+      image.setSrc("http://fabricjs.com/assets/pug_small.jpg", () => {
+        image.set({
+          left: textbox.left,
+          top: textbox.top - 55,
+          width: 100,
+          height: 100,
+          selectable: false,
+          hasControls: false,
+          hasBorders: false,
+          hoverCursor: "pointer"
+        });
+      
+        const triangle = new fabric.Triangle({
+          left: image.left,
+          top: image.top + image.height - 50,
+          width: 50,
+          height: 50,
+          fill: 'blue',
+          angle: 45,
+          selectable: false,
+          hasControls: false,
+          hasBorders: false,
+          hoverCursor: 'pointer'
+        });
+      
+        const group = new fabric.Group([triangle,image], {
+          selectable: false,
+          hasControls: false,
+          hasBorders: false,
+          hoverCursor: "pointer"
+        });
+      
+        canvas.add(group);
+        canvas.renderAll();
+      });
 
+      text.enterEditing(); // Programmatically focus on the Textbox
       // Event listener for keyup event
       text.on("changed", function () {
         const content = this.text;
@@ -170,7 +213,7 @@ const CommentBox = ({
         // Set the width of the textbox
         this.set("width", calculatedWidth);
 
-        setTextBoxData(this.text)
+        setTextBoxData(this.text);
 
         canvas.renderAll();
       });
@@ -220,15 +263,11 @@ const CommentBox = ({
 
     const checkActiveObject = () => {
       const activeObject = canvas?.getActiveObject();
-
       if (activeObject && activeObject.type === "textbox") {
         // set the tool selected to "SelectedComment"
         setToolSelected("SelectedComment");
-        // console.log("select");
       } else {
-        // set the tool selected to an empty string
         setToolSelected("");
-        // console.log("object");
       }
     };
 
@@ -246,8 +285,9 @@ const CommentBox = ({
   // first remove both from canvas then group them and then add group to canvas
   useEffect(() => {
     const addToFeed = async () => {
+      // console.log(shape);
       if (!shape) return;
-      console.log(shape);
+      // console.log(shape);
       const message = createAnnotationMessage({
         slideId,
         shape,
@@ -257,7 +297,8 @@ const CommentBox = ({
         isClosed: true,
       });
 
-      console.log("m", message);
+      // console.log("m", message);
+      setLastCommentAdded(message.object);
       saveAnnotationToDB({
         slideId,
         annotation: message.object,
@@ -303,9 +344,6 @@ const CommentBox = ({
     }
   }, [navigatorCounter]);
 
-
-
-  
   return (
     <Box
       onClick={() => {

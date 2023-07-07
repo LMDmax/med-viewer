@@ -144,7 +144,7 @@ export const createAnnotationMessage = ({
         hash,
         slide: slideId,
         zoomLevel: viewer.viewport.getZoom(),
-        text: message.object.text,
+        text: message.object.text || "" ,
         maskType: maskType || "",
         type: type || "",
         isClosed: isClosed,

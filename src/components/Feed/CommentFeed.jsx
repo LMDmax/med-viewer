@@ -169,6 +169,7 @@ const CommentFeed = ({
   const { fabricOverlay, activityFeed, viewer, tile, slideId } =
     viewerWindow[viewerId];
 
+
   const { deleteAllAnnotations, deleteAllComments } =
     useCanvasHelpers(viewerId);
 
@@ -243,9 +244,26 @@ const CommentFeed = ({
     onDeleteConfirmationClose();
   };
 
-  // console.log(activityFeed);
+//  useEffect(()=>{
+//    const commentAnnotation = activityFeed.filter(obj => obj.object.type === "textbox");
+//    if(commentAnnotation){
+//      console.log(commentAnnotation)
+//     commentAnnotation.forEach(annotation => {
+//       console.log(annotation)
+//       if (annotation.object.text === "") {
+//         const data = {
+//           hash : annotation.object.hash,
+//           slideId,
+//           type: []
+//         }
+//         // console.log(data)
+//         removeAnnotation({ variables: { body: data } });
+//       }
+//     });
+//   }
+//  },[activityFeed])
   
-
+ 
 
 
   return (
