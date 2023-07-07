@@ -29,7 +29,6 @@ const osdOptions = {
   },
   showNavigator: true,
   showNavigationControl: false,
-  navigatorAutoFade: false,
   navigatorPosition: "BOTTOM_LEFT",
   navigatorHeight: "126px",
   navigatorWidth: "247px",
@@ -66,6 +65,7 @@ function Viewer({
   setBottomZoomValue,
   application,
   setLoadUI,
+  isXmlAnnotations,
   caseInfo,
   setToolSelected,
   client2,
@@ -170,6 +170,7 @@ function Viewer({
           zoomValue={zoomValue}
           viewerIds={viewerIds}
           setBottomZoomValue={setBottomZoomValue}
+          isXmlAnnotations={isXmlAnnotations}
           setToolSelected={setToolSelected}
           mentionUsers={mentionUsers}
           caseInfo={caseInfo}

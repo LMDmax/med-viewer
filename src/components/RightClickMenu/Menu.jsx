@@ -167,6 +167,7 @@ export function CustomMenu({
   runKI67,
   setModelname,
   onHandleVhutAnalysis,
+  isXmlAnnotations,
   slide,
   onHandleShowAnalysis,
   isMorphometryDisabled,
@@ -217,7 +218,7 @@ export function CustomMenu({
                   slide?.stainType === "IHC" ||
                   value < 39 ||
                   !isAnnotationSelected?.isClosed ||
-                  isAnnotationSelected.type === "textbox"
+                  isAnnotationSelected.type === "textbox" || isXmlAnnotations
                 }
               >
                 Run Morphometry
@@ -240,7 +241,7 @@ export function CustomMenu({
                     isMorphometryDisabled ||
                     value < 39 ||
                     !isAnnotationSelected?.isClosed ||
-                    isAnnotationSelected.type === "textbox"
+                    isAnnotationSelected.type === "textbox" || isXmlAnnotations
                   }
                 >
                   Run KI-67

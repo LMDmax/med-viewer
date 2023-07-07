@@ -70,6 +70,7 @@ const ViewerControls = ({
   setBottomZoomValue,
   enableAI,
   slide,
+  isXmlAnnotations,
   application,
   setLoadUI,
   zoomValue,
@@ -1175,6 +1176,7 @@ const ViewerControls = ({
             onHandleVhutAnalysis={handleVhutAnalysis}
             setZoom={handleZoomLevel}
             slide={slide}
+            isXmlAnnotations={isXmlAnnotations}
             enableAI={enableAI}
             setModelname={setModelname}
             isMorphometryDisabled={isMorphometryDisabled}

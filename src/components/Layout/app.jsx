@@ -460,6 +460,7 @@ const LayoutApp = ({
               setModelname={setModelname}
               viewerIds={viewerIds}
               runAiModel={runAiModel}
+              isXmlAnnotations={isXmlAnnotations}
               setToolSelected={setToolSelected}
               navigatorCounter={navigatorCounter}
               mentionUsers={mentionUsers}

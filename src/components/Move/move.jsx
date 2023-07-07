@@ -277,7 +277,7 @@ function Move({
           navigatorCounter={navigatorCounter}
 
         />
-        <AiModels
+       {!isXmlAnnotations ? ( <AiModels
           bottomZoomValue={bottomZoomValue}
           toolSelected={toolSelected}
           zoomValue={zoomValue}
@@ -292,8 +292,8 @@ function Move({
           navigatorCounter={navigatorCounter}
           slide={slide}
           setToolSelected={setToolSelected}
-        />
-  
+        />) : null}
+
       </Flex>
       <Flex
         top={

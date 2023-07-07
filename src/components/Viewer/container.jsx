@@ -35,6 +35,7 @@ const ViewerContainer = ({
 	onMessageListener,
 	application,
 	client2,
+  isXmlAnnotations,
 	mentionUsers,
 	caseInfo,
   navigatorCounter,
@@ -116,6 +117,7 @@ const ViewerContainer = ({
 			caseInfo={caseInfo}
 			addUsersToCase={addUsersToCase}
 			Environment={Environment}
+      isXmlAnnotations={isXmlAnnotations}
 			accessToken={accessToken}
 			setIsXmlAnnotations={setIsXmlAnnotations}
 			handleAnnotationClick={handleAnnotationClick}

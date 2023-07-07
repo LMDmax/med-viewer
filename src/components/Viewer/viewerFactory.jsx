@@ -17,6 +17,7 @@ function ViewerFactory({
   bottomZoomValue,
   slide,
   slideName,
+  isXmlAnnotations,
   binaryMask,
   slides,
   setBottomZoomValue,
@@ -114,6 +115,7 @@ function ViewerFactory({
             binaryMask={binaryMask}
             bottomZoomValue={bottomZoomValue}
             viewerIds={viewerIds}
+            isXmlAnnotations={isXmlAnnotations}
             client2={client2}
             navigatorCounter={navigatorCounter}
             setBottomZoomValue={setBottomZoomValue}
