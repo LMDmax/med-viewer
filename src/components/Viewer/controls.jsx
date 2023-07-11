@@ -639,7 +639,7 @@ const ViewerControls = ({
           }
 
           canvas.requestRenderAll();
-          // console.log(annotatedData);
+          console.log(annotatedData);
           if (annotatedData?.length > 0) {
             toast({
               title: "Annotation loaded",
@@ -704,7 +704,7 @@ const ViewerControls = ({
                   );
 
                   canvas.add(group);
-                  // console.log(group);
+                  console.log(group);
                   canvas.renderAll();
                 });
               }
@@ -741,7 +741,7 @@ const ViewerControls = ({
           .getObjects()
           .filter((obj) => obj.type === "textbox");
         if (e.target && e.target.type === "group") {
-          // console.log(e.target.visible);
+          console.log(e.target.visible);
           const clickedGroupHash = e.target.get("hash");
 
           // Hide the clicked group and show the textbox with the same hash
@@ -761,7 +761,7 @@ const ViewerControls = ({
           canvas.renderAll();
         } else if (e.target === null) {
           // Show all groups and hide all textboxes
-          // console.log("sadsdsd from groupObjects");
+          console.log("sadsdsd from groupObjects");
           groupObjects.forEach((group) => {
             group.set("visible", true);
             const correspondingTextbox = textboxObjects.find(
@@ -837,7 +837,7 @@ const ViewerControls = ({
                 );
 
                 canvas.add(group);
-                // console.log(group);
+                console.log(group);
                 canvas.renderAll();
               });
             }
