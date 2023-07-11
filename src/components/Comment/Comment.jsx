@@ -76,7 +76,6 @@ const CommentBox = ({
 
   const [shape, setShape] = useState(null);
   const [textbox, setTextbox] = useState(false);
-  const [lastCommentAdded, setLastCommentAdded] = useState("");
 
   const [myState, setState] = useState({
     activeShape: null, // active shape in event Panel
@@ -160,46 +159,10 @@ const CommentBox = ({
         cursorWidth: 2, // Set the cursor width
         cursorDuration: 1000, // Set the blinking speed in milliseconds
         blinkingCursor: true, // Enable blinking cursor
-        hoverCursor: "pointer",
+        visibility:false,
       });
       canvas.add(text);
-      const image = new fabric.Image();
-      image.setSrc("http://fabricjs.com/assets/pug_small.jpg", () => {
-        image.set({
-          left: textbox.left,
-          top: textbox.top - 55,
-          width: 100,
-          height: 100,
-          selectable: false,
-          hasControls: false,
-          hasBorders: false,
-          hoverCursor: "pointer"
-        });
       
-        const triangle = new fabric.Triangle({
-          left: image.left,
-          top: image.top + image.height - 50,
-          width: 50,
-          height: 50,
-          fill: 'blue',
-          angle: 45,
-          selectable: false,
-          hasControls: false,
-          hasBorders: false,
-          hoverCursor: 'pointer'
-        });
-      
-        const group = new fabric.Group([triangle,image], {
-          selectable: false,
-          hasControls: false,
-          hasBorders: false,
-          hoverCursor: "pointer"
-        });
-      
-        canvas.add(group);
-        canvas.renderAll();
-      });
-
       text.enterEditing(); // Programmatically focus on the Textbox
       // Event listener for keyup event
       text.on("changed", function () {
@@ -297,8 +260,7 @@ const CommentBox = ({
         isClosed: true,
       });
 
-      // console.log("m", message);
-      setLastCommentAdded(message.object);
+      
       saveAnnotationToDB({
         slideId,
         annotation: message.object,

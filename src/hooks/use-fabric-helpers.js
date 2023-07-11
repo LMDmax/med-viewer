@@ -118,14 +118,14 @@ const useCanvasHelpers = (viewerId) => {
     const target = canvas.getObjectByHash(annotation?.hash);
     target?.set(annotation);
 
-    if (target?.type === "textbox") {
-      toast({
-        title: "Comment updated",
-        status: "success",
-        duration: 1000,
-        isClosable: true,
-      });
-    } 
+    // if (target?.type === "textbox") {
+    //   toast({
+    //     title: "Comment updated",
+    //     status: "success",
+    //     duration: 1000,
+    //     isClosable: true,
+    //   });
+    // } 
   };
   // delete annotation/object from canvas
   const deleteAnnotation = async (onDeleteAnnotation) => {

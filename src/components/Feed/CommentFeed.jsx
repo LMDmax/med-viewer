@@ -203,8 +203,29 @@ const CommentFeed = ({
   }, [tile]);
 
   const handleClick = (feed) => {
-    if (!feed?.object || !feed?.object?.visible) return;
     const canvas = fabricOverlay.fabricCanvas();
+    const objects = canvas.getObjects().filter(obj => obj.type === "group");
+    const textbox = canvas.getObjects().filter(obj => obj.type === "textbox");
+    console.log(feed)
+   
+if(objects){
+  objects.forEach(obj => {
+    if (obj.hash === feed.object.hash) {
+      console.log(obj)
+      obj.set('visible', false);
+    }
+  });
+  if(textbox){
+    textbox.forEach(obj => {
+      if (obj.hash === feed.object.hash) {
+        console.log(obj,"4545")
+        obj.set('visible', true);
+      }
+    });
+  }
+}
+
+    if (!feed?.object || !feed?.object?.visible) return;
 
     if (feed?.object?.type !== "viewport") {
       canvas.setActiveObject(feed?.object);

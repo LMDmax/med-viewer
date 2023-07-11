@@ -7,7 +7,6 @@ import {
 	Text,
 	Spinner,
 } from "@chakra-ui/react";
-import { AiOutlineClose } from "react-icons/ai";
 
 import Questionnaire from "../Qna/questionnaire";
 
@@ -28,7 +27,7 @@ function CLSReport({
 			fontFamily="inter"
 			w="100%"
 			h={ifWidthLessthan1920 ? "calc(100vh - 90px)" : "90.926vh"}
-			top={ifWidthLessthan1920 ? "90px" : "9.999vh"}
+			top={ifWidthLessthan1920 ? "50px" : "8.999vh"}
 			pos="absolute"
 			right="0px"
 			bg="#FCFCFC"
@@ -45,16 +44,6 @@ function CLSReport({
 				</Flex>
 			) : ( */}
 			<>
-				<Flex w="100%" justifyContent="flex-end">
-					<IconButton
-						icon={<AiOutlineClose />}
-						onClick={handleCLSReport}
-						borderRadius="0"
-						background="#fcfcfc"
-						size="sm"
-						_focus={{}}
-					/>
-				</Flex>
 				<Flex
 					w="100%"
 					justifyContent="center"

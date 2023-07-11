@@ -55,7 +55,7 @@ const AiModels = ({
   const [showGleason, setShowGleason] = useState(false);
   const [onTumorAnalysis, { data: analysis_data, error: analysis_error }] =
     useMutation(TUMOR_ANALYSIS);
-  const slideid = slide?._id;
+  const slideid = slide?._id || slide?.slideId;
   const { data: subscription, error: subscription_error } = useSubscription(
     TUMOR_DETECTION_SUBSCRIPTION,
     {

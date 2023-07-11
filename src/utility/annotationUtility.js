@@ -195,6 +195,7 @@ export const createAnnotation = (annotation) => {
         hasRotatingPoint: false,
         lockMovementX: true,
         lockMovementY: true,
+        visible:false,
       });
       break;
 
@@ -430,7 +431,6 @@ export const addAnnotationsToCanvas = ({
   const feed = [];
 
   annotations.forEach((annotation) => {
-    console.log("abcd", annotation);
     const shape = createAnnotation(annotation);
     canvas.on("mouse:over", function (e) {
       if (e?.target?.type === "textBox" || e?.target?.type === "textbox")

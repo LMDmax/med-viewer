@@ -444,6 +444,19 @@ const ViewerControls = ({
 
   // delete Annotation from db
   const onDeleteAnnotation = (data) => {
+    const canvas = fabricOverlay.fabricCanvas();
+    const groupObjects = canvas
+    .getObjects()
+    .filter((obj) => obj.type === "group");
+    // console.log(groupObjects);
+    if(groupObjects){
+      groupObjects.map((object)=>{
+        if(object.hash === data.hash){
+          object.set("visible",  false)
+          console.log(object);
+        }
+      })
+    }
     removeAnnotation({ variables: { body: data } });
   };
 
@@ -625,7 +638,7 @@ const ViewerControls = ({
           }
 
           canvas.requestRenderAll();
-          // console.log(annotatedData);
+          console.log(annotatedData);
           if (annotatedData?.length > 0) {
             toast({
               title: "Annotation loaded",
@@ -636,42 +649,68 @@ const ViewerControls = ({
             for (let i = 0; i < annotatedData.length; i++) {
               if (annotatedData[i].type === "textbox") {
                 const textbox = annotatedData[i];
-                const image = new fabric.Image();
-                image.setSrc("http://fabricjs.com/assets/pug_small.jpg", () => {
-                  image.set({
-                    left: textbox.left,
-                    top: textbox.top - 225,
-                    width: 200,
-                    height: 250,
-                    selectable: false,
-                    hasControls: false,
-                    hasBorders: false,
-                    hoverCursor: "pointer",
-                  });
-
-                  const triangle = new fabric.Triangle({
-                    left: image.left + 51,
-                    top: image.top + image.height - 30,
-                    width: 50,
-                    height: 50,
-                    fill: "blue",
-                    angle: 90,
-                    selectable: false,
-                    hasControls: false,
-                    hasBorders: false,
-                    hoverCursor: "pointer",
-                  });
-
-                  const group = new fabric.Group([triangle, image], {
-                    selectable: false,
-                    hasControls: false,
-                    hasBorders: false,
-                    hoverCursor: "pointer",
-                  });
-
-                  canvas.add(group);
-                  canvas.renderAll();
+                const circle = new fabric.Rect({
+                  left: textbox.left,
+                  top: textbox.top - 75,
+                  height: 100,
+                  width: 100,
+                  fill: "#C1C6D7",
+                  selectable: false,
+                  hasControls: false,
+                  hasBorders: false,
+                  hoverCursor: "pointer",
                 });
+
+                const circleImage = new fabric.Circle({
+                  left: circle.left + 20,
+                  top: circle.top + 20,
+                  radius: 30,
+                  fill: "#D8E7F3", // Set the circle fill color to black
+                  selectable: false,
+                  hasControls: false,
+                  hasBorders: false,
+                  hoverCursor: "pointer",
+                });
+
+                const text = new fabric.Text("C", {
+                  left: circle.left + 35,
+                  top: circle.top + 28,
+                  fontSize: 40,
+                  fontWeight: "bold",
+                  fill: "black", // Set the letter fill color to white
+                  selectable: false,
+                  hasControls: false,
+                  hasBorders: false,
+                  hoverCursor: "pointer",
+                });
+
+                const triangle = new fabric.Triangle({
+                  left: circle.left + 51,
+                  top: circle.top + 75,
+                  width: 50,
+                  height: 50,
+                  fill: "#C1C6D7",
+                  angle: 90,
+                  selectable: false,
+                  hasControls: false,
+                  hasBorders: false,
+                  hoverCursor: "pointer",
+                });
+
+                const group = new fabric.Group(
+                  [triangle, circle, circleImage, text],
+                  {
+                    selectable: false,
+                    hasControls: false,
+                    hasBorders: false,
+                    hash: textbox.hash,
+                    hoverCursor: "pointer",
+                  }
+                );
+
+                canvas.add(group);
+                console.log(group);
+                canvas.renderAll();
               }
             }
           }
@@ -698,9 +737,6 @@ const ViewerControls = ({
     const canvas = fabricOverlay?.fabricCanvas();
 
     if (canvas) {
-      const imageObjects = canvas
-        .getObjects()
-        .filter((obj) => obj.type === "image");
       const groupObjects = canvas
         .getObjects()
         .filter((obj) => obj.type === "group");
@@ -708,12 +744,29 @@ const ViewerControls = ({
         .getObjects()
         .filter((obj) => obj.type === "textbox");
 
+        console.log("textboxes", textboxObjects);
+
       canvas.on("mouse:down", function (e) {
         if (e.target && e.target.type === "group") {
-          groupObjects.forEach((group) => group.set("visible", false));
-          textboxObjects.forEach((textbox) => textbox.set("visible", true));
+          const clickedGroupHash = e.target.get("hash");
+
+          // Hide the clicked group and show the textbox with the same hash
+          groupObjects.forEach((group) => {
+            if (group.get("hash") === clickedGroupHash) {
+              group.set("visible", false);
+            }
+          });
+
+          textboxObjects.forEach((textbox) => {
+            if (textbox.get("hash") === clickedGroupHash) {
+              textbox.set("visible", true);
+              textbox.set("hoverCursor", "pointer");
+            }
+          });
+
           canvas.renderAll();
         } else if (e.target === null) {
+          // Show all groups and hide all textboxes
           groupObjects.forEach((group) => group.set("visible", true));
           textboxObjects.forEach((textbox) => textbox.set("visible", false));
           canvas.renderAll();
