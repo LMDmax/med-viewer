@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 
 import "./zoom-levels";
 import "./openseadragon-scalebar";
-import commentIcon from "../../assets/images/CommentIcon.svg"
 import { useLazyQuery, useMutation, useSubscription } from "@apollo/client";
 import {
   VStack,
@@ -663,7 +662,7 @@ const ViewerControls = ({
                 });
 
                 // Load the image from your local folder
-                fabric.Image.fromURL(commentIcon, (img) => {
+                fabric.Image.fromURL("https://i.postimg.cc/6qdhNGP4/user.png", (img) => {
                   // Set the position and size to match the letter "C"
                   img.set({
                     left: circle.left + 22,
@@ -796,16 +795,16 @@ const ViewerControls = ({
               });
 
               // Load the image from your local folder
-              fabric.Image.fromURL(commentIcon, (img) => {
-                // Set the position and size to match the letter "C"
-                img.set({
-                  left: circle.left + 22,
-                  top: circle.top + 22,
-                  selectable: false,
-                  hasControls: false,
-                  hasBorders: true,
-                  hoverCursor: "pointer",
-                });
+              fabric.Image.fromURL("https://i.postimg.cc/6qdhNGP4/user.png", (img) => {
+                  // Set the position and size to match the letter "C"
+                  img.set({
+                    left: circle.left + 22,
+                    top: circle.top + 22,
+                    selectable: false,
+                    hasControls: false,
+                    hasBorders: true,
+                    hoverCursor: "pointer",
+                  });
               
                 // Scale the image to fit within the circle
                 const scale = Math.min(58 / img.width, 58 / img.height);
