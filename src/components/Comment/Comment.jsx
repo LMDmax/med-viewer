@@ -159,7 +159,6 @@ const CommentBox = ({
         cursorWidth: 2, // Set the cursor width
         cursorDuration: 1000, // Set the blinking speed in milliseconds
         blinkingCursor: true, // Enable blinking cursor
-        visibility:false,
       });
       canvas.add(text);
       

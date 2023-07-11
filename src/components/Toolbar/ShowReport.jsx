@@ -60,7 +60,7 @@ const ShowReport = ({
       />
     );
 
-  if (application === "education")
+  if (application === "clinical" || application === "education")
     return (
       <CLSReportHelper
         questions={questions}
