@@ -70,8 +70,8 @@ const AiModels = ({
     }
   );
 
-  console.log("sssssub", subscription);
-  console.log("sssssubEEEEEEEE", subscription_error);
+  // console.log("sssssub", subscription);
+  // console.log("sssssubEEEEEEEE", subscription_error);
 
   const reinhardFilter = async (context, callback) => {
     // console.log("object");

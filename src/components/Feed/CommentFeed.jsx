@@ -131,6 +131,7 @@ const CommentFeed = ({
   // const onUpdateAnnotation = (data) => {
   //   console.log("activityfeed", data);
   // };
+  const [commentFeedS, setCommentFeeds] = useState();
 
   const [
     modifyAnnotation,
@@ -187,7 +188,16 @@ const CommentFeed = ({
 
   useEffect(() => {
     if (scrollbar.current) scrollbar.current.scrollToBottom();
-    if (activityFeed.length === 0) setAnnotationsDetails(null);
+    if (activityFeed.length === 0){
+      setAnnotationsDetails(null)
+    };
+    if(activityFeed.length > 0){
+      const filteredComment = activityFeed.filter((comment) => {
+        return comment.object.type === "textbox" && comment.object.text !== "";
+      });
+      setCommentFeeds(filteredComment)
+    }
+    
   }, [activityFeed]);
 
   useEffect(() => {
@@ -206,19 +216,19 @@ const CommentFeed = ({
     const canvas = fabricOverlay.fabricCanvas();
     const objects = canvas.getObjects().filter(obj => obj.type === "group");
     const textbox = canvas.getObjects().filter(obj => obj.type === "textbox");
-    console.log(feed)
+    // console.log(feed)
    
 if(objects){
   objects.forEach(obj => {
     if (obj.hash === feed.object.hash) {
-      console.log(obj)
+      // console.log(obj)
       obj.set('visible', false);
     }
   });
   if(textbox){
     textbox.forEach(obj => {
       if (obj.hash === feed.object.hash) {
-        console.log(obj,"4545")
+        // console.log(obj,"4545")
         obj.set('visible', true);
       }
     });
@@ -325,7 +335,7 @@ if(objects){
         </HStack>
         <ScrollBar>
           <Flex direction="column">
-            {activityFeed?.map((feed) => {
+            {commentFeedS?.map((feed) => {
               return feed?.object && feed?.object?.type === "textbox" ? (
                 <Flex
                   key={feed.object.hash}

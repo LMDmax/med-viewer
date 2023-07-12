@@ -32,6 +32,7 @@ import {
   updateActivityFeed,
   updateFeedInAnnotationFeed,
   updateIsViewportAnalysing,
+  removeFromActivityFeed,
 } from "../../state/actions/fabricOverlayActions";
 import { useFabricOverlayState } from "../../state/store";
 import {
@@ -286,7 +287,7 @@ const ViewerControls = ({
       const top = updatedAnnotation.top;
       const angle = updatedAnnotation.angle;
       const text = updatedAnnotation.text;
-      console.log(annotationObject);
+      // console.log(annotationObject);
       // console.log(angle);
       updateAnnotationInDB({
         slideId,
@@ -453,7 +454,7 @@ const ViewerControls = ({
       groupObjects.map((object) => {
         if (object.hash === data.hash) {
           object.set("visible", false);
-          console.log(object);
+          // console.log(object);
         }
       });
     }
@@ -638,7 +639,7 @@ const ViewerControls = ({
           }
 
           canvas.requestRenderAll();
-          console.log(annotatedData);
+          // console.log(annotatedData);
           if (annotatedData?.length > 0) {
             toast({
               title: "Annotation loaded",
@@ -649,63 +650,65 @@ const ViewerControls = ({
             for (let i = 0; i < annotatedData.length; i++) {
               if (annotatedData[i].type === "textbox") {
                 const textbox = annotatedData[i];
-                const circle = new fabric.Rect({
-                  left: textbox.left,
-                  top: textbox.top - 75,
-                  height: 100,
-                  width: 100,
-                  fill: "#C1C6D7",
-                  selectable: false,
-                  hasControls: false,
-                  hasBorders: false,
-                  hoverCursor: "pointer",
-                });
-
-                // Load the image from your local folder
-                fabric.Image.fromURL("https://i.postimg.cc/6qdhNGP4/user.png", (img) => {
-                  // Set the position and size to match the letter "C"
-                  img.set({
-                    left: circle.left + 22,
-                    top: circle.top + 22,
-                    selectable: false,
-                    hasControls: false,
-                    hasBorders: true,
-                    hoverCursor: "pointer",
-                  });
-                
-                  // Scale the image to fit within the circle
-                  const scale = Math.min(58 / img.width, 58 / img.height);
-                  img.scaleToWidth(img.width * scale);
-                  img.scaleToHeight(img.height * scale);
-
-                  const triangle = new fabric.Triangle({
-                    left: circle.left + 51,
-                    top: circle.top + 75,
-                    width: 50,
-                    height: 50,
+                if (textbox.text !== "") {
+                  const circle = new fabric.Rect({
+                    left: textbox.left,
+                    top: textbox.top - 75,
+                    height: 100,
+                    width: 100,
                     fill: "#C1C6D7",
-                    angle: 90,
                     selectable: false,
                     hasControls: false,
                     hasBorders: false,
                     hoverCursor: "pointer",
                   });
 
-                  const group = new fabric.Group(
-                    [triangle, circle, img],
-                    {
-                      selectable: false,
-                      hasControls: false,
-                      hasBorders: false,
-                      hash: textbox.hash,
-                      hoverCursor: "pointer",
+                  // Load the image from your local folder
+                  fabric.Image.fromURL(
+                    "https://i.postimg.cc/6qdhNGP4/user.png",
+                    (img) => {
+                      // Set the position and size to match the letter "C"
+                      img.set({
+                        left: circle.left + 22,
+                        top: circle.top + 22,
+                        selectable: false,
+                        hasControls: false,
+                        hasBorders: true,
+                        hoverCursor: "pointer",
+                      });
+
+                      // Scale the image to fit within the circle
+                      const scale = Math.min(58 / img.width, 58 / img.height);
+                      img.scaleToWidth(img.width * scale);
+                      img.scaleToHeight(img.height * scale);
+
+                      const triangle = new fabric.Triangle({
+                        left: circle.left + 51,
+                        top: circle.top + 75,
+                        width: 50,
+                        height: 50,
+                        fill: "#C1C6D7",
+                        angle: 90,
+                        selectable: false,
+                        hasControls: false,
+                        hasBorders: false,
+                        hoverCursor: "pointer",
+                      });
+
+                      const group = new fabric.Group([triangle, circle, img], {
+                        selectable: false,
+                        hasControls: false,
+                        hasBorders: false,
+                        hash: textbox.hash,
+                        hoverCursor: "pointer",
+                      });
+
+                      canvas.add(group);
+                      // console.log(group);
+                      canvas.renderAll();
                     }
                   );
-
-                  canvas.add(group);
-                  console.log(group);
-                  canvas.renderAll();
-                });
+                }
               }
             }
           }
@@ -733,14 +736,17 @@ const ViewerControls = ({
     if (canvas) {
       canvas.on("mouse:down", function (e) {
         const canvas = fabricOverlay?.fabricCanvas();
+        // find all group and textboxes
         const groupObjects = canvas
           .getObjects()
           .filter((obj) => obj.type === "group");
         const textboxObjects = canvas
           .getObjects()
           .filter((obj) => obj.type === "textbox");
+        // console.log(textboxObjects);
+
         if (e.target && e.target.type === "group") {
-          console.log(e.target.visible);
+          // console.log(e.target.visible);
           const clickedGroupHash = e.target.get("hash");
 
           // Hide the clicked group and show the textbox with the same hash
@@ -760,7 +766,6 @@ const ViewerControls = ({
           canvas.renderAll();
         } else if (e.target === null) {
           // Show all groups and hide all textboxes
-          console.log("sadsdsd from groupObjects");
           groupObjects.forEach((group) => {
             group.set("visible", true);
             const correspondingTextbox = textboxObjects.find(
@@ -774,14 +779,25 @@ const ViewerControls = ({
           });
           textboxObjects.forEach((textbox) => {
             textbox.set("visible", false);
+
+            // empty textbox found then remove the textbox and hide group
+            if (textbox.text === "") {
+              // console.log(textbox);
+              groupObjects.forEach((group) => {
+                if (group.get("hash") === textbox.hash) {
+                  group.set("visible", false);
+                }
+              });
+            }
           });
+          // console.log(textboxObjects);
           // Add a new group for each textbox that doesn't have a corresponding group
           textboxObjects.forEach((textbox) => {
             const textboxHash = textbox.get("hash");
             const hasCorrespondingGroup = groupObjects.some(
               (group) => group.get("hash") === textboxHash
             );
-            if (!hasCorrespondingGroup) {
+            if (!hasCorrespondingGroup && textbox.text !== "") {
               const circle = new fabric.Rect({
                 left: textbox.left,
                 top: textbox.top - 75,
@@ -795,7 +811,9 @@ const ViewerControls = ({
               });
 
               // Load the image from your local folder
-              fabric.Image.fromURL("https://i.postimg.cc/6qdhNGP4/user.png", (img) => {
+              fabric.Image.fromURL(
+                "https://i.postimg.cc/6qdhNGP4/user.png",
+                (img) => {
                   // Set the position and size to match the letter "C"
                   img.set({
                     left: circle.left + 22,
@@ -805,40 +823,38 @@ const ViewerControls = ({
                     hasBorders: true,
                     hoverCursor: "pointer",
                   });
-              
-                // Scale the image to fit within the circle
-                const scale = Math.min(58 / img.width, 58 / img.height);
-                img.scaleToWidth(img.width * scale);
-                img.scaleToHeight(img.height * scale);
 
-                const triangle = new fabric.Triangle({
-                  left: circle.left + 51,
-                  top: circle.top + 75,
-                  width: 50,
-                  height: 50,
-                  fill: "#C1C6D7",
-                  angle: 90,
-                  selectable: false,
-                  hasControls: false,
-                  hasBorders: false,
-                  hoverCursor: "pointer",
-                });
+                  // Scale the image to fit within the circle
+                  const scale = Math.min(58 / img.width, 58 / img.height);
+                  img.scaleToWidth(img.width * scale);
+                  img.scaleToHeight(img.height * scale);
 
-                const group = new fabric.Group(
-                  [triangle, circle, img],
-                  {
+                  const triangle = new fabric.Triangle({
+                    left: circle.left + 51,
+                    top: circle.top + 75,
+                    width: 50,
+                    height: 50,
+                    fill: "#C1C6D7",
+                    angle: 90,
+                    selectable: false,
+                    hasControls: false,
+                    hasBorders: false,
+                    hoverCursor: "pointer",
+                  });
+
+                  const group = new fabric.Group([triangle, circle, img], {
                     selectable: false,
                     hasControls: false,
                     hasBorders: false,
                     hash: textbox.hash,
                     hoverCursor: "pointer",
-                  }
-                );
+                  });
 
-                canvas.add(group);
-                console.log(group);
-                canvas.renderAll();
-              });
+                  canvas.add(group);
+                  // console.log(group);
+                  canvas.renderAll();
+                }
+              );
             }
           });
           canvas.renderAll();

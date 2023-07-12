@@ -41,7 +41,7 @@ const useCanvasHelpers = (viewerId) => {
     );
 
     canvas.remove(target).requestRenderAll();
-
+    // console.log("target", target);
     if (target?.type === "textbox") {
       toast({
         title: "Comment deleted",
@@ -125,7 +125,7 @@ const useCanvasHelpers = (viewerId) => {
     //     duration: 1000,
     //     isClosable: true,
     //   });
-    // } 
+    // }
   };
   // delete annotation/object from canvas
   const deleteAnnotation = async (onDeleteAnnotation) => {
