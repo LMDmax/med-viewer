@@ -106,12 +106,8 @@ function Viewer({
       id: `viewer${viewerId}`,
     });
   
-    // Disable keyboard controls
-    osdViewer.addHandler('canvas-click', function () {
-      // Remove keyboard controls
-      osdViewer.removeHandler('canvas-key', OpenSeadragon.ControlReferenceTracker);
-    });
-  
+    osdViewer.innerTracker.keyDownHandler = null;
+    osdViewer.innerTracker.keyHandler = null;
     initFabricJSOverlay(OpenSeadragon, fabric);
   
     setViewer(osdViewer);

@@ -744,7 +744,9 @@ const ViewerControls = ({
           .getObjects()
           .filter((obj) => obj.type === "textbox");
         // console.log(textboxObjects);
-
+      textboxObjects.forEach((textbox) => {
+        textbox.editable = false;
+      });
         if (e.target && e.target.type === "group") {
           // console.log(e.target.visible);
           const clickedGroupHash = e.target.get("hash");

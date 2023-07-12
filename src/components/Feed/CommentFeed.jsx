@@ -193,12 +193,13 @@ const CommentFeed = ({
     };
     if(activityFeed.length > 0){
       const filteredComment = activityFeed.filter((comment) => {
-        return comment.object.type === "textbox" && comment.object.text !== "";
+        return comment.object.type === "textbox";
       });
       setCommentFeeds(filteredComment)
     }
     
   }, [activityFeed]);
+
 
   useEffect(() => {
     return () => {
@@ -270,29 +271,21 @@ if(objects){
       handleClick(filteredComment[0]);
     }
   }, [searchSelectedData]);
+
+
   const deleteAnnotations = () => {
     deleteAllComments(onDeleteAnnotation);
     onDeleteConfirmationClose();
+    const canvas = fabricOverlay.fabricCanvas();
+    const objects = canvas.getObjects().filter(obj => obj.type === "group");
+    if(objects){
+      objects.forEach(obj => {
+          obj.set('visible', false);
+      });
+    }
   };
 
-//  useEffect(()=>{
-//    const commentAnnotation = activityFeed.filter(obj => obj.object.type === "textbox");
-//    if(commentAnnotation){
-//      console.log(commentAnnotation)
-//     commentAnnotation.forEach(annotation => {
-//       console.log(annotation)
-//       if (annotation.object.text === "") {
-//         const data = {
-//           hash : annotation.object.hash,
-//           slideId,
-//           type: []
-//         }
-//         // console.log(data)
-//         removeAnnotation({ variables: { body: data } });
-//       }
-//     });
-//   }
-//  },[activityFeed])
+
   
  
 
@@ -328,15 +321,15 @@ if(objects){
             size="sm"
             variant="unstyled"
             cursor="pointer"
-            isDisabled={activityFeed.length === 0}
+            isDisabled={commentFeedS? commentFeedS.length < 0 ? true : false : true}
             _focus={{ border: "none", outline: "none" }}
             onClick={onDeleteConfirmationOpen}
           />
         </HStack>
         <ScrollBar>
-          <Flex direction="column">
-            {commentFeedS?.map((feed) => {
-              return feed?.object && feed?.object?.type === "textbox" ? (
+        <Flex direction="column">
+            {activityFeed?.map((feed) => {
+              return feed?.object && feed?.object?.type === "textbox" && feed.object.text !== "" ? (
                 <Flex
                   key={feed.object.hash}
                   borderBottom="1px solid #F6F6F6"

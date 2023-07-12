@@ -17,6 +17,7 @@ import { RiChatQuoteLine } from "react-icons/ri";
 import {
   DELETE_ANNOTATION,
   SAVE_ANNOTATION,
+  UPDATE_ANNOTATION,
 } from "../../graphql/annotaionsQuery";
 import {
   addToActivityFeed,
@@ -28,6 +29,7 @@ import {
   getCanvasImage,
   getScaleFactor,
   saveAnnotationToDB,
+  updateAnnotationInDB,
 } from "../../utility";
 import TooltipLabel from "../AdjustmentBar/ToolTipLabel";
 import ToolbarButton from "../ViewerToolbar/button";
@@ -48,6 +50,10 @@ const CommentBox = ({
   const caseData = JSON.parse(localStorage.getItem("caseData"));
   const [textBoxData, setTextBoxData] = useState("");
   const caseId = caseInfo?._id;
+  const [
+    modifyAnnotation,
+    { data: updatedData, error: updateError, loading: updateLoading },
+  ] = useMutation(UPDATE_ANNOTATION);
   const onSaveAnnotation = (data) => {
     createAnnotation({
       variables: {
@@ -161,7 +167,7 @@ const CommentBox = ({
         blinkingCursor: true, // Enable blinking cursor
       });
       canvas.add(text);
-      
+
       text.enterEditing(); // Programmatically focus on the Textbox
       // Event listener for keyup event
       text.on("changed", function () {
@@ -220,6 +226,14 @@ const CommentBox = ({
     };
   }, [addComments, fabricOverlay, isActive]);
 
+  const onUpdateAnnotation = (data) => {
+    console.log(data)
+    delete data?.slideId;
+    modifyAnnotation({
+      variables: { body: { ...data } },
+    });
+  };
+
   useEffect(() => {
     const canvas = fabricOverlay?.fabricCanvas();
 
@@ -230,7 +244,7 @@ const CommentBox = ({
         setToolSelected("SelectedComment");
       } else {
         setToolSelected("");
-      }
+       }
     };
 
     // Check the active object when the component mounts
@@ -242,6 +256,33 @@ const CommentBox = ({
     // Remove the click listener when the component unmounts
     return () => canvas?.off("mouse:down", checkActiveObject);
   }, [fabricOverlay]);
+
+
+  useEffect(()=>{
+    const canvas = fabricOverlay?.fabricCanvas();
+    const updateCommentText=()=>{
+      const textboxObjects = canvas
+  .getObjects()
+  .filter((obj) => obj.type === "textbox");
+
+const lastAddedTextbox = textboxObjects.pop();
+if(textBoxData !== ""){
+  console.log(lastAddedTextbox);
+  updateAnnotationInDB({
+    slideId,
+    hash: lastAddedTextbox.hash,
+    updateObject: { text: textBoxData },
+    onUpdateAnnotation,
+  });
+  setTextBoxData("")
+}
+    }
+
+    canvas?.on("mouse:down", updateCommentText);
+
+    // Remove the click listener when the component unmounts
+    return () => canvas?.off("mouse:down", updateCommentText);
+  },[textBoxData])
 
   // group shape and textbox together
   // first remove both from canvas then group them and then add group to canvas
@@ -259,7 +300,6 @@ const CommentBox = ({
         isClosed: true,
       });
 
-      
       saveAnnotationToDB({
         slideId,
         annotation: message.object,
