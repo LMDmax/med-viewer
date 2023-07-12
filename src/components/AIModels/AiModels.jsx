@@ -21,7 +21,6 @@ import {
 } from "../../graphql/annotaionsQuery";
 import { getFileBucketFolder } from "../../utility";
 import { useFabricOverlayState } from "../../state/store";
-import axios from "axios";
 
 const AiModels = ({
   slide,
@@ -70,8 +69,8 @@ const AiModels = ({
     }
   );
 
-  // console.log("sssssub", subscription);
-  // console.log("sssssubEEEEEEEE", subscription_error);
+  console.log("sssssub", subscription);
+  console.log("sssssubEEEEEEEE", subscription_error);
 
   const reinhardFilter = async (context, callback) => {
     // console.log("object");

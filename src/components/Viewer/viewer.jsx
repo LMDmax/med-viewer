@@ -95,24 +95,32 @@ function Viewer({
   useEffect(() => {
     // Initialize OpenSeadragon instance and set to viewer
     if (viewer) viewer.destroy();
-    setViewer(
-      OpenSeadragon({
-        ...osdOptions,
-         tileSources: [
-           {
-            tileSource:  tile,
-           }
-        
-        ],
   
-        id: `viewer${viewerId}`,
-      })
-    );
+    const osdViewer = OpenSeadragon({
+      ...osdOptions,
+      tileSources: [
+        {
+          tileSource: tile,
+        },
+      ],
+      id: `viewer${viewerId}`,
+    });
+  
+    // Disable keyboard controls
+    osdViewer.addHandler('canvas-click', function () {
+      // Remove keyboard controls
+      osdViewer.removeHandler('canvas-key', OpenSeadragon.ControlReferenceTracker);
+    });
+  
     initFabricJSOverlay(OpenSeadragon, fabric);
+  
+    setViewer(osdViewer);
+  
     return () => {
       if (viewer) viewer.destroy();
     };
   }, []);
+  
 
   // Show the results.
   useEffect(() => {
