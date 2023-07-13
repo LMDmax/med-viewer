@@ -252,6 +252,7 @@ const Til = ({
         stroke: "",
         strokeWidth: 1,
         objectCaching: false,
+        roiType:"TIL",
       });
       // console.log(t);
       setCords(t);
@@ -384,6 +385,7 @@ const Til = ({
         stroke: "",
         strokeWidth: 1,
         objectCaching: false,
+        roiType:"TIL",
       });
       setOriginalTil(ts);
       setTimeout(() => {
@@ -469,6 +471,7 @@ const Til = ({
           stroke: "",
           strokeWidth: 1,
           objectCaching: false,
+          roiType:"TIL",
         });
         setCords(t);
         setTimeout(() => {
@@ -568,6 +571,7 @@ const Til = ({
           stroke: "red",
           strokeWidth: 1,
           objectCaching: false,
+          roiType:"TIL",
         });
         setCords(newSlidet);
         setTimeout(() => {
@@ -684,6 +688,7 @@ const Til = ({
           stroke: "",
           strokeWidth: 1,
           objectCaching: false,
+          roiType:"TIL",
         });
         setCords(t);
         // console.log(roi2);
@@ -784,6 +789,7 @@ const Til = ({
           stroke: "red",
           strokeWidth: 1,
           objectCaching: false,
+          roiType:"TIL",
         });
         setCords(newSlidet);
         setTimeout(() => {
@@ -864,6 +870,7 @@ const Til = ({
           stroke: "",
           strokeWidth: 1,
           objectCaching: false,
+          roiType:"TIL",
         });
         // console.log(t);
         setCords(t);
@@ -937,6 +944,7 @@ const Til = ({
           stroke: "",
           strokeWidth: 1,
           objectCaching: false,
+          roiType:"TIL",
         });
         //  console.log(t);
         setCords(t);
@@ -1008,6 +1016,7 @@ const Til = ({
           stroke: "",
           strokeWidth: 1,
           objectCaching: false,
+          roiType:"TIL",
         });
         // console.log(t);
         setCords(t);
@@ -1098,6 +1107,7 @@ const Til = ({
           stroke: "",
           strokeWidth: 1,
           objectCaching: false,
+          roiType:"TIL",
         });
         // console.log(t);
         setCords(t);
@@ -1178,6 +1188,7 @@ const Til = ({
           stroke: "",
           strokeWidth: 1,
           objectCaching: false,
+          roiType:"TIL",
         });
         // console.log(t);
         setCords(t);
@@ -1256,6 +1267,7 @@ const Til = ({
           stroke: "",
           strokeWidth: 1,
           objectCaching: false,
+          roiType:"TIL",
         });
         //  console.log(t);
         setCords(t);
@@ -1331,6 +1343,7 @@ const Til = ({
           stroke: "",
           strokeWidth: 1,
           objectCaching: false,
+          roiType:"TIL",
         });
         // console.log(t);
         setCords(t);
@@ -1426,6 +1439,7 @@ const Til = ({
           stroke: "",
           strokeWidth: 1,
           objectCaching: false,
+          roiType:"TIL",
         });
         // console.log(t);
         setCords(t);

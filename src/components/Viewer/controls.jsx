@@ -739,7 +739,7 @@ const ViewerControls = ({
         // find all group and textboxes
         const groupObjects = canvas
           .getObjects()
-          .filter((obj) => obj.type === "group" && !obj.roiType);
+          .filter((obj) => obj.type === "group" && !obj.hasOwnProperty("roiType"));
           console.log(groupObjects)
         const textboxObjects = canvas
           .getObjects()
