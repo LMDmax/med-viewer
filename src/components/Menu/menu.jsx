@@ -188,7 +188,7 @@ function FunctionsMenu({
   useEffect(() => {
     if (toolSelected !== "Filter" && selectedOption !== "annotations") {
       // setSelectedOption("slides");
-      setIsOpen(false);
+      // setIsOpen(false);
     }
     if (toolSelected === "Filter") {
       setSelectedOption("adjustments");

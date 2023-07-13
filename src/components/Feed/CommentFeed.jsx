@@ -20,6 +20,7 @@ import {
   Circle,
   IconButton,
   useToast,
+  Tooltip,
 } from "@chakra-ui/react";
 import { BiRectangle } from "react-icons/bi";
 import { MdModeEditOutline, MdDelete, MdTextsms } from "react-icons/md";
@@ -286,9 +287,6 @@ if(objects){
   };
 
 
-  
- 
-
 
   return (
     <Flex
@@ -341,7 +339,9 @@ if(objects){
                 >
                   <Text fontSize={10}>{`${feed?.object?.title}`}</Text>
                   <Flex align="center" bgColor="#E6E6E6" p="1vh">
-                    <Text>{`${feed?.object?.text}`}</Text>
+                  <Tooltip label={feed?.object?.text?.length > 28 ? feed?.object?.text : ""} hasArrow placement="left">
+                    <Text>{feed?.object?.text?.length > 28 ? `${feed?.object?.text?.substring(0, 28)}...` : feed?.object?.text  }</Text>
+                    </Tooltip>
                   </Flex>
                 </Flex>
               ) : null;
