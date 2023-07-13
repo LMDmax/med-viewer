@@ -151,7 +151,7 @@ const SlidesMenu = ({
       setToolSelected("MultiviewSlideChoosed");
       setIsMultiview(false);
     } else {
-      setImageFilter(false);
+      // setImageFilter(false);
       if (application === "hospital") {
         setSlideName(slide.slideName);
       } else {
