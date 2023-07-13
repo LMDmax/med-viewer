@@ -191,10 +191,11 @@ const annotationFeed = ({
       isClosable: true,
     });
   const onDeleteAnnotation = (data) => {
-    // console.log("====================================");
-    // console.log("activity feed delete", data);
-    // console.log("====================================");
+    console.log("====================================");
+    console.log("activity feed delete", data);
+    console.log("====================================");
     removeAnnotation({ variables: { body: data } });
+    window.location.reload();
   };
 
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
@@ -229,7 +230,6 @@ const annotationFeed = ({
     annotationFeed.map(() => ({ isOpen: false, isFocused: false }))
   );
 
-  // console.log(annotationFeed);
   useEffect(() => {
     if (scrollbar.current) scrollbar.current.scrollToBottom();
     if (annotationFeed.length === 0) setAnnotationsDetails(null);
@@ -385,7 +385,7 @@ const annotationFeed = ({
         </HStack>
         <ScrollBar>
           <Flex direction="column" h="80vh">
-            {activityFeed.map((feed, index) => {
+            {annotationFeed.map((feed, index) => {
               return feed?.object && feed.object?.type !== "textbox" ? (
                 <Accordion key={index} allowToggle allowMultiple>
                   <AccordionItem

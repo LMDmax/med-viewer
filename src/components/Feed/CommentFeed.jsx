@@ -276,13 +276,13 @@ if(objects){
   const deleteAnnotations = () => {
     deleteAllComments(onDeleteAnnotation);
     onDeleteConfirmationClose();
-    const canvas = fabricOverlay.fabricCanvas();
-    const objects = canvas.getObjects().filter(obj => obj.type === "group");
-    if(objects){
-      objects.forEach(obj => {
-          obj.set('visible', false);
-      });
-    }
+    // const canvas = fabricOverlay.fabricCanvas();
+    // const objects = canvas.getObjects().filter(obj => obj.type === "group");
+    // if(objects){
+    //   objects.forEach(obj => {
+    //       obj.set('visible', false);
+    //   });
+    // }
   };
 
 
