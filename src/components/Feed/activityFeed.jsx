@@ -385,7 +385,7 @@ const annotationFeed = ({
         </HStack>
         <ScrollBar>
           <Flex direction="column" h="80vh">
-            {annotationFeed.map((feed, index) => {
+            {activityFeed.map((feed, index) => {
               return feed?.object && feed.object?.type !== "textbox" ? (
                 <Accordion key={index} allowToggle allowMultiple>
                   <AccordionItem
