@@ -195,7 +195,7 @@ const annotationFeed = ({
     // console.log("activity feed delete", data);
     // console.log("====================================");
     removeAnnotation({ variables: { body: data } });
-    window.location.reload()
+    window.location.reload();
   };
 
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
@@ -496,9 +496,24 @@ const annotationFeed = ({
                                   <CardDetailsRow
                                     title="Description"
                                     value={
-                                      annotationDetails?.text
-                                        ? annotationDetails.text
-                                        : "-"
+                                      feed?.object?.text ? (
+                                        feed?.object?.text.length > 20 ? (
+                                          <Tooltip
+                                            label={feed.object.text}
+                                            placement="left"
+                                            hasArrow
+                                          >
+                                            {`${feed.object.text.substring(
+                                              0,
+                                              15
+                                            )}...`}
+                                          </Tooltip>
+                                        ) : (
+                                          feed.object.text
+                                        )
+                                      ) : (
+                                        "-"
+                                      )
                                     }
                                   />
 
