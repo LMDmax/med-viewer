@@ -75,6 +75,7 @@ export const createAnnotationMessage = ({
       hash,
       text,
       title,
+      type,
       zoomLevel,
       points,
       isClosed,
@@ -94,6 +95,7 @@ export const createAnnotationMessage = ({
         hash,
         text,
         title,
+        type,
         zoomLevel,
         points,
         timeStamp,
@@ -109,6 +111,7 @@ export const createAnnotationMessage = ({
         slide,
         hash,
         text,
+        type,
         title,
         zoomLevel,
         points,
@@ -144,7 +147,7 @@ export const createAnnotationMessage = ({
         hash,
         slide: slideId,
         zoomLevel: viewer.viewport.getZoom(),
-        text: message.object.text || "" ,
+        text: message.object.text || "",
         maskType: maskType || "",
         type: type || "",
         isClosed: isClosed,
@@ -195,7 +198,7 @@ export const createAnnotation = (annotation) => {
         hasRotatingPoint: false,
         lockMovementX: true,
         lockMovementY: true,
-        visible:false,
+        visible: false,
       });
       break;
 
@@ -229,7 +232,6 @@ export const createAnnotation = (annotation) => {
         lockMovementX: !annotation.globalCompositeOperation,
         lockMovementY: !annotation.globalCompositeOperation,
         angle: annotation.angle,
-
       });
       break;
 
@@ -245,7 +247,6 @@ export const createAnnotation = (annotation) => {
         lockMovementX: !annotation.globalCompositeOperation,
         lockMovementY: !annotation.globalCompositeOperation,
         angle: annotation.angle,
-
       });
       break;
 
@@ -261,11 +262,24 @@ export const createAnnotation = (annotation) => {
         lockMovementX: !annotation.globalCompositeOperation,
         lockMovementY: !annotation.globalCompositeOperation,
         angle: annotation.angle,
-
+      });
+      break;
+    case "ruler":
+      shape = new fabric.Line(annotation.cords, {
+        color: "black",
+        stroke: "#000",
+        strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
+        strokeUniform: annotation.strokeUniform,
+        fill: annotation.fill,
+        hasControls: annotation.globalCompositeOperation,
+        hasRotatingPoint: annotation.globalCompositeOperation,
+        lockMovementX: !annotation.globalCompositeOperation,
+        lockMovementY: !annotation.globalCompositeOperation,
+        angle: annotation.angle,
       });
       break;
     case "arrow":
-      // need to remove declaration in case bloack
+      // need to remove declaration in case block
       const pointerX = annotation.left;
       const pointerY = annotation.top;
       const width = annotation.width;
@@ -316,9 +330,9 @@ export const createAnnotation = (annotation) => {
       var objs = [line, arrowHead];
       shape = new fabric.Group(objs, {
         hasControls: false,
-        hasRotatingPoint:false,
-        lockMovementX: false,
-        lockMovementY: false,
+        hasRotatingPoint: false,
+        lockMovementX: true,
+        lockMovementY: true,
       });
       break;
     case "marker":
@@ -382,9 +396,9 @@ export const createAnnotation = (annotation) => {
         : [line1, line2, line3, line4];
       shape = new fabric.Group(objs, {
         hasControls: false,
-        hasRotatingPoint:false,
-        lockMovementX: false,
-        lockMovementY: false,
+        hasRotatingPoint: false,
+        lockMovementX: true,
+        lockMovementY: true,
       });
       break;
     case "viewport":

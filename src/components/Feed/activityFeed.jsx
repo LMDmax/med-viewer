@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import { motion } from "framer-motion";
-import { useMutation, useSubscription } from "@apollo/client";
-import { BsEye, BsEyeSlash, BsCircle, BsSlash } from "react-icons/bs";
 
+import { useMutation, useSubscription } from "@apollo/client";
 import {
   Box,
   Flex,
@@ -26,15 +24,22 @@ import {
   IconButton,
   Collapse,
 } from "@chakra-ui/react";
+import { motion } from "framer-motion";
+import { AiFillCaretRight, AiFillCaretDown } from "react-icons/ai";
 import { BiRectangle } from "react-icons/bi";
-
+import {
+  BsEye,
+  BsEyeSlash,
+  BsCircle,
+  BsSlash,
+  BsPlusLg,
+  BsArrowUpLeft,
+} from "react-icons/bs";
 import { FaDrawPolygon } from "react-icons/fa";
 import { GrFormClose } from "react-icons/gr";
 import { MdModeEditOutline, MdDelete, MdTextsms } from "react-icons/md";
-import { v4 as uuidv4 } from "uuid";
-import { AiFillCaretRight, AiFillCaretDown } from "react-icons/ai";
 import { RiCheckboxBlankLine, RiCheckboxBlankFill } from "react-icons/ri";
-import { GroupTil } from "../Icons/CustomIcons";
+import { v4 as uuidv4 } from "uuid";
 
 import {
   DELETE_ANNOTATION,
@@ -45,10 +50,11 @@ import useCanvasHelpers from "../../hooks/use-fabric-helpers";
 import { useFabricOverlayState } from "../../state/store";
 import { updateAnnotationInDB } from "../../utility";
 import DeleteConfirmation from "../Annotations/DeleteConfirmation";
+import { GroupTil } from "../Icons/CustomIcons";
 import ScrollBar from "../ScrollBar";
 import EditText from "./editText";
 
-const EditTextButton = ({ feed, handleEditClick, ...restProps }) => {
+function EditTextButton({ feed, handleEditClick, ...restProps }) {
   return (
     <Icon
       as={MdModeEditOutline}
@@ -57,8 +63,8 @@ const EditTextButton = ({ feed, handleEditClick, ...restProps }) => {
       {...restProps}
     />
   );
-};
-const CardDetailsRow = ({ title, value, ...restProps }) => {
+}
+function CardDetailsRow({ title, value, ...restProps }) {
   return (
     <HStack
       py="8px"
@@ -71,8 +77,8 @@ const CardDetailsRow = ({ title, value, ...restProps }) => {
       <Text>{value}</Text>
     </HStack>
   );
-};
-const CustomTab = ({ title, ...props }) => {
+}
+function CustomTab({ title, ...props }) {
   return (
     <Tab
       {...props}
@@ -96,15 +102,9 @@ const CustomTab = ({ title, ...props }) => {
       {title}
     </Tab>
   );
-};
+}
 
-const CustomTabPanel = ({
-  children,
-  title,
-  annotation,
-  totalCells,
-  ...props
-}) => {
+function CustomTabPanel({ children, title, annotation, totalCells, ...props }) {
   return (
     <TabPanel {...props} px={0} py="8px">
       <Text
@@ -129,7 +129,7 @@ const CustomTabPanel = ({
       ) : null}
     </TabPanel>
   );
-};
+}
 
 const MotionBox = motion(Box);
 
@@ -191,11 +191,11 @@ const annotationFeed = ({
       isClosable: true,
     });
   const onDeleteAnnotation = (data) => {
-    console.log("====================================");
-    console.log("activity feed delete", data);
-    console.log("====================================");
+    // console.log("====================================");
+    // console.log("activity feed delete", data);
+    // console.log("====================================");
     removeAnnotation({ variables: { body: data } });
-    window.location.reload();
+    window.location.reload()
   };
 
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
@@ -230,6 +230,7 @@ const annotationFeed = ({
     annotationFeed.map(() => ({ isOpen: false, isFocused: false }))
   );
 
+  // console.log(annotationFeed);
   useEffect(() => {
     if (scrollbar.current) scrollbar.current.scrollToBottom();
     if (annotationFeed.length === 0) setAnnotationsDetails(null);
@@ -248,10 +249,6 @@ const annotationFeed = ({
   }, [tile]);
 
   const handleClick = (feed, index) => {
-    // console.log(feed,index);
-    if (isXmlAnnotations) {
-      return;
-    }
     const newAccordionState = [...accordionState];
     if (newAccordionState[index]) {
       newAccordionState[index].isOpen = !newAccordionState[index].isOpen;
@@ -279,11 +276,11 @@ const annotationFeed = ({
     // except for when MagicWand tool is activated
     if (activeTool !== "MagicWand") {
       const { zoomLevel, left, top, width, height } = feed.object;
-      if (isXmlAnnotations) {
-        viewer.viewport.zoomTo(zoomLevel * 2.2);
-      } else {
-        viewer.viewport.zoomTo(zoomLevel);
-      }
+      // if (isXmlAnnotations) {
+      // 	viewer.viewport.zoomTo(zoomLevel * 2.2);
+      // } else {
+      viewer.viewport.zoomTo(zoomLevel);
+      // }
       // get viewport point of middle of selected annotation
       const vpoint = viewer.viewport.imageToViewportRectangle(
         left + width / 2,
@@ -295,7 +292,6 @@ const annotationFeed = ({
     setAnnotationsDetails(feed.object);
   };
   // on annotation click
-  // console.log(annotationDetails);
   useEffect(() => {
     if (searchSelectedData) {
       setAnnotationsDetails(searchSelectedData);
@@ -429,7 +425,11 @@ const annotationFeed = ({
                                 alignItems="center"
                                 justifyContent="space-between"
                               >
-                                {feed.object?.type === "rect" ? (
+                                {feed.object?.type === "marker" ? (
+                                  <BsPlusLg color="#E23636" />
+                                ) : feed.object?.type === "arrow" ? (
+                                  <BsArrowUpLeft color="#E23636" />
+                                ) : feed.object?.type === "rect" ? (
                                   <BiRectangle color="#E23636" />
                                 ) : feed.object?.type === "polygon" ? (
                                   <FaDrawPolygon color="#E23636" />
@@ -439,24 +439,26 @@ const annotationFeed = ({
                                   <BsSlash color="#E23636" />
                                 )}
                                 <Text ml="0.8vw">
-                                  {feed.object?.title
-                                    ?<Tooltip
-                                    label={feed.object.text}
-                                    placement="left"
-                                    hasArrow
-                                  >
-                                    {`${feed.object.text.substring(
-                                      0,
-                                      20
-                                    )}...`}
-                                  </Tooltip>
-                                    : feed.object?.roiType === "morphometry"
-                                    ? `ROI ${index + 1}`
-                                    : feed.object?.roiType === "KI67"
-                                    ? `ROI ${index + 1}`
-                                    : feed.object?.type === "viewport"
-                                    ? `Viewport ${index + 1}`
-                                    : `Annotation ${index + 1}`}
+                                  {feed.object?.title ? (
+                                    <Tooltip
+                                      label={feed.object.text}
+                                      placement="left"
+                                      hasArrow
+                                    >
+                                      {`${feed.object.text.substring(
+                                        0,
+                                        20
+                                      )}...`}
+                                    </Tooltip>
+                                  ) : feed.object?.roiType === "morphometry" ? (
+                                    `ROI ${index + 1}`
+                                  ) : feed.object?.roiType === "KI67" ? (
+                                    `ROI ${index + 1}`
+                                  ) : feed.object?.type === "viewport" ? (
+                                    `Viewport ${index + 1}`
+                                  ) : (
+                                    `Annotation ${index + 1}`
+                                  )}
                                 </Text>
                               </Flex>
                             </Box>
@@ -486,32 +488,17 @@ const annotationFeed = ({
                                   <CardDetailsRow
                                     title="Annotation"
                                     value={
-                                      feed?.object?.type
-                                        ? feed?.object?.type
+                                      annotationDetails?.type
+                                        ? annotationDetails.type
                                         : "-"
                                     }
                                   />
                                   <CardDetailsRow
                                     title="Description"
                                     value={
-                                      feed?.object?.text ? (
-                                        feed?.object?.text.length > 20 ? (
-                                          <Tooltip
-                                            label={feed.object.text}
-                                            placement="left"
-                                            hasArrow
-                                          >
-                                            {`${feed.object.text.substring(
-                                              0,
-                                              15
-                                            )}...`}
-                                          </Tooltip>
-                                        ) : (
-                                          feed.object.text
-                                        )
-                                      ) : (
-                                        "-"
-                                      )
+                                      annotationDetails?.text
+                                        ? annotationDetails.text
+                                        : "-"
                                     }
                                   />
 
@@ -729,7 +716,7 @@ const annotationFeed = ({
                       ) : null}
                     </AccordionPanel>
                   </AccordionItem>
-                  <AccordionItem></AccordionItem>
+                  <AccordionItem />
                 </Accordion>
               ) : null;
             })}
