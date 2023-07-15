@@ -9,6 +9,7 @@ import {
   Input,
   Textarea,
   Image,
+  Tooltip,
 } from "@chakra-ui/react";
 import { GrFormClose } from "react-icons/gr";
 
@@ -26,28 +27,27 @@ const Report = ({
 }) => {
   const [ifwidthLessthan1920] = useMediaQuery("(max-width:1920px)");
 
-// console.log(caseInfo);
+  // console.log(caseInfo);
 
-const currentDate = new Date();
+  const currentDate = new Date();
 
-// Convert the birthdate to a Date object
-const birthdate = new Date( caseInfo?.patient?.dateOfBirth);
+  // Convert the birthdate to a Date object
+  const birthdate = new Date(caseInfo?.patient?.dateOfBirth);
 
-// Calculate the age
-let age = currentDate.getFullYear() - birthdate.getFullYear();
+  // Calculate the age
+  let age = currentDate.getFullYear() - birthdate.getFullYear();
 
-// Check if the birthday has already occurred this year
-if (
-  currentDate.getMonth() < birthdate.getMonth() ||
-  (currentDate.getMonth() === birthdate.getMonth() &&
-    currentDate.getDate() < birthdate.getDate())
-) {
-  age--;
-}
+  // Check if the birthday has already occurred this year
+  if (
+    currentDate.getMonth() < birthdate.getMonth() ||
+    (currentDate.getMonth() === birthdate.getMonth() &&
+      currentDate.getDate() < birthdate.getDate())
+  ) {
+    age--;
+  }
 
-// Output the age
-// console.log(age);
-
+  // Output the age
+  // console.log(age);
 
   return (
     <Flex
@@ -60,8 +60,6 @@ if (
       display="flex"
       // pb="30px"
     >
-      
-     
       <Flex
         bg="#fff"
         mt="0.5vw"
@@ -118,7 +116,7 @@ if (
               <HStack minW="50%" py="0.7vh" borderRight="1px solid #DEDEDE">
                 <Text pl="0.5208vw">Gender/age:</Text>
                 <Text pr="0.5208vw">
-                  {`${caseInfo?.patient?.gender}/${age? age : "-"}`}
+                  {`${caseInfo?.patient?.gender}/${age ? age : "-"}`}
                 </Text>
               </HStack>
               <HStack minW="50%">
@@ -163,9 +161,21 @@ if (
               >
                 <Text pl="0.5208vw">Address:</Text>
                 <Text pr="0.5208vw">
-                  {caseInfo?.patient?.patientAddress
-                    ? caseInfo?.patient?.patientAddress
-                    : "-"}
+                  {caseInfo?.patient?.patientAddress ? (
+                    caseInfo?.patient?.patientAddress.length > 20 ? (
+                      <Tooltip
+                      label={caseInfo?.patient?.patientAddress}
+                      placement="left"
+                      hasArrow
+                    >
+                        <Text>{caseInfo?.patient?.patientAddress.substring(0, 20)}...</Text>
+                     </Tooltip>
+                    ) : (
+                      caseInfo?.patient?.patientAddress
+                    )
+                  ) : (
+                    "-"
+                  )}
                 </Text>
               </HStack>
               <HStack minW="50%" h="100%">
