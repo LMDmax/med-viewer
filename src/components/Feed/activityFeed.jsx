@@ -229,7 +229,7 @@ const annotationFeed = ({
 	const [accordionState, setAccordionState] = useState(
 		annotationFeed.map(() => ({ isOpen: false, isFocused: false }))
 	);
-
+	
 	// console.log(annotationFeed);
 	useEffect(() => {
 		if (scrollbar.current) scrollbar.current.scrollToBottom();
@@ -489,13 +489,7 @@ const annotationFeed = ({
 										slideId === "757bc483-78cd-4ae6-836f-94fff0528db8" ? (
 											<AccordionPanel px="0">
 												<Flex direction="column" pr="0.5rem">
-													<Text>
-														In recent years incidence of esophageal carcinoma
-													</Text>
-													<Text>
-														has increased, while incidence of squamous cell
-													</Text>
-													<Text>carcinoma has remained constant.</Text>
+													<Text>{feed.object.text}</Text>
 												</Flex>
 											</AccordionPanel>
 										) : (
