@@ -229,7 +229,7 @@ const annotationFeed = ({
 	const [accordionState, setAccordionState] = useState(
 		annotationFeed.map(() => ({ isOpen: false, isFocused: false }))
 	);
-	
+
 	// console.log(annotationFeed);
 	useEffect(() => {
 		if (scrollbar.current) scrollbar.current.scrollToBottom();
@@ -488,8 +488,8 @@ const annotationFeed = ({
 										{slideId === "bb614ca0-8639-4574-8996-be14eabe2942" ||
 										slideId === "757bc483-78cd-4ae6-836f-94fff0528db8" ? (
 											<AccordionPanel px="0">
-												<Flex direction="column" pr="0.5rem">
-													<Text>{feed.object.text}</Text>
+												<Flex direction="column" flexWrap="wrap" w="100%" pr="0.5rem">
+													<Text style={{ whiteSpace: 'pre-wrap' }}>{feed.object.text}</Text>
 												</Flex>
 											</AccordionPanel>
 										) : (
