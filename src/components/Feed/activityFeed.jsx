@@ -280,7 +280,7 @@ const annotationFeed = ({
 			// if (isXmlAnnotations) {
 			// 	viewer.viewport.zoomTo(zoomLevel * 2.2);
 			// } else {
-			viewer.viewport.zoomTo(zoomLevel);
+			// viewer.viewport.zoomTo(zoomLevel);
 			// }
 			// get viewport point of middle of selected annotation
 			const vpoint = viewer.viewport.imageToViewportRectangle(

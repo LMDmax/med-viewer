@@ -12,8 +12,7 @@ import ViewerControls from "./controls";
 import "../../utility/fabricUtility";
 
 const osdOptions = {
-  maxZoomLevel: 6.0,
-  constrainDuringPan: !!isBrowser,
+  maxZoomLevel: 0,
   debugMode: false,
   gestureSettingsMouse: {
     clickToZoom: false,
@@ -38,6 +37,8 @@ const osdOptions = {
   navigatorBorderColor: "gray",
   navigatorDisplayRegionColor: "red",
   springStiffness: isBrowser ? 20 : 10,
+  constrainDuringPan: true,
+    preserveImageSizeOnResize: true,
   viewportMargin: {
     left: 100,
     top: 100,
@@ -82,7 +83,7 @@ function Viewer({
   const boxRef = useRef();
 
   // Customize Fabric selection handles
-   fabric.Object.prototype.set({
+  fabric.Object.prototype.set({
     borderColor: "#22a2f8",
     borderScaleFactor: 2, // selection stroke width
     cornerColor: "white",
@@ -90,12 +91,12 @@ function Viewer({
     transparentCorners: false,
     hasControls: true,
     evented: true,
-  }); 
+  });
 
   useEffect(() => {
     // Initialize OpenSeadragon instance and set to viewer
     if (viewer) viewer.destroy();
-  
+
     const osdViewer = OpenSeadragon({
       ...osdOptions,
       tileSources: [
@@ -105,18 +106,17 @@ function Viewer({
       ],
       id: `viewer${viewerId}`,
     });
-  
+
     osdViewer.innerTracker.keyDownHandler = null;
     osdViewer.innerTracker.keyHandler = null;
     initFabricJSOverlay(OpenSeadragon, fabric);
-  
+
     setViewer(osdViewer);
-  
+
     return () => {
       if (viewer) viewer.destroy();
     };
   }, []);
-  
 
   // Show the results.
   useEffect(() => {
@@ -145,8 +145,6 @@ function Viewer({
       );
     };
   }, [viewer]);
-
-
 
   return (
     <Box
