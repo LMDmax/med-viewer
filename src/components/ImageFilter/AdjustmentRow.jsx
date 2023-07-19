@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Slider,
   SliderTrack,
@@ -20,6 +20,7 @@ const AdjustmentRow = ({
   min,
   max,
   baseValue,
+  reset,
   handleSliderChange,
 }) => {
   const [sliderValue, setSliderValue] = useState(defaultValue);
@@ -39,6 +40,10 @@ const AdjustmentRow = ({
     setSliderValue(baseValue);
     handleSliderChange(label, baseValue);
   };
+
+  useEffect(()=>{
+      setSliderValue(defaultValue)
+  },[reset])
 
   return (
     <HStack w="100%" justify="space-between" spacing={4}>

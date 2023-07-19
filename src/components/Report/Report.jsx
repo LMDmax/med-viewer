@@ -49,6 +49,10 @@ const Report = ({
   // Output the age
   // console.log(age);
 
+  const name =
+    caseInfo?.patient?.patientName?.firstName +
+    " " +
+    caseInfo?.patient?.patientName?.lastName;
   return (
     <Flex
       fontSize="12px"
@@ -98,10 +102,19 @@ const Report = ({
             <HStack w="100%">
               <HStack minW="50%" py="0.7vh" borderRight="1px solid #DEDEDE">
                 <Text pl="0.5208vw">Name:</Text>
-                <Text pr="0.5208vw">
-                  {caseInfo?.patient?.patientName?.firstName}
-                  {caseInfo?.patient?.patientName?.lastName}
-                </Text>
+                <Tooltip
+                  label={name.length > 20 ? name : ""}
+                  placement="left"
+                  hasArrow
+                >
+                  <Text pr="0.5208vw">
+                    {name
+                      ? name.length > 20
+                        ? `${name.substring(0, 20)}...`
+                        : name
+                      : "-"}
+                  </Text>
+                </Tooltip>
               </HStack>
               <HStack minW="50%">
                 <Text>UHID: {caseInfo?.patient?.uhid}</Text>
@@ -164,12 +177,15 @@ const Report = ({
                   {caseInfo?.patient?.patientAddress ? (
                     caseInfo?.patient?.patientAddress.length > 20 ? (
                       <Tooltip
-                      label={caseInfo?.patient?.patientAddress}
-                      placement="left"
-                      hasArrow
-                    >
-                        <Text>{caseInfo?.patient?.patientAddress.substring(0, 20)}...</Text>
-                     </Tooltip>
+                        label={caseInfo?.patient?.patientAddress}
+                        placement="left"
+                        hasArrow
+                      >
+                        <Text>
+                          {caseInfo?.patient?.patientAddress.substring(0, 20)}
+                          ...
+                        </Text>
+                      </Tooltip>
                     ) : (
                       caseInfo?.patient?.patientAddress
                     )
@@ -180,9 +196,20 @@ const Report = ({
               </HStack>
               <HStack minW="50%" h="100%">
                 <Text>Hospital:</Text>
-                <Text pr="0.5208vw" isTruncated>
-                  {caseInfo?.treatingHospitalDetails?.hospitalName}
-                </Text>
+                <Tooltip
+                  label={caseInfo?.treatingHospitalDetails?.hospitalName.length > 20 ? caseInfo?.treatingHospitalDetails?.hospitalName : ""}
+                  placement="left"
+                  hasArrow
+                >
+                  <Text pr="0.5208vw" isTruncated>
+                    {caseInfo?.treatingHospitalDetails?.hospitalName.length > 20
+                      ? `${caseInfo?.treatingHospitalDetails?.hospitalName.substring(
+                          0,
+                          20
+                        )}...`
+                      : caseInfo?.treatingHospitalDetails?.hospitalName}
+                  </Text>
+                </Tooltip>
               </HStack>
             </HStack>
           </VStack>

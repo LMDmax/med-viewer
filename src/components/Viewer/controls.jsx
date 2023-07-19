@@ -614,7 +614,7 @@ const ViewerControls = ({
   useEffect(() => {
     if (!fabricOverlay) return;
     const canvas = fabricOverlay.fabricCanvas();
-
+    canvas.clear().requestRenderAll()
     const loadAnnotations = async () => {
       // check if the annotations is already loaded
       if (canvas.toJSON().objects.length === 0 && annotatedData) {

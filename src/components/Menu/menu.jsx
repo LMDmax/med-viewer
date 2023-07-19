@@ -66,8 +66,13 @@ function FunctionsMenu({
   viewerId,
   viewerIds,
   setIsMultiview,
+  setOriginalPixels,
   hideTumor,
+  originalPixels,
   setHideTumor,
+  setNewSliderInputs,
+  newSliderInputs,
+  setAdjustmentTool,
   setNormalizeDefault,
   gleasonScoring,
   setBase64URL,
@@ -189,6 +194,7 @@ function FunctionsMenu({
     if (toolSelected !== "Filter" && selectedOption !== "annotations") {
       // setSelectedOption("slides");
       // setIsOpen(false);
+      setAdjustmentTool(false);
     }
     if (toolSelected === "Filter") {
       setSelectedOption("adjustments");
@@ -858,6 +864,9 @@ function FunctionsMenu({
                 setSelectedOption={setSelectedOption}
                 setToolSelected={setToolSelected}
                 viewer={viewer}
+                newSliderInputs={newSliderInputs}
+                setNewSliderInputs={setNewSliderInputs}
+                setAdjustmentTool={setAdjustmentTool}
                 setIsOpen={setIsOpen}
               />
             ) : selectedOption === "mode" ? (
@@ -871,6 +880,8 @@ function FunctionsMenu({
                 setSlideName={setSlideName}
                 setCurrentViewer={setCurrentViewer}
                 viewerId={viewerId}
+                originalPixels={originalPixels}
+                setOriginalPixels={setOriginalPixels}
                 editView={editView}
                 targetAnnotation={targetAnnotation}
                 viewerIds={viewerIds}

@@ -27,10 +27,8 @@ const ProgressBar = () => {
       w="300px"
       h="4px"
       borderRadius="20px"
-      // border="1px solid black" // Add black border
       overflow="hidden" // Hide overflowing progress
       zIndex="9999"
-      // bg="#D9D9D9"
       display="flex"
       justifyContent="center"
       alignItems="center"
@@ -44,6 +42,7 @@ const ProgressBar = () => {
           width={progressWidth}
           background="#1B75BC"
           transition="width 0.5s ease-out" // Add transition for width
+          animation="loadingAnimation 1s infinite linear" // Add loading animation
         />
       </Box>
       <Box
@@ -52,14 +51,25 @@ const ProgressBar = () => {
         left="0"
         bottom="30px"
         w="100%"
-        // h="100vh"
         zIndex="-1"
         backdropFilter="blur(1px)"
         backgroundColor="rgba(255, 255, 255, 0.15)"
-        // boxShadow="0 8px 32px 0 rgba(31, 38, 135, 0.37)"
         borderRadius="10px"
         border="1px solid rgba(255, 255, 255, 0.18)"
       ></Box>
+      {/* CSS Keyframes for the loading animation */}
+      <style>
+        {`
+        @keyframes loadingAnimation {
+          0% {
+            transform: translateX(-100%);
+          }
+          100% {
+            transform: translateX(100%);
+          }
+        }
+      `}
+      </style>
     </Box>
   );
 };

@@ -90,12 +90,19 @@ const LayoutApp = ({
   const [base64URL, setBase64URL] = useState(false);
   const [normalizeDefault, setNormalizeDefault] = useState(false);
   const [imageFilter, setImageFilter] = useState(false);
+  const [newSliderInputs, setNewSliderInputs] = useState({
+    contrast: 1,
+    brightness: 0,
+    thresholding: -1,
+    gamma: 1,
+    exposure: 0,
+  });
   const [ifBiggerScreen] = useMediaQuery("(min-width:1920px)");
   const [currentViewer, setCurrentViewer] = useState(
     viewerIds?.[0]?._id || viewerIds?.[0]?.slideId
   );
 
-  // console.log('slideInfo',slide);
+  // console.log('slideInfo',normalizeDefault);
   const [showAnnotationsBar, setShowAnnotationsBar] = useState(false);
   const [slideName, setSlideName] = useState(slide?.slideName);
   const [slideName2, setSlideName2] = useState(null);
@@ -118,13 +125,16 @@ const LayoutApp = ({
   const [isXmlAnnotations, setIsXmlAnnotations] = useState(false);
   const [loadUI, setLoadUI] = useState(true);
   const [unit, setUnit] = useState();
+  const [AdjustmentTool,setAdjustmentTool] = useState(false);
   const [socketIsConnected, setSocketIsConnected] = useState(false);
   const [binaryMask, setBinaryMask] = useState("");
   const [modelName, setModelname] = useState("");
   const [showRightPanel, setShowRightPanel] = useState(false);
+  const [originalPixels, setOriginalPixels] = useState([]);
   const [editView, setEditView] = useState(false);
   const [gleasonScoring, setGleasonScoring] = useState(false);
   const { tile, viewer } = viewerWindow[currentViewer];
+
 
   useEffect(() => {
     const UnitStore = localStorage.getItem("unit");
@@ -357,6 +367,9 @@ const LayoutApp = ({
           normalizeDefault={normalizeDefault}
           setGleasonScoring={setGleasonScoring}
           gleasonScoring={gleasonScoring}
+          setAdjustmentTool={setAdjustmentTool}
+          setOriginalPixels={setOriginalPixels}
+          AdjustmentTool={AdjustmentTool}
           loadUI={loadUI}
           setLoadUI={setLoadUI}
           toolSelected={toolSelected}
@@ -373,6 +386,7 @@ const LayoutApp = ({
           setTilScore={setTilScore}
           setStromaArea={setStromaArea}
           setLymphocyteCount={setLymphocyteCount}
+          newSliderInputs={newSliderInputs}
           slide={viewerIds?.[0]}
           socketIsConnected={socketIsConnected}
           slides={slides}
@@ -483,9 +497,11 @@ const LayoutApp = ({
             isMultiview={isMultiview}
             slide={viewerIds?.[0]}
             hideTumor={hideTumor}
+            originalPixels={originalPixels}
             viewerIds={viewerIds}
             setHideTumor={setHideTumor}
             setToolSelected={setToolSelected}
+            setAdjustmentTool={setAdjustmentTool}
             hideLymphocyte={hideLymphocyte}
             gleasonScoring={gleasonScoring}
             setHideLymphocyte={setHideLymphocyte}
@@ -495,6 +511,7 @@ const LayoutApp = ({
             navigatorCounter={navigatorCounter}
             Environment={Environment}
             tilScore={tilScore}
+            setOriginalPixels={setOriginalPixels}
             setSlideName={setSlideName}
             userInfo={userInfo}
             toolSelected={toolSelected}
@@ -520,6 +537,8 @@ const LayoutApp = ({
             questionnaireResponse={questionnaireResponse}
             synopticType={synopticType}
             setSynopticType={setSynopticType}
+            newSliderInputs={newSliderInputs}
+            setNewSliderInputs={setNewSliderInputs}
             getSynopticReport={getSynopticReport}
             updateSynopticReport={updateSynopticReport}
             chatFeedBar={chatFeedBar}

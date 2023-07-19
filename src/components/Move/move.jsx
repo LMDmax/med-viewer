@@ -34,7 +34,10 @@ function Move({
   annotations,
   socketIsConnected,
   lessonId,
+  newSliderInputs,
   setBinaryMask,
+  AdjustmentTool,
+  setAdjustmentTool,
   setImageFilter,
   Environment,
   enableAI,
@@ -82,20 +85,18 @@ function Move({
   const [popup, setPopup] = useState(false);
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { activeTool, viewerWindow } = fabricOverlayState;
-  const [AdjustmentTool,setAdjustmentTool] = useState(0);
+
   const { fabricOverlay } = viewerWindow[viewerId];
   let isActive = activeTool === "Move";
   const [activeAnnotations, setActiveAnnotations] = useState(false);
-// console.log(AdjustmentTool);
+  // console.log(AdjustmentTool);
   useEffect(() => {
     if (typeToolsToggle) {
       setToolSelected("Annotation");
-    setFabricOverlayState(updateTool({ tool: "Annotations" }));
-
+      setFabricOverlayState(updateTool({ tool: "Annotations" }));
     } else {
       setToolSelected("");
-     setFabricOverlayState(updateTool({ tool: "Move" }));
-
+      setFabricOverlayState(updateTool({ tool: "Move" }));
     }
   }, [typeToolsToggle]);
 
@@ -191,48 +192,60 @@ function Move({
                 zIndex: 1,
               },
             }}
-            
           >
-            <Flex direction="column" mt={ifScreenlessthan1536px? "1px" : "-2px"} justifyContent="center" alignItems="center" h="100%">
-            <IconButton
-              width={ifScreenlessthan1536px ? "100%" : "100%"}
-              height={ifScreenlessthan1536px ? "50%" : "50%"}
-              // border="2px solid red"
-              _hover={{ bgColor: "transparent" }}
-              icon={
-                <AnnotationIcon
-                  transform="scale(1.2)"
-                  size={iconSize}
-                  color="black"
-                />
-              }
-              _active={{
-                bgColor: "transparent",
-                outline: "none",
-              }}
-              // outline={TilHover ? " 0.5px solid rgba(0, 21, 63, 1)" : ""}
-              // _focus={{
-              // }}
-              backgroundColor="transparent"
-              // mr="7px"
-              // border="1px solid red"
-              borderRadius={0}
-              mb="3px"
-            />
-            <Text
-              align="center"
-              color="black"
-              fontSize="10px"
-              fontFamily="inter"
+            <Flex
+              direction="column"
+              mt={ifScreenlessthan1536px ? "1px" : "-2px"}
+              justifyContent="center"
+              alignItems="center"
+              h="100%"
             >
-              Annotation
-            </Text>
+              <IconButton
+                width={ifScreenlessthan1536px ? "100%" : "100%"}
+                height={ifScreenlessthan1536px ? "50%" : "50%"}
+                // border="2px solid red"
+                _hover={{ bgColor: "transparent" }}
+                icon={
+                  <AnnotationIcon
+                    transform="scale(1.2)"
+                    size={iconSize}
+                    color="black"
+                  />
+                }
+                _active={{
+                  bgColor: "transparent",
+                  outline: "none",
+                }}
+                // outline={TilHover ? " 0.5px solid rgba(0, 21, 63, 1)" : ""}
+                // _focus={{
+                // }}
+                backgroundColor="transparent"
+                // mr="7px"
+                // border="1px solid red"
+                borderRadius={0}
+                mb="3px"
+              />
+              <Text
+                align="center"
+                color="black"
+                fontSize="10px"
+                fontFamily="inter"
+              >
+                Annotation
+              </Text>
             </Flex>
           </Box>
         ) : null}
 
         {/* <Measuremnet /> */}
-        <Mode  setImageFilter={setImageFilter} viewerId={viewerId} setShowRightPanel={setShowRightPanel} socketIsConnected={socketIsConnected}  AdjustmentTool={AdjustmentTool} setAdjustmentTool={setAdjustmentTool} />
+        <Mode
+          setImageFilter={setImageFilter}
+          viewerId={viewerId}
+          setShowRightPanel={setShowRightPanel}
+          socketIsConnected={socketIsConnected}
+          AdjustmentTool={AdjustmentTool}
+          setAdjustmentTool={setAdjustmentTool}
+        />
 
         <CommentBox
           userInfo={userInfo}
@@ -248,6 +261,7 @@ function Move({
             setToolSelected={setToolSelected}
             viewerId={viewerId}
             AdjustmentTool={AdjustmentTool}
+            newSliderInputs={newSliderInputs}
             toolSelected={toolSelected}
             navigatorCounter={navigatorCounter}
           />
@@ -275,25 +289,25 @@ function Move({
           setLymphocyteCount={setLymphocyteCount}
           pathStroma={pathStroma}
           navigatorCounter={navigatorCounter}
-
         />
-       {!isXmlAnnotations ? ( <AiModels
-          bottomZoomValue={bottomZoomValue}
-          toolSelected={toolSelected}
-          zoomValue={zoomValue}
-          viewerId={viewerId}
-          setLoadUI={setLoadUI}
-          Environment={Environment}
-          viewerIds={viewerIds}
-          gleasonScoring={gleasonScoring}
-          setGleasonScoring={setGleasonScoring}
-          setModelname={setModelname}
-          setBinaryMask={setBinaryMask}
-          navigatorCounter={navigatorCounter}
-          slide={slide}
-          setToolSelected={setToolSelected}
-        />) : null}
-
+        {!isXmlAnnotations ? (
+          <AiModels
+            bottomZoomValue={bottomZoomValue}
+            toolSelected={toolSelected}
+            zoomValue={zoomValue}
+            viewerId={viewerId}
+            setLoadUI={setLoadUI}
+            Environment={Environment}
+            viewerIds={viewerIds}
+            gleasonScoring={gleasonScoring}
+            setGleasonScoring={setGleasonScoring}
+            setModelname={setModelname}
+            setBinaryMask={setBinaryMask}
+            navigatorCounter={navigatorCounter}
+            slide={slide}
+            setToolSelected={setToolSelected}
+          />
+        ) : null}
       </Flex>
       <Flex
         top={

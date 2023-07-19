@@ -31,6 +31,7 @@ const ImageFilter = ({
   navigatorCounter,
   setLoadUI,
   imageFilter,
+  setOriginalPixels,
   normalizeDefault,
   base64URL,
   socketRef,
@@ -126,6 +127,8 @@ const ImageFilter = ({
       context.canvas.height
     );
 
+    // console.log(imgData)
+
     // Modify pixels
     const pixelsData = {
       data: imgData.data,
@@ -133,6 +136,9 @@ const ImageFilter = ({
       height: imgData.height,
       colorSpace: "srgb",
     };
+    // console.log("PIXEL", pixelsData)
+
+    setOriginalPixels((prevArray)=> [...prevArray, pixelsData])
 
     setArray((prevArray) => [...prevArray, pixelsData]);
     // console.log(array);
@@ -169,7 +175,7 @@ const ImageFilter = ({
     if (!viewer) return;
     if (!imageFilter) {
       // console.log("sad");
-      window.location.reload();
+      // window.location.reload();
       // setToolSelected("");
       setFabricOverlayState(updateTool({ tool: "Move" }));
       // viewer?.setFilterOptions(null);
@@ -180,7 +186,6 @@ const ImageFilter = ({
   useEffect(() => {
     if (normalizeDefault) {
       handleOkay();
-     
     }
   }, [normalizeDefault]);
 

@@ -195,7 +195,8 @@ const annotationFeed = ({
 		// console.log("activity feed delete", data);
 		// console.log("====================================");
 		removeAnnotation({ variables: { body: data } });
-		window.location.reload();
+			window.location.reload();
+		
 	};
 
 	const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();

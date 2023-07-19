@@ -30,6 +30,7 @@ function ScreenTools({
   base64URL,
   application,
   handleAnnotationBar,
+  setOriginalPixels,
   imageFilter,
   caseInfo,
   slide,
@@ -80,6 +81,7 @@ function ScreenTools({
         socketRef={socketRef}
         base64URL={base64URL}
         setLoadUI={setLoadUI}
+        setOriginalPixels={setOriginalPixels}
         navigatorCounter={navigatorCounter}
         setToolSelected={setToolSelected}
         viewerId={viewerId}

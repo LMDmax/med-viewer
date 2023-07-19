@@ -167,24 +167,25 @@ const CommentBox = ({
         blinkingCursor: true, // Enable blinking cursor
       });
       canvas.add(text);
+      setTimeout(() => {
+        text.enterEditing();
 
-      text.enterEditing(); // Programmatically focus on the Textbox
-      // Event listener for keyup event
-      text.on("changed", function () {
-        const content = this.text;
-        const contentLength = content.length;
+        // Event listener for keyup event
+        text.on("changed", function (options) {
+          const content = this.text;
+          const contentLength = content.length;
 
-        // Calculate the width based on the content length
-        const calculatedWidth =
-          contentLength > 0 ? contentLength * 10 : defaultWidth;
+          // Calculate the width based on the content length
+          const calculatedWidth =
+            contentLength > 0  ? contentLength * 20 : defaultWidth;
 
-        // Set the width of the textbox
-        this.set("width", calculatedWidth);
+          // Set the width of the textbox
+          this.set("width", calculatedWidth);
+          setTextBoxData(this.text);
 
-        setTextBoxData(this.text);
-
-        canvas.renderAll();
-      });
+          canvas.renderAll();
+        });
+      }, 1000);
 
       // canvas.add(mousecursor);
       setMyState({
@@ -227,7 +228,7 @@ const CommentBox = ({
   }, [addComments, fabricOverlay, isActive]);
 
   const onUpdateAnnotation = (data) => {
-    console.log(data)
+    // console.log(data);
     delete data?.slideId;
     modifyAnnotation({
       variables: { body: { ...data } },
@@ -244,7 +245,7 @@ const CommentBox = ({
         setToolSelected("SelectedComment");
       } else {
         setToolSelected("");
-       }
+      }
     };
 
     // Check the active object when the component mounts
@@ -257,32 +258,37 @@ const CommentBox = ({
     return () => canvas?.off("mouse:down", checkActiveObject);
   }, [fabricOverlay]);
 
-
-  useEffect(()=>{
+  useEffect(() => {
     const canvas = fabricOverlay?.fabricCanvas();
-    const updateCommentText=()=>{
+    const updateCommentText = () => {
       const textboxObjects = canvas
-  .getObjects()
-  .filter((obj) => obj.type === "textbox");
+        .getObjects()
+        .filter((obj) => obj.type === "textbox");
 
-const lastAddedTextbox = textboxObjects.pop();
-if(textBoxData !== ""){
-  console.log(lastAddedTextbox);
-  updateAnnotationInDB({
-    slideId,
-    hash: lastAddedTextbox.hash,
-    updateObject: { text: textBoxData },
-    onUpdateAnnotation,
-  });
-  setTextBoxData("")
-}
-    }
+      const lastAddedTextbox = textboxObjects.pop();
+      // console.log(lastAddedTextbox);
+      if (textBoxData !== "") {
+        updateAnnotationInDB({
+          slideId,
+          hash: lastAddedTextbox.hash,
+          updateObject: {
+            text: textBoxData,
+            width: lastAddedTextbox.width,
+            height: lastAddedTextbox.height,
+          },
+          onUpdateAnnotation,
+        });
+        setTextBoxData("");
+        textboxObjects.push(lastAddedTextbox);
+        // console.log(textboxObjects);
+      }
+    };
 
     canvas?.on("mouse:down", updateCommentText);
 
     // Remove the click listener when the component unmounts
     return () => canvas?.off("mouse:down", updateCommentText);
-  },[textBoxData])
+  }, [textBoxData]);
 
   // group shape and textbox together
   // first remove both from canvas then group them and then add group to canvas

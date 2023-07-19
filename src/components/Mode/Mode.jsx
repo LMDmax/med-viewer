@@ -16,7 +16,6 @@ import { useFabricOverlayState } from "../../state/store";
 const Mode = ({
   setAdjustmentTool,
   AdjustmentTool,
-  
   showRightPanel,
   setShowRightPanel,
   viewerId,
@@ -28,17 +27,13 @@ const Mode = ({
   const { viewer, fabricOverlay } = viewerWindow[viewerId];
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
   const [isOpen, setIsOpen] = useState();
-  const [showNormalisationCount, setShowNormalisationCount] = useState(0);
+  const [showNormalisationCount, setShowNormalisationCount] = useState(false);
   const handleClick = () => {
     setIsOpen(!isOpen);
   };
 
   useEffect(() => {
-    if (showNormalisationCount % 2 == 0) {
-      localStorage.removeItem("mode");
-      setShowRightPanel(false);
-      setImageFilter(false)
-    } else {
+    if (showNormalisationCount)  {
       localStorage.setItem("mode", "normalisation");
       setShowRightPanel(true);
       setImageFilter(true)
@@ -146,7 +141,7 @@ const Mode = ({
               }}
               onClick={() => {
                 if (socketIsConnected) {
-                  setShowNormalisationCount(showNormalisationCount + 1);
+                  setShowNormalisationCount(true);
                 }
               }}
             >
@@ -165,7 +160,7 @@ const Mode = ({
                 e.target.style.color = "black";
               }}
               onClick={() => {
-                setAdjustmentTool(AdjustmentTool + 1);
+                setAdjustmentTool(!AdjustmentTool);
               }}
             >
               Adjustments

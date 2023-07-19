@@ -40,6 +40,7 @@ const FilterAdjustments = ({
   toolSelected,
   AdjustmentTool,
   navigatorCounter,
+  newSliderInputs,
 }) => {
   const { fabricOverlayState,setFabricOverlayState  } = useFabricOverlayState();
   const { viewerWindow, activeTool } = fabricOverlayState;
@@ -64,11 +65,7 @@ const FilterAdjustments = ({
   }, [navigatorCounter]);
 
   useEffect(() => {
-    if (isActiveTool) {
-      setToolSelected("Filter");
-      setFabricOverlayState(updateTool({ tool: "Filter" }));
-
-    } else {
+    if (!isActiveTool) {
       setToolSelected("");
       setFabricOverlayState(updateTool({ tool: "Move" }));
     }
@@ -80,43 +77,22 @@ const FilterAdjustments = ({
     }
   }, [toolSelected]);
 
-  const sliderStateRef = useRef(sliderInputs);
-  const modalRef = useRef(null);
-
-  const toast = useToast();
 
   const handleClick = () => {
     setIsActiveTool((state) => !state);
   };
 
   useEffect(()=>{
-    if(AdjustmentTool > 0){
-      handleClick()
+    if(AdjustmentTool){
+      setToolSelected("Filter");
+      setFabricOverlayState(updateTool({ tool: "Filter" }));
+      // handleClick()
     }
   },[AdjustmentTool])
 
+  // console.log("tool", activeTool)
+  // console.log("tool", AdjustmentTool)
 
-  const handleSliderChange = (name, value) => {
-    setSliderInputs({ ...sliderInputs, [name.toLowerCase()]: value });
-  };
-
-  const handleOnClose = () => {
-    setIsActiveTool(false);
-    if (sliderStateRef.current) setSliderInputs(sliderStateRef.current);
-    onClose();
-  };
-
-  const handleSave = () => {
-    sliderStateRef.current = sliderInputs;
-    toast({
-      status: "success",
-      title: "Filters successfully applied",
-      isClosable: true,
-      duration: 1000,
-    });
-    setIsActiveTool(false);
-    onClose();
-  };
 
   useEffect(() => {
     if (!viewer) return;

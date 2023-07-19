@@ -4,6 +4,9 @@ import AdjustmentRow from "../ImageFilter/AdjustmentRow";
 import OpenSeadragon from "openseadragon";
 import { Box, VStack, Flex, Text, Button } from "@chakra-ui/react";
 import "../ImageFilter/openseadragon-filtering";
+import { GrFormClose } from "react-icons/gr";
+import { useFabricOverlayState } from "../../state/store";
+import { updateTool } from "../../state/actions/fabricOverlayActions";
 
 const getFilters = (sliderInputs) => {
   const filters = [];
@@ -12,14 +15,19 @@ const getFilters = (sliderInputs) => {
   return filters;
 };
 
-const Adjustments = ({ setIsOpen, viewer, setToolSelected, setSelectedOption }) => {
+const Adjustments = ({ setIsOpen, viewer, setToolSelected, setSelectedOption, setAdjustmentTool, setNewSliderInputs, newSliderInputs }) => {
+  const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const [sliderInputs, setSliderInputs] = useState({
-    contrast: 1,
-    brightness: 0,
-    thresholding: -1,
-    gamma: 1,
-    exposure: 0,
+    contrast: newSliderInputs.contrast,
+    brightness: newSliderInputs.brightness,
+    thresholding: newSliderInputs.thresholding,
+    gamma: newSliderInputs.gamma,
+    exposure: newSliderInputs.exposure,
   });
+
+
+
+  const [reset, setReset] = useState(false);
 
   const sliderStateRef = useRef(sliderInputs);
 
@@ -31,9 +39,10 @@ const Adjustments = ({ setIsOpen, viewer, setToolSelected, setSelectedOption }) 
   // console.log(sliderInputs);
 
   const handleOnClose = () => {
+    setReset(!reset);
     // setIsOpen(false);
-    setToolSelected("");
-    setSelectedOption("slides");
+    // setToolSelected("");
+    // setSelectedOption("slides");
   
     // Reset the slider inputs to their default values
     const defaultSliderInputs = {
@@ -67,10 +76,13 @@ const Adjustments = ({ setIsOpen, viewer, setToolSelected, setSelectedOption }) 
 
   const handleSave = () => {
     sliderStateRef.current = sliderInputs;
-    // setIsActive(false);
     // onClose();
+    // console.log(sliderInputs)
+    setNewSliderInputs(sliderInputs);
     setIsOpen(false);
     setToolSelected("FilterSaved");
+    setAdjustmentTool(false);
+    setFabricOverlayState(updateTool({ tool: "Move" }));
   };
 
   useEffect(() => {
@@ -96,7 +108,8 @@ const Adjustments = ({ setIsOpen, viewer, setToolSelected, setSelectedOption }) 
     }
   }, [sliderInputs, viewer]);
   return (
-    <Box w="100%" bg="white" h="100%" px="5px">
+    <Box w="100%" bg="white" h="80vh" px="5px">
+      <Flex mb="3vh" w="100%" justifyContent="space-between" alignItems="center" >
       <Text
         fontFamily="Inter"
         fontStyle="normal"
@@ -104,41 +117,54 @@ const Adjustments = ({ setIsOpen, viewer, setToolSelected, setSelectedOption }) 
         fontSize={20}
         letterSpacing=" 0.0025em"
         color=" #3B5D7C"
-        mb="3vh"
       >
         Adjustments
       </Text>
+      <GrFormClose
+            size={20}
+            cursor="pointer"
+            _hover={{ cursor: "pointer" }}
+            onClick={()=>{
+            handleOnClose()
+            handleSave();
+            }}
+          />
+      </Flex>
       <VStack mb="30px" spacing={4}>
         <AdjustmentRow
           label="Contrast"
           min={1}
           max={255}
+          reset={reset}
           baseValue={1}
-          defaultValue={sliderInputs.contrast}
+          defaultValue={newSliderInputs? newSliderInputs.contrast : sliderInputs.contrast}
           handleSliderChange={handleSliderChange}
         />
         <AdjustmentRow
           label="Brightness"
           min={-255}
           max={255}
+          reset={reset}
           baseValue={0}
-          defaultValue={sliderInputs.brightness}
+          defaultValue={newSliderInputs? newSliderInputs.brightness : sliderInputs.brightness}
           handleSliderChange={handleSliderChange}
         />
         <AdjustmentRow
           label="Thresholding"
           min={-1}
           max={255}
+          reset={reset}
           baseValue={-1}
-          defaultValue={sliderInputs.thresholding}
+          defaultValue={newSliderInputs? newSliderInputs.thresholding : sliderInputs.thresholding}
           handleSliderChange={handleSliderChange}
         />
         <AdjustmentRow
           label="Gamma"
           min={1}
           max={255}
+          reset={reset}
           baseValue={1}
-          defaultValue={sliderInputs.gamma}
+          defaultValue={newSliderInputs? newSliderInputs.gamma : sliderInputs.gamma}
           handleSliderChange={handleSliderChange}
         />
         
@@ -160,7 +186,7 @@ const Adjustments = ({ setIsOpen, viewer, setToolSelected, setSelectedOption }) 
           fontWeight="bold"
           onClick={handleOnClose}
         >
-          Cancel
+          Reset
         </Button>
         <Button
           variant="solid"

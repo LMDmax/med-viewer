@@ -11,7 +11,9 @@ const ModeMeanu = ({
   setBase64URL,
   slide,
   setCurrentViewer,
+  setOriginalPixels,
   setEditView,
+  originalPixels,
   viewerIds,
   setShowNormalisation,
   application,
@@ -51,7 +53,8 @@ const ModeMeanu = ({
               setShowRightPanel(false);
               setEditView(false);
               localStorage.removeItem("mode");
-              // setFabricOverlayState(removeViewerWindow({ id: vKeys[1] }));
+              setShowNormalisation(false);
+              window.location.reload()
             }}
             size={24}
             color="gray"
@@ -73,7 +76,9 @@ const ModeMeanu = ({
           setEditView={setEditView}
           viewerIds={viewerIds}
           editView={editView}
+          setOriginalPixels={setOriginalPixels}
           setShowNormalisation={setShowNormalisation}
+          originalPixels={originalPixels}
           tile={tile}
           setShowRightPanel={setShowRightPanel}
           setIsNavigatorActive={setIsNavigatorActive}
