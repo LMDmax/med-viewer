@@ -308,6 +308,7 @@ const ChatConversationFeed = ({
           query: {
             filter: {
               toId: groupChatId,
+              fromId:userInfo?._id
             },
             paginate: {
               limit: 25,
@@ -327,6 +328,7 @@ const ChatConversationFeed = ({
         query: {
           filter: {
             toId: groupChatId,
+            fromId: userInfo?._id
           },
           paginate: {
             limit: 25,
