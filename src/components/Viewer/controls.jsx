@@ -12,10 +12,10 @@ import {
   Box,
 } from "@chakra-ui/react";
 import axios from "axios";
+import Draggable from "react-draggable";
 import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 import { MdOutlineDragIndicator } from "react-icons/md";
 
-import Draggable from "react-draggable";
 import {
   ANNOTATIONS_SUBSCRIPTION,
   DELETE_ANNOTATION,
@@ -49,16 +49,16 @@ import {
 } from "../../utility";
 import AnnotationChat from "../AnnotationChat/AnnotationChat";
 import ShowMetric from "../Annotations/ShowMetric";
+import ActivityFeed from "../Feed/activityFeed";
 import EditText from "../Feed/editText";
 import FullScreen from "../Fullscreen/Fullscreen";
+import { MoveBar } from "../Icons/CustomIcons";
 import Loading from "../Loading/loading";
 import { CustomMenu } from "../RightClickMenu/Menu";
 import ToolbarButton from "../ViewerToolbar/button";
 import IconSize from "../ViewerToolbar/IconSize";
 import ZoomButton from "../ZoomButton/ZoomButton";
 import ZoomSlider from "../ZoomSlider/slider";
-import { MoveBar } from "../Icons/CustomIcons";
-import ActivityFeed from "../Feed/activityFeed";
 
 const ViewerControls = ({
   viewerId,
@@ -281,12 +281,12 @@ const ViewerControls = ({
     if (updatedAnnotation && manipulationComplete) {
       // console.log('Updated annotation object: ', updatedAnnotation);
       const canvas = fabricOverlay?.fabricCanvas();
-      const width = updatedAnnotation.width;
-      const height = updatedAnnotation.height;
-      const left = updatedAnnotation.left;
-      const top = updatedAnnotation.top;
-      const angle = updatedAnnotation.angle;
-      const text = updatedAnnotation.text;
+      const { width } = updatedAnnotation;
+      const { height } = updatedAnnotation;
+      const { left } = updatedAnnotation;
+      const { top } = updatedAnnotation;
+      const { angle } = updatedAnnotation;
+      const { text } = updatedAnnotation;
       // console.log(annotationObject);
       // console.log(angle);
       updateAnnotationInDB({
@@ -483,7 +483,7 @@ const ViewerControls = ({
     }
   }, [responseData]);
 
-  //On load run roi for existing ones
+  // On load run roi for existing ones
 
   useEffect(() => {
     if (vhutSubscriptionData) {
@@ -579,14 +579,14 @@ const ViewerControls = ({
   // once viewer is initialized
   useEffect(() => {
     if (xmlLink) {
-      getXmlAnnotation({
-        variables: {
-          query: {
-            slideId,
-          },
+    getXmlAnnotation({
+      variables: {
+        query: {
+          slideId,
         },
-      });
-      setIsXmlAnnotations(true);
+      },
+    });
+    setIsXmlAnnotations(true);
     } else {
       getAnnotation({
         variables: {
@@ -614,7 +614,7 @@ const ViewerControls = ({
   useEffect(() => {
     if (!fabricOverlay) return;
     const canvas = fabricOverlay.fabricCanvas();
-    // canvas.clear().requestRenderAll()
+    canvas.clear().requestRenderAll();
     const loadAnnotations = async () => {
       // check if the annotations is already loaded
       if (canvas.toJSON().objects.length === 0 && annotatedData) {
@@ -740,15 +740,17 @@ const ViewerControls = ({
         // find all group and textboxes
         const groupObjects = canvas
           .getObjects()
-          .filter((obj) => obj.type === "group" && !obj.hasOwnProperty("roiType"));
-          // console.log(groupObjects)
+          .filter(
+            (obj) => obj.type === "group" && !obj.hasOwnProperty("roiType")
+          );
+        // console.log(groupObjects)
         const textboxObjects = canvas
           .getObjects()
           .filter((obj) => obj.type === "textbox" && obj.usingAs === "comment");
         // console.log(textboxObjects);
-      textboxObjects.forEach((textbox) => {
-        textbox.editable = false;
-      });
+        textboxObjects.forEach((textbox) => {
+          textbox.editable = false;
+        });
         if (e.target && e.target.type === "group") {
           // console.log(e.target.visible);
           const clickedGroupHash = e.target.get("hash");
@@ -1142,7 +1144,7 @@ const ViewerControls = ({
   useEffect(() => {
     if (annotationObject?.type === "path") {
       if (annotationObject?.isClosed === false) {
-        //return from this block print a console out
+        // return from this block print a console out
         setToolSelected("OpenPath");
         return;
       }
@@ -1163,7 +1165,7 @@ const ViewerControls = ({
       if (slide?.stainType === "H&E" || application === "education") {
         if (runAiModel === "Morphometry") {
           if (annotationObject) {
-            //first time run morphometry
+            // first time run morphometry
             if (!annotationObject?.isAnalysed) {
               handleVhutAnalysis();
               setModelname("");
