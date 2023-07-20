@@ -1,3 +1,5 @@
+/* eslint-disable no-case-declarations */
+/* eslint-disable no-unsafe-optional-chaining */
 import { fabric } from "openseadragon-fabricjs-overlay";
 import md5 from "md5";
 import { normalizeUnits } from "./utility";
@@ -150,7 +152,7 @@ export const createAnnotationMessage = ({
         text: message.object.text || "",
         maskType: maskType || "",
         type: type || "",
-        isClosed: isClosed,
+        isClosed,
       });
     }
   }
@@ -280,53 +282,46 @@ export const createAnnotation = (annotation) => {
       break;
     case "arrow":
       // need to remove declaration in case block
-      const pointerX = annotation.left;
-      const pointerY = annotation.top;
-      const width = annotation.width;
-      const height = annotation.height;
+      const endX = annotation.left + annotation.width;
+      const endY = annotation.top + annotation.height;
+      const { width } = annotation;
+      const { height } = annotation;
       const startPointX = annotation.left;
       const startPointY = annotation.top;
       const ratio = height / width;
-      const angle = (Math.atan(ratio) / Math.PI) * 100;
+      const angle =
+        (Math.atan2(endY - startPointY, endX - startPointX) * 180) / Math.PI;
       const line = new fabric.Line(
         [
           annotation.left,
-          annotation.top - 10,
-          annotation.left + 300,
-          annotation.top - 10,
+          annotation.top,
+          annotation.left + annotation.width,
+          annotation.top + annotation.height,
         ],
         {
           stroke: "#00ff00",
-          strokeWidth: 30,
+          strokeWidth: 3,
         }
       );
       const arrowHead = new fabric.Polygon(
         [
           { x: 0, y: 0 },
-          { x: 100, y: -50 },
-          { x: 100, y: 50 },
+          { x: 6, y: -3 },
+          { x: 6, y: 3 },
         ],
         {
+          width: annotation?.width,
+          height: annotation?.height,
           stroke: "#00ff00",
-          strokeWidth: 30,
+          strokeWidth: 6,
           fill: "#00ff00",
           top: annotation.top,
           left: annotation.left,
           originX: "center",
           originY: "center",
+          angle,
         }
       );
-      // if (pointerX >= startPointX) {
-      //   if (pointerY <= startPointY) {
-      //     arrowHead.angle = 180 - angle;
-      //   } else if (pointerY > startPointY) {
-      //     arrowHead.angle = 360 - angle;
-      //   }
-      // } else if (pointerY <= startPointY) {
-      //   arrowHead.angle = angle;
-      // } else if (pointerY > startPointY) {
-      //   arrowHead.angle = angle;
-      // }
       var objs = [line, arrowHead];
       shape = new fabric.Group(objs, {
         hasControls: false,
@@ -336,69 +331,23 @@ export const createAnnotation = (annotation) => {
       });
       break;
     case "marker":
-      const line1 = new fabric.Line(
-        [
-          annotation.left,
-          annotation.top - 20,
-          annotation.left,
-          annotation.top - 150,
-        ],
-        {
-          stroke: "#00ff00",
-          strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
-        }
-      );
-      const line2 = new fabric.Line(
-        [
-          annotation.left,
-          annotation.top + 30,
-          annotation.left,
-          annotation.top + 150,
-        ],
-        {
-          stroke: "#00ff00",
-          strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
-        }
-      );
-      const line3 = new fabric.Line(
-        [
-          annotation.left - 10,
-          annotation.top - 10,
-          annotation.left - 150,
-          annotation.top - 10,
-        ],
-        {
-          stroke: "#00ff00",
-          strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
-        }
-      );
-      const line4 = new fabric.Line(
-        [
-          annotation.left + 40,
-          annotation.top - 10,
-          annotation.left + 170,
-          annotation.top - 10,
-        ],
-        {
-          stroke: "#00ff00",
-          strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
-        }
-      );
-      const Id = new fabric.Textbox(`${annotation.localId}`, {
-        left: annotation.left - 150,
-        top: annotation.top - 200,
+      shape = new fabric.Ellipse({
+        left: annotation.left,
+        top: annotation.top,
+        width: 100,
+        height: 100,
         color: "#00ff00",
-        backgroundColor: "rgba(0,0,0,0.6)",
         fill: "#00ff00",
-      });
-      var objs = annotation.localId
-        ? [line1, line2, line3, line4, Id]
-        : [line1, line2, line3, line4];
-      shape = new fabric.Group(objs, {
-        hasControls: false,
-        hasRotatingPoint: false,
-        lockMovementX: true,
-        lockMovementY: true,
+        stroke: "#00ff00",
+        strokeWidth: 2,
+        strokeUniform: annotation.strokeUniform,
+        rx: 50,
+        ry: 50,
+        angle: annotation.angle,
+        hasControls: annotation.globalCompositeOperation,
+        hasRotatingPoint: annotation.globalCompositeOperation,
+        lockMovementX: !annotation.globalCompositeOperation,
+        lockMovementY: !annotation.globalCompositeOperation,
       });
       break;
     case "viewport":
@@ -446,31 +395,55 @@ export const addAnnotationsToCanvas = ({
 
   annotations.forEach((annotation) => {
     const shape = createAnnotation(annotation);
-    canvas.on("mouse:over", function (e) {
-      if (e?.target?.type === "textBox" || e?.target?.type === "textbox")
-        return;
-      const zoomLevel = viewer.viewport.getZoom();
-      const fontSize = zoomLevel <= 1 ? 250 : 250 / zoomLevel;
-      const textHeight = e?.target?.height / 2; // height of target
-      const title = new fabric.Text(`${e?.target?.title}`, {
-        left: e?.target?.left + e?.target?.width + 20, // positining text
-        top: e?.target?.top + textHeight,
-        width: e?.target?.width,
-        backgroundColor: "rgba(0,0,0,0.6)",
-        fill: e?.taget?.color ? e?.taget?.color : "#00ff00",
-        selectable: false,
-        textAlign: "center",
-        fontWeight: 600,
-        fontFamily: "inter",
-      });
-      if (e?.target === shape && e?.target?.title) {
-        if (shape && shape.type !== "viewport") canvas.add(title);
-        title.fontSize = fontSize;
-      }
-      canvas.on("mouse:out", function (e) {
-        canvas.remove(title).requestRenderAll();
-      });
+    if (annotation?.type === "textBox" || annotation?.type === "textbox")
+      return;
+    const text = new fabric.Textbox(`${annotation?.text}`, {
+      left: annotation?.left, // positining text
+      top: annotation?.top,
+      backgroundColor: "transparent",
+      fill: "#0078d4",
+      selectable: false,
+      textAlign: "center",
+      fontWeight: 500,
+      fontFamily: "inter",
+      border: "10px solid #000",
+      borderColor: "#000",
+      outline: "1px solid #000",
+      hasBorders: true,
+      lineHeight: 1.5,
+      rx: 15,
+      ry: 15,
+      padding: "100px",
+      hasControls: false,
+      hasRotatingPoint: false,
     });
+    viewer.addHandler("zoom", function (e) {
+      const zoomlevel = e.zoom;
+      const initialObjectSize = 350;
+      const newObjectSize = initialObjectSize / zoomlevel;
+      const maxWidth = annotation?.width / zoomlevel;
+      const maxHight = annotation?.height / zoomlevel;
+      function getTextWidth(textData) {
+        const context = canvas.getContext("2d");
+        return context.measureText(textData).width;
+      }
+      text.set("width", getTextWidth(annotation?.text, "inter") * 1.3);
+      text.set("backgroundColor", "#F6F6F6");
+      text.set("fontSize", newObjectSize);
+      text.set("maxWidth", maxWidth);
+      text.set("maxHeight", maxHight);
+      text.set("left", annotation.left + newObjectSize + 10);
+      text.set("rx", 10);
+      text.set("ry", 10);
+      if (shape.type === "marker") {
+        shape.set("width", newObjectSize);
+        shape.set("height", newObjectSize);
+        shape.set("rx", newObjectSize / 2);
+        shape.set("ry", newObjectSize / 2);
+      }
+      canvas.renderAll();
+    });
+    if (shape && shape.type !== "viewport" && annotation.text) canvas.add(text);
 
     // add shape to canvas and to activity feed
     if (shape && shape.type !== "viewport") canvas.add(shape);
