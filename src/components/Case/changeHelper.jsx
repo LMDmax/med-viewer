@@ -16,6 +16,7 @@ const ChangeHelper = ({
   setIsMultiview,
   setIsNavigatorActive,
   slide,
+  setSelectedOption,
   loadUI,
   isNavigatorActive,
   isAnnotationLoading,
@@ -87,6 +88,7 @@ const ChangeHelper = ({
       wordBreak="break-word"
       noOfLines={1}
       cursor="pointer"
+      onClick={()=> setSelectedOption("information")}
       isDisabled={isAnnotationLoading}
       isActive={isNavigatorActive}
     >

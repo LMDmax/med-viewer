@@ -36,6 +36,7 @@ const EditText = ({
   };
 
   const handleSaveButton = () => {
+    window.location.reload()
     handleSave({ text, title });
     setText("");
     setTitle("");

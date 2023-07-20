@@ -22,6 +22,7 @@ import {
 	AccordionIcon,
 	Circle,
 	IconButton,
+	useToast,
 	Collapse,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
@@ -159,6 +160,7 @@ const annotationFeed = ({
 	// const onUpdateAnnotation = (data) => {
 	//   console.log("annotationFeed", data);
 	// };
+	const toast = useToast();
 	const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
 	const [isTILBoxVisible, setIsTilBoxVisible] = useState(false);
 	const [visibleTumor, setVisibleTumor] = useState(true);
@@ -192,10 +194,12 @@ const annotationFeed = ({
 		});
 	const onDeleteAnnotation = (data) => {
 		// console.log("====================================");
-		// console.log("activity feed delete", data);
+		// console.log("activity feed delete", deletedData);
 		// console.log("====================================");
-		removeAnnotation({ variables: { body: data } });
-		window.location.reload();
+		 removeAnnotation({ variables: { body: data } })
+		setTimeout(function() {
+			window.location.reload();
+		  }, 2000); 
 	};
 
 	const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();

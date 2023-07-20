@@ -26,6 +26,7 @@ const DetailsCard = ({ cardTitle, details = [], ...restProps }) => {
       pb="5px"
       {...restProps}
       fontFamily="Inter"
+      w="100%"
     >
       <AccordionItem border="none">
         <h2>
@@ -49,15 +50,13 @@ const DetailsCard = ({ cardTitle, details = [], ...restProps }) => {
                 pb="8px"
                 borderBottom="1px solid #DEDEDE"
               >
-                <Text flex={1}>{title}:</Text>
+                <Text w="50%" >{title}:</Text>
                 {title === "Title" ? (
-                  <Tooltip placement="left" hasArrow label={details[title]}>
-                    <Text textTransform="capitalize" flex={1} whiteSpace="initial" overflowWrap="break-word">
+                    <Text w="50%" textTransform="capitalize" flex={1} whiteSpace="initial" overflowWrap="break-word">
                       {details[title]}
                     </Text>
-                  </Tooltip>
                 ) : (
-                  <Text textTransform="capitalize" flex={1} whiteSpace="initial">
+                  <Text w="50%" textTransform="capitalize" flex={1} whiteSpace="initial" >
                     {details[title]}
                   </Text>
                 )}

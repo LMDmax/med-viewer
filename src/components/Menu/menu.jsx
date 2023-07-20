@@ -120,6 +120,8 @@ function FunctionsMenu({
   setEditView,
   editView,
   setSlideId,
+  selectedOption,
+  setSelectedOption,
   responseHandler,
   questionnaireResponse,
   synopticType,
@@ -140,7 +142,6 @@ function FunctionsMenu({
   const [showNormalisation, setShowNormalisation] = useState(false);
   const [getAnnotation, { data: annotationData, loading, error }] =
     useLazyQuery(GET_ANNOTATION);
-  const [selectedOption, setSelectedOption] = useState("slides");
   const [reportData, setReportData] = useState({
     clinicalStudy: "",
     grossDescription: "",
@@ -303,6 +304,12 @@ function FunctionsMenu({
       }
     });
   }, [fabricOverlay]);
+
+  useEffect(()=>{
+    if(selectedOption === "information"){
+      setIsOpen("true")
+    }
+  },[selectedOption])
 
   useEffect(() => {
     if (isMultiview || editView) {

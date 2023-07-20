@@ -614,7 +614,7 @@ const ViewerControls = ({
   useEffect(() => {
     if (!fabricOverlay) return;
     const canvas = fabricOverlay.fabricCanvas();
-    canvas.clear().requestRenderAll()
+    // canvas.clear().requestRenderAll()
     const loadAnnotations = async () => {
       // check if the annotations is already loaded
       if (canvas.toJSON().objects.length === 0 && annotatedData) {
@@ -650,7 +650,8 @@ const ViewerControls = ({
             for (let i = 0; i < annotatedData.length; i++) {
               if (annotatedData[i].type === "textbox") {
                 const textbox = annotatedData[i];
-                if (textbox.text !== "") {
+                console.log(textbox);
+                if (textbox.text !== "" && textbox.usingAs === "comment") {
                   const circle = new fabric.Rect({
                     left: textbox.left,
                     top: textbox.top - 75,
@@ -743,7 +744,7 @@ const ViewerControls = ({
           // console.log(groupObjects)
         const textboxObjects = canvas
           .getObjects()
-          .filter((obj) => obj.type === "textbox");
+          .filter((obj) => obj.type === "textbox" && obj.usingAs === "comment");
         // console.log(textboxObjects);
       textboxObjects.forEach((textbox) => {
         textbox.editable = false;

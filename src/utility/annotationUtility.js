@@ -19,6 +19,7 @@ export const getAnnotationJSON = (annotation) => {
     "cords",
     "timeStamp",
     "isClosed",
+    "usingAs",
     "area",
     "perimeter",
     "centroid",
@@ -59,6 +60,7 @@ export const createAnnotationMessage = ({
   maskType,
   type,
   isClosed,
+  usingAs,
 }) => {
   if (!viewer || !shape) return null;
   const message = {
@@ -79,6 +81,7 @@ export const createAnnotationMessage = ({
       zoomLevel,
       points,
       isClosed,
+      usingAs,
       timeStamp,
       area,
       perimeter,
@@ -117,6 +120,7 @@ export const createAnnotationMessage = ({
         points,
         timeStamp,
         isClosed,
+        usingAs,
         area,
         perimeter,
         centroid,
@@ -128,7 +132,6 @@ export const createAnnotationMessage = ({
   } else {
     const timeStamp = Date.now();
     const hash = md5(shape + timeStamp);
-
     // message.image = await getCanvasImage(viewerId);
     if (shape.type === "viewport") {
       message.object = {
@@ -151,6 +154,7 @@ export const createAnnotationMessage = ({
         maskType: maskType || "",
         type: type || "",
         isClosed: isClosed,
+        usingAs: usingAs || ""
       });
     }
   }

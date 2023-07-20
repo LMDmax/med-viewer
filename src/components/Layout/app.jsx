@@ -89,6 +89,8 @@ const LayoutApp = ({
   const [navigatorCounter, setNavigatorCounter] = useState(0);
   const [base64URL, setBase64URL] = useState(false);
   const [normalizeDefault, setNormalizeDefault] = useState(false);
+  // Right Panel navigation state
+  const [selectedOption, setSelectedOption] = useState("slides");
   const [imageFilter, setImageFilter] = useState(false);
   const [newSliderInputs, setNewSliderInputs] = useState({
     contrast: 1,
@@ -125,7 +127,7 @@ const LayoutApp = ({
   const [isXmlAnnotations, setIsXmlAnnotations] = useState(false);
   const [loadUI, setLoadUI] = useState(true);
   const [unit, setUnit] = useState();
-  const [AdjustmentTool,setAdjustmentTool] = useState(false);
+  const [AdjustmentTool, setAdjustmentTool] = useState(false);
   const [socketIsConnected, setSocketIsConnected] = useState(false);
   const [binaryMask, setBinaryMask] = useState("");
   const [modelName, setModelname] = useState("");
@@ -135,7 +137,6 @@ const LayoutApp = ({
   const [gleasonScoring, setGleasonScoring] = useState(false);
   const { tile, viewer } = viewerWindow[currentViewer];
 
-
   useEffect(() => {
     const UnitStore = localStorage.getItem("unit");
     setUnit(UnitStore);
@@ -144,7 +145,8 @@ const LayoutApp = ({
 
   // console.log(MouseDown);
 
-  // console.log("sssss", showRightPanel);
+  console.log("sssss", selectedOption);
+
 
   let runAiModel;
   switch (modelName) {
@@ -529,6 +531,8 @@ const LayoutApp = ({
             setShowReport={setShowReport}
             setCurrentViewer={setCurrentViewer}
             showRightPanel={showRightPanel}
+            setSelectedOption={setSelectedOption}
+            selectedOption={selectedOption}
             setShowRightPanel={setShowRightPanel}
             questions={questions}
             app={application}
@@ -581,6 +585,7 @@ const LayoutApp = ({
                   slideName={slideName}
                   setSlideName={setSlideName}
                   viewerId={currentViewer}
+                  setSelectedOption={setSelectedOption}
                   setNavigatorCounter={setNavigatorCounter}
                   slideUrl={tile}
                   setIsMultiview={setIsMultiview}

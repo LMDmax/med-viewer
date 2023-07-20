@@ -65,6 +65,7 @@ export const GET_ANNOTATION = gql`
         createdAt
         createdBy
         updatedAt
+        usingAs
       }
     }
   }
@@ -216,6 +217,7 @@ export const SAVE_ANNOTATION = gql`
         updatedAt
         createdBy
         caseId
+        usingAs
       }
       message
       success

@@ -157,6 +157,7 @@ const CommentBox = ({
         opacity: 0.75,
         title: `${userInfo.firstName} ${userInfo.lastName}`,
         hasControls: false,
+       
         hasRotatingPoint: false,
         lockUniScaling: true,
         lockMovementX: true,
@@ -166,6 +167,7 @@ const CommentBox = ({
         cursorDuration: 1000, // Set the blinking speed in milliseconds
         blinkingCursor: true, // Enable blinking cursor
       });
+      console.log(text);
       canvas.add(text);
       setTimeout(() => {
         text.enterEditing();
@@ -304,8 +306,10 @@ const CommentBox = ({
         userInfo,
         type: "textbox",
         isClosed: true,
+        usingAs:"comment",
+       
       });
-
+      console.log(message)
       saveAnnotationToDB({
         slideId,
         annotation: message.object,

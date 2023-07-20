@@ -20,6 +20,7 @@ const ChangeSlide = ({
   slideUrl,
   viewerId,
   setIsMultiview,
+  setSelectedOption,
   slide,
   setNavigatorCounter,
   setIsNavigatorActive,
@@ -79,6 +80,7 @@ const ChangeSlide = ({
            clickHandler={clickHandler}
            setIsMultiview={setIsMultiview}
            loadUI={loadUI}
+           setSelectedOption={setSelectedOption}
            slide={slide}
            slideName={slideName}
            setIsNavigatorActive={setIsNavigatorActive}

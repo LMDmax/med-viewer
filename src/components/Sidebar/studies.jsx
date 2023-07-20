@@ -20,7 +20,7 @@ const Studies = ({ caseInfo, slideInfo }) => {
   };
 
   // console.log(slideInfo);
-  // console.log("case",caseInfo);
+  console.log("case",caseInfo);
 
   const full = caseInfo?.caseId;
 const lastSlashIndex = full.lastIndexOf('/');
@@ -50,7 +50,7 @@ const index = caseInfo?.slides.findIndex(obj => obj.slideName === searchBySliden
   const imageDetails = {
     "Accession Id" : slideInfo?.accessionId,
     Title: slideInfo?.slideName || slideInfo?.originalName?.split(".")?.[0],
-    "Case Title": caseInfo?.caseName,
+    // "Case Title": caseInfo?.caseName,
     "Case Id" : caseInfo?.caseId,
     "Slide Id":`${result}/${slideInfo.grossId}/${slideInfo.blockId}/${index + 1}`,
     Location: "My Folder/Cases/203-11-22-22-UHID/SLIDE 1",
@@ -85,7 +85,7 @@ const index = caseInfo?.slides.findIndex(obj => obj.slideName === searchBySliden
       <Flex
         background="none"
         direction="column"
-        w="100%"
+        w="82%"
         h="100%"
         pb="12px"
         // pt="5px"
