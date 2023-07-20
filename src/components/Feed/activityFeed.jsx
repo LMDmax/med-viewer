@@ -409,7 +409,7 @@ const annotationFeed = ({
 											>
 												<Flex
 													w="100%"
-													alignItems="center"
+													alignItems="flex-start"
 													justifyContent="space-between"
 												>
 													<Flex>
@@ -422,9 +422,10 @@ const annotationFeed = ({
 														</Box>
 														<Box>
 															<Flex
-																alignItems="center"
+																
 																justifyContent="space-between"
 															>
+																<Box w="10%" mt="4px">
 																{feed.object?.type === "marker" ? (
 																	<BsPlusLg color="#E23636" />
 																) : feed.object?.type === "arrow" ? (
@@ -438,8 +439,10 @@ const annotationFeed = ({
 																) : (
 																	<BsSlash color="#E23636" />
 																)}
+																</Box>
 																<Text
 																	ml="0.8vw"
+																	wordBreak="break-word"
 																	style={{ whiteSpace: "pre-wrap" }}
 																	textAlign="left"
 																>
@@ -448,10 +451,15 @@ const annotationFeed = ({
 																			"bb614ca0-8639-4574-8996-be14eabe2942" ||
 																		slideId ===
 																			"757bc483-78cd-4ae6-836f-94fff0528db8" ? (
-																			<Text>{feed.object.text}</Text>
+																			<Text
+																				wordBreak="break-word"
+																				style={{ whiteSpace: "pre-wrap" }}
+																			>
+																				{feed.object.text}
+																			</Text>
 																		) : (
 																			<Text
-																				ml="0.8vw"
+																				wordBreak="break-word"
 																				style={{ whiteSpace: "pre-wrap" }}
 																				textAlign="left"
 																			>
@@ -490,7 +498,10 @@ const annotationFeed = ({
 													w="100%"
 													pr="0.5rem"
 												>
-													<Text style={{ whiteSpace: "pre-wrap" }}>
+													<Text
+														wordBreak="break-word"
+														style={{ whiteSpace: "pre-wrap" }}
+													>
 														{feed.object.text}
 													</Text>
 												</Flex>
@@ -517,14 +528,13 @@ const annotationFeed = ({
 																			}
 																		/>
 																		<Flex flexDirection="row" ml="0.8vw">
-																			<Text
-																				height="fit-content"
-																			>
+																			<Text height="fit-content">
 																				Description:
 																			</Text>
 																			{feed?.object?.text ? (
 																				<Text
 																					ml="1.0vw"
+																					wordBreak="break-word"
 																					whiteSpace="pre-wrap"
 																				>
 																					{feed.object.text}
