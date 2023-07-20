@@ -195,8 +195,7 @@ const annotationFeed = ({
 		// console.log("activity feed delete", data);
 		// console.log("====================================");
 		removeAnnotation({ variables: { body: data } });
-			window.location.reload();
-		
+		window.location.reload();
 	};
 
 	const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
@@ -439,29 +438,25 @@ const annotationFeed = ({
 																) : (
 																	<BsSlash color="#E23636" />
 																)}
-																<Text ml="0.8vw">
+																<Text
+																	ml="0.8vw"
+																	style={{ whiteSpace: "pre-wrap" }}
+																	textAlign="left"
+																>
 																	{feed.object?.title ? (
 																		slideId ===
 																			"bb614ca0-8639-4574-8996-be14eabe2942" ||
 																		slideId ===
 																			"757bc483-78cd-4ae6-836f-94fff0528db8" ? (
-																			<Text>
-																				{`${feed.object.text.substring(
-																					0,
-																					20
-																				)}...`}
-																			</Text>
+																			<Text>{feed.object.text}</Text>
 																		) : (
-																			<Tooltip
-																				label={feed.object.text}
-																				placement="left"
-																				hasArrow
+																			<Text
+																				ml="0.8vw"
+																				style={{ whiteSpace: "pre-wrap" }}
+																				textAlign="left"
 																			>
-																				{`${feed.object.text.substring(
-																					0,
-																					20
-																				)}...`}
-																			</Tooltip>
+																				{feed.object.text}
+																			</Text>
 																		)
 																	) : feed.object?.roiType === "morphometry" ? (
 																		`ROI ${index + 1}`
@@ -489,8 +484,15 @@ const annotationFeed = ({
 										{slideId === "bb614ca0-8639-4574-8996-be14eabe2942" ||
 										slideId === "757bc483-78cd-4ae6-836f-94fff0528db8" ? (
 											<AccordionPanel px="0">
-												<Flex direction="column" flexWrap="wrap" w="100%" pr="0.5rem">
-													<Text style={{ whiteSpace: 'pre-wrap' }}>{feed.object.text}</Text>
+												<Flex
+													direction="column"
+													flexWrap="wrap"
+													w="100%"
+													pr="0.5rem"
+												>
+													<Text style={{ whiteSpace: "pre-wrap" }}>
+														{feed.object.text}
+													</Text>
 												</Flex>
 											</AccordionPanel>
 										) : (
@@ -514,29 +516,23 @@ const annotationFeed = ({
 																					: "-"
 																			}
 																		/>
-																		<CardDetailsRow
-																			title="Description"
-																			value={
-																				feed?.object?.text ? (
-																					feed?.object?.text.length > 20 ? (
-																						<Tooltip
-																							label={feed.object.text}
-																							placement="left"
-																							hasArrow
-																						>
-																							{`${feed.object.text.substring(
-																								0,
-																								15
-																							)}...`}
-																						</Tooltip>
-																					) : (
-																						feed.object.text
-																					)
-																				) : (
-																					"-"
-																				)
-																			}
-																		/>
+																		<Flex flexDirection="row" ml="0.8vw">
+																			<Text
+																				height="fit-content"
+																			>
+																				Description:
+																			</Text>
+																			{feed?.object?.text ? (
+																				<Text
+																					ml="1.0vw"
+																					whiteSpace="pre-wrap"
+																				>
+																					{feed.object.text}
+																				</Text>
+																			) : (
+																				<Text>-</Text>
+																			)}
+																		</Flex>
 
 																		{annotationDetails?.area ? (
 																			<>
