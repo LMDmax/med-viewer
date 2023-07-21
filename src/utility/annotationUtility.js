@@ -399,7 +399,7 @@ export const addAnnotationsToCanvas = ({
 
   annotations.forEach((annotation) => {
     const shape = createAnnotation(annotation);
-    if (annotation?.type === "textBox" || annotation?.type === "textbox")
+    if (annotation?.type === "textBox" || annotation?.type === "textbox" && annotation.usingAs !== "comment")
       return;
     const text = new fabric.Textbox(`${annotation?.text}`, {
       left: annotation?.left, // positining text
@@ -423,7 +423,7 @@ export const addAnnotationsToCanvas = ({
     });
     viewer.addHandler("zoom", function (e) {
       const zoomlevel = e.zoom;
-      const initialObjectSize = 320;
+      const initialObjectSize = 300;
       const newObjectSize = initialObjectSize / zoomlevel;
       const maxWidth = annotation?.width / zoomlevel;
       const maxHight = annotation?.height / zoomlevel;
