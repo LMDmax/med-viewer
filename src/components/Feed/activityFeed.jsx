@@ -2,31 +2,36 @@ import React, { useState, useRef, useEffect } from "react";
 
 import { useMutation, useSubscription } from "@apollo/client";
 import {
-	Box,
-	Flex,
-	HStack,
-	Text,
-	Icon,
-	useDisclosure,
-	useMediaQuery,
-	Tabs,
-	TabList,
-	Tab,
-	TabPanels,
-	Tooltip,
-	TabPanel,
-	Accordion,
-	AccordionItem,
-	AccordionButton,
-	AccordionPanel,
-	AccordionIcon,
-	Circle,
-	IconButton,
-	useToast,
-	Collapse,
+  Box,
+  Flex,
+  HStack,
+  Text,
+  Icon,
+  useDisclosure,
+  useMediaQuery,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanels,
+  Tooltip,
+  TabPanel,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
+  Circle,
+  IconButton,
+  useToast,
+  Collapse,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import { AiFillCaretRight, AiFillCaretDown } from "react-icons/ai";
+import {
+  AiFillCaretRight,
+  AiFillCaretDown,
+  AiOutlineEye,
+  AiOutlineEyeInvisible,
+} from "react-icons/ai";
 import { BiRectangle } from "react-icons/bi";
 import {
   BsEye,
@@ -163,20 +168,20 @@ const annotationFeed = ({
   activeObject,
   searchSelectedData,
 }) => {
-	// const onUpdateAnnotation = (data) => {
-	//   console.log("annotationFeed", data);
-	// };
-	const toast = useToast();
-	const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
-	const [isTILBoxVisible, setIsTilBoxVisible] = useState(false);
-	const [visibleTumor, setVisibleTumor] = useState(true);
-	const [visibleStroma, setVisibleStroma] = useState(true);
-	const [visibleLymphocyte, setVisibleLymphocyte] = useState(true);
-	const [selectedItemIndex, setSelectedItemIndex] = useState(null);
-	const [
-		modifyAnnotation,
-		{ data: updatedData, error: updateError, loading: updateLoading },
-	] = useMutation(UPDATE_ANNOTATION);
+  // const onUpdateAnnotation = (data) => {
+  //   console.log("annotationFeed", data);
+  // };
+  const toast = useToast();
+  const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
+  const [isTILBoxVisible, setIsTilBoxVisible] = useState(false);
+  const [visibleTumor, setVisibleTumor] = useState(true);
+  const [visibleStroma, setVisibleStroma] = useState(true);
+  const [visibleLymphocyte, setVisibleLymphocyte] = useState(true);
+  const [selectedItemIndex, setSelectedItemIndex] = useState(null);
+  const [
+    modifyAnnotation,
+    { data: updatedData, error: updateError, loading: updateLoading },
+  ] = useMutation(UPDATE_ANNOTATION);
 
   const onUpdateAnnotation = (data) => {
     // console.log("====================================");
@@ -188,25 +193,25 @@ const annotationFeed = ({
     });
   };
 
-	const [removeAnnotation, { data: deletedData, error: deleteError }] =
-		useMutation(DELETE_ANNOTATION);
-	if (deleteError)
-		toast({
-			title: "Annotation could not be deleted",
-			description: "server error",
-			status: "error",
-			duration: 1000,
-			isClosable: true,
-		});
-	const onDeleteAnnotation = (data) => {
-		// console.log("====================================");
-		// console.log("activity feed delete", deletedData);
-		// console.log("====================================");
-		 removeAnnotation({ variables: { body: data } })
-		setTimeout(function() {
-			window.location.reload();
-		  }, 2000); 
-	};
+  const [removeAnnotation, { data: deletedData, error: deleteError }] =
+    useMutation(DELETE_ANNOTATION);
+  if (deleteError)
+    toast({
+      title: "Annotation could not be deleted",
+      description: "server error",
+      status: "error",
+      duration: 1000,
+      isClosable: true,
+    });
+  const onDeleteAnnotation = (data) => {
+    // console.log("====================================");
+    // console.log("activity feed delete", deletedData);
+    // console.log("====================================");
+    removeAnnotation({ variables: { body: data } });
+    setTimeout(function () {
+      window.location.reload();
+    }, 2000);
+  };
 
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { activeTool, viewerWindow } = fabricOverlayState;
@@ -221,8 +226,9 @@ const annotationFeed = ({
     onClose: onDeleteConfirmationClose,
     onOpen: onDeleteConfirmationOpen,
   } = useDisclosure();
-
+  const canvas = fabricOverlay.fabricCanvas();
   const [annotationObject, setAnnotationObject] = useState(null);
+  const [hideDescription, setHideDescription] = useState(false);
   const [annotationDetails, setAnnotationsDetails] = useState(null);
   const [ifScreenlessthan1660px] = useMediaQuery("(max-width:1660px)");
   const [ki67Feed, setKi67Feed] = useState({});
@@ -277,7 +283,6 @@ const annotationFeed = ({
       setKi67Feed({});
     }
     if (!feed.object || !feed.object?.visible) return;
-    const canvas = fabricOverlay.fabricCanvas();
 
     if (feed?.object?.type !== "viewport") {
       canvas.setActiveObject(feed?.object);
@@ -349,7 +354,26 @@ const annotationFeed = ({
       [grade]: !prevState[grade],
     }));
   };
-
+  //toggle annotation description
+  const handletoggleClick = () => {
+    setHideDescription((state) => !state);
+    const textObjects = canvas
+      .getObjects()
+      .filter((obj) => obj?.type === "textbox");
+    const notCommentObjects = textObjects?.filter(
+      (obj) => obj?.usingAs !== "comment"
+    );
+    if (hideDescription) {
+      notCommentObjects?.forEach((obj) => {
+        obj.set({ visible: true });
+      });
+    } else {
+      notCommentObjects?.forEach((obj) => {
+        obj.set({ visible: false });
+      });
+    }
+    canvas.requestRenderAll();
+  };
   // console.log(annotationFeed);
 
   return (
@@ -377,17 +401,43 @@ const annotationFeed = ({
           <Text fontSize="1rem" pb="3px">
             Annotation List
           </Text>
-          {!isXmlAnnotations && (
-            <IconButton
-              icon={<MdDelete size={18} />}
-              size="sm"
-              variant="unstyled"
-              cursor="pointer"
-              isDisabled={annotationFeed.length === 0}
-              _focus={{ border: "none", outline: "none" }}
-              onClick={onDeleteConfirmationOpen}
-            />
-          )}
+          <Flex>
+            {isXmlAnnotations && (
+              <Tooltip
+                label={
+                  hideDescription ? "Show description" : "Hide description"
+                }
+                closeOnClick={false}
+              >
+                <IconButton
+                  icon={
+                    hideDescription ? (
+                      <AiOutlineEyeInvisible size={18} />
+                    ) : (
+                      <AiOutlineEye size={18} />
+                    )
+                  }
+                  size="sm"
+                  variant="unstyled"
+                  cursor="pointer"
+                  isDisabled={annotationFeed.length === 0}
+                  _focus={{ border: "none", outline: "none" }}
+                  onClick={() => handletoggleClick()}
+                />
+              </Tooltip>
+            )}
+            {!isXmlAnnotations && (
+              <IconButton
+                icon={<MdDelete size={18} />}
+                size="sm"
+                variant="unstyled"
+                cursor="pointer"
+                isDisabled={annotationFeed.length === 0}
+                _focus={{ border: "none", outline: "none" }}
+                onClick={onDeleteConfirmationOpen}
+              />
+            )}
+          </Flex>
         </HStack>
         <ScrollBar>
           <Flex direction="column" h="80vh">

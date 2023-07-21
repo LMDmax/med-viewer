@@ -155,8 +155,8 @@ export const createAnnotationMessage = ({
         text: message.object.text || "",
         maskType: maskType || "",
         type: type || "",
-        isClosed: isClosed,
-        usingAs: usingAs || ""
+        isClosed,
+        usingAs: usingAs || "",
       });
     }
   }
@@ -304,14 +304,14 @@ export const createAnnotation = (annotation) => {
         ],
         {
           stroke: "#00ff00",
-          strokeWidth: 3,
+          strokeWidth: 4,
         }
       );
       const arrowHead = new fabric.Polygon(
         [
           { x: 0, y: 0 },
-          { x: 6, y: -3 },
-          { x: 6, y: 3 },
+          { x: 8, y: -4 },
+          { x: 8, y: 4 },
         ],
         {
           width: annotation?.width,
@@ -413,8 +413,8 @@ export const addAnnotationsToCanvas = ({
       border: "10px solid #000",
       borderColor: "#000",
       outline: "1px solid #000",
+      lineHeight: 0.9,
       hasBorders: true,
-      lineHeight: 1.5,
       rx: 15,
       ry: 15,
       padding: "100px",
@@ -423,7 +423,7 @@ export const addAnnotationsToCanvas = ({
     });
     viewer.addHandler("zoom", function (e) {
       const zoomlevel = e.zoom;
-      const initialObjectSize = 350;
+      const initialObjectSize = 320;
       const newObjectSize = initialObjectSize / zoomlevel;
       const maxWidth = annotation?.width / zoomlevel;
       const maxHight = annotation?.height / zoomlevel;
@@ -447,7 +447,13 @@ export const addAnnotationsToCanvas = ({
       }
       canvas.renderAll();
     });
-    if (shape && shape.type !== "viewport" && annotation.text) canvas.add(text);
+    if (
+      shape &&
+      shape.type !== "viewport" &&
+      annotation?.text &&
+      annotation?.globalCompositeOperation !== "source-over"
+    )
+      canvas.add(text);
 
     // add shape to canvas and to activity feed
     if (shape && shape.type !== "viewport") canvas.add(shape);
