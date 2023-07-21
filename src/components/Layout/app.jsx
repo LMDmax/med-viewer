@@ -145,7 +145,7 @@ const LayoutApp = ({
 
   // console.log(MouseDown);
 
-  console.log("sssss", selectedOption);
+  // console.log("sssss", selectedOption);
 
 
   let runAiModel;

@@ -167,7 +167,7 @@ const CommentBox = ({
         cursorDuration: 1000, // Set the blinking speed in milliseconds
         blinkingCursor: true, // Enable blinking cursor
       });
-      console.log(text);
+      // console.log(text);
       canvas.add(text);
       setTimeout(() => {
         text.enterEditing();
@@ -309,7 +309,7 @@ const CommentBox = ({
         usingAs:"comment",
        
       });
-      console.log(message)
+      // console.log(message)
       saveAnnotationToDB({
         slideId,
         annotation: message.object,

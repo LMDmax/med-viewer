@@ -650,7 +650,7 @@ const ViewerControls = ({
             for (let i = 0; i < annotatedData.length; i++) {
               if (annotatedData[i].type === "textbox") {
                 const textbox = annotatedData[i];
-                console.log(textbox);
+                // console.log(textbox);
                 if (textbox.text !== "" && textbox.usingAs === "comment") {
                   const circle = new fabric.Rect({
                     left: textbox.left,
