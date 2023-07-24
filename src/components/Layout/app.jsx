@@ -514,6 +514,7 @@ const LayoutApp = ({
             Environment={Environment}
             tilScore={tilScore}
             setOriginalPixels={setOriginalPixels}
+            setNavigatorCounter={setNavigatorCounter}
             setSlideName={setSlideName}
             userInfo={userInfo}
             toolSelected={toolSelected}

@@ -78,6 +78,7 @@ function FunctionsMenu({
   setBase64URL,
   hideLymphocyte,
   setSlideName2,
+  setNavigatorCounter,
   setSlideName,
   showRightPanel,
   navigatorCounter,
@@ -723,6 +724,8 @@ function FunctionsMenu({
                 setSelectedOption={setSelectedOption}
                 setSlideName2={setSlideName2}
                 application={application}
+                navigatorCounter={navigatorCounter}
+                setNavigatorCounter={setNavigatorCounter}
                 setIsOpen={setIsOpen}
                 setTargetAnnotation={setTargetAnnotation}
                 setShowNormalisation={setShowNormalisation}
