@@ -147,6 +147,8 @@ const AiModels = ({
     localStorage.removeItem("ModelName");
   }, [showTumor, showGleason]);
 
+  
+
   useEffect(() => {
     if (subscription && detectTumor) {
       // setBinaryMask(dziUrl);

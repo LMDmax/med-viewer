@@ -120,7 +120,7 @@ const LayoutApp = ({
   const [hideStroma, setHideStroma] = useState(false);
   const [hideLymphocyte, setHideLymphocyte] = useState(false);
   const [annotationObject, setAnnotationObject] = useState("");
-  const [toolSelected, setToolSelected] = useState("");
+  const [toolSelected, setToolSelected] = useState("Loading");
   const [bottomZoomValue, setBottomZoomValue] = useState("");
   const socketRef = useRef(null);
   // xml annotations check
@@ -179,6 +179,17 @@ const LayoutApp = ({
   // console.log("sssss", selectedOption);
 
 
+  useEffect(()=>{
+    setLoadUI(false);
+    setToolSelected("Loading")
+    // After 2 seconds, set loadUI to true
+    setTimeout(function() {
+    setToolSelected("")
+      setLoadUI(true);
+    }, 2000);
+  },[])
+
+
   let runAiModel;
   switch (modelName) {
     case "":
@@ -209,6 +220,10 @@ const LayoutApp = ({
     case "Rotate":
       returnText =
         "Click and slide the circle to rotate image. Press enter to save changes,";
+      break;
+      case "Loading":
+      returnText =
+        "Initialising viewer";
       break;
     case "Multiview":
       returnText = "Multiview is selected.";
