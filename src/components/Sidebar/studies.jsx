@@ -5,8 +5,12 @@ import { Scrollbars } from "react-custom-scrollbars";
 import Loading from "../Loading/loading";
 import DetailsCard from "../Studies/detailsCard";
 import "../../styles/scrollBar.css";
+import { useFabricOverlayState } from "../../state/store";
 
-const Studies = ({ caseInfo, slideInfo }) => {
+const Studies = ({ caseInfo, slideInfo, viewerId }) => {
+  const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
+  const { viewerWindow, isAnnotationLoading,  } = fabricOverlayState;
+  const { slideName } = viewerWindow[viewerId];
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
   const caseDetails = {
     Department: caseInfo?.departmentTo,
@@ -19,7 +23,7 @@ const Studies = ({ caseInfo, slideInfo }) => {
       : "-",
   };
 
-  // console.log(slideInfo);
+  console.log(slideInfo);
   // console.log("case",caseInfo);
 
   const full = caseInfo?.caseId;

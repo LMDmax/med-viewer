@@ -594,10 +594,12 @@ const ViewerControls = ({
             slideId,
           },
         },
+        fetchPolicy: "network-only",
       });
       setIsXmlAnnotations(false);
     }
   }, [xmlLink, slideId, fabricOverlay]);
+
 
   // set annotation data
   useEffect(() => {
@@ -634,13 +636,11 @@ const ViewerControls = ({
               updateActivityFeed({ id: viewerId, fullFeed: feed })
             );
             setActiveFeed(feed);
-            // console.log(feed,"feeeeeeeeeeeeeeeeeeeeeeeed");
-            // onLoadCallData()
           }
 
           canvas.requestRenderAll();
           // console.log(annotatedData);
-          if (annotatedData?.length > 0) {
+          if (annotatedData?.length > 0 && navigatorCounter === 0) {
             toast({
               title: "Annotation loaded",
               status: "success",
@@ -735,6 +735,7 @@ const ViewerControls = ({
   useEffect(() => {
     const canvas = fabricOverlay?.fabricCanvas();
     if (canvas) {
+
       canvas.on("mouse:down", function (e) {
         const canvas = fabricOverlay?.fabricCanvas();
         // find all group and textboxes

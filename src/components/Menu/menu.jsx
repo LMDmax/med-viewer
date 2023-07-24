@@ -329,7 +329,8 @@ function FunctionsMenu({
   }, [activeObject]);
 
   const handleReportClose = () => {
-    setShowReport(!showReport);
+    setShowReport(false);
+    setSynopticType("")
   };
 
   useEffect(() => {
@@ -735,7 +736,7 @@ function FunctionsMenu({
             ) : selectedOption === "information" ? (
               <Flex w="100%" bg="#FCFCFC">
                 {application === "hospital" ? (
-                  <Studies caseInfo={caseInfo} slideInfo={slide} />
+                  <Studies caseInfo={caseInfo} slideInfo={slide} viewerId={viewerId} />
                 ) : (
                   <Studies2 caseInfo={caseInfo} slideInfo={slide}></Studies2>
                 )}
@@ -809,7 +810,7 @@ function FunctionsMenu({
                     slideData={slideData}
                     setSlideData={setSlideData}
                   />
-                  {showReport ? (
+                  {showReport || synopticType ? (
                     <GrFormClose
                       size={16}
                       cursor="pointer"

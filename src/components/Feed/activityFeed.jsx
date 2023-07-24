@@ -1135,7 +1135,7 @@ const annotationFeed = ({
                         borderBottom="1px solid lightgray"
                         my="0"
                         pt="10px"
-						pb="15px"
+                        pb="15px"
                         alignItems="center"
                         onClick={() => {
                           handleCollapseToggle("grade2");
@@ -1184,15 +1184,20 @@ const annotationFeed = ({
                         <Text>Primary Pattern :</Text>
                         <Text>4</Text>
                       </Flex>
-                      <Flex w="100%" pb="20px" borderBottom="1px solid lightgray" justifyContent="space-between">
+                      <Flex
+                        w="100%"
+                        pb="20px"
+                        borderBottom="1px solid lightgray"
+                        justifyContent="space-between"
+                      >
                         <Text>Secondary Pattern :</Text>
                         <Text>3</Text>
                       </Flex>
-					  <Flex w="100%" justifyContent="space-between">
+                      <Flex w="100%" justifyContent="space-between">
                         <Text>Gleason Score :</Text>
                         <Text>7 (4+3)</Text>
                       </Flex>
-					  <Flex w="100%" justifyContent="space-between">
+                      <Flex w="100%" justifyContent="space-between">
                         <Text>Grade Group :</Text>
                         <Text>3</Text>
                       </Flex>

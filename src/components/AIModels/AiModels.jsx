@@ -45,24 +45,24 @@ const AiModels = ({
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
   const [PRRHover, setPRRHover] = useState(false);
   const [animationActive, setAnimationActive] = useState(true);
-  const [TilActiveState, setTilActiveState] = useState(0);
+  const [TilActiveState, setTilActiveState] = useState(false);
   const [infoBox, setInfoBox] = useState(false);
   const [infoItem, setInfoItem] = useState("");
   const [showTumor, setShowTumor] = useState(false);
   const [detectTumor, setDetectTumor] = useState(false);
-  const [modelType, setModelType] = useState("")
+  const [modelType, setModelType] = useState("");
   const [showGleason, setShowGleason] = useState(false);
   const [onTumorAnalysis, { data: analysis_data, error: analysis_error }] =
     useMutation(TUMOR_ANALYSIS);
-  const slideid = slide?._id;
+
   const { data: subscription, error: subscription_error } = useSubscription(
     TUMOR_DETECTION_SUBSCRIPTION,
     {
       variables: {
         body: {
           data: {
-            slideid,
-            type:modelType
+            slideid: slideId,
+            type: modelType,
           },
         },
       },
@@ -105,34 +105,32 @@ const AiModels = ({
     callback();
   };
 
-
   //gleasongrading
-//################################################# gleason grade ########################### 
+  //################################################# gleason grade ###########################
 
-const handleGleasonScore = ()=>{
-  const body = {
-    key: `${getFileBucketFolder(viewerIds[0].originalFileUrl)}`,
-    slideId: slideid,
-    type:"gleason"
+  const handleGleasonScore = () => {
+    const body = {
+      key: `${getFileBucketFolder(viewerIds[0].originalFileUrl)}`,
+      slideId,
+      type: "gleason",
+    };
+    onTumorAnalysis({
+      variables: { body: { ...body } },
+    });
+    localStorage.setItem("ModelName", "Gleason Scoring");
+    setLoadUI(false);
   };
-  onTumorAnalysis({
-    variables: { body: { ...body } },
-  });
-  localStorage.setItem("ModelName", "Gleason Scoring");
-  setLoadUI(false);
-}
 
   useEffect(() => {
     if (gleasonScoring) {
       handleGleasonScore();
-    }
-    else{
+    } else {
       var topImage = viewer?.world?.getItemAt(1);
       if (topImage) {
         viewer.world.removeItem(topImage);
+      }
+      setShowGleason(false);
     }
-    setShowGleason(false);
-  }
   }, [gleasonScoring]);
 
   useEffect(() => {
@@ -146,7 +144,7 @@ const handleGleasonScore = ()=>{
       });
       setLoadUI(true);
     }
-      localStorage.removeItem("ModelName");
+    localStorage.removeItem("ModelName");
   }, [showTumor, showGleason]);
 
   useEffect(() => {
@@ -170,7 +168,7 @@ const handleGleasonScore = ()=>{
       // console.log("1", tiledImage);
       // Change the duration (in milliseconds) as per your requirement
     }
-    if(subscription && gleasonScoring){
+    if (subscription && gleasonScoring) {
       if (subscription.conversionStatus.data.dziUrl !== null) {
         // console.log("11", subscription.conversionStatus.data.dziUrl);
         const dziUrl = subscription.conversionStatus.data.dziUrl;
@@ -185,12 +183,9 @@ const handleGleasonScore = ()=>{
           setShowGleason(true);
         }, 2000);
       }
-    }
-  else {
+    } else {
       setShowTumor(false);
       setShowGleason(false);
-
-
     }
   }, [subscription]);
 
@@ -203,12 +198,11 @@ const handleGleasonScore = ()=>{
 
   useEffect(() => {
     if (navigatorCounter > 0) {
+      setGleasonScoring(false);
       setPRRHover(false);
       setShowTumor(false);
-      setDetectTumor(false);
-      if (TilActiveState > 0) {
-        setTilActiveState(0);
-      }
+      setDetectTumor(false)
+        setTilActiveState(false);
       setToolSelected("");
       setModelname("");
     }
@@ -250,11 +244,14 @@ const handleGleasonScore = ()=>{
     }
   };
 
+  // console.log("tilState", TilActiveState)
+
   useEffect(() => {
     if (slide.stainType === "H&E") {
-      if (TilActiveState / 2 !== 0) {
+      if (TilActiveState) {
         setModelname("TIL");
       } else {
+        // console.log("TILClear")
         setModelname("TILClear");
       }
       // console.log("object");
@@ -276,8 +273,6 @@ const handleGleasonScore = ()=>{
     }
   }, [toolSelected]);
 
-
-
   //#########################  HANDLE TUMOR     ################################################################
 
   const handleDetectTumor = () => {
@@ -285,8 +280,8 @@ const handleGleasonScore = ()=>{
     localStorage.setItem("ModelName", "Detect Tumor");
     const body = {
       key: `${getFileBucketFolder(viewerIds[0].originalFileUrl)}`,
-      slideId: slideid,
-      type:"tumour"
+      slideId,
+      type: "tumour",
     };
     onTumorAnalysis({
       variables: { body: { ...body } },
@@ -309,7 +304,6 @@ const handleGleasonScore = ()=>{
       }
     }
   }, [detectTumor]);
-
 
   return (
     <>
@@ -438,7 +432,7 @@ const handleGleasonScore = ()=>{
                       setInfoItem("");
                     }}
                     cursor="pointer"
-                    color="gray"
+                    color={infoItem === "morphometry" ? "black" : "gray"}
                   />
                 </Flex>
                 <Flex
@@ -458,7 +452,7 @@ const handleGleasonScore = ()=>{
                       e.target.style.color = "black";
                     }}
                     onClick={() => {
-                      setTilActiveState(TilActiveState + 1);
+                      setTilActiveState(!TilActiveState);
                     }}
                   >
                     TILS
@@ -473,7 +467,7 @@ const handleGleasonScore = ()=>{
                       setInfoItem("");
                     }}
                     cursor="pointer"
-                    color="gray"
+                    color={infoItem === "tils" ? "black" : "gray"}
                   />
                 </Flex>
                 <Flex alignItems="center" justifyContent="space-between">
@@ -502,7 +496,7 @@ const handleGleasonScore = ()=>{
                       setInfoItem("");
                     }}
                     cursor="pointer"
-                    color="gray"
+                    color={infoItem === "ki67" ? "black" : "gray"}
                   />
                 </Flex>
                 <Flex alignItems="center" justifyContent="space-between">
@@ -519,7 +513,7 @@ const handleGleasonScore = ()=>{
                     }}
                     onClick={() => {
                       setDetectTumor(!detectTumor);
-                      setModelType("tumuor")
+                      setModelType("tumuor");
                     }}
                   >
                     Detect Tumor
@@ -534,7 +528,7 @@ const handleGleasonScore = ()=>{
                       setInfoItem("");
                     }}
                     cursor="pointer"
-                    color="gray"
+                    color={infoItem === "detect_tumor" ? "black" : "gray"}
                   />
                 </Flex>
                 <Flex alignItems="center" justifyContent="space-between">
@@ -551,8 +545,7 @@ const handleGleasonScore = ()=>{
                     }}
                     onClick={() => {
                       setGleasonScoring(!gleasonScoring);
-                      setModelType("gleason")
-
+                      setModelType("gleason");
                     }}
                   >
                     Gleason Scoring
@@ -560,14 +553,14 @@ const handleGleasonScore = ()=>{
                   <BiInfoCircle
                     onMouseEnter={() => {
                       setInfoBox(true);
-                      setInfoItem("detect_tumor");
+                      setInfoItem("gleason_scoring");
                     }}
                     onMouseLeave={() => {
                       setInfoBox(false);
                       setInfoItem("");
                     }}
                     cursor="pointer"
-                    color="gray"
+                    color={infoItem === "gleason_scoring" ? "black" : "gray"}
                   />
                 </Flex>
               </Flex>
@@ -633,6 +626,26 @@ const handleGleasonScore = ()=>{
                 <Box lineHeight="1.2" marginBottom="8px">
                   <strong>Model output</strong>: Location of centers of cells,
                   proliferation score.
+                </Box>
+              </Box>
+            ) : infoItem === "gleason_scoring" ? (
+              <Box>
+                <Box lineHeight="1.2" marginBottom="8px">
+                  <Text>
+                    <strong>Gleason Scoring Model</strong> does the tumor
+                    segmentation andgives the Gleason grades and area for the
+                    tumorous regions present in the slide.
+                  </Text>
+                </Box>
+                <Box lineHeight="1.2" marginBottom="8px">
+                  <strong>Model output</strong>: segmented mask representing
+                  each grade
+                </Box>
+
+                <Box lineHeight="1.2" marginBottom="8px">
+                  <strong>Analysis return</strong>: Gleason score, first
+                  predominant and secon predominant Grade, Grade area and
+                  percentage of grade 3,4,5 and benign epithelium, risk category
                 </Box>
               </Box>
             ) : infoItem === "detect_tumor" ? (

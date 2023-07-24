@@ -169,7 +169,7 @@ const SlidesMenu = ({
       viewer.open(slide.awsImageBucketUrl);
 
       // clear canvas (remove all annotations)
-      fabricOverlay.fabricCanvas().clear();
+      // fabricOverlay.fabricCanvas().clear();
       setIsNavigatorActive(false);
     }
     setFabricOverlayState(updateTool({ tool: "Move" }));
