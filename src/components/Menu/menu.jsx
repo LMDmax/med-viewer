@@ -12,6 +12,7 @@ import {
 import { motion } from "framer-motion";
 import { GrFormClose } from "react-icons/gr";
 import axios from "axios";
+import { getMainDefinition } from "@apollo/client/utilities";
 import {
   SlidesIcon,
   TimelineIcon,
@@ -30,6 +31,15 @@ import {
   adjustmentIcon,
   adjustmentIconSelected,
 } from "../Icons/CustomIcons";
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  split,
+  HttpLink,
+} from "@apollo/client";
+import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
+import { createClient } from "graphql-ws";
 import SlidesMenu from "./slidesMenu";
 import { useFabricOverlayState } from "../../state/store";
 import Studies from "../Sidebar/studies";
@@ -71,6 +81,10 @@ function FunctionsMenu({
   originalPixels,
   setHideTumor,
   setNewSliderInputs,
+  synopticReportData,
+  reportedStatus,
+  slideData,
+  setSlideData,
   newSliderInputs,
   setAdjustmentTool,
   setNormalizeDefault,
@@ -173,6 +187,8 @@ function FunctionsMenu({
       [input]: value,
     }));
   };
+
+  // console.log("slideInforFromMEanu",slideInfo)
   const handleUpload = (e) => {
     const { files } = e.target;
     const filesArray = Array.from(files);
@@ -180,7 +196,6 @@ function FunctionsMenu({
     setAnnotedSlideImages(imagesArray);
   };
   const [annotedSlideImages, setAnnotedSlideImages] = useState([]);
-  const [slideData, setSlideData] = useState(null);
   const [timelineData, setTimeLineData] = useState([]);
   useEffect(() => {
     if (!chatFeedBar && selectedOption !== "annotations") {
@@ -306,11 +321,11 @@ function FunctionsMenu({
     });
   }, [fabricOverlay]);
 
-  useEffect(()=>{
-    if(selectedOption === "information"){
-      setIsOpen("true")
+  useEffect(() => {
+    if (selectedOption === "information") {
+      setIsOpen("true");
     }
-  },[selectedOption])
+  }, [selectedOption]);
 
   useEffect(() => {
     if (isMultiview || editView) {
@@ -322,7 +337,11 @@ function FunctionsMenu({
   }, [isMultiview, editView]);
 
   useEffect(() => {
-    if (activeObject?.type !== "textbox" && activeObject && activeObject?.type !== "group") {
+    if (
+      activeObject?.type !== "textbox" &&
+      activeObject &&
+      activeObject?.type !== "group"
+    ) {
       setIsOpen(true);
       setSelectedOption("annotations");
       // console.log(activeObject);
@@ -331,7 +350,7 @@ function FunctionsMenu({
 
   const handleReportClose = () => {
     setShowReport(false);
-    setSynopticType("")
+    setSynopticType("");
   };
 
   useEffect(() => {
@@ -349,6 +368,59 @@ function FunctionsMenu({
       setSelectedOption("slides");
     }
   }, [showRightPanel, showNormalisation]);
+  const token = localStorage.getItem(Environment.AUTH0_TOKEN);
+  let accessToken;
+  if (token) {
+    const { body } = JSON.parse(token);
+
+    if (body && typeof body === "object") {
+      accessToken = body.access_token;
+    }
+  }
+
+  const httpLink = new HttpLink({
+    uri: "https://development-api.chat.prr.ai",
+
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  const wsLink = new GraphQLWsLink(
+    createClient({
+      url: "wss://development-api.chat.prr.ai",
+    })
+  );
+
+  // The split function takes three parameters:
+
+  //
+
+  // * A function that's called for each operation to execute
+
+  // * The Link to use for an operation if the function returns a "truthy" value
+
+  // * The Link to use for an operation if the function returns a "falsy" value
+
+  const splitLink = split(
+    ({ query }) => {
+      const definition = getMainDefinition(query);
+      return (
+        definition.kind === "OperationDefinition" &&
+        definition.operation === "subscription"
+      );
+    },
+
+    wsLink,
+
+    httpLink
+  );
+
+  const apolloClient = new ApolloClient({
+    link: splitLink,
+
+    cache: new InMemoryCache(),
+  });
 
   return (
     <Box
@@ -591,7 +663,7 @@ function FunctionsMenu({
                     letterSpacing="0.0025em"
                     color={selectedOption === "report" ? "#3B5D7C" : "fff"}
                   >
-                    Report
+                    Reports
                   </Text>
                 </VStack>
               </Button>
@@ -739,7 +811,11 @@ function FunctionsMenu({
             ) : selectedOption === "information" ? (
               <Flex w="100%" bg="#FCFCFC">
                 {application === "hospital" ? (
-                  <Studies caseInfo={caseInfo} slideInfo={slide} viewerId={viewerId} />
+                  <Studies
+                    caseInfo={caseInfo}
+                    slideInfo={slide}
+                    viewerId={viewerId}
+                  />
                 ) : (
                   <Studies2 caseInfo={caseInfo} slideInfo={slide}></Studies2>
                 )}
@@ -843,6 +919,8 @@ function FunctionsMenu({
                       saveSynopticReport={saveSynopticReport}
                       getSynopticReport={getSynopticReport}
                       synopticType={synopticType}
+                      reportedStatus={reportedStatus}
+                      synopticReportData={synopticReportData}
                       caseInfo={caseInfo}
                       setSynopticType={setSynopticType}
                       slideId={slideId}
@@ -852,24 +930,26 @@ function FunctionsMenu({
                 </Flex>
               </Flex>
             ) : selectedOption === "messages" ? (
-              <ChatFeed
-                viewerId={viewerId}
-                chatFeedBar={chatFeedBar}
-                handleChatFeedBarClose={handleChatFeedBarClose}
-                showReport={showReport}
-                feedTab={feedTab}
-                setChatFeedBar={setChatFeedBar}
-                userInfo={userInfo}
-                caseInfo={caseInfo}
-                synopticType={synopticType}
-                application={application}
-                app={application}
-                users={users}
-                client2={client2}
-                mentionUsers={mentionUsers}
-                Environment={Environment}
-                addUsersToCase={addUsersToCase}
-              />
+              <ApolloProvider client={apolloClient}>
+                <ChatFeed
+                  viewerId={viewerId}
+                  chatFeedBar={chatFeedBar}
+                  handleChatFeedBarClose={handleChatFeedBarClose}
+                  showReport={showReport}
+                  feedTab={feedTab}
+                  setChatFeedBar={setChatFeedBar}
+                  userInfo={userInfo}
+                  caseInfo={caseInfo}
+                  synopticType={synopticType}
+                  application={application}
+                  app={application}
+                  users={users}
+                  client2={client2}
+                  mentionUsers={mentionUsers}
+                  Environment={Environment}
+                  addUsersToCase={addUsersToCase}
+                />
+              </ApolloProvider>
             ) : selectedOption === "adjustments" ? (
               <Adjustments
                 setSelectedOption={setSelectedOption}

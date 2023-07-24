@@ -20,6 +20,8 @@ const SynopticReport = ({
   slideId,
   saveSynopticReport,
   getSynopticReport,
+  synopticReportData,
+  reportedStatus,
   updateSynopticReport,
   userInfo,
 }) => {
@@ -119,6 +121,8 @@ const SynopticReport = ({
             saveSynopticReport={saveSynopticReport}
             getSynopticReport={getSynopticReport}
             setSynopticType={setSynopticType}
+            reportedStatus={reportedStatus}
+            synopticReportData={synopticReportData}
             updateSynopticReport={updateSynopticReport}
             userInfo={userInfo}
           />

@@ -486,6 +486,7 @@ const ViewerControls = ({
   // On load run roi for existing ones
 
   useEffect(() => {
+    console.log(vhutSubscriptionData)
     if (vhutSubscriptionData) {
       const {
         data,
@@ -588,6 +589,7 @@ const ViewerControls = ({
     });
     setIsXmlAnnotations(true);
     } else {
+      // console.log("abcd")
       getAnnotation({
         variables: {
           query: {
@@ -615,6 +617,9 @@ const ViewerControls = ({
   }, [xmlAnnotationData, annotationData]);
   useEffect(() => {
     if (!fabricOverlay) return;
+    // console.log("laodAnnotationFromDb")
+
+    // console.log(btoa(JSON.stringify(annotatedData)))
     const canvas = fabricOverlay.fabricCanvas();
     canvas.clear().requestRenderAll();
     const loadAnnotations = async () => {
@@ -730,7 +735,7 @@ const ViewerControls = ({
       setIsAnnotationLoaded(true);
     };
     loadAnnotations();
-  }, [fabricOverlay, annotatedData, slideId]);
+  }, [fabricOverlay, annotatedData,slideId]);
 
   useEffect(() => {
     const canvas = fabricOverlay?.fabricCanvas();

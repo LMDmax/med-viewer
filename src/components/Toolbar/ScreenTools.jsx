@@ -21,6 +21,8 @@ import Crop from "../Crop/Crop";
 import Share from "../Sidebar/Share";
 import Cancel from "../Cancel/Cancel";
 
+
+
 function ScreenTools({
   viewerId,
   report,
@@ -36,6 +38,7 @@ function ScreenTools({
   slide,
   saveReport,
   saveSynopticReport,
+  Environment,
   mediaUpload,
   socketRef,
   slideInfo,
@@ -73,6 +76,7 @@ function ScreenTools({
     onClose: onImgDetailsClose,
   } = useDisclosure();
 
+
   return (
     <Flex h="100%" w="25%" alignItems="center" justifyContent="flex-end">
       <ImageFilter
@@ -88,6 +92,7 @@ function ScreenTools({
       />
       <DownloadImage  viewerId={viewerId} setToolSelected={setToolSelected} />
       {application === "hospital" && (
+       
         <ViewerChat
           chatHover={chatHover}
           setChatHover={setChatHover}

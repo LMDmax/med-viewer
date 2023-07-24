@@ -136,6 +136,37 @@ const LayoutApp = ({
   const [editView, setEditView] = useState(false);
   const [gleasonScoring, setGleasonScoring] = useState(false);
   const { tile, viewer } = viewerWindow[currentViewer];
+   // meanu_Report
+  const [slideData, setSlideData] = useState(null);
+  const [reportedStatus, setReportedStatus] = useState(false);
+  const [synopticReportData, setSynopticReportData] = useState("");
+  useEffect(() => {
+    setSynopticReportData("Loading");
+    async function getData() {
+      const response = await getSynopticReport({
+        reportType: "breast-cancer",
+        caseId: caseInfo?._id,
+      });
+      setSynopticReportData(response?.data?.data);
+      if (response?.status === "fulfilled") {
+        setReportedStatus(true);
+      }
+    }
+    getData();
+  }, [caseInfo?._id]);
+
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await slideInfo({
+        caseId: caseInfo?._id,
+      }).unwrap();
+      // console.log("report", response);
+      setSlideData(response);
+    }
+    fetchData();
+  }, [caseInfo]);
+
 
   useEffect(() => {
     const UnitStore = localStorage.getItem("unit");
@@ -505,10 +536,14 @@ const LayoutApp = ({
             setToolSelected={setToolSelected}
             setAdjustmentTool={setAdjustmentTool}
             hideLymphocyte={hideLymphocyte}
+            slideData={slideData}
+            setSlideData={setSlideData}
             gleasonScoring={gleasonScoring}
             setHideLymphocyte={setHideLymphocyte}
             setHideStroma={setHideStroma}
             hideStroma={hideStroma}
+            reportedStatus={reportedStatus}
+            synopticReportData={synopticReportData}
             setSlideName2={setSlideName2}
             navigatorCounter={navigatorCounter}
             Environment={Environment}

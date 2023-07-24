@@ -204,6 +204,7 @@ function AdjustmentBar({
         chatHover={chatHover}
         chatFeedBar={chatFeedBar}
         handleFeedBar={handleFeedBar}
+        Environment={Environment}
         normalizeDefault={normalizeDefault}
         socketRef={socketRef}
         base64URL={base64URL}

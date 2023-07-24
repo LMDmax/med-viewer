@@ -118,7 +118,7 @@ const Til = ({
   // console.log(tilSubscriptionData);
   useEffect(() => {
     if (!tilSubscriptionData) {
-      console.log("tiles", slideId)
+      // console.log("tiles", slideId)
       getTils({
         variables: {
           query: {
