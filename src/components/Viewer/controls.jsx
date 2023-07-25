@@ -579,14 +579,14 @@ const ViewerControls = ({
   // once viewer is initialized
   useEffect(() => {
     if (xmlLink) {
-    getXmlAnnotation({
-      variables: {
-        query: {
-          slideId,
+      getXmlAnnotation({
+        variables: {
+          query: {
+            slideId,
+          },
         },
-      },
-    });
-    setIsXmlAnnotations(true);
+      });
+      setIsXmlAnnotations(true);
     } else {
       getAnnotation({
         variables: {
