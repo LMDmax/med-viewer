@@ -337,8 +337,8 @@ export const createAnnotation = (annotation) => {
       break;
     case "marker":
       shape = new fabric.Ellipse({
-        left: textLength >= 300 ? 100 : annotation.left,
-        top: textLength >= 300 ? 100 : annotation.top,
+        left: textLength >= 300 ? -10000 : annotation.left,
+        top: textLength >= 300 ? 200 : annotation.top,
         width: 120,
         height: 120,
         color: "#00ff00",
@@ -407,8 +407,8 @@ export const addAnnotationsToCanvas = ({
     )
       return;
     const text = new fabric.Textbox(`${annotation?.text}`, {
-      left: textLength >= 300 ? 100 : annotation?.left, // positining text
-      top: textLength >= 300 ? 100 : annotation?.top + 15,
+      left: textLength >= 300 ? -10000 : annotation?.left, // positining text
+      top: textLength >= 300 ? 200 : annotation?.top + 15,
       backgroundColor: "transparent",
       fill:
         annotation.type === "marker" && textLength >= 300
@@ -426,7 +426,7 @@ export const addAnnotationsToCanvas = ({
     });
     viewer.addHandler("zoom", function (e) {
       const zoomlevel = e.zoom;
-      const initialObjectSize = 500;
+      const initialObjectSize = 560;
       const initialMarkerSize = 300;
       const zoomValue = parseInt(
         Math.ceil((e.zoom * 40) / viewer.viewport.getMaxZoom()),
