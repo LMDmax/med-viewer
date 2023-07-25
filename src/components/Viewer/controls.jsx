@@ -486,7 +486,7 @@ const ViewerControls = ({
   // On load run roi for existing ones
 
   useEffect(() => {
-    console.log(vhutSubscriptionData)
+    console.log(vhutSubscriptionData);
     if (vhutSubscriptionData) {
       const {
         data,
@@ -601,7 +601,6 @@ const ViewerControls = ({
       setIsXmlAnnotations(false);
     }
   }, [xmlLink, slideId, fabricOverlay]);
-
 
   // set annotation data
   useEffect(() => {
@@ -735,12 +734,11 @@ const ViewerControls = ({
       setIsAnnotationLoaded(true);
     };
     loadAnnotations();
-  }, [fabricOverlay, annotatedData,slideId]);
+  }, [fabricOverlay, annotatedData, slideId]);
 
   useEffect(() => {
     const canvas = fabricOverlay?.fabricCanvas();
     if (canvas) {
-
       canvas.on("mouse:down", function (e) {
         const canvas = fabricOverlay?.fabricCanvas();
         // find all group and textboxes

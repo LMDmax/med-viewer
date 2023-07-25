@@ -177,7 +177,7 @@ export const createAnnotation = (annotation) => {
         height: annotation.height,
         color: "black",
         fill: annotation.fill,
-        stroke: "#000",
+        stroke: annotation?.color ? annotation?.color : "#000",
         strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         strokeUniform: annotation.strokeUniform,
         rx: annotation.rx,
@@ -218,7 +218,7 @@ export const createAnnotation = (annotation) => {
         color: "black",
         fill: annotation.fill,
         angle: annotation.angle,
-        stroke: "#000",
+        stroke: annotation?.color ? annotation?.color : "#000",
         strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         strokeUniform: annotation.strokeUniform,
         hasControls: annotation.globalCompositeOperation,
@@ -230,7 +230,7 @@ export const createAnnotation = (annotation) => {
 
     case "polygon":
       shape = new fabric.Polygon(annotation.points, {
-        stroke: "#000",
+        stroke: annotation?.color ? annotation?.color : "#000",
         strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         fill: annotation.fill,
         strokeUniform: annotation.strokeUniform,
@@ -245,7 +245,7 @@ export const createAnnotation = (annotation) => {
     case "path":
       shape = new fabric.Path(annotation.path, {
         color: "black",
-        stroke: "#000",
+        stroke: annotation?.color ? annotation?.color : "#000",
         strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         strokeUniform: annotation.strokeUniform,
         fill: annotation.fill,
@@ -260,7 +260,7 @@ export const createAnnotation = (annotation) => {
     case "line":
       shape = new fabric.Line(annotation.cords, {
         color: "black",
-        stroke: "#000",
+        stroke: annotation?.color ? annotation?.color : "#000",
         strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         strokeUniform: annotation.strokeUniform,
         fill: annotation.fill,
@@ -274,7 +274,7 @@ export const createAnnotation = (annotation) => {
     case "ruler":
       shape = new fabric.Line(annotation.cords, {
         color: "black",
-        stroke: "#000",
+        stroke: annotation?.color ? annotation?.color : "#000",
         strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         strokeUniform: annotation.strokeUniform,
         fill: annotation.fill,
@@ -304,7 +304,7 @@ export const createAnnotation = (annotation) => {
           annotation.top + annotation.height,
         ],
         {
-          stroke: "#00ff00",
+          stroke: annotation?.color ? annotation?.color : "#00ff00",
           strokeWidth: 4,
         }
       );
@@ -317,9 +317,9 @@ export const createAnnotation = (annotation) => {
         {
           width: annotation?.width,
           height: annotation?.height,
-          stroke: "#00ff00",
+          stroke: annotation?.color ? annotation?.color : "#00ff00",
           strokeWidth: 6,
-          fill: "#00ff00",
+          fill: annotation?.color ? annotation?.color : "#00ff00",
           top: annotation.top,
           left: annotation.left,
           originX: "center",
@@ -426,10 +426,13 @@ export const addAnnotationsToCanvas = ({
     });
     viewer.addHandler("zoom", function (e) {
       const zoomlevel = e.zoom;
-      const initialObjectSize = 340;
+      const initialObjectSize = 500;
       const initialMarkerSize = 300;
-      const zoomValueToDivideby = zoomlevel >= 40 ? 40 : zoomlevel;
-      const newObjectSize = initialObjectSize / zoomlevel;
+      const zoomValue = parseInt(
+        Math.ceil((e.zoom * 40) / viewer.viewport.getMaxZoom()),
+        10
+      );
+      const newObjectSize = initialObjectSize / zoomValue;
       const newMarkerSize = initialMarkerSize / zoomlevel;
       function getTextWidth(textData) {
         const context = canvas.getContext("2d");
