@@ -433,7 +433,7 @@ export const addAnnotationsToCanvas = ({
         10
       );
       const newObjectSize = initialObjectSize / zoomValue;
-      const newMarkerSize = initialMarkerSize / zoomlevel;
+      const newMarkerSize = initialMarkerSize / zoomValue;
       function getTextWidth(textData) {
         const context = canvas.getContext("2d");
         return context.measureText(textData).width;
