@@ -178,15 +178,7 @@ const ReportHelper = ({
   const { slideId } = viewerWindow[viewerId];
   const toast = useToast();
 
-  useEffect(() => {
-    async function fetchData() {
-      const response = await slideInfo({
-        caseId: caseInfo?._id,
-      }).unwrap();
-      setSlideData(response);
-    }
-    fetchData();
-  }, [slideId, caseInfo, slideInfo]);
+
 
   const openReport = () => {
     setSynopticType("");

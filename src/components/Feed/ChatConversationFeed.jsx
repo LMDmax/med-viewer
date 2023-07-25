@@ -277,7 +277,7 @@ const ChatConversationFeed = ({
   const [
     fetchMessages,
     { loading: isConversationLoading, refetch, data: msgData, error },
-  ] = useLazyQuery(FETCH_CONVERSATION, { client: client2 });
+  ] = useLazyQuery(FETCH_CONVERSATION);
 
   useEffect(() => {
     if (msgData && msgData.readChat.success) {
@@ -308,7 +308,7 @@ const ChatConversationFeed = ({
           query: {
             filter: {
               toId: groupChatId,
-              fromId:userInfo?._id
+              fromId: userInfo?._id,
             },
             paginate: {
               limit: 25,
@@ -328,7 +328,7 @@ const ChatConversationFeed = ({
         query: {
           filter: {
             toId: groupChatId,
-            fromId: userInfo?._id
+            fromId: userInfo?._id,
           },
           paginate: {
             limit: 25,
@@ -346,10 +346,8 @@ const ChatConversationFeed = ({
     // 👇️ scroll to bottom every time messages change
     if (pageNumber === 1) bottomRef.current?.scrollIntoView();
   }, [groupMessages]);
-  const [sendNewMessage, { error: newMessageError }] = useMutation(
-    SEND_MESSAGE,
-    { client: client2 }
-  );
+  const [sendNewMessage, { error: newMessageError }] =
+    useMutation(SEND_MESSAGE);
 
   const sendMessage = async (e) => {
     e.preventDefault();
@@ -362,13 +360,6 @@ const ChatConversationFeed = ({
     if (!newMessage) return;
     setGroupMessages([
       ...groupMessages,
-      {
-        from: userInfo?._id,
-        createdAt: moment(),
-        payload: { body: newMessage },
-        mentionedUsers: messageInput.mentionedUsers,
-        fromName: `${userInfo.firstName} ${userInfo.lastName}`,
-      },
     ]);
 
     const { data } = await sendNewMessage({
@@ -430,17 +421,14 @@ const ChatConversationFeed = ({
   // 	// );
   // };
 
-  const { data: subscribedMessageData } = useSubscription(
-    CHAT_SUBSCRIPTION,
-    { client: client2 },
-    {
-      variables: {
-        toId: groupChatId,
-        fromId: userInfo?._id,
-      },
-    }
-  );
-
+  const { data: subscribedMessageData } = useSubscription(CHAT_SUBSCRIPTION, {
+    variables: {
+      toId: groupChatId,
+      fromId: userInfo?._id,
+    },
+  });
+  // console.log(subscribedMessageData);
+  // console.log(client2);
   useEffect(() => {
     if (subscribedMessageData) {
       const newMessages = [

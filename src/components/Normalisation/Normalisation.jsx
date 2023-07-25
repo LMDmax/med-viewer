@@ -113,7 +113,7 @@ const Normalisation = ({
         pixelsData.width,
         pixelsData.height
       );
-      console.log(imageData);
+      // console.log(imageData);
       context.putImageData(
         imageData,
         context.canvas.width,

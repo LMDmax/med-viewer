@@ -48,7 +48,7 @@ const Til = ({
   const [TilHover, setTilHover] = useState(false);
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { viewerWindow } = fabricOverlayState;
-  const { fabricOverlay, viewer } = viewerWindow[viewerId];
+  const { fabricOverlay, viewer, slideId } = viewerWindow[viewerId];
   const [tilCords, setTilCords] = useState([]);
   const [allPathStroma, setAllPathStroma] = useState([]);
   const [tumorCords, setTumorCords] = useState([]);
@@ -77,12 +77,13 @@ const Til = ({
     useSubscription(TIL_ANALYSIS_SUBSCRIPTION, {
       variables: {
         body: {
-          slideId: slide?._id,
+          slideId,
         },
       },
     });
 
-
+// console.log(tilSubscriptionData)
+// console.log(data)
   // ------------------------------
   // ------------- updating state if data found,if hideModification button clicked,if hook data recived
   // ------------------
@@ -117,12 +118,13 @@ const Til = ({
   // console.log(tilSubscriptionData);
   useEffect(() => {
     if (!tilSubscriptionData) {
+      // console.log("tiles", slideId)
       getTils({
         variables: {
           query: {
             key: `${getFileBucketFolder(viewerIds[0].originalFileUrl)}`,
             bucket_name: "med-ai-image-processor",
-            slideId: `${slide?._id}`,
+            slideId,
             hilRemoved: false,
           },
         },
@@ -140,6 +142,14 @@ const Til = ({
     // console.log("eror",error);
     // getData();
   }, [ tilSubscriptionData,navigatorCounter]);
+
+  useEffect(()=>{
+    if(navigatorCounter > 0){
+      setTilCords("");
+      setTumorCords("");
+      setStromaCords("");
+    }
+  },[navigatorCounter])
 
   // console.log(tilSubscriptionData?.tilStatus);
 

@@ -120,7 +120,7 @@ const LayoutApp = ({
   const [hideStroma, setHideStroma] = useState(false);
   const [hideLymphocyte, setHideLymphocyte] = useState(false);
   const [annotationObject, setAnnotationObject] = useState("");
-  const [toolSelected, setToolSelected] = useState("");
+  const [toolSelected, setToolSelected] = useState("Loading");
   const [bottomZoomValue, setBottomZoomValue] = useState("");
   const socketRef = useRef(null);
   // xml annotations check
@@ -136,6 +136,37 @@ const LayoutApp = ({
   const [editView, setEditView] = useState(false);
   const [gleasonScoring, setGleasonScoring] = useState(false);
   const { tile, viewer } = viewerWindow[currentViewer];
+   // meanu_Report
+  const [slideData, setSlideData] = useState(null);
+  const [reportedStatus, setReportedStatus] = useState(false);
+  const [synopticReportData, setSynopticReportData] = useState("");
+  useEffect(() => {
+    setSynopticReportData("Loading");
+    async function getData() {
+      const response = await getSynopticReport({
+        reportType: "breast-cancer",
+        caseId: caseInfo?._id,
+      });
+      setSynopticReportData(response?.data?.data);
+      if (response?.status === "fulfilled") {
+        setReportedStatus(true);
+      }
+    }
+    getData();
+  }, [caseInfo?._id]);
+
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await slideInfo({
+        caseId: caseInfo?._id,
+      }).unwrap();
+      // console.log("report", response);
+      setSlideData(response);
+    }
+    fetchData();
+  }, [caseInfo]);
+
 
   useEffect(() => {
     const UnitStore = localStorage.getItem("unit");
@@ -145,7 +176,18 @@ const LayoutApp = ({
 
   // console.log(MouseDown);
 
-  console.log("sssss", selectedOption);
+  // console.log("sssss", selectedOption);
+
+
+  useEffect(()=>{
+    setLoadUI(false);
+    setToolSelected("Loading")
+    // After 2 seconds, set loadUI to true
+    setTimeout(function() {
+    setToolSelected("")
+      setLoadUI(true);
+    }, 2000);
+  },[])
 
 
   let runAiModel;
@@ -178,6 +220,10 @@ const LayoutApp = ({
     case "Rotate":
       returnText =
         "Click and slide the circle to rotate image. Press enter to save changes,";
+      break;
+      case "Loading":
+      returnText =
+        "Initialising viewer";
       break;
     case "Multiview":
       returnText = "Multiview is selected.";
@@ -505,15 +551,20 @@ const LayoutApp = ({
             setToolSelected={setToolSelected}
             setAdjustmentTool={setAdjustmentTool}
             hideLymphocyte={hideLymphocyte}
+            slideData={slideData}
+            setSlideData={setSlideData}
             gleasonScoring={gleasonScoring}
             setHideLymphocyte={setHideLymphocyte}
             setHideStroma={setHideStroma}
             hideStroma={hideStroma}
+            reportedStatus={reportedStatus}
+            synopticReportData={synopticReportData}
             setSlideName2={setSlideName2}
             navigatorCounter={navigatorCounter}
             Environment={Environment}
             tilScore={tilScore}
             setOriginalPixels={setOriginalPixels}
+            setNavigatorCounter={setNavigatorCounter}
             setSlideName={setSlideName}
             userInfo={userInfo}
             toolSelected={toolSelected}

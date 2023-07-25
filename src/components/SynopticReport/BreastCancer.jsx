@@ -17,30 +17,17 @@ const BreastCancer = ({
   saveSynopticReport,
   slideId,
   caseId,
-  getSynopticReport,
+  synopticReportData,
+  reportedStatus,
   setSynopticType,
   userInfo,
   updateSynopticReport,
 }) => {
   const toast = useToast();
-  const [synopticReportData, setSynopticReportData] = useState("");
   const [newInputData, setNewInputData] = useState("");
-  const [reportedStatus, setReportedStatus] = useState(false);
 
-  useEffect(() => {
-    setSynopticReportData("Loading");
-    async function getData() {
-      const response = await getSynopticReport({
-        reportType: "breast-cancer",
-        caseId,
-      });
-      setSynopticReportData(response?.data?.data);
-      if (response?.status === "fulfilled") {
-        setReportedStatus(true);
-      }
-    }
-    getData();
-  }, [caseId]);
+
+  
   const [inputData, setInputData] = useState({
     dataRecieved: "",
     specimenType: "",

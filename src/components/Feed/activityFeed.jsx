@@ -66,7 +66,7 @@ import { GroupTil } from "../Icons/CustomIcons";
 import ScrollBar from "../ScrollBar";
 import EditText from "./editText";
 
-const EditTextButton = ({ feed, handleEditClick, ...restProps }) => {
+function EditTextButton({ feed, handleEditClick, ...restProps }) {
   return (
     <Icon
       as={MdModeEditOutline}
@@ -75,8 +75,8 @@ const EditTextButton = ({ feed, handleEditClick, ...restProps }) => {
       {...restProps}
     />
   );
-};
-const CardDetailsRow = ({ title, value, ...restProps }) => {
+}
+function CardDetailsRow({ title, value, ...restProps }) {
   return (
     <HStack
       py="8px"
@@ -89,8 +89,8 @@ const CardDetailsRow = ({ title, value, ...restProps }) => {
       <Text>{value}</Text>
     </HStack>
   );
-};
-const CustomTab = ({ title, ...props }) => {
+}
+function CustomTab({ title, ...props }) {
   return (
     <Tab
       {...props}
@@ -114,15 +114,9 @@ const CustomTab = ({ title, ...props }) => {
       {title}
     </Tab>
   );
-};
+}
 
-const CustomTabPanel = ({
-  children,
-  title,
-  annotation,
-  totalCells,
-  ...props
-}) => {
+function CustomTabPanel({ children, title, annotation, totalCells, ...props }) {
   return (
     <TabPanel {...props} px={0} py="8px">
       <Text
@@ -147,7 +141,7 @@ const CustomTabPanel = ({
       ) : null}
     </TabPanel>
   );
-};
+}
 
 const MotionBox = motion(Box);
 
@@ -544,7 +538,7 @@ const annotationFeed = ({
                                         wordBreak="break-word"
                                         style={{ whiteSpace: "pre-wrap" }}
                                       >
-                                        {feed.object.title}
+                                        {feed.object.text}
                                       </Text>
                                     ) : (
                                       <Text
@@ -552,7 +546,7 @@ const annotationFeed = ({
                                         style={{ whiteSpace: "pre-wrap" }}
                                         textAlign="left"
                                       >
-                                        {feed.object.title}
+                                        {feed.object.text}
                                       </Text>
                                     )
                                   ) : feed.object?.roiType === "morphometry" ? (
@@ -698,8 +692,9 @@ const annotationFeed = ({
                                     {annotationDetails.analysedData.data.map(
                                       (cell) => {
                                         return (
-                                          <Accordion allowToggle key={uuidv4()}>
+                                          <Accordion allowToggle>
                                             <AccordionItem
+                                              key={uuidv4()}
                                               color="black"
                                               isDisabled={
                                                 cell.status !== "detected"
@@ -1147,7 +1142,6 @@ const annotationFeed = ({
                   >
                     <Flex px="25px" flexDir="column" w="100%">
                       <Flex
-                        borderBottom="1px solid lightgray"
                         my="0"
                         py="10px"
                         alignItems="center"
@@ -1172,10 +1166,10 @@ const annotationFeed = ({
                         <Box ml="15px">
                           <RiCheckboxBlankFill color="#E18B08" />
                         </Box>
-                        <Text ml="5px">Grade 3</Text>
+                        <Text ml="5px">Pattern 3</Text>
                         <Box w="100%">
                           <Text textAlign="end" mr="5px">
-                            54%
+                            20%
                           </Text>
                         </Box>
                       </Flex>
@@ -1188,7 +1182,8 @@ const annotationFeed = ({
                       <Flex
                         borderBottom="1px solid lightgray"
                         my="0"
-                        py="10px"
+                        pt="10px"
+                        pb="15px"
                         alignItems="center"
                         onClick={() => {
                           handleCollapseToggle("grade2");
@@ -1210,92 +1205,16 @@ const annotationFeed = ({
                         <Box ml="15px">
                           <RiCheckboxBlankFill color="#189B77" />
                         </Box>
-                        <Text ml="5px">Grade 4</Text>
+                        <Text ml="5px">Pattern 4</Text>
                         <Box w="100%">
                           <Text textAlign="end" mr="5px">
-                            21%
+                            80%
                           </Text>
                         </Box>
                       </Flex>
                       <Collapse in={collapseStates.grade2} animateOpacity>
                         <Box bg="white" my="5px" p="10px" boxShadow="md">
                           <Text>Grade 2 Collapse Content</Text>
-                          {/* Add more content here */}
-                        </Box>
-                      </Collapse>
-                      <Flex
-                        borderBottom="1px solid lightgray"
-                        my="0"
-                        py="10px"
-                        alignItems="center"
-                        onClick={() => {
-                          handleCollapseToggle("grade3");
-                        }}
-                      >
-                        {collapseStates.grade3 ? (
-                          <Icon
-                            as={AiFillCaretDown}
-                            color="#3B5D7C"
-                            boxSize={4}
-                          />
-                        ) : (
-                          <Icon
-                            as={AiFillCaretRight}
-                            color="gray"
-                            boxSize={4}
-                          />
-                        )}
-                        <Box ml="15px">
-                          <RiCheckboxBlankFill color="#800000" />
-                        </Box>
-                        <Text ml="5px">Grade 5</Text>
-                        <Box w="100%">
-                          <Text textAlign="end" mr="5px">
-                            8%
-                          </Text>
-                        </Box>
-                      </Flex>
-                      <Collapse in={collapseStates.grade3} animateOpacity>
-                        <Box bg="white" my="5px" p="10px" boxShadow="md">
-                          <Text>Grade 3 Collapse Content</Text>
-                          {/* Add more content here */}
-                        </Box>
-                      </Collapse>
-                      <Flex
-                        borderBottom="1px solid lightgray"
-                        my="0"
-                        py="10px"
-                        alignItems="center"
-                        onClick={() => {
-                          handleCollapseToggle("grade4");
-                        }}
-                      >
-                        {collapseStates.grade4 ? (
-                          <Icon
-                            as={AiFillCaretDown}
-                            color="#3B5D7C"
-                            boxSize={4}
-                          />
-                        ) : (
-                          <Icon
-                            as={AiFillCaretRight}
-                            color="gray"
-                            boxSize={4}
-                          />
-                        )}
-                        <Box ml="15px">
-                          <RiCheckboxBlankFill color="#800000" />
-                        </Box>
-                        <Text ml="5px">Benign Epithelial</Text>
-                        <Box w="100%">
-                          <Text textAlign="end" mr="5px">
-                            8%
-                          </Text>
-                        </Box>
-                      </Flex>
-                      <Collapse in={collapseStates.grade4} animateOpacity>
-                        <Box bg="white" my="5px" p="10px" boxShadow="md">
-                          <Text>Grade 4 Collapse Content</Text>
                           {/* Add more content here */}
                         </Box>
                       </Collapse>
@@ -1310,29 +1229,31 @@ const annotationFeed = ({
                       px="25px"
                     >
                       <Flex w="100%" justifyContent="space-between">
+                        <Text>Primary Pattern :</Text>
+                        <Text>4</Text>
+                      </Flex>
+                      <Flex
+                        w="100%"
+                        pb="20px"
+                        borderBottom="1px solid lightgray"
+                        justifyContent="space-between"
+                      >
+                        <Text>Secondary Pattern :</Text>
+                        <Text>3</Text>
+                      </Flex>
+                      <Flex w="100%" justifyContent="space-between">
                         <Text>Gleason Score :</Text>
-                        <Text>7 (3+4)</Text>
+                        <Text>7 (4+3)</Text>
                       </Flex>
                       <Flex w="100%" justifyContent="space-between">
-                        <Text>First Predominant Area :</Text>
-                        <Text>Grade 3</Text>
-                      </Flex>
-                      <Flex w="100%" justifyContent="space-between">
-                        <Text>Second Predominant Area :</Text>
-                        <Text>Grade 4</Text>
+                        <Text>Grade Group :</Text>
+                        <Text>3</Text>
                       </Flex>
                       <Flex w="100%" justifyContent="space-between">
                         <Text>Risk Category :</Text>
                         <Text>intermediate</Text>
                       </Flex>
                     </Flex>
-                    <Box h="85px">
-                      <Text fontSize="sm">
-                        Note: Gleason score is determined by adding <br /> the
-                        first predominant region with highest area <br /> and
-                        second predominant region with highest <br /> grade.
-                      </Text>
-                    </Box>
                   </MotionBox>
                 )}
               </Box>

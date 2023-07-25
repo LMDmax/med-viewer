@@ -74,9 +74,10 @@ export const changeTile = ({
   slideId,
   slideName,
   originalFileUrl,
+  slideInfo,
 }) => ({
   type: "changeTile",
-  payload: { id, tile, slideId, slideName, originalFileUrl },
+  payload: { id, tile, slideId, slideName, originalFileUrl, slideInfo },
 });
 
 export const toggleSync = () => ({

@@ -28,8 +28,9 @@ const ChangeSlide = ({
   ...restProps
 }) => {
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
-  const { viewerWindow, isAnnotationLoading } = fabricOverlayState;
-  const { viewer, fabricOverlay } = viewerWindow[viewerId];
+  const { viewerWindow, isAnnotationLoading,  } = fabricOverlayState;
+  const { viewer, fabricOverlay, slideId } = viewerWindow[viewerId];
+  // console.log(slideId)
   var vKeys = Object.keys(viewerWindow);
   const currentIndex = slides?.findIndex(
     (s) => s.awsImageBucketUrl === slideUrl
@@ -54,6 +55,7 @@ const ChangeSlide = ({
 
   const clickHandler = (position) => {
     const nextSlide = slides?.[currentIndex + position];
+    // console.log(nextSlide);
     setSlideName(nextSlide.slideName)
     setNavigatorCounter(prev=>prev+1);
     setFabricOverlayState(updateTool({ tool: "Move" }));
@@ -67,7 +69,7 @@ const ChangeSlide = ({
       })
     );
     viewer.open(nextSlide.awsImageBucketUrl);
-    fabricOverlay.fabricCanvas().clear();
+    // fabricOverlay.fabricCanvas().clear();
   };
 
   return (

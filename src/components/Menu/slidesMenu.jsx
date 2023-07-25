@@ -19,6 +19,8 @@ const SlidesMenu = ({
   setIsOpen,
   setTargetAnnotation,
   setShowNormalisation,
+  setNavigatorCounter,
+  navigatorCounter,
   editView,
   setSlideName,
   setToolSelected,
@@ -152,6 +154,7 @@ const SlidesMenu = ({
       setIsMultiview(false);
     } else {
       // setImageFilter(false);
+      setNavigatorCounter(navigatorCounter + 1);
       if (application === "hospital") {
         setSlideName(slide.slideName);
       } else {
