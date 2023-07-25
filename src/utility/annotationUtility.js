@@ -408,7 +408,7 @@ export const addAnnotationsToCanvas = ({
       return;
     const text = new fabric.Textbox(`${annotation?.text}`, {
       left: textLength >= 300 ? -10000 : annotation?.left, // positining text
-      top: textLength >= 300 ? 200 : annotation?.top + 15,
+      top: textLength >= 300 ? 200 : annotation?.top,
       backgroundColor: "transparent",
       fill:
         annotation.type === "marker" && textLength >= 300
@@ -441,7 +441,12 @@ export const addAnnotationsToCanvas = ({
       text.set("width", getTextWidth(annotation?.text, "inter") * 1.3);
       text.set("backgroundColor", "#F6F6F6");
       text.set("fontSize", newObjectSize);
-      // text.set("left", annotation?.left);
+      text.set(
+        "left",
+        textLength >= 300
+          ? -10000 + newObjectSize
+          : annotation.left + newObjectSize
+      );
       // text.set("top", annotation?.top + 10);
       text.set("rx", 10);
       text.set("ry", 10);
