@@ -21,26 +21,13 @@ const ProstateCancer = ({
   getSynopticReport,
   setSynopticType,
   userInfo,
+  synopticReportData,
+  reportedStatus,
   updateSynopticReport,
 }) => {
   const toast = useToast();
-  const [synopticReportData, setSynopticReportData] = useState("");
+
   const [newInputData, setNewInputData] = useState("");
-  const [reportedStatus, setReportedStatus] = useState(false);
-  useEffect(() => {
-    async function getData() {
-      setSynopticReportData("Loading");
-      const response = await getSynopticReport({
-        reportType: "prostate-cancer",
-        caseId,
-      });
-      setSynopticReportData(response?.data?.data);
-      if (response?.status === "fulfilled") {
-        setReportedStatus(true);
-      }
-    }
-    getData();
-  }, [caseId]);
   const [inputData, setInputData] = useState({
     isPreviousHistory: "",
     previousBiopsy: "",

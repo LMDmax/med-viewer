@@ -12,27 +12,12 @@ const Lymphoma = ({
   setSynopticType,
   userInfo,
   updateSynopticReport,
+  synopticReportData,
+  reportedStatus,
 }) => {
   const toast = useToast();
-  const [synopticReportData, setSynopticReportData] = useState("");
+ 
   const [newInputData, setNewInputData] = useState("");
-  const [reportedStatus, setReportedStatus] = useState(false);
-
-  // get cancer report
-  useEffect(() => {
-    async function getData() {
-      setSynopticReportData("Loading");
-      const response = await getSynopticReport({
-        reportType: "lymphoma-cancer",
-        caseId,
-      });
-      setSynopticReportData(response?.data?.data);
-      if (response?.status === "fulfilled") {
-        setReportedStatus(true);
-      }
-    }
-    getData();
-  }, [caseId]);
   const [inputData, setInputData] = useState({
     typeOfSpecimen: "",
     dateOfRequest: "",

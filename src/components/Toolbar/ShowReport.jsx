@@ -13,6 +13,7 @@ const ShowReport = ({
   showReport,
   setShowReport,
   saveReport,
+  handleReportsubmit,
   saveSynopticReport,
   questions,
   app,

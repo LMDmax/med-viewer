@@ -59,6 +59,7 @@ function Viewer({
   enableAI,
   navigatorCounter,
   bottomZoomValue,
+  setNewSliderInputs,
   zoomValue,
   setZoomValue,
   viewerIds,
@@ -172,6 +173,7 @@ function Viewer({
           zoomValue={zoomValue}
           viewerIds={viewerIds}
           setBottomZoomValue={setBottomZoomValue}
+          setNewSliderInputs={setNewSliderInputs}
           isXmlAnnotations={isXmlAnnotations}
           setToolSelected={setToolSelected}
           mentionUsers={mentionUsers}

@@ -81,6 +81,7 @@ function FunctionsMenu({
   originalPixels,
   setHideTumor,
   setNewSliderInputs,
+  handleReportsubmit,
   synopticReportData,
   reportedStatus,
   slideData,
@@ -955,6 +956,7 @@ function FunctionsMenu({
                 setSelectedOption={setSelectedOption}
                 setToolSelected={setToolSelected}
                 viewer={viewer}
+                slideId={slideId}
                 newSliderInputs={newSliderInputs}
                 setNewSliderInputs={setNewSliderInputs}
                 setAdjustmentTool={setAdjustmentTool}

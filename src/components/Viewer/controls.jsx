@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
-
+import OpenSeadragon from "openseadragon";
 import "./zoom-levels";
 import "./openseadragon-scalebar";
 import { useLazyQuery, useMutation, useSubscription } from "@apollo/client";
@@ -59,6 +59,7 @@ import ToolbarButton from "../ViewerToolbar/button";
 import IconSize from "../ViewerToolbar/IconSize";
 import ZoomButton from "../ZoomButton/ZoomButton";
 import ZoomSlider from "../ZoomSlider/slider";
+import { GET_ADJUSTMENT_RESULT } from "../../graphql/filterQuery";
 
 const ViewerControls = ({
   viewerId,
@@ -75,6 +76,7 @@ const ViewerControls = ({
   application,
   setLoadUI,
   zoomValue,
+  setNewSliderInputs,
   navigatorCounter,
   setZoomValue,
   client2,
@@ -140,6 +142,13 @@ const ViewerControls = ({
     useLazyQuery(GET_ANNOTATION);
   const [getXmlAnnotation, { data: xmlAnnotationData }] =
     useLazyQuery(GET_XMLANNOTATION);
+
+  //################## GET_FILTER_DATA #################
+  const [onGetFilterData, { data: filterResponseData, error: filterResponseError }] =
+    useLazyQuery(GET_ADJUSTMENT_RESULT);
+
+
+
   // ########## RUN MORPHOMETRY ##########################
   const [onVhutAnalysis, { data: analysis_data, error: analysis_error }] =
     useMutation(VHUT_ANALTSIS);
@@ -178,6 +187,8 @@ const ViewerControls = ({
       },
     });
 
+
+
   // console.log(viewer?.viewport?.getZoom(true));
   // console.log(viewer?.viewport?.getBounds());
   const bounds = viewer?.viewport?.getBounds();
@@ -186,8 +197,55 @@ const ViewerControls = ({
   const x = bounds?.x + bounds?.width / 2;
   const y = bounds?.y + bounds?.height / 2;
 
-  // console.log(x);
-  // console.log(y);
+  // console.log(filterResponseData);
+  // console.log(filterResponseDataError);
+  const getFilters = (sliderInputs) => {
+    const filters = [];
+    if (sliderInputs.thresholding > -1)
+      filters.push(OpenSeadragon.Filters.THRESHOLDING(sliderInputs.thresholding));
+    return filters;
+  };
+
+  useEffect(()=>{
+  if(filterResponseData){
+    if(filterResponseData.loadAdjustment.data !== null){
+      const sliderInputs = filterResponseData.loadAdjustment.data
+      if (!viewer) return;
+    // console.log(sliderInputs);
+    setNewSliderInputs({
+      contrast: sliderInputs.contrast,
+      brightness: sliderInputs.brightness,
+      thresholding: sliderInputs.thresholding,
+      gamma: sliderInputs.gamma,
+      exposure: 0,
+    })
+    const filters = getFilters(sliderInputs);
+
+    try {
+      viewer.setFilterOptions({
+        filters: {
+          processors: [
+            ...filters,
+            OpenSeadragon.Filters.CONTRAST(sliderInputs.contrast),
+            OpenSeadragon.Filters.BRIGHTNESS(sliderInputs.brightness),
+            OpenSeadragon.Filters.GAMMA(sliderInputs.gamma),
+          ],
+        },
+        loadMode: "async",
+      });
+    } catch (err) {
+      console.error(err);
+    }
+    toast({
+        title: "Adjustment loaded",
+        status: "success",
+        duration: 1500,
+        isClosable: true,
+      });
+    }
+  }
+  },[filterResponseData])
+
 
   const handleZoomIn = () => {
     try {
@@ -486,7 +544,7 @@ const ViewerControls = ({
   // On load run roi for existing ones
 
   useEffect(() => {
-    console.log(vhutSubscriptionData)
+    // console.log(vhutSubscriptionData)
     if (vhutSubscriptionData) {
       const {
         data,
@@ -579,6 +637,14 @@ const ViewerControls = ({
   // load saved annotations from the server
   // once viewer is initialized
   useEffect(() => {
+    onGetFilterData({
+      variables: {
+        query: {
+          slideId,
+        },
+      },
+      fetchPolicy: "network-only",
+    });
     if (xmlLink) {
     getXmlAnnotation({
       variables: {

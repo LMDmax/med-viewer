@@ -17,6 +17,7 @@ function ViewerFactory({
   bottomZoomValue,
   slide,
   slideName,
+  setNewSliderInputs,
   isXmlAnnotations,
   binaryMask,
   slides,
@@ -121,6 +122,7 @@ function ViewerFactory({
             setBottomZoomValue={setBottomZoomValue}
             mentionUsers={mentionUsers}
             caseInfo={caseInfo}
+            setNewSliderInputs={setNewSliderInputs}
             runAiModel={runAiModel}
             addUsersToCase={addUsersToCase}
             Environment={Environment}

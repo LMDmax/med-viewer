@@ -115,6 +115,7 @@ const LayoutApp = ({
   const [feedTab, setFeedBar] = useState(0);
   const [pathStroma, setPathStroma] = useState(null);
   const [synopticType, setSynopticType] = useState("");
+  const [synopticReportType, setSynopticReportType] = useState("");
   const [chatHover, setChatHover] = useState(false);
   const [hideTumor, setHideTumor] = useState(false);
   const [hideStroma, setHideStroma] = useState(false);
@@ -140,11 +141,25 @@ const LayoutApp = ({
   const [slideData, setSlideData] = useState(null);
   const [reportedStatus, setReportedStatus] = useState(false);
   const [synopticReportData, setSynopticReportData] = useState("");
+  useEffect(()=>{
+    if(synopticType === "breast-cancer"){
+      setSynopticReportType("breast-cancer")
+    }
+    if(synopticType === "prostate-cancer"){
+      setSynopticReportType("prostate-cancer")
+    }
+    if(synopticType === "lymphoma"){
+      setSynopticReportType("lymphoma-cancer")
+    }
+  },[synopticType])
+
+  // fetch based on synoptic type
   useEffect(() => {
+  if(synopticReportType !== ""){
     setSynopticReportData("Loading");
     async function getData() {
       const response = await getSynopticReport({
-        reportType: "breast-cancer",
+        reportType: synopticReportType,
         caseId: caseInfo?._id,
       });
       setSynopticReportData(response?.data?.data);
@@ -153,7 +168,47 @@ const LayoutApp = ({
       }
     }
     getData();
-  }, [caseInfo?._id]);
+  }
+  }, [caseInfo?._id, synopticReportType]);
+
+  const handleReportsubmit = async () => {
+    annotedSlideImages.forEach((element, i) => {
+      annotedSlidesForm.append("files", annotedSlideImages[i]);
+    });
+    const { data } = await mediaUpload(annotedSlidesForm);
+    try {
+      const resp = await saveReport({
+        caseId: caseInfo._id,
+        subClaim: userInfo?.subClaim,
+        clinicalStudy: reportData?.clinicalStudy,
+        grossDescription: reportData?.grossDescription,
+        microscopicDescription: reportData?.microscopicDescription,
+        impression: reportData?.impression,
+        advise: reportData?.advice,
+        annotatedSlides: reportData?.annotedSlides,
+        mediaURLs: data?.urls,
+      }).unwrap();
+      clearValues();
+      setSlideData(resp);
+      setShowReport(!showReport);
+
+      toast({
+        status: "success",
+        title: "Successfully Reported",
+        duration: 1500,
+        isClosable: true,
+      });
+    } catch (err) {
+      console.error(err);
+      toast({
+        status: "error",
+        title: "Reporting Failed",
+        description: "Something went wrong, try again!",
+        duration: 1500,
+        isClosable: true,
+      });
+    }
+  };
 
 
   useEffect(() => {
@@ -177,17 +232,6 @@ const LayoutApp = ({
   // console.log(MouseDown);
 
   // console.log("sssss", selectedOption);
-
-
-  useEffect(()=>{
-    setLoadUI(false);
-    setToolSelected("Loading")
-    // After 2 seconds, set loadUI to true
-    setTimeout(function() {
-    setToolSelected("")
-      setLoadUI(true);
-    }, 2000);
-  },[])
 
 
   let runAiModel;
@@ -518,6 +562,7 @@ const LayoutApp = ({
               slideName2={slideName2}
               setLoadUI={setLoadUI}
               binaryMask={binaryMask}
+              setNewSliderInputs={setNewSliderInputs}
               slideName={slideName}
               setModelname={setModelname}
               viewerIds={viewerIds}

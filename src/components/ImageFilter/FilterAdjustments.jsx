@@ -49,13 +49,6 @@ const FilterAdjustments = ({
   const [isActiveTool, setIsActiveTool] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [sliderInputs, setSliderInputs] = useState({
-    contrast: 1,
-    brightness: 0,
-    thresholding: -1,
-    gamma: 1,
-    exposure: 0,
-  });
   const isActive = activeTool === "Filter"
 
   useEffect(() => {
@@ -94,27 +87,6 @@ const FilterAdjustments = ({
   // console.log("tool", AdjustmentTool)
 
 
-  useEffect(() => {
-    if (!viewer) return;
-
-    const filters = getFilters(sliderInputs);
-
-    try {
-      viewer.setFilterOptions({
-        filters: {
-          processors: [
-            ...filters,
-            OpenSeadragon.Filters.CONTRAST(sliderInputs.contrast),
-            OpenSeadragon.Filters.BRIGHTNESS(sliderInputs.brightness),
-            OpenSeadragon.Filters.GAMMA(sliderInputs.gamma),
-          ],
-        },
-        loadMode: "async",
-      });
-    } catch (err) {
-      console.error(err);
-    }
-  }, [sliderInputs, viewer]);
 
   return (
  <></>

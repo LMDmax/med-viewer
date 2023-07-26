@@ -25,6 +25,7 @@ const ViewerContainer = ({
   setZoomValue,
   bottomZoomValue,
 	onLoadAnnotations,
+  setNewSliderInputs,
 	onSaveAnnotation,
 	onDeleteAnnotation,
 	onUpdateAnnotation,
@@ -110,6 +111,7 @@ const ViewerContainer = ({
 			client2={client2}
       setBottomZoomValue={setBottomZoomValue}
       runAiModel={runAiModel}
+      setNewSliderInputs={setNewSliderInputs}
 			setLoadUI={setLoadUI}
       navigatorCounter={navigatorCounter}
       setToolSelected={setToolSelected}

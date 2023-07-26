@@ -133,6 +133,8 @@ const SynopticReport = ({
             saveSynopticReport={saveSynopticReport}
             getSynopticReport={getSynopticReport}
             setSynopticType={setSynopticType}
+            reportedStatus={reportedStatus}
+            synopticReportData={synopticReportData}
             updateSynopticReport={updateSynopticReport}
             userInfo={userInfo}
           />
@@ -143,6 +145,8 @@ const SynopticReport = ({
             saveSynopticReport={saveSynopticReport}
             getSynopticReport={getSynopticReport}
             setSynopticType={setSynopticType}
+            reportedStatus={reportedStatus}
+            synopticReportData={synopticReportData}
             updateSynopticReport={updateSynopticReport}
             userInfo={userInfo}
           />
