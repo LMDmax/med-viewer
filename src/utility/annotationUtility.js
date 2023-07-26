@@ -167,6 +167,7 @@ export const createAnnotationMessage = ({
 // create annotation from the annotation data
 export const createAnnotation = (annotation) => {
   let shape;
+  const textLength = annotation?.text?.length;
   switch (annotation.type) {
     case "ellipse":
       shape = new fabric.Ellipse({
@@ -176,7 +177,7 @@ export const createAnnotation = (annotation) => {
         height: annotation.height,
         color: "black",
         fill: annotation.fill,
-        stroke: "#000",
+        stroke: annotation?.color ? annotation?.color : "#000",
         strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         strokeUniform: annotation.strokeUniform,
         rx: annotation.rx,
@@ -217,7 +218,7 @@ export const createAnnotation = (annotation) => {
         color: "black",
         fill: annotation.fill,
         angle: annotation.angle,
-        stroke: "#000",
+        stroke: annotation?.color ? annotation?.color : "#000",
         strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         strokeUniform: annotation.strokeUniform,
         hasControls: annotation.globalCompositeOperation,
@@ -229,7 +230,7 @@ export const createAnnotation = (annotation) => {
 
     case "polygon":
       shape = new fabric.Polygon(annotation.points, {
-        stroke: "#000",
+        stroke: annotation?.color ? annotation?.color : "#000",
         strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         fill: annotation.fill,
         strokeUniform: annotation.strokeUniform,
@@ -244,7 +245,7 @@ export const createAnnotation = (annotation) => {
     case "path":
       shape = new fabric.Path(annotation.path, {
         color: "black",
-        stroke: "#000",
+        stroke: annotation?.color ? annotation?.color : "#000",
         strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         strokeUniform: annotation.strokeUniform,
         fill: annotation.fill,
@@ -259,7 +260,7 @@ export const createAnnotation = (annotation) => {
     case "line":
       shape = new fabric.Line(annotation.cords, {
         color: "black",
-        stroke: "#000",
+        stroke: annotation?.color ? annotation?.color : "#000",
         strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         strokeUniform: annotation.strokeUniform,
         fill: annotation.fill,
@@ -273,7 +274,7 @@ export const createAnnotation = (annotation) => {
     case "ruler":
       shape = new fabric.Line(annotation.cords, {
         color: "black",
-        stroke: "#000",
+        stroke: annotation?.color ? annotation?.color : "#000",
         strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         strokeUniform: annotation.strokeUniform,
         fill: annotation.fill,
@@ -303,7 +304,7 @@ export const createAnnotation = (annotation) => {
           annotation.top + annotation.height,
         ],
         {
-          stroke: "#00ff00",
+          stroke: annotation?.color ? annotation?.color : "#00ff00",
           strokeWidth: 4,
         }
       );
@@ -316,9 +317,9 @@ export const createAnnotation = (annotation) => {
         {
           width: annotation?.width,
           height: annotation?.height,
-          stroke: "#00ff00",
+          stroke: annotation?.color ? annotation?.color : "#00ff00",
           strokeWidth: 6,
-          fill: "#00ff00",
+          fill: annotation?.color ? annotation?.color : "#00ff00",
           top: annotation.top,
           left: annotation.left,
           originX: "center",
@@ -336,17 +337,17 @@ export const createAnnotation = (annotation) => {
       break;
     case "marker":
       shape = new fabric.Ellipse({
-        left: annotation.left,
-        top: annotation.top,
-        width: 100,
-        height: 100,
+        left: textLength >= 300 ? -10000 : annotation.left,
+        top: textLength >= 300 ? 200 : annotation.top,
+        width: 120,
+        height: 120,
         color: "#00ff00",
-        fill: "#00ff00",
+        fill: "transparent",
         stroke: "#00ff00",
-        strokeWidth: 2,
+        strokeWidth: 30,
         strokeUniform: annotation.strokeUniform,
-        rx: 50,
-        ry: 50,
+        rx: 60,
+        ry: 60,
         angle: annotation.angle,
         hasControls: annotation.globalCompositeOperation,
         hasRotatingPoint: annotation.globalCompositeOperation,
@@ -399,34 +400,40 @@ export const addAnnotationsToCanvas = ({
 
   annotations.forEach((annotation) => {
     const shape = createAnnotation(annotation);
-    if (annotation?.type === "textBox" || annotation?.type === "textbox" && annotation.usingAs !== "comment")
+    const textLength = annotation?.text?.length;
+    if (
+      annotation?.type === "textBox" ||
+      (annotation?.type === "textbox" && annotation.usingAs !== "comment")
+    )
       return;
     const text = new fabric.Textbox(`${annotation?.text}`, {
-      left: annotation?.left, // positining text
-      top: annotation?.top,
+      left: textLength >= 300 ? -10000 : annotation?.left, // positining text
+      top: textLength >= 300 ? 200 : annotation?.top,
       backgroundColor: "transparent",
-      fill: "#0078d4",
+      fill:
+        annotation.type === "marker" && textLength >= 300
+          ? "#1109ed"
+          : "#0078d4",
       selectable: false,
-      textAlign: "center",
+      textAlign: "left",
       fontWeight: 500,
       fontFamily: "inter",
-      border: "10px solid #000",
-      borderColor: "#000",
-      outline: "1px solid #000",
       lineHeight: 0.9,
       hasBorders: true,
-      rx: 15,
-      ry: 15,
       padding: "100px",
       hasControls: false,
       hasRotatingPoint: false,
     });
     viewer.addHandler("zoom", function (e) {
       const zoomlevel = e.zoom;
-      const initialObjectSize = 300;
-      const newObjectSize = initialObjectSize / zoomlevel;
-      const maxWidth = annotation?.width / zoomlevel;
-      const maxHight = annotation?.height / zoomlevel;
+      const initialObjectSize = 560;
+      const initialMarkerSize = 300;
+      const zoomValue = parseInt(
+        Math.ceil((e.zoom * 40) / viewer.viewport.getMaxZoom()),
+        10
+      );
+      const newObjectSize = initialObjectSize / zoomValue;
+      const newMarkerSize = initialMarkerSize / zoomValue;
       function getTextWidth(textData) {
         const context = canvas.getContext("2d");
         return context.measureText(textData).width;
@@ -434,16 +441,20 @@ export const addAnnotationsToCanvas = ({
       text.set("width", getTextWidth(annotation?.text, "inter") * 1.3);
       text.set("backgroundColor", "#F6F6F6");
       text.set("fontSize", newObjectSize);
-      text.set("maxWidth", maxWidth);
-      text.set("maxHeight", maxHight);
-      text.set("left", annotation.left + newObjectSize + 10);
+      text.set(
+        "left",
+        textLength >= 300
+          ? -10000 + newObjectSize
+          : annotation.left + newObjectSize
+      );
+      // text.set("top", annotation?.top + 10);
       text.set("rx", 10);
       text.set("ry", 10);
       if (shape.type === "marker") {
-        shape.set("width", newObjectSize);
-        shape.set("height", newObjectSize);
-        shape.set("rx", newObjectSize / 2);
-        shape.set("ry", newObjectSize / 2);
+        shape.set("width", newMarkerSize);
+        shape.set("height", newMarkerSize);
+        shape.set("rx", newMarkerSize / 1.5);
+        shape.set("ry", newMarkerSize / 1.5);
       }
       canvas.renderAll();
     });

@@ -38,7 +38,7 @@ const osdOptions = {
   navigatorDisplayRegionColor: "red",
   springStiffness: isBrowser ? 20 : 10,
   constrainDuringPan: true,
-    preserveImageSizeOnResize: true,
+  preserveImageSizeOnResize: true,
   viewportMargin: {
     left: 100,
     top: 100,
@@ -51,7 +51,7 @@ const osdOptions = {
   timeout: 60000,
 };
 
-function Viewer({
+const Viewer = ({
   viewerId,
   tile,
   runAiModel,
@@ -78,7 +78,7 @@ function Viewer({
   accessToken,
   setIsXmlAnnotations,
   handleAnnotationClick,
-}) {
+}) => {
   const { setFabricOverlayState } = useFabricOverlayState();
   const [viewer, setViewer] = useState(null);
   const boxRef = useRef();
@@ -188,7 +188,7 @@ function Viewer({
       {/* <Button onClick={selection}>Select</Button> */}
     </Box>
   );
-}
+};
 
 Viewer.propTypes = {
   tile: PropTypes.string,

@@ -32,7 +32,7 @@ import {
   AiOutlineEye,
   AiOutlineEyeInvisible,
 } from "react-icons/ai";
-import { BiRectangle } from "react-icons/bi";
+import { BiRectangle, BiText } from "react-icons/bi";
 import {
   BsEye,
   BsEyeSlash,
@@ -43,7 +43,13 @@ import {
 } from "react-icons/bs";
 import { FaDrawPolygon } from "react-icons/fa";
 import { GrFormClose } from "react-icons/gr";
-import { MdModeEditOutline, MdDelete, MdTextsms } from "react-icons/md";
+import {
+  MdModeEditOutline,
+  MdDelete,
+  MdTextsms,
+  MdOutlineFontDownload,
+  MdOutlineFontDownloadOff,
+} from "react-icons/md";
 import { RiCheckboxBlankLine, RiCheckboxBlankFill } from "react-icons/ri";
 import { v4 as uuidv4 } from "uuid";
 
@@ -232,10 +238,22 @@ const annotationFeed = ({
     grade3: false,
     grade4: false,
   });
+
   const annotationFeed = activityFeed?.filter(
     (eachAnnotation) => eachAnnotation.object.type !== "textbox"
   );
-
+  // set description text and visibility
+  const textObjects = canvas
+    .getObjects()
+    .filter((obj) => obj?.type === "textbox");
+  const textObjectsData = textObjects?.map((object) => {
+    return {
+      [object?.text]: object?.visible,
+    };
+  });
+  const mergedObject = Object.assign({}, ...textObjectsData);
+  const [descriptionData, setDescriptionData] = useState(mergedObject);
+  //
   const [accordionState, setAccordionState] = useState(
     annotationFeed.map(() => ({ isOpen: false, isFocused: false }))
   );
@@ -348,12 +366,9 @@ const annotationFeed = ({
       [grade]: !prevState[grade],
     }));
   };
-  //toggle annotation description
+  // toggle all annotations description
   const handletoggleClick = () => {
     setHideDescription((state) => !state);
-    const textObjects = canvas
-      .getObjects()
-      .filter((obj) => obj?.type === "textbox");
     const notCommentObjects = textObjects?.filter(
       (obj) => obj?.usingAs !== "comment"
     );
@@ -366,6 +381,23 @@ const annotationFeed = ({
         obj.set({ visible: false });
       });
     }
+    canvas.requestRenderAll();
+  };
+  // toggle single description
+  const toggleDescription = (annotation) => {
+    const notCommentObjects = textObjects?.filter(
+      (obj) => obj?.usingAs !== "comment"
+    );
+    const selectedDescription = notCommentObjects?.filter(
+      (obj) => obj?.text === annotation?.text
+    );
+    if (selectedDescription) {
+      selectedDescription[0].set({ visible: !selectedDescription[0]?.visible });
+    }
+    setDescriptionData({
+      ...descriptionData,
+      [annotation?.text]: !descriptionData[annotation?.text],
+    });
     canvas.requestRenderAll();
   };
   // console.log(annotationFeed);
@@ -396,7 +428,7 @@ const annotationFeed = ({
             Annotation List
           </Text>
           <Flex>
-            {isXmlAnnotations && (
+            {/* {isXmlAnnotations && (
               <Tooltip
                 label={
                   hideDescription ? "Show description" : "Hide description"
@@ -419,7 +451,7 @@ const annotationFeed = ({
                   onClick={() => handletoggleClick()}
                 />
               </Tooltip>
-            )}
+            )} */}
             {!isXmlAnnotations && (
               <IconButton
                 icon={<MdDelete size={18} />}
@@ -535,6 +567,22 @@ const annotationFeed = ({
                               feed={feed}
                               handleEditClick={handleEditClick}
                               mr={2}
+                            />
+                          )}
+                          {isXmlAnnotations && feed?.object?.text && (
+                            <IconButton
+                              icon={
+                                descriptionData?.[feed?.object?.text] ? (
+                                  <MdOutlineFontDownload size={18} />
+                                ) : (
+                                  <MdOutlineFontDownloadOff size={18} />
+                                )
+                              }
+                              size="sm"
+                              variant="unstyled"
+                              cursor="pointer"
+                              _focus={{ border: "none", outline: "none" }}
+                              onClick={() => toggleDescription(feed?.object)}
                             />
                           )}
                         </Flex>

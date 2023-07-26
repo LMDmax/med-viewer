@@ -646,14 +646,14 @@ const ViewerControls = ({
       fetchPolicy: "network-only",
     });
     if (xmlLink) {
-    getXmlAnnotation({
-      variables: {
-        query: {
-          slideId,
+      getXmlAnnotation({
+        variables: {
+          query: {
+            slideId,
+          },
         },
-      },
-    });
-    setIsXmlAnnotations(true);
+      });
+      setIsXmlAnnotations(true);
     } else {
       // console.log("abcd")
       getAnnotation({
@@ -667,7 +667,6 @@ const ViewerControls = ({
       setIsXmlAnnotations(false);
     }
   }, [xmlLink, slideId, fabricOverlay]);
-
 
   // set annotation data
   useEffect(() => {
@@ -801,12 +800,11 @@ const ViewerControls = ({
       setIsAnnotationLoaded(true);
     };
     loadAnnotations();
-  }, [fabricOverlay, annotatedData,slideId]);
+  }, [fabricOverlay, annotatedData, slideId]);
 
   useEffect(() => {
     const canvas = fabricOverlay?.fabricCanvas();
     if (canvas) {
-
       canvas.on("mouse:down", function (e) {
         const canvas = fabricOverlay?.fabricCanvas();
         // find all group and textboxes
