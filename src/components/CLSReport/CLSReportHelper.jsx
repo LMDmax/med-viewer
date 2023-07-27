@@ -33,25 +33,19 @@ function CLSReportHelper({
 	});
 
 	// get questions and response
+	const lessonId = caseInfo?.id;
 	useEffect(() => {
 		setIsUpdating(true);
 		if (app === "education") setSlideId(slideId);
 		async function fetchResponse() {
 			const response = await questionnaireResponse({
-				slideId,
+				lessonId,
 			});
 			setQuestionsResponse(response?.data?.data);
 		}
 		fetchResponse();
-		// console.log(response);
-
-		// async function fetchQuestions() {
-		// 	const response = await questions({ slideId });
-		// 	setSlideQuestions(response?.data?.data?.finalQuestionnaireResponse);
-		// 	setIsUpdating(false);
-		// }
-		// fetchQuestions();
-	}, [slideId, showCLSreport]);
+		
+	}, [showCLSreport]);
 
 	const handleCLSReport = () => {
 		setShowCLSReport(!showCLSreport);
@@ -62,7 +56,7 @@ function CLSReportHelper({
 		try {
 			setLoading(true);
 			await responseHandler({
-				slideId,
+				lessonId,
 				response,
 			});
 			setShowCLSReport(!showCLSreport);

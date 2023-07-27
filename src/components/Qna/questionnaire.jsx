@@ -20,6 +20,8 @@ function Questionnaire({
 			return { qna: newQna };
 		});
 	};
+
+	
 	return (
 		<VStack
 			spacing={6}
