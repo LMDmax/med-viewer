@@ -33,8 +33,8 @@ function Questionnaire({
 			fontSize="14px"
 			px="10px"
 		>
-			{questions[0].LessonQuestions?.map((question, index) => {
-				// console.log(response?.responses[index + 1]?.Question?.correctAnswer[0]);
+			{questions && questions[0].LessonQuestions?.map((question, index) => {
+				console.log(question);
 				return (
 					<Stack
 						key={question?.Question?.id ? question?.Question?.id : index}

@@ -28,33 +28,14 @@ function CLSReport({
 			fontFamily="inter"
 			w="100%"
 			h={ifWidthLessthan1920 ? "calc(100vh - 90px)" : "90.926vh"}
-			top={ifWidthLessthan1920 ? "90px" : "9.999vh"}
+			top={ifWidthLessthan1920 ? "30px" : "9.999vh"}
 			pos="absolute"
 			right="0px"
 			bg="#FCFCFC"
 			flexDirection="column"
 		>
-			{/* {loading || isUpdating ? (
-				<Flex
-					w="100%"
-					height="100%"
-					alignItems="center"
-					justifyContent="center"
-				>
-					<Spinner color="#3965C5" size="xl" thickness="4px" speed="0.65s" />
-				</Flex>
-			) : ( */}
+
 			<>
-				<Flex w="100%" justifyContent="flex-end">
-					<IconButton
-						icon={<AiOutlineClose />}
-						onClick={handleCLSReport}
-						borderRadius="0"
-						background="#fcfcfc"
-						size="sm"
-						_focus={{}}
-					/>
-				</Flex>
 				<Flex
 					w="100%"
 					justifyContent="center"

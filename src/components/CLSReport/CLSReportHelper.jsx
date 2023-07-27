@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 
-import { Button, Tooltip, useToast } from "@chakra-ui/react";
+import { Button, Tooltip, useToast, Flex, IconButton } from "@chakra-ui/react";
 import _ from "lodash";
 
 import { useFabricOverlayState } from "../../state/store";
 import CLSReport from "./CLSReport";
+import { AiOutlineClose } from "react-icons/ai";
+
 
 function CLSReportHelper({
 	restProps,
@@ -41,6 +43,7 @@ function CLSReportHelper({
 			setQuestionsResponse(response?.data?.data);
 		}
 		fetchResponse();
+		// console.log(response);
 
 		// async function fetchQuestions() {
 		// 	const response = await questions({ slideId });
@@ -151,6 +154,17 @@ function CLSReportHelper({
 						Submit Report
 					</Button>
 				</Tooltip>
+			): showCLSreport ? (
+				<Flex w="100%" justifyContent="flex-end">
+					<IconButton
+						icon={<AiOutlineClose />}
+						onClick={handleCLSReport}
+						borderRadius="0"
+						background="#fcfcfc"
+						size="sm"
+						_focus={{}}
+					/>
+				</Flex>
 			) : null}
 			{showCLSreport && (
 				<CLSReport
@@ -166,7 +180,9 @@ function CLSReportHelper({
 					slideId={slideId}
 					loading={loading}
 				/>
+				
 			)}
+			
 		</>
 	);
 }
