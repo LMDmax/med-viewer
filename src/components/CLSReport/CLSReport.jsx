@@ -19,6 +19,8 @@ function CLSReport({
 	questionsResponse,
 	loading,
 	isUpdating,
+	questionIndex,
+	slideId,
 }) {
 	const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
 
@@ -34,7 +36,6 @@ function CLSReport({
 			bg="#FCFCFC"
 			flexDirection="column"
 		>
-
 			<>
 				<Flex
 					w="100%"
@@ -52,6 +53,8 @@ function CLSReport({
 					slideQna={slideQna}
 					setSlideQna={setSlideQna}
 					response={questionsResponse}
+					questionIndex={questionIndex}
+					slideId={slideId}
 				/>
 			</>
 			{/* )} */}

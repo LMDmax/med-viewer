@@ -2,11 +2,10 @@ import React, { useState, useEffect } from "react";
 
 import { Button, Tooltip, useToast, Flex, IconButton } from "@chakra-ui/react";
 import _ from "lodash";
+import { AiOutlineClose } from "react-icons/ai";
 
 import { useFabricOverlayState } from "../../state/store";
 import CLSReport from "./CLSReport";
-import { AiOutlineClose } from "react-icons/ai";
-
 
 function CLSReportHelper({
 	restProps,
@@ -18,6 +17,7 @@ function CLSReportHelper({
 	setSlideId,
 	responseHandler,
 	questionnaireResponse,
+	questionIndex,
 }) {
 	const { fabricOverlayState } = useFabricOverlayState();
 	const { viewerWindow } = fabricOverlayState;
@@ -44,7 +44,6 @@ function CLSReportHelper({
 			setQuestionsResponse(response?.data?.data);
 		}
 		fetchResponse();
-		
 	}, [showCLSreport]);
 
 	const handleCLSReport = () => {
@@ -77,6 +76,12 @@ function CLSReportHelper({
 			});
 		}
 	};
+	//open report if navigated through questions
+	useEffect(()=>{
+		if(questionIndex){
+				setShowCLSReport(true);
+		}
+	},[questionIndex]);
 	return (
 		<>
 			{!showCLSreport ? (
@@ -148,7 +153,7 @@ function CLSReportHelper({
 						Submit Report
 					</Button>
 				</Tooltip>
-			): showCLSreport ? (
+			) : showCLSreport ? (
 				<Flex w="100%" justifyContent="flex-end">
 					<IconButton
 						icon={<AiOutlineClose />}
@@ -173,10 +178,9 @@ function CLSReportHelper({
 					questionsResponse={questionsResponse}
 					slideId={slideId}
 					loading={loading}
+					questionIndex={questionIndex}
 				/>
-				
 			)}
-			
 		</>
 	);
 }

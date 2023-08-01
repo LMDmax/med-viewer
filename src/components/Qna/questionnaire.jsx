@@ -1,6 +1,8 @@
+import React, { useEffect,useRef } from "react";
+
 import { Box, Flex, Stack, Text, VStack } from "@chakra-ui/react";
 import _ from "lodash";
-import React from "react";
+
 import QuestionType from "./questionType";
 
 function Questionnaire({
@@ -11,8 +13,12 @@ function Questionnaire({
 	slideQna,
 	setSlideQna,
 	projectQnaType,
+	questionIndex,
+	slideId,
 	...restProps
 }) {
+	// console.log("agjhhgsjhasj", questionIndex);
+	const scrollRef = useRef(questionIndex);
 	const setQnaResponse = ({ questionId = null, choice = null, choiceType }) => {
 		setSlideQna((state) => {
 			const { qna } = state;
@@ -20,8 +26,15 @@ function Questionnaire({
 			return { qna: newQna };
 		});
 	};
-
-	
+	// useEffect(()=>{
+	// 	if(questionIndex) {
+	// 		scrollRef.current.scrollIntoView({
+	// 			behavior: "smooth",
+	// 			block: "nearest",
+	// 			inline: "start",
+	// 		});
+	// 	}
+	// },[questionIndex]);
 	return (
 		<VStack
 			spacing={6}
@@ -35,41 +48,58 @@ function Questionnaire({
 			fontSize="14px"
 			px="10px"
 		>
-			{questions && questions[0].LessonQuestions?.map((question, index) => {
-				console.log(question);
-				return (
-					<Stack
-						key={question?.Question?.id ? question?.Question?.id : index}
-						direction={direction}
-						spacing={4}
-						mt="15px"
-					>
-						<Text
-							// whiteSpace="nowrap"
-							// fontSize="14px"
-							color={question?.Question?.id === questions[1]?.questionId}
-						>{`Q${index + 1}: ${question?.Question?.questionText}`}</Text>
-						{response ? null : (
-							<Box>
-								<QuestionType
-									question={question}
-									direction={direction}
-									response={response}
-									setQnaResponse={setQnaResponse}
-									projectQnaType={projectQnaType}
-									slideQna={slideQna}
-								/>
-							</Box>
-						)}
-						{response && (
+			{questions &&
+				questions[0].LessonQuestions?.map((question, index) => {
+					return (
+						<Stack key={index} direction={direction} spacing={4} mt="15px" ref={scrollRef} w="100%" maxW="100%">
 							<Text>
-								Your response:{" "}
-								{response?.responses[index + 1]?.Question?.correctAnswer[0]}
+								<span
+									// style={{
+									// 	border: index === questionIndex && "1px solid #000",
+									// 	padding: index === questionIndex && "0.3rem 1rem",
+									// 	borderRadius: index === questionIndex && "0% 50% 50% 0%",
+									// }}
+								>{`Q${index + 1}:`}</span>
+								{` ${question?.Question?.questionText}`}
 							</Text>
-						)}
-					</Stack>
-				);
-			})}
+							{question?.Question?.referenceToSlides[0]?.slideData && (
+								<Flex w="100%" maxW="100%" justifyContent="flex-end" mt="-0.5rem !important">
+									{
+										question?.Question?.referenceToSlides[0]?.slideData?.toString()?.slice(
+											1,
+											question?.Question?.referenceToSlides[0]?.slideData?.lastIndexOf(
+												"-"
+											) - 1 ) === slideId ?
+										<Text color="#3B5D7C">Related to this slide</Text> :
+										<Text color="#3B5D7C">{`Refer to slide ${question?.Question?.referenceToSlides[0]?.slideData?.toString()?.substring(
+											question?.Question?.referenceToSlides[0]?.slideData?.lastIndexOf("-") + 1)
+											}`
+										}
+										</Text>
+									}
+								</Flex>
+							)}
+							{response ? null : (
+								<Box>
+									<QuestionType
+										question={question}
+										direction={direction}
+										response={response}
+										setQnaResponse={setQnaResponse}
+										projectQnaType={projectQnaType}
+										slideQna={slideQna}
+									/>
+								</Box>
+							)}
+							{response && (
+								<Text>
+									Your response:{" "}
+									{response?.responses[index + 1]?.Question?.correctAnswer[0]}
+								</Text>
+							)}
+						</Stack>
+					);
+				})}
 			{/* {questions[0].LessonQuestions?.map((question, index) => (
 				
 				

@@ -30,7 +30,7 @@ function CheckboxType({ question, response, setQnaResponse, slideQna }) {
 				{question?.Question?.choices?.map((choice, index) => (
 					<Checkbox
 						borderColor="#000"
-						key={choice}
+						key={`${index + 1}`}
 						value={choice}
 						checked
 						// borderWidth="thin"

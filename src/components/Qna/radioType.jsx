@@ -17,7 +17,7 @@ function RadioType({ question, response, handleChange, slideQna }) {
 				{question?.Question?.choices?.map((choice, index) => (
 					<Radio
 						borderColor="#000"
-						key={choice}
+						key={`${index + 1}`}
 						value={choice}
 						onChange={(e) => {
 							handleChange({
