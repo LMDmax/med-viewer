@@ -144,10 +144,10 @@ const ViewerControls = ({
     useLazyQuery(GET_XMLANNOTATION);
 
   //################## GET_FILTER_DATA #################
-  const [onGetFilterData, { data: filterResponseData, error: filterResponseError }] =
-    useLazyQuery(GET_ADJUSTMENT_RESULT);
-
-
+  const [
+    onGetFilterData,
+    { data: filterResponseData, error: filterResponseError },
+  ] = useLazyQuery(GET_ADJUSTMENT_RESULT);
 
   // ########## RUN MORPHOMETRY ##########################
   const [onVhutAnalysis, { data: analysis_data, error: analysis_error }] =
@@ -187,8 +187,6 @@ const ViewerControls = ({
       },
     });
 
-
-
   // console.log(viewer?.viewport?.getZoom(true));
   // console.log(viewer?.viewport?.getBounds());
   const bounds = viewer?.viewport?.getBounds();
@@ -202,50 +200,51 @@ const ViewerControls = ({
   const getFilters = (sliderInputs) => {
     const filters = [];
     if (sliderInputs.thresholding > -1)
-      filters.push(OpenSeadragon.Filters.THRESHOLDING(sliderInputs.thresholding));
+      filters.push(
+        OpenSeadragon.Filters.THRESHOLDING(sliderInputs.thresholding)
+      );
     return filters;
   };
 
-  useEffect(()=>{
-  if(filterResponseData){
-    if(filterResponseData.loadAdjustment.data !== null){
-      const sliderInputs = filterResponseData.loadAdjustment.data
-      if (!viewer) return;
-    // console.log(sliderInputs);
-    setNewSliderInputs({
-      contrast: sliderInputs.contrast,
-      brightness: sliderInputs.brightness,
-      thresholding: sliderInputs.thresholding,
-      gamma: sliderInputs.gamma,
-      exposure: 0,
-    })
-    const filters = getFilters(sliderInputs);
+  useEffect(() => {
+    if (filterResponseData) {
+      if (filterResponseData.loadAdjustment.data !== null) {
+        const sliderInputs = filterResponseData.loadAdjustment.data;
+        if (!viewer) return;
+        // console.log(sliderInputs);
+        setNewSliderInputs({
+          contrast: sliderInputs.contrast,
+          brightness: sliderInputs.brightness,
+          thresholding: sliderInputs.thresholding,
+          gamma: sliderInputs.gamma,
+          exposure: 0,
+        });
+        const filters = getFilters(sliderInputs);
 
-    try {
-      viewer.setFilterOptions({
-        filters: {
-          processors: [
-            ...filters,
-            OpenSeadragon.Filters.CONTRAST(sliderInputs.contrast),
-            OpenSeadragon.Filters.BRIGHTNESS(sliderInputs.brightness),
-            OpenSeadragon.Filters.GAMMA(sliderInputs.gamma),
-          ],
-        },
-        loadMode: "async",
-      });
-    } catch (err) {
-      console.error(err);
+        try {
+          viewer.setFilterOptions({
+            filters: {
+              processors: [
+                ...filters,
+                OpenSeadragon.Filters.CONTRAST(sliderInputs.contrast),
+                OpenSeadragon.Filters.BRIGHTNESS(sliderInputs.brightness),
+                OpenSeadragon.Filters.GAMMA(sliderInputs.gamma),
+              ],
+            },
+            loadMode: "async",
+          });
+        } catch (err) {
+          console.error(err);
+        }
+        toast({
+          title: "Adjustment loaded",
+          status: "success",
+          duration: 1500,
+          isClosable: true,
+        });
+      }
     }
-    toast({
-        title: "Adjustment loaded",
-        status: "success",
-        duration: 1500,
-        isClosable: true,
-      });
-    }
-  }
-  },[filterResponseData])
-
+  }, [filterResponseData]);
 
   const handleZoomIn = () => {
     try {
@@ -711,12 +710,28 @@ const ViewerControls = ({
           canvas.requestRenderAll();
           // console.log(annotatedData);
           if (annotatedData?.length > 0 && navigatorCounter === 0) {
-            toast({
-              title: "Annotation loaded",
-              status: "success",
-              duration: 1000,
-              isClosable: true,
-            });
+            const shapeAnnotation = annotatedData.filter(
+              (eachAnnotation) => eachAnnotation.type !== "textbox"
+            );
+            if (shapeAnnotation.length > 0) {
+              toast({
+                title: "Annotation loaded",
+                status: "success",
+                duration: 1000,
+                isClosable: true,
+              });
+            }
+            const textAnnotation = annotatedData.filter(
+              (eachAnnotation) => eachAnnotation.type == "textbox" && eachAnnotation.text !== ""
+            );
+            if (textAnnotation.length > 0) {
+              toast({
+                title: "Comment loaded",
+                status: "success",
+                duration: 1000,
+                isClosable: true,
+              });
+            }
             for (let i = 0; i < annotatedData.length; i++) {
               if (annotatedData[i].type === "textbox") {
                 const textbox = annotatedData[i];

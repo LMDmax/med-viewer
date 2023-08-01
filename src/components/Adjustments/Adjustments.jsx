@@ -162,15 +162,6 @@ const Adjustments = ({
         >
           Adjustments
         </Text>
-        <GrFormClose
-          size={20}
-          cursor="pointer"
-          _hover={{ cursor: "pointer" }}
-          onClick={() => {
-            handleOnClose();
-            handleSave();
-          }}
-        />
       </Flex>
       <VStack mb="30px" spacing={4}>
         <AdjustmentRow
