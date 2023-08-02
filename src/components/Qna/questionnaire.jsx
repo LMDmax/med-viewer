@@ -1,4 +1,4 @@
-import React, { useEffect,useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 import { Box, Flex, Stack, Text, VStack } from "@chakra-ui/react";
 import _ from "lodash";
@@ -26,15 +26,15 @@ function Questionnaire({
 			return { qna: newQna };
 		});
 	};
-	// useEffect(()=>{
-	// 	if(questionIndex) {
-	// 		scrollRef.current.scrollIntoView({
-	// 			behavior: "smooth",
-	// 			block: "nearest",
-	// 			inline: "start",
-	// 		});
-	// 	}
-	// },[questionIndex]);
+	useEffect(() => {
+		if (questionIndex) {
+			scrollRef.current.scrollIntoView({
+				behavior: "smooth",
+				block: "nearest",
+				inline: "start",
+			});
+		}
+	}, [questionIndex]);
 	return (
 		<VStack
 			spacing={6}
@@ -42,41 +42,70 @@ function Questionnaire({
 			mt="0px"
 			align="flex-start"
 			{...restProps}
-			bgColor="#fff"
+			bgColor="#fcfcfc"
+			overflowY="scroll"
 			h="100%"
+			w="100%"
 			fontFamily="inter"
 			fontSize="14px"
 			px="10px"
+			pb="20px"
 		>
 			{questions &&
-				questions[0].LessonQuestions?.map((question, index) => {
+				questions[0]?.LessonQuestions?.map((question, index) => {
 					return (
-						<Stack key={index} direction={direction} spacing={4} mt="15px" ref={scrollRef} w="100%" maxW="100%">
-							<Text>
+						<Stack
+							key={index}
+							direction={direction}
+							spacing={4}
+							mt="15px"
+							ref={scrollRef}
+							w="100%"
+							maxW="100%"
+							pb="10px"
+						>
+							<Text
+								wordBreak="break-word"
+								whiteSpace="pre-wrap"
+								maxWidth="100%"
+								overflowWrap="break-word"
+							>
 								<span
-									// style={{
-									// 	border: index === questionIndex && "1px solid #000",
-									// 	padding: index === questionIndex && "0.3rem 1rem",
-									// 	borderRadius: index === questionIndex && "0% 50% 50% 0%",
-									// }}
+								// style={{
+								// 	border: index === questionIndex && "1px solid #000",
+								// 	padding: index === questionIndex && "0.3rem 1rem",
+								// 	borderRadius: index === questionIndex && "0% 50% 50% 0%",
+								// }}
 								>{`Q${index + 1}:`}</span>
 								{` ${question?.Question?.questionText}`}
 							</Text>
 							{question?.Question?.referenceToSlides[0]?.slideData && (
-								<Flex w="100%" maxW="100%" justifyContent="flex-end" mt="-0.5rem !important">
-									{
-										question?.Question?.referenceToSlides[0]?.slideData?.toString()?.slice(
+								<Flex
+									w="100%"
+									maxW="100%"
+									justifyContent="flex-end"
+									mt="-0.5rem !important"
+								>
+									{question?.Question?.referenceToSlides[0]?.slideData
+										?.toString()
+										?.slice(
 											1,
 											question?.Question?.referenceToSlides[0]?.slideData?.lastIndexOf(
 												"-"
-											) - 1 ) === slideId ?
-										<Text color="#3B5D7C">Related to this slide</Text> :
-										<Text color="#3B5D7C">{`Refer to slide ${question?.Question?.referenceToSlides[0]?.slideData?.toString()?.substring(
-											question?.Question?.referenceToSlides[0]?.slideData?.lastIndexOf("-") + 1)
-											}`
-										}
+											) - 1
+										) === slideId ? (
+										<Text color="#3B5D7C">Related to this slide</Text>
+									) : (
+										<Text color="#3B5D7C">
+											{`Refer to slide ${question?.Question?.referenceToSlides[0]?.slideData
+												?.toString()
+												?.substring(
+													question?.Question?.referenceToSlides[0]?.slideData?.lastIndexOf(
+														"-"
+													) + 1
+												)}`}
 										</Text>
-									}
+									)}
 								</Flex>
 							)}
 							{response ? null : (
