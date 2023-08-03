@@ -20,9 +20,12 @@ function CheckboxType({ question, response, setQnaResponse, slideQna }) {
 		<CheckboxGroup
 			name={question?.Question?.id}
 			defaultValue={
-				!_.isEmpty(response) ? response[question?.Question?.id]?.choiceId : ""
+				!_.isEmpty(response)
+					? response[question?.Question?.id]?.choiceId
+					: question?.Question?.correctAnswer &&
+					  question?.Question?.correctAnswer
 			}
-			isDisabled={!_.isEmpty(response)}
+			isDisabled={!_.isEmpty(response) || question?.Question?.correctAnswer}
 			ml="10px"
 			onChange={handleChange}
 		>

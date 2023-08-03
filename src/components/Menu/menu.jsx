@@ -270,15 +270,15 @@ function FunctionsMenu({
 			// console.log(slide?.originalName);
 		}
 	}, [slide]);
-	//open report if navigated through questions
-	useEffect(()=>{
-		if(questionIndex){
-			setTimeout(()=>{
+	// open report if navigated through questions
+	useEffect(() => {
+		if (questionIndex >= 0) {
+			setTimeout(() => {
 				setSelectedOption("report");
 				setIsOpen(true);
-			},500)
+			}, 500);
 		}
-	},[questionIndex])
+	}, [questionIndex]);
 
 	useEffect(() => {
 		if (searchSelectedData) {
@@ -860,7 +860,7 @@ function FunctionsMenu({
 								searchSelectedData={searchSelectedData}
 							/>
 						) : selectedOption === "report" ? (
-							<Flex w="100%"  h="82vh" direction="column" bgColor="#FCFCFC">
+							<Flex w="100%" h="82vh" direction="column" bgColor="#FCFCFC">
 								<Flex
 									w="100%"
 									direction="row"

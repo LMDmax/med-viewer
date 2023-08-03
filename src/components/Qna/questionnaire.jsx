@@ -27,7 +27,7 @@ function Questionnaire({
 		});
 	};
 	useEffect(() => {
-		if (questionIndex) {
+		if (questionIndex >= 0) {
 			scrollRef.current.scrollIntoView({
 				behavior: "smooth",
 				block: "nearest",
@@ -123,7 +123,9 @@ function Questionnaire({
 							{response && (
 								<Text>
 									Your response:{" "}
-									{response?.responses[index + 1]?.Question?.correctAnswer[0]}
+									{response?.responses[index + 1]?.response
+										? response?.responses[index + 1]?.response
+										: "-"}
 								</Text>
 							)}
 						</Stack>

@@ -25,7 +25,13 @@ function TextType({
 			// 		? response[question?.Question?.id]?.choiceText
 			// 		: slideQna?.response?.[question?.Question?.id]?.choiceText ?? ""
 			// }
-			isDisabled={!_.isEmpty(response)}
+			defaultValue={
+				!_.isEmpty(response)
+					? response[question?.Question?.id]?.choiceId
+					: question?.Question?.correctAnswer &&
+					  question?.Question?.correctAnswer
+			}
+			isDisabled={!_.isEmpty(response) || question?.Question?.correctAnswer}
 			border="none"
 			borderBottom="1px solid"
 			borderRadius="none"

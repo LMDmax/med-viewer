@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
 
-import { Button, Tooltip, useToast, Flex, IconButton } from "@chakra-ui/react";
+import {
+	Button,
+	Tooltip,
+	useToast,
+	Flex,
+	IconButton,
+	Text,
+} from "@chakra-ui/react";
 import _ from "lodash";
 import { AiOutlineClose } from "react-icons/ai";
 
@@ -24,6 +31,7 @@ function CLSReportHelper({
 	const { slideId } = viewerWindow[viewerId];
 	const [showCLSreport, setShowCLSReport] = useState(false);
 	const [questionsResponse, setQuestionsResponse] = useState();
+	const [errorMessage, setErrorMessage] = useState();
 	const [slideQuestions, setSlideQuestions] = useState();
 	const [loading, setLoading] = useState(false);
 	const [isUpdating, setIsUpdating] = useState(false);
@@ -34,15 +42,17 @@ function CLSReportHelper({
 
 	// get questions and response
 	const lessonId = caseInfo?.id;
+	async function fetchResponse() {
+		const response = await questionnaireResponse({
+			lessonId,
+		});
+		setQuestionsResponse(response?.data?.data);
+		setErrorMessage(response?.error?.response?.data?.message);
+	}
 	useEffect(() => {
 		setIsUpdating(true);
 		if (app === "education") setSlideId(slideId);
-		async function fetchResponse() {
-			const response = await questionnaireResponse({
-				lessonId,
-			});
-			setQuestionsResponse(response?.data?.data);
-		}
+
 		fetchResponse();
 	}, [showCLSreport]);
 
@@ -58,14 +68,9 @@ function CLSReportHelper({
 				lessonId,
 				response,
 			});
-			setShowCLSReport(!showCLSreport);
+			fetchResponse();
+			setShowCLSReport(false);
 			setLoading(false);
-			toast({
-				status: "success",
-				title: "Successfully Reported",
-				duration: 1500,
-				isClosable: true,
-			});
 		} catch (err) {
 			toast({
 				status: "error",
@@ -76,14 +81,14 @@ function CLSReportHelper({
 			});
 		}
 	};
-	//open report if navigated through questions
-	useEffect(()=>{
-		if(questionIndex){
-				setShowCLSReport(true);
+	// open report if navigated through questions
+	useEffect(() => {
+		if (questionIndex >= 0) {
+			setShowCLSReport(true);
 		}
-	},[questionIndex]);
+	}, [questionIndex]);
 	return (
-		<>
+		<Flex direction="column">
 			{!showCLSreport ? (
 				<Tooltip
 					label="Report"
@@ -117,7 +122,9 @@ function CLSReportHelper({
 						Report
 					</Button>
 				</Tooltip>
-			) : !questionsResponse && userInfo?.userType !== "professor" ? (
+			) : !questionsResponse &&
+			  userInfo?.userType !== "professor" &&
+			  errorMessage !== "Result  is not publish yet" ? (
 				<Tooltip
 					label="Submit-Report"
 					placement="bottom"
@@ -147,6 +154,7 @@ function CLSReportHelper({
 						{...restProps}
 						onClick={submitQnaReport}
 						disabled={
+							questions &&
 							questions[0]?.LessonQuestions?.length !== response?.length
 						}
 					>
@@ -165,23 +173,25 @@ function CLSReportHelper({
 					/>
 				</Flex>
 			) : null}
-			{showCLSreport && (
-				<CLSReport
-					isUpdating={isUpdating}
-					questions={questions}
-					caseInfo={caseInfo}
-					userInfo={userInfo}
-					responseHandler={responseHandler}
-					handleCLSReport={handleCLSReport}
-					slideQna={slideQna}
-					setSlideQna={setSlideQna}
-					questionsResponse={questionsResponse}
-					slideId={slideId}
-					loading={loading}
-					questionIndex={questionIndex}
-				/>
-			)}
-		</>
+			<Flex>
+				{showCLSreport && errorMessage !== "Result  is not publish yet" && (
+					<CLSReport
+						isUpdating={isUpdating}
+						questions={questions}
+						caseInfo={caseInfo}
+						userInfo={userInfo}
+						responseHandler={responseHandler}
+						handleCLSReport={handleCLSReport}
+						slideQna={slideQna}
+						setSlideQna={setSlideQna}
+						questionsResponse={questionsResponse}
+						slideId={slideId}
+						loading={loading}
+						questionIndex={questionIndex}
+					/>
+				)}
+			</Flex>
+		</Flex>
 	);
 }
 
