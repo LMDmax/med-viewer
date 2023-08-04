@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Stack, Checkbox, CheckboxGroup } from "@chakra-ui/react";
+import { Stack, Checkbox, CheckboxGroup, Text } from "@chakra-ui/react";
 import _ from "lodash";
 
 function CheckboxType({ question, response, setQnaResponse, slideQna }) {
@@ -44,7 +44,14 @@ function CheckboxType({ question, response, setQnaResponse, slideQna }) {
 						//   })
 						// }
 					>
-						{choice}
+						<Text
+							wordBreak="break-word"
+							whiteSpace="pre-wrap"
+							maxWidth="100%"
+							overflowWrap="break-word"
+						>
+							{choice}
+						</Text>
 					</Checkbox>
 				))}
 			</Stack>

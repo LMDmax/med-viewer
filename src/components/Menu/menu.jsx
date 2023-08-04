@@ -459,7 +459,7 @@ function FunctionsMenu({
 						: "70px",
 				}}
 				style={{
-					overflowY: isOpen ? "scroll" : "hidden",
+					overflowY: isOpen && selectedOption !== "report" ? "scroll" : "hidden",
 					overflowX: "hidden",
 					whiteSpace: "nowrap",
 					position: "absolute",

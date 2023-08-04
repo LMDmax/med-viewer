@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-import { RadioGroup, Stack, Radio } from "@chakra-ui/react";
+import { RadioGroup, Stack, Radio, Text } from "@chakra-ui/react";
 import _ from "lodash";
 
 function RadioType({ question, response, handleChange, slideQna }) {
@@ -31,7 +31,14 @@ function RadioType({ question, response, handleChange, slideQna }) {
 						checked
 						borderWidth="thin"
 					>
-						{choice}
+						<Text
+							wordBreak="break-word"
+							whiteSpace="pre-wrap"
+							maxWidth="100%"
+							overflowWrap="break-word"
+						>
+							{choice}
+						</Text>
 					</Radio>
 				))}
 			</Stack>

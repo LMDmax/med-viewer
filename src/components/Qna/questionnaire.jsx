@@ -44,12 +44,11 @@ function Questionnaire({
 			{...restProps}
 			bgColor="#fcfcfc"
 			overflowY="scroll"
-			h="100%"
+			h="80%"
 			w="100%"
 			fontFamily="inter"
 			fontSize="14px"
 			px="10px"
-			pb="20px"
 		>
 			{questions &&
 				questions[0]?.LessonQuestions?.map((question, index) => {
@@ -94,9 +93,23 @@ function Questionnaire({
 												"-"
 											) - 1
 										) === slideId ? (
-										<Text color="#3B5D7C">Related to this slide</Text>
+										<Text
+											wordBreak="break-word"
+											whiteSpace="pre-wrap"
+											maxWidth="80%"
+											overflowWrap="break-word"
+											color="#3B5D7C"
+										>
+											Related to this slide
+										</Text>
 									) : (
-										<Text color="#3B5D7C">
+										<Text
+											wordBreak="break-word"
+											whiteSpace="pre-wrap"
+											maxWidth="100%"
+											overflowWrap="break-word"
+											color="#3B5D7C"
+										>
 											{`Refer to slide ${question?.Question?.referenceToSlides[0]?.slideData
 												?.toString()
 												?.substring(
