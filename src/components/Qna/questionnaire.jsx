@@ -26,15 +26,15 @@ function Questionnaire({
 			return { qna: newQna };
 		});
 	};
-	// useEffect(() => {
-	// 	if (questionIndex >= 0) {
-	// 		scrollRef.current.scrollIntoView({
-	// 			behavior: "smooth",
-	// 			block: "nearest",
-	// 			inline: "start",
-	// 		});
-	// 	}
-	// }, [questionIndex]);
+	useEffect(() => {
+		if (questionIndex >= 0) {
+			scrollRef.current.scrollIntoView({
+				behavior: "smooth",
+				block: "nearest",
+				inline: "start",
+			});
+		}
+	}, [questionIndex]);
 	return (
 		<VStack
 			spacing={6}
