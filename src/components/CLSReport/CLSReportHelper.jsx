@@ -88,7 +88,7 @@ function CLSReportHelper({
 		}
 	}, [questionIndex]);
 	return (
-		<Flex direction="column" border="2px solid green">
+		<Flex direction="column" >
 			{!showCLSreport ? (
 				<Tooltip
 					label="Report"
