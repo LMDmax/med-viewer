@@ -26,6 +26,7 @@ function Questionnaire({
 			return { qna: newQna };
 		});
 	};
+
 	useEffect(() => {
 		if (questionIndex >= 0) {
 			scrollRef.current.scrollIntoView({

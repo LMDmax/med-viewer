@@ -440,8 +440,9 @@ function FunctionsMenu({
 		<Box
 			pos="absolute"
 			right={0}
+			top={128}
 			background="#FFFFFF"
-			// border="1px solid red"
+			border="1px solid red"
 			zIndex={10}
 			mt="2px"
 			h={ifWidthLessthan1920 ? "calc(100vh - 18vh)" : "calc(100vh - 18vh)"}
