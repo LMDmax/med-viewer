@@ -16,18 +16,18 @@ function RadioType({ question, response, handleChange, slideQna }) {
 			isDisabled={!_.isEmpty(response) || question?.Question?.correctAnswer}
 			ml="10px"
 		>
-			<Stack spacing={4} wrap="wrap" fontSize="12px" fontFamily="inter">
+			<Stack  spacing={4} direction="column"  fontSize="12px" fontFamily="inter">
 				{question?.Question?.choices?.map((choice, index) => (
 					<Radio
 						borderColor="#000"
 						key={`${index + 1}`}
 						value={choice}
-						// onChange={(e) => {
-						// 	handleChange({
-						// 		questionId: question?.Question?.id,
-						// 		choice: e.target.value,
-						// 	});
-						// }}
+						onChange={(e) => {
+							handleChange({
+								questionId: question?.Question?.id,
+								choice: e.target.value,
+							});
+						}}
 						checked
 						borderWidth="thin"
 					>
