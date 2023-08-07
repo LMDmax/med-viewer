@@ -440,7 +440,6 @@ function FunctionsMenu({
 		<Box
 			pos="absolute"
 			right={0}
-			top={128}
 			background="#FFFFFF"
 			zIndex={10}
 			mt="2px"
