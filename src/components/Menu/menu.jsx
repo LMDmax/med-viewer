@@ -466,7 +466,6 @@ function FunctionsMenu({
           right: isOpen ? "0" : "0",
           height: "82vh",
           top: "0",
-          border: "1px solid red",
         }}
       >
         <Flex>
