@@ -9,6 +9,7 @@ import {
   addToActivityFeed,
   updateIsViewportAnalysing,
 } from "../../state/actions/fabricOverlayActions";
+import { fabric } from "fabric"; 
 import {
   createAnnotationMessage,
   getFileBucketFolder,

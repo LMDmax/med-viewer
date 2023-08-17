@@ -32,7 +32,8 @@ const TypeTools = ({
   const { fabricOverlayState } = useFabricOverlayState();
   const toast = useToast();
 
-  const fabricOverlay = fabricOverlayState.viewerWindow[viewerId]?.fabricOverlay;
+  const fabricOverlay =
+    fabricOverlayState.viewerWindow[viewerId]?.fabricOverlay;
   // console.log(viewerId);
   // console.log("2",viewerIds);
   fabric.IText.prototype.onKeyDown = (e) => {
@@ -41,7 +42,8 @@ const TypeTools = ({
     }
   };
 
-  const [removeAnnotation, { error: deleteError }] = useMutation(DELETE_ANNOTATION);
+  const [removeAnnotation, { error: deleteError }] =
+    useMutation(DELETE_ANNOTATION);
   if (deleteError) {
     toast({
       title: "Annotation could not be deleted",
@@ -66,7 +68,15 @@ const TypeTools = ({
           ...data,
           app: application,
           createdBy: `${userInfo?.firstName} ${userInfo?.lastName}`,
-          caseId: caseId? caseId : lessonId
+          // caseId: caseId? caseId : lessonId
+          caseId:
+            application === "hospital"
+              ? caseId
+              : application === "education"
+              ? lessonId
+              : application === "clinical"
+              ? caseInfo.caseId
+              : "",
         },
       },
     });

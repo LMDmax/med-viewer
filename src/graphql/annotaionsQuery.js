@@ -506,3 +506,146 @@ export const TUMOR_DETECTION_SUBSCRIPTION = gql`
     }
   }
 `;
+
+export const GET_STANDARD_REPORT = gql`
+  query Query($query: LoadReportInput) {
+    loadReport(query: $query) {
+      data {
+        clinicalDescription
+        grossDescription
+        microscopicDescription
+        impression
+        advise
+        annotatedSlides
+        uploadedBy
+        mediaUrls
+      }
+      message
+      success
+    }
+  }
+`;
+export const SAVE_STANDARD_REPORT = gql`
+  mutation Mutation($body: CreateReportInput!) {
+    autoSaveReport(body: $body) {
+      data {
+        clinicalDescription
+        grossDescription
+        microscopicDescription
+        impression
+        advise
+        annotatedSlides
+        uploadedBy
+        mediaUrls
+      }
+      message
+      success
+    }
+  }
+`;
+
+export const GET_SYNOPTIC_REPORT = gql`
+  query LoadSynopticReport($query: LoadReportInput) {
+    loadSynopticReport(query: $query) {
+      data {
+        uploadedBy
+        dataRecieved
+        specimenType
+        specimenRadiographProvided
+        radiologyAbnormalitySeen
+        rGrade
+        radiologyLesion
+        specimenWeight
+        ellipseOfSkin
+        nipple
+        histologicalClassificationPresent
+        fibrofattyTissue
+        lesionMeasures
+        site
+        macroscopicDistanceToMargin
+        comments
+        invasiveTumourSize
+        wholeTumourSize
+        invasiveGrade
+        tumourExtent
+        type
+        typeForComponents
+        grade
+        associatedDcis
+        isSituLobularNeoplasia
+        dcisGrade
+        isPagetDisease
+        isLcis
+        pureDcisSize
+        pureDcisGrade
+        dcisArchitecture
+        dcisNecrosis
+        microInvasion
+        pagetDisease
+        typeOfSpecimen
+        dateOfRequest
+        principalClinician
+        siteOfBiopsy
+        laterability
+        reasonForBiopsy
+        involvedSiteOrPatternOfDiseasesSpread
+        clinicalOrStagesExtentOfDiseases
+        constitutionalSymptoms
+        furtherClinicalInformation
+        specimenSize
+        narrativeOrMicroscopicDescription
+        abnormalCells
+        abnormalCellSize
+        abnormalCellCytomorphology
+        abnormalCellProLiferativeIndicators
+        immunoHistoChemistry
+        flowStudies
+        clonality
+        whoDiseaseSubType
+        ancillaryAbnormalCellSize
+        ancillaryCytomorphology
+        ancillaryProLiferativeIndicators
+        isPreviousHistory
+        previousBiopsy
+        previousTherapy
+        preBiopsySerumPSA
+        clinicalSymptoms
+        clinicalStage
+        leftBaseCores
+        leftBaseLength
+        leftBaseHistologicalTumourType
+        coExistentPathology
+        leftMidCores
+        leftMidLength
+        leftMidHistologicalTumourType
+        leftMidGleasonScore
+        isUpGrade
+        gleasonPattern
+        leftMidPerineuralInvasion
+        leftMidSeminalInvasion
+        leftMidLymphovascularInvasion
+        leftMidExtraprostateExtension
+        leftMidIntraductualProstate
+        leftMidCoexistentExtension
+        leftApexCores
+        leftApexLength
+        leftApexPerineuralInvasion
+        leftApexSeminalInvasion
+        leftApexLymphovascularInvasion
+        leftApexExtraprostateExtension
+        leftApexIntraductualProstate
+        leftApexCoexistentExtension
+        rightBaseCores
+        rightBaseLength
+        rightMidCores
+        rightMidLength
+        rightApexCores
+        rightApexLength
+        reportType
+      }
+      message
+      success
+    }
+  }
+`;
+

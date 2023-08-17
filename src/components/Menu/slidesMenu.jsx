@@ -4,6 +4,8 @@ import Scrollbars from "react-custom-scrollbars";
 import { useFabricOverlayState } from "../../state/store";
 import { getSlideUrl, zoomToLevel } from "../../utility/utility";
 import { v4 as uuidv4 } from "uuid";
+import { fabric } from "fabric"; 
+
 import {
   changeTile,
   updateTool,

@@ -148,6 +148,12 @@ const CommentBox = ({
       const initialContent = "";
       const defaultWidth = 100;
 
+      const left = origX;
+      const top = origY - 48;
+      const width = defaultWidth;
+      const height = 48; // Set an appropriate height for the textbox
+
+
       const text = new fabric.Textbox(initialContent, {
         width: defaultWidth,
         left: origX,

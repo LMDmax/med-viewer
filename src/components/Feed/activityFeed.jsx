@@ -145,7 +145,7 @@ function CustomTabPanel({ children, title, annotation, totalCells, ...props }) {
 
 const MotionBox = motion(Box);
 
-const annotationFeed = ({
+const AnnotationFeed = ({
   userInfo,
   viewerId,
   totalCells,
@@ -1281,4 +1281,4 @@ const annotationFeed = ({
   );
 };
 
-export default annotationFeed;
+export default AnnotationFeed;

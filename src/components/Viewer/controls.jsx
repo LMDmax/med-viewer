@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import OpenSeadragon from "openseadragon";
 import "./zoom-levels";
 import "./openseadragon-scalebar";
+import { fabric } from "fabric"; 
 import { useLazyQuery, useMutation, useSubscription } from "@apollo/client";
 import {
   VStack,
@@ -10,6 +11,13 @@ import {
   Flex,
   Text,
   Box,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
 } from "@chakra-ui/react";
 import axios from "axios";
 import Draggable from "react-draggable";
@@ -1447,35 +1455,6 @@ const ViewerControls = ({
           <ShowMetric viewerId={viewerId} slide={slide} />
         </Flex>
       </Box>
-      {isKI67Open ? (
-        <Box
-          position="absolute"
-          top="50%"
-          left="50%"
-          transform="translate(-50%, -50%)"
-          zIndex="999"
-        >
-          <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>Create your account</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody pb={6}>
-                <Lorem count={2} />
-              </ModalBody>
-
-              <ModalFooter>
-                <Button colorScheme="blue" mr={3}>
-                  Save
-                </Button>
-                <Button onClick={onClose}>Cancel</Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
-        </Box>
-      ) : (
-        ""
-      )}
     </Box>
   );
 };
