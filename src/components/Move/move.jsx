@@ -256,7 +256,7 @@ function Move({
           navigatorCounter={navigatorCounter}
         />
 
-        {enableFilters || application === "clinical" ? (
+        {enableFilters ? (
           <FilterAdjustments
             setToolSelected={setToolSelected}
             viewerId={viewerId}
