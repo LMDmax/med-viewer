@@ -124,12 +124,11 @@ const Normalisation = ({
     setShowNormalizeButton(false);
   };
 
-  useEffect(()=>{
-    if(originalPixels.length > 0){
-    setShowNormalizeButton(false);
-
+  useEffect(() => {
+    if (originalPixels.length > 0) {
+      setShowNormalizeButton(false);
     }
-  },[originalPixels])
+  }, [originalPixels]);
 
   const BackToDefaultPixels = () => {
     if (originalPixels.length > 0) {
@@ -359,7 +358,6 @@ const Normalisation = ({
                   bg="#c6dcee"
                   variant="solid"
                   onClick={() => {
-                    console.log("sadsadsadsad")
                     setNormalizeDefault(true);
                     // setShowRightPanel(false);
                     localStorage.removeItem("mode");

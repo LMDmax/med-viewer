@@ -19,6 +19,7 @@ function CLSReport({
 	questionsResponse,
 	loading,
 	isUpdating,
+	application,
 	questionIndex,
 	slideId,
 }) {
@@ -55,6 +56,7 @@ function CLSReport({
 					response={questionsResponse}
 					questionIndex={questionIndex}
 					slideId={slideId}
+					application={application}
 				/>
 			</>
 			{/* )} */}

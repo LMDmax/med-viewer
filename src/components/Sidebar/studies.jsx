@@ -9,7 +9,7 @@ import { useFabricOverlayState } from "../../state/store";
 
 const Studies = ({ caseInfo, slideInfo, viewerId }) => {
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
-  const { viewerWindow, isAnnotationLoading,  } = fabricOverlayState;
+  const { viewerWindow, isAnnotationLoading } = fabricOverlayState;
   const { slideName } = viewerWindow[viewerId];
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
   const caseDetails = {
@@ -23,17 +23,18 @@ const Studies = ({ caseInfo, slideInfo, viewerId }) => {
       : "-",
   };
 
-  console.log(slideInfo);
   // console.log("case",caseInfo);
 
   const full = caseInfo?.caseId;
-const lastSlashIndex = full.lastIndexOf('/');
-const result = full.substring(lastSlashIndex + 1);
+  const lastSlashIndex = full.lastIndexOf("/");
+  const result = full.substring(lastSlashIndex + 1);
 
-// console.log(result); // Output: e43sl
+  // console.log(result); // Output: e43sl
 
-const searchBySlidename = slideInfo?.slideName;
-const index = caseInfo?.slides.findIndex(obj => obj.slideName === searchBySlidename);
+  const searchBySlidename = slideInfo?.slideName;
+  const index = caseInfo?.slides.findIndex(
+    (obj) => obj.slideName === searchBySlidename
+  );
 
   const patientDetails = {
     UHID: `${caseInfo?.patient?.uhid}`,
@@ -48,29 +49,33 @@ const index = caseInfo?.slides.findIndex(obj => obj.slideName === searchBySliden
       : "-",
   };
 
-  const date = slideInfo?.uploadedAt
-  const localDate = new Date(date).toLocaleDateString("en-GB")
+  const date = slideInfo?.uploadedAt;
+  const localDate = new Date(date).toLocaleDateString("en-GB");
 
   const imageDetails = {
-    "Accession Id" : slideInfo?.accessionId,
+    "Accession Id": slideInfo?.accessionId,
     Title: slideInfo?.slideName || slideInfo?.originalName?.split(".")?.[0],
     // "Case Title": caseInfo?.caseName,
-    "Case Id" : caseInfo?.caseId,
-    "Slide Id":`${result}/${slideInfo.grossId}/${slideInfo.blockId}/${index + 1}`,
+    "Case Id": caseInfo?.caseId,
+    "Slide Id": `${result}/${slideInfo.grossId}/${slideInfo.blockId}/${
+      index + 1
+    }`,
     Location: "My Folder/Cases/203-11-22-22-UHID/SLIDE 1",
     Type: slideInfo?.originalName?.split(".")?.[1]?.toUpperCase(),
     "Orgininal Slide Name": slideInfo?.originalName,
     Size: "100 mb",
     "Stain Type": slideInfo?.stainType,
-    "Marker Type" : slideInfo.bioMarkerType? slideInfo.bioMarkerType : "-",
+    "Marker Type": slideInfo.bioMarkerType ? slideInfo.bioMarkerType : "-",
     // "Gross Id" : "G1",
     // "Block Id" : "B1",
     // "Slide Id" : "A125/G1/B1/S1",
     Dimension: "1280 x 720 px",
     Resolution: "148 dpi",
     Scanner: "NanoZoomer S360",
-    "Uploaded At": localDate ,
-    "Uploaded By": `Dr. ${slideInfo?.metadata.find(m => m.Key === 'uploaded by')?.Value}`,
+    "Uploaded At": localDate,
+    "Uploaded By": `Dr. ${
+      slideInfo?.metadata.find((m) => m.Key === "uploaded by")?.Value
+    }`,
     "Shared With": slideInfo?.metadata?.doctor || "Dr. Sharma",
   };
 

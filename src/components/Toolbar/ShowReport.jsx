@@ -69,6 +69,7 @@ function ShowReport({
 				questions={questions}
 				caseInfo={caseInfo}
 				userInfo={userInfo}
+				application={application}
 				responseHandler={responseHandler}
 				viewerId={viewerId}
 				app={app}

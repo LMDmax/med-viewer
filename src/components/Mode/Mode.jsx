@@ -32,14 +32,11 @@ const Mode = ({
     setIsOpen(!isOpen);
   };
 
-  console.log(AdjustmentTool);
-
   useEffect(() => {
-    if (showNormalisationCount)  {
+    if (showNormalisationCount) {
       localStorage.setItem("mode", "normalisation");
       setShowRightPanel(true);
-      setImageFilter(true)
-
+      setImageFilter(true);
     }
   }, [showNormalisationCount]);
 

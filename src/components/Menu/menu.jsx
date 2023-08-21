@@ -198,7 +198,6 @@ function FunctionsMenu({
     }
   }, [chatFeedBar]);
   useEffect(() => {
-    console.log("abscd", toolSelected)
     if (toolSelected !== "Filter" && selectedOption !== "annotations") {
       setAdjustmentTool(false);
     }
@@ -930,26 +929,26 @@ function FunctionsMenu({
               </Flex>
             ) : selectedOption === "messages" ? (
               // <ApolloProvider client={apolloClient}>
-                <ChatFeed
-                  viewerId={viewerId}
-                  chatFeedBar={chatFeedBar}
-                  handleChatFeedBarClose={handleChatFeedBarClose}
-                  showReport={showReport}
-                  feedTab={feedTab}
-                  setChatFeedBar={setChatFeedBar}
-                  userInfo={userInfo}
-                  caseInfo={caseInfo}
-                  synopticType={synopticType}
-                  application={application}
-                  app={application}
-                  users={users}
-                  client2={client2}
-                  mentionUsers={mentionUsers}
-                  Environment={Environment}
-                  addUsersToCase={addUsersToCase}
-                />
-              // </ApolloProvider>
-            ) : selectedOption === "adjustments" ? (
+              <ChatFeed
+                viewerId={viewerId}
+                chatFeedBar={chatFeedBar}
+                handleChatFeedBarClose={handleChatFeedBarClose}
+                showReport={showReport}
+                feedTab={feedTab}
+                setChatFeedBar={setChatFeedBar}
+                userInfo={userInfo}
+                caseInfo={caseInfo}
+                synopticType={synopticType}
+                application={application}
+                app={application}
+                users={users}
+                client2={client2}
+                mentionUsers={mentionUsers}
+                Environment={Environment}
+                addUsersToCase={addUsersToCase}
+              />
+            ) : // </ApolloProvider>
+            selectedOption === "adjustments" ? (
               <Adjustments
                 setSelectedOption={setSelectedOption}
                 setToolSelected={setToolSelected}

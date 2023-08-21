@@ -108,7 +108,6 @@ function LayoutApp({
     viewerIds?.[0]?._id || viewerIds?.[0]?.slideId
   );
 
-  console.log('slideInfo',normalizeDefault);
   const [showAnnotationsBar, setShowAnnotationsBar] = useState(false);
   const [slideName, setSlideName] = useState(slide?.slideName);
   const [slideName2, setSlideName2] = useState(null);
@@ -211,7 +210,6 @@ function LayoutApp({
           },
           fetchPolicy: "network-only",
         });
-        console.log(response.data.loadReport.data);
         // You can also update the slide data with the new standardReportData
         setSlideData(response.data.loadReport.data);
       } catch (error) {
@@ -426,7 +424,6 @@ function LayoutApp({
   			console.error("WebSocket connection error:", error);
   		});
   }, []);
-  console.log(currentViewer);
 
   let h;
 
