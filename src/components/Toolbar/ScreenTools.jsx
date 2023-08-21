@@ -79,7 +79,7 @@ function ScreenTools({
 
   return (
     <Flex h="100%" w="25%" alignItems="center" justifyContent="flex-end">
-      {/* <ImageFilter
+      <ImageFilter
         imageFilter={imageFilter}
         normalizeDefault={normalizeDefault}
         socketRef={socketRef}
@@ -89,7 +89,7 @@ function ScreenTools({
         navigatorCounter={navigatorCounter}
         setToolSelected={setToolSelected}
         viewerId={viewerId}
-      /> */}
+      />
       <DownloadImage  viewerId={viewerId} setToolSelected={setToolSelected} />
       {application === "hospital" && (
        

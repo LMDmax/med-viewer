@@ -104,7 +104,7 @@ const ImageFilter = ({
   // console.log("Open Connections:", connectionCountRef.current);
 
   const sendRequest = (pixelsData) => {
-    // console.log(pixelsData);
+    console.log(pixelsData);
     return new Promise((resolve) => {
       const requestCallback = (imageData) => {
         resolve(imageData);
@@ -113,8 +113,8 @@ const ImageFilter = ({
       requestQueueRef.current.push(requestCallback);
       // console.log(isConnected);
       if (array.length > 0) {
-        // console.log("sending");
-        // setLoadUI(false);
+        console.log("sending");
+        setLoadUI(false);
         socketRef.current.send(JSON.stringify(pixelsData));
       }
     });
@@ -185,8 +185,7 @@ const ImageFilter = ({
 
   useEffect(() => {
     if (normalizeDefault) {
-      console.log("nn", normalizeDefault)
-      // handleOkay();
+      handleOkay();
     }
   }, [normalizeDefault]);
 
