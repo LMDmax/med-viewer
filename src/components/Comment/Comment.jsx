@@ -49,7 +49,7 @@ const CommentBox = ({
   const toast = useToast();
   const caseData = JSON.parse(localStorage.getItem("caseData"));
   const [textBoxData, setTextBoxData] = useState("");
-  const caseId = caseInfo?._id || caseInfo?.id;
+  const caseId = caseInfo?._id || caseInfo?.id || caseInfo.caseId;
   const [
     modifyAnnotation,
     { data: updatedData, error: updateError, loading: updateLoading },

@@ -185,7 +185,8 @@ const ImageFilter = ({
 
   useEffect(() => {
     if (normalizeDefault) {
-      handleOkay();
+      console.log("nn", normalizeDefault)
+      // handleOkay();
     }
   }, [normalizeDefault]);
 

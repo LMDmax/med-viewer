@@ -170,21 +170,6 @@ function FunctionsMenu({
     advice: "",
     annotedSlides: "",
   });
-  const [
-    modifyAnnotation,
-    { data: updatedData, error: updateError, loading: updateLoading },
-  ] = useMutation(UPDATE_ANNOTATION);
-  // console.log(caseInfo);
-  // console.log(slide);
-  const onUpdateAnnotation = (data) => {
-    // console.log("====================================");
-    // console.log("activity feed update");
-    // console.log("====================================");
-    delete data?.slideId;
-    modifyAnnotation({
-      variables: { body: { ...data } },
-    });
-  };
   const handleReportData = (input) => (e) => {
     const { value } = e.target;
     setReportData((prevState) => ({
@@ -213,9 +198,8 @@ function FunctionsMenu({
     }
   }, [chatFeedBar]);
   useEffect(() => {
+    console.log("abscd", toolSelected)
     if (toolSelected !== "Filter" && selectedOption !== "annotations") {
-      // setSelectedOption("slides");
-      // setIsOpen(false);
       setAdjustmentTool(false);
     }
     if (toolSelected === "Filter") {

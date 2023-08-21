@@ -108,7 +108,7 @@ function LayoutApp({
     viewerIds?.[0]?._id || viewerIds?.[0]?.slideId
   );
 
-  // console.log('slideInfo',normalizeDefault);
+  console.log('slideInfo',normalizeDefault);
   const [showAnnotationsBar, setShowAnnotationsBar] = useState(false);
   const [slideName, setSlideName] = useState(slide?.slideName);
   const [slideName2, setSlideName2] = useState(null);

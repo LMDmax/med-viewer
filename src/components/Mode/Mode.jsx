@@ -32,6 +32,8 @@ const Mode = ({
     setIsOpen(!isOpen);
   };
 
+  console.log(AdjustmentTool);
+
   useEffect(() => {
     if (showNormalisationCount)  {
       localStorage.setItem("mode", "normalisation");

@@ -75,6 +75,7 @@ const FilterAdjustments = ({
     setIsActiveTool((state) => !state);
   };
 
+  console.log("adj", AdjustmentTool)
   useEffect(()=>{
     if(AdjustmentTool){
       setToolSelected("Filter");

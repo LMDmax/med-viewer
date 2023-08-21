@@ -359,8 +359,9 @@ const Normalisation = ({
                   bg="#c6dcee"
                   variant="solid"
                   onClick={() => {
+                    console.log("sadsadsadsad")
                     setNormalizeDefault(true);
-                    setShowRightPanel(false);
+                    // setShowRightPanel(false);
                     localStorage.removeItem("mode");
                   }}
                 >
