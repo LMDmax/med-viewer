@@ -8,14 +8,9 @@ import "../../styles/scrollBar.css";
 
 const Studies2 = ({ caseInfo, slideInfo }) => {
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
-
+  console.log(slideInfo);
   const uplodadDate = slideInfo.updatedAt;
-  const CreatedDate = slideInfo.updatedAt;
   const formattedDate = new Date(uplodadDate)
-    .toLocaleDateString()
-    .split("/")
-    .join("/");
-  const formattedDate2 = new Date(CreatedDate)
     .toLocaleDateString()
     .split("/")
     .join("/");
@@ -23,13 +18,13 @@ const Studies2 = ({ caseInfo, slideInfo }) => {
   const imageDetails = {
     "Accession Id": slideInfo?.accessionId,
     Title: slideInfo?.originalName,
-    "Slide Id": `${slideInfo.slideId}`,
+    "Slide Id": slideInfo.slideId || "-",
     Location: "My Folder/Cases/203-11-22-22-UHID/SLIDE 1",
     Size: "100 mb",
     Dimension: "1280 x 720 px",
     Resolution: "148 dpi",
     Scanner: "NanoZoomer S360",
-    "Uploaded At": formattedDate,
+    "Uploaded At": formattedDate !==  "Invalid Date" ? formattedDate :"-",
     "Uploaded By": `${caseInfo.firstName}`,
   };
 

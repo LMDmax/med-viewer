@@ -42,17 +42,15 @@ function CLSReportHelper({
   });
 
   // console.log("slideQNA", slideQna)
-
-  const key = application === "education" ? "lessonId" : "case_id";
-  const value = application === "education" ? lessonId : caseInfo.caseId;
-
   // get questions and response
   const lessonId = caseInfo?.id || caseInfo.caseId;
+  const key = application === "education" ? "lessonId" : "case_id"; // key as payload
+  const value = application === "education" ? lessonId : caseInfo.caseId; // value as payload
   async function fetchResponse() {
     const response = await questionnaireResponse({
       [key]: value,
     });
-    // console.log(response)
+    console.log(response)
     setQuestionsResponse(response?.data?.data);
     setErrorMessage(response?.error?.response?.data?.message);
   }

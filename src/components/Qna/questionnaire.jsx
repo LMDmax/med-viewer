@@ -26,6 +26,7 @@ function Questionnaire({
       return { qna: newQna };
     });
   };
+  console.log(application)
 
   useEffect(() => {
     if (questionIndex >= 0) {
@@ -36,6 +37,8 @@ function Questionnaire({
       });
     }
   }, [questionIndex]);
+
+  console.log("RESPONSE", response)
   return (
     <VStack
       spacing={6}
@@ -129,6 +132,7 @@ function Questionnaire({
                       question={question}
                       direction={direction}
                       response={response}
+                      application={application}
                       setQnaResponse={setQnaResponse}
                       projectQnaType={projectQnaType}
                       slideQna={slideQna}

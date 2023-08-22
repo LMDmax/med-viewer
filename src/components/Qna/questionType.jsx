@@ -15,6 +15,8 @@ function QuestionType({
     setQnaResponse({ questionId, choice: [choice], choiceType });
   };
 
+  console.log(application)
+
   if (
     question?.Question?.questionType === "multiple-choice" ||
     question?.question_type === "multiple choice"

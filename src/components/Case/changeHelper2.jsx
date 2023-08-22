@@ -100,8 +100,8 @@ const ChangeHelper2 = ({
             isActive={isNavigatorActive}
           >
             {viewerWindow[vKeys[1]]?.slideName
-              ? `${viewerWindow[vKeys[1]]?.slideName.substring(0, 6)}..`
-              : `${slideName2.substring(0, 6)}..`}
+              ? `${viewerWindow[vKeys[1]]?.slideName?.substring(0, 6)}..`
+              : `${slideName2?.substring(0, 6)}..`}
           </Text>
         </Tooltip>
         <Tooltip

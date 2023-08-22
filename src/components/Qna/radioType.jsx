@@ -3,6 +3,8 @@ import _ from "lodash";
 import { Box, Text, Flex } from "@chakra-ui/react";
 
 function RadioType({ question, response, handleChange, application }) {
+  console.log(question?.Question?.choices)
+  console.log(application)
   return (
     <Box w="100%">
       {application === "education"
