@@ -277,7 +277,8 @@ const ChatConversationFeed = ({
   const [
     fetchMessages,
     { loading: isConversationLoading, refetch, data: msgData, error },
-  ] = useLazyQuery(FETCH_CONVERSATION);
+  ] = useLazyQuery(FETCH_CONVERSATION, { client2 });
+
 
   useEffect(() => {
     if (msgData && msgData.readChat.success) {

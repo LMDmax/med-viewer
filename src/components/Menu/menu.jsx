@@ -178,6 +178,10 @@ function FunctionsMenu({
     }));
   };
 
+
+  
+  console.log("C2", client2)
+
   // console.log("slideInforFromMEanu",slideInfo)
   const handleUpload = (e) => {
     const { files } = e.target;
@@ -365,59 +369,59 @@ function FunctionsMenu({
       setSelectedOption("slides");
     }
   }, [showRightPanel, showNormalisation]);
-  // const token = localStorage.getItem(Environment.AUTH0_TOKEN);
-  // let accessToken;
-  // if (token) {
-  //   const { body } = JSON.parse(token);
+  const token = localStorage.getItem(Environment.AUTH0_TOKEN);
+  let accessToken;
+  if (token) {
+    const { body } = JSON.parse(token);
 
-  //   if (body && typeof body === "object") {
-  //     accessToken = body.access_token;
-  //   }
-  // }
+    if (body && typeof body === "object") {
+      accessToken = body.access_token;
+    }
+  }
 
-  // const httpLink = new HttpLink({
-  //   uri: "https://development-api.chat.prr.ai",
+  const httpLink = new HttpLink({
+    uri: "https://development-api.chat.prr.ai",
 
-  //   headers: {
-  //     Authorization: `Bearer ${accessToken}`,
-  //   },
-  // });
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
 
-  // const wsLink = new GraphQLWsLink(
-  //   createClient({
-  //     url: "wss://development-api.chat.prr.ai",
-  //   })
-  // );
+  const wsLink = new GraphQLWsLink(
+    createClient({
+      url: "wss://development-api.chat.prr.ai",
+    })
+  );
 
-  // // The split function takes three parameters:
+  // The split function takes three parameters:
 
-  // //
+  //
 
-  // // * A function that's called for each operation to execute
+  // * A function that's called for each operation to execute
 
-  // // * The Link to use for an operation if the function returns a "truthy" value
+  // * The Link to use for an operation if the function returns a "truthy" value
 
-  // // * The Link to use for an operation if the function returns a "falsy" value
+  // * The Link to use for an operation if the function returns a "falsy" value
 
-  // const splitLink = split(
-  //   ({ query }) => {
-  //     const definition = getMainDefinition(query);
-  //     return (
-  //       definition.kind === "OperationDefinition" &&
-  //       definition.operation === "subscription"
-  //     );
-  //   },
+  const splitLink = split(
+    ({ query }) => {
+      const definition = getMainDefinition(query);
+      return (
+        definition.kind === "OperationDefinition" &&
+        definition.operation === "subscription"
+      );
+    },
 
-  //   wsLink,
+    wsLink,
 
-  //   httpLink
-  // );
+    httpLink
+  );
 
-  // const apolloClient = new ApolloClient({
-  //   link: splitLink,
+  const apolloClient = new ApolloClient({
+    link: splitLink,
 
-  //   cache: new InMemoryCache(),
-  // });
+    cache: new InMemoryCache(),
+  });
 
   return (
     <Box
@@ -928,7 +932,7 @@ function FunctionsMenu({
                 </Flex>
               </Flex>
             ) : selectedOption === "messages" ? (
-              // <ApolloProvider client={apolloClient}>
+              <ApolloProvider client={apolloClient}>
               <ChatFeed
                 viewerId={viewerId}
                 chatFeedBar={chatFeedBar}
@@ -947,7 +951,8 @@ function FunctionsMenu({
                 Environment={Environment}
                 addUsersToCase={addUsersToCase}
               />
-            ) : // </ApolloProvider>
+              </ApolloProvider>
+            ) : 
             selectedOption === "adjustments" ? (
               <Adjustments
                 setSelectedOption={setSelectedOption}
