@@ -325,7 +325,9 @@ const CommentFeed = ({
 									mb="0.5vh"
 									direction="column"
 								>
-									<Text fontSize={10}>{`${feed?.object?.title}`}</Text>
+									<Text fontSize={10}>
+										{`${feed?.object?.title}`.replace(/\bnull\b/g, "")}
+									</Text>
 									<Flex align="center" bgColor="#E6E6E6" p="1vh">
 										<Tooltip
 											label={
