@@ -67,7 +67,10 @@ const CommentBox = ({
 				body: {
 					...data,
 					app: application,
-					createdBy: `${userInfo?.firstName} ${userInfo?.lastName}`,
+					createdBy:
+						application === "hospital"
+							? `${userInfo?.firstName} ${userInfo?.lastName}`
+							: `${userInfo?.firstName}`,
 					caseId,
 				},
 			},
