@@ -89,7 +89,7 @@ function Move({
   const { fabricOverlay } = viewerWindow[viewerId];
   let isActive = activeTool === "Move";
   const [activeAnnotations, setActiveAnnotations] = useState(false);
-  // console.log(AdjustmentTool);
+  console.log(application);
   useEffect(() => {
     if (typeToolsToggle) {
       setToolSelected("Annotation");
@@ -290,7 +290,7 @@ function Move({
           pathStroma={pathStroma}
           navigatorCounter={navigatorCounter}
         />
-        {!isXmlAnnotations ? (
+        {!isXmlAnnotations && application !== "education" ? (
           <AiModels
             bottomZoomValue={bottomZoomValue}
             toolSelected={toolSelected}
