@@ -30,13 +30,14 @@ const SynopticReport = ({
   return (
     <Flex
       fontSize={ifwidthLessthan1920 ? "14px" : "0.729vw"}
+      // border="1px solid green"
       fontFamily="Calibri"
       width="100%"
-      height="fit-content"
+      height="100%" // Set height to 100%
       bg="#fff"
       flexDirection="column"
       display="flex"
-      overflow="auto"
+      overflowY="scroll" // Enable vertical scrolling
       css={{
         "&::-webkit-scrollbar": {
           width: "4px",
@@ -92,7 +93,9 @@ const SynopticReport = ({
               <VStack alignItems="flex-start" minW="33.3%">
                 <Text fontWeight="600">AGE</Text>
                 <Text mt="-0rem !important" color="#8F8F8F">
-                  {caseInfo?.patient?.age?.years?`${caseInfo?.patient?.age?.years} years`: "-"}
+                  {caseInfo?.patient?.age?.years
+                    ? `${caseInfo?.patient?.age?.years} years`
+                    : "-"}
                 </Text>
               </VStack>
             </HStack>

@@ -178,9 +178,7 @@ function FunctionsMenu({
     }));
   };
 
-
-  
-  console.log("C2", client2)
+  console.log("C2", client2);
 
   // console.log("slideInforFromMEanu",slideInfo)
   const handleUpload = (e) => {
@@ -847,13 +845,19 @@ function FunctionsMenu({
                 searchSelectedData={searchSelectedData}
               />
             ) : selectedOption === "report" ? (
-              <Flex w="100%" h="82vh" direction="column" bgColor="#FCFCFC">
+              <Flex
+                w="100%"
+                // border="1px solid red"
+                h="82vh"
+                direction="column"
+                bgColor="#FCFCFC"
+                overflowY="scroll"
+              >
                 <Flex
                   w="100%"
                   direction="row"
                   alignItems="center"
                   justifyContent="space-evenly"
-                  // border="1px solid red"
                   // p="5px 5px 0px 20px"
                 >
                   <Text fontFamily="Inter" color="#3B5D7C" mr="60%">
@@ -933,27 +937,26 @@ function FunctionsMenu({
               </Flex>
             ) : selectedOption === "messages" ? (
               <ApolloProvider client={apolloClient}>
-              <ChatFeed
-                viewerId={viewerId}
-                chatFeedBar={chatFeedBar}
-                handleChatFeedBarClose={handleChatFeedBarClose}
-                showReport={showReport}
-                feedTab={feedTab}
-                setChatFeedBar={setChatFeedBar}
-                userInfo={userInfo}
-                caseInfo={caseInfo}
-                synopticType={synopticType}
-                application={application}
-                app={application}
-                users={users}
-                client2={client2}
-                mentionUsers={mentionUsers}
-                Environment={Environment}
-                addUsersToCase={addUsersToCase}
-              />
+                <ChatFeed
+                  viewerId={viewerId}
+                  chatFeedBar={chatFeedBar}
+                  handleChatFeedBarClose={handleChatFeedBarClose}
+                  showReport={showReport}
+                  feedTab={feedTab}
+                  setChatFeedBar={setChatFeedBar}
+                  userInfo={userInfo}
+                  caseInfo={caseInfo}
+                  synopticType={synopticType}
+                  application={application}
+                  app={application}
+                  users={users}
+                  client2={client2}
+                  mentionUsers={mentionUsers}
+                  Environment={Environment}
+                  addUsersToCase={addUsersToCase}
+                />
               </ApolloProvider>
-            ) : 
-            selectedOption === "adjustments" ? (
+            ) : selectedOption === "adjustments" ? (
               <Adjustments
                 setSelectedOption={setSelectedOption}
                 setToolSelected={setToolSelected}
