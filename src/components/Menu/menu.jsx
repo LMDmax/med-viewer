@@ -847,7 +847,6 @@ function FunctionsMenu({
             ) : selectedOption === "report" ? (
               <Flex
                 w="100%"
-                // border="1px solid red"
                 h="82vh"
                 direction="column"
                 bgColor="#FCFCFC"
