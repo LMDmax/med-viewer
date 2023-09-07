@@ -50,7 +50,7 @@ function CLSReportHelper({
     const response = await questionnaireResponse({
       [key]: value,
     });
-    console.log(response)
+    console.log(response);
     setQuestionsResponse(response?.data?.data);
     setErrorMessage(response?.error?.response?.data?.message);
   }
@@ -160,12 +160,13 @@ function CLSReportHelper({
             {...restProps}
             onClick={submitQnaReport}
             disabled={
-              application === "education"
+              (application === "education"
                 ? questions &&
                   questions[0]?.LessonQuestions?.length !== response?.length
                 : questions &&
                   questions?.data?.desiredQuestionsInfo?.length !==
-                    response?.length
+                    response?.length) ||
+              (application === "clinical" && userInfo.role === "PI")
             }
           >
             Submit Report

@@ -178,7 +178,7 @@ function FunctionsMenu({
     }));
   };
 
-  console.log("C2", client2);
+  console.log("C2", userInfo);
 
   // console.log("slideInforFromMEanu",slideInfo)
   const handleUpload = (e) => {
@@ -367,7 +367,7 @@ function FunctionsMenu({
       setSelectedOption("slides");
     }
   }, [showRightPanel, showNormalisation]);
-  const token = localStorage.getItem(Environment.AUTH0_TOKEN);
+  const token = localStorage?.getItem(Environment.AUTH0_TOKEN);
   let accessToken;
   if (token) {
     const { body } = JSON.parse(token);
