@@ -49,6 +49,7 @@ function CLSReportHelper({
   async function fetchResponse() {
     const response = await questionnaireResponse({
       [key]: value,
+      slide_id : slideId,
     });
     console.log(response);
     setQuestionsResponse(response?.data?.data);
@@ -73,6 +74,7 @@ function CLSReportHelper({
       await responseHandler({
         [key]: value,
         response,
+        slide_id: slideId,
       });
       fetchResponse();
       setShowCLSReport(false);
@@ -169,7 +171,7 @@ function CLSReportHelper({
               (application === "clinical" && userInfo.role === "PI")
             }
           >
-            Submit Report
+            Submit Reports
           </Button>
         </Tooltip>
       ) : showCLSreport ? (

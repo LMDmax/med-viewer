@@ -38,7 +38,7 @@ function Questionnaire({
     }
   }, [questionIndex]);
 
-  console.log("RESPONSE", response)
+  // console.log("RESPONSE", response)
   return (
     <VStack
       spacing={6}
