@@ -75,7 +75,7 @@ const fabricOverlayReducer = (state, action) => {
 
     case "removeFromActivityFeed": {
       const newFeed = state.viewerWindow[action.payload.id].activityFeed.filter(
-        (af) => af.object.hash !== action.payload.hash
+        (af) => af?.object?.hash !== action.payload.hash
       );
       return {
         ...state,
@@ -103,7 +103,7 @@ const fabricOverlayReducer = (state, action) => {
 
     case "updateFeedInAnnotationFeed": {
       const newFeed = state.viewerWindow[action.payload.id].activityFeed.filter(
-        (af) => af.object.hash !== action.payload.feed.object.hash
+        (af) => af?.object?.hash !== action?.payload?.feed?.object?.hash
       );
       return {
         ...state,
@@ -144,7 +144,7 @@ const fabricOverlayReducer = (state, action) => {
           newViewerWindow[id] = state.viewerWindow[id];
       });
       const { viewer } = state.viewerWindow[action.payload.id];
-      viewer.destroy();
+      viewer?.destroy();
       return { ...state, viewerWindow: { ...newViewerWindow } };
     }
 
