@@ -422,12 +422,12 @@ const ChatConversationFeed = ({
   // 	// );
   // };
 
-  const { data: subscribedMessageData } = useSubscription(CHAT_SUBSCRIPTION, {
-    variables: {
-      toId: groupChatId,
-      fromId: userInfo?._id,
-    },
-  });
+  // const { data: subscribedMessageData } = useSubscription(CHAT_SUBSCRIPTION, {
+  //   variables: {
+  //     toId: groupChatId,
+  //     fromId: userInfo?._id,
+  //   },
+  // });
   // console.log(subscribedMessageData);
   // console.log(client2);
   useEffect(() => {
