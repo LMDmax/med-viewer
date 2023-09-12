@@ -3,6 +3,8 @@ import { Flex, HStack, Input, Text, useToast } from "@chakra-ui/react";
 import SRHelper from "./SRHelper";
 import Loading from "../Loading/loading";
 import SubmitHelper from "./SubmitHelper";
+import { useMutation } from "@apollo/client";
+import { SAVE_SYNOPTIC_REPORT } from "../../graphql/annotaionsQuery";
 
 const Lymphoma = ({
   slideId,
@@ -16,7 +18,8 @@ const Lymphoma = ({
   reportedStatus,
 }) => {
   const toast = useToast();
- 
+  const [onSaveSynopticReport, { data: analysis_data, error: analysis_error }] =
+    useMutation(SAVE_SYNOPTIC_REPORT);
   const [newInputData, setNewInputData] = useState("");
   const [inputData, setInputData] = useState({
     typeOfSpecimen: "",
@@ -183,8 +186,107 @@ const Lymphoma = ({
         [e.target.name]: e.target.value,
       }));
   };
+  // const submitReport = async () => {
+  //   try {
+  //     await saveSynopticReport({
+  //       typeOfSpecimen: inputData.typeOfSpecimen,
+  //       dateOfRequest: inputData.dateOfRequest,
+  //       principalClinician: inputData.principalClinician,
+  //       siteOfBiopsy: inputData.siteOfBiopsy,
+  //       laterability: inputData.laterability,
+  //       reasonForBiopsy: inputData.reasonForBiopsy,
+  //       wholeTumourSize: inputData.wholeTumourSize,
+  //       grade: inputData.grade,
+  //       involvedSiteOrPatternOfDiseasesSpread:
+  //         inputData.involvedSiteOrPatternOfDiseasesSpread,
+  //       clinicalOrStagesExtentOfDiseases:
+  //         inputData.clinicalOrStagesExtentOfDiseases,
+  //       constitutionalSymptoms: inputData.constitutionalSymptoms,
+  //       furtherClinicalInformation: inputData.furtherClinicalInformation,
+  //       specimenType: inputData.specimenType,
+  //       specimenSize: inputData.specimenSize,
+  //       narrativeOrMicroscopicDescription:
+  //         inputData.narrativeOrMicroscopicDescription,
+  //       abnormalCells: inputData.abnormalCells,
+  //       abnormalCellSize: inputData.abnormalCellSize,
+  //       abnormalCellCytomorphology: inputData.abnormalCellCytomorphology,
+  //       abnormalCellProLiferativeIndicators:
+  //         inputData.abnormalCellProLiferativeIndicators,
+  //       immunoHistoChemistry: inputData.immunoHistoChemistry,
+  //       flowStudies: inputData.flowStudies,
+  //       clonality: inputData.clonality,
+  //       whoDiseaseSubType: inputData.whoDiseaseSubType,
+  //       ancillaryAbnormalCellSize: inputData.ancillaryAbnormalCellSize,
+  //       ancillaryCytomorphology: inputData.ancillaryCytomorphology,
+  //       ancillaryProLiferativeIndicators:
+  //         inputData.ancillaryProLiferativeIndicators,
+  //       slideId,
+  //       caseId,
+  //       reportType: "lymphoma-cancer-report",
+  //     }).unwrap();
+  //     toast({
+  //       description: "Report submitted sucessfully",
+  //       status: "success",
+  //       duration: 2000,
+  //     });
+  //     setSynopticType("");
+  //   } catch (err) {
+  //     toast({
+  //       description: err?.data?.message
+  //         ? err?.data?.message
+  //         : "something went wrong",
+  //       status: "error",
+  //       duration: 2000,
+  //     });
+  //   }
+  // };
+  // check the values of inputData
+
   const submitReport = async () => {
     try {
+      const { data } = await onSaveSynopticReport({
+        variables: {
+          body: {
+            caseId,
+            data: {
+              typeOfSpecimen: inputData.typeOfSpecimen,
+              dateOfRequest: inputData.dateOfRequest,
+              principalClinician: inputData.principalClinician,
+              siteOfBiopsy: inputData.siteOfBiopsy,
+              laterability: inputData.laterability,
+              reasonForBiopsy: inputData.reasonForBiopsy,
+              wholeTumourSize: inputData.wholeTumourSize,
+              grade: inputData.grade,
+              involvedSiteOrPatternOfDiseasesSpread:
+                inputData.involvedSiteOrPatternOfDiseasesSpread,
+              clinicalOrStagesExtentOfDiseases:
+                inputData.clinicalOrStagesExtentOfDiseases,
+              constitutionalSymptoms: inputData.constitutionalSymptoms,
+              furtherClinicalInformation: inputData.furtherClinicalInformation,
+              specimenType: inputData.specimenType,
+              specimenSize: inputData.specimenSize,
+              narrativeOrMicroscopicDescription:
+                inputData.narrativeOrMicroscopicDescription,
+              abnormalCells: inputData.abnormalCells,
+              abnormalCellSize: inputData.abnormalCellSize,
+              abnormalCellCytomorphology: inputData.abnormalCellCytomorphology,
+              abnormalCellProLiferativeIndicators:
+                inputData.abnormalCellProLiferativeIndicators,
+              immunoHistoChemistry: inputData.immunoHistoChemistry,
+              flowStudies: inputData.flowStudies,
+              clonality: inputData.clonality,
+              whoDiseaseSubType: inputData.whoDiseaseSubType,
+              ancillaryAbnormalCellSize: inputData.ancillaryAbnormalCellSize,
+              ancillaryCytomorphology: inputData.ancillaryCytomorphology,
+              ancillaryProLiferativeIndicators:
+                inputData.ancillaryProLiferativeIndicators,
+              reportType: "lymphoma-cancer-report",
+            },
+          },
+        },
+      });
+
+      // send data to hospital DB
       await saveSynopticReport({
         typeOfSpecimen: inputData.typeOfSpecimen,
         dateOfRequest: inputData.dateOfRequest,
@@ -221,24 +323,32 @@ const Lymphoma = ({
         caseId,
         reportType: "lymphoma-cancer-report",
       }).unwrap();
+      if (data && data.autoSaveSynopticReport.success) {
+        toast({
+          description: "Report submitted successfully",
+          status: "success",
+          duration: 2000,
+        });
+        setSynopticType("");
+      } else {
+        toast({
+          description:
+            data.autoSaveSynopticReport.message || "Something went wrong",
+          status: "error",
+          duration: 2000,
+        });
+      }
+    } catch (error) {
       toast({
-        description: "Report submitted sucessfully",
-        status: "success",
-        duration: 2000,
-      });
-      setSynopticType("");
-    } catch (err) {
-      toast({
-        description: err?.data?.message
-          ? err?.data?.message
-          : "something went wrong",
+        description: error.message || "Something went wrong",
         status: "error",
         duration: 2000,
       });
     }
   };
-  // check the values of inputData
+
   const answeredAll = Object.keys(inputData).every((k) => inputData[k] !== "");
+
   // handle report update
   const handleUpdate = async () => {
     try {
@@ -310,7 +420,8 @@ const Lymphoma = ({
               defaultValue={synopticReportData?.wholeTumourSize}
               onChange={handleInput}
               type="number"
-              onWheel={(e) => e.target.blur()}
+                onWheel={(e) => e.target.blur()}
+                disabled={synopticReportData.message === "Report successfully found"}
             />{" "}
             MM
           </Text>
@@ -379,14 +490,19 @@ const Lymphoma = ({
           );
         })}
       </Flex>
-      <SubmitHelper
-        userInfo={userInfo}
-        reportedStatus={reportedStatus}
-        answeredAll={answeredAll}
-        submitReport={submitReport}
-        newInputData={newInputData}
-        handleUpdate={handleUpdate}
-      />
+      {userInfo?.userType !== "technologist" &&
+      synopticReportData.message === "Report not found" ? (
+        <SubmitHelper
+          userInfo={userInfo}
+          reportedStatus={reportedStatus}
+          answeredAll={answeredAll}
+          submitReport={submitReport}
+          newInputData={newInputData}
+          handleUpdate={handleUpdate}
+        />
+      ) : (
+        ""
+      )}
     </Flex>
   );
 };

@@ -12,6 +12,8 @@ import React, { useState, useEffect } from "react";
 import Loading from "../Loading/loading";
 import SRHelper from "./SRHelper";
 import SubmitHelper from "./SubmitHelper";
+import { SAVE_SYNOPTIC_REPORT } from "../../graphql/annotaionsQuery";
+import { useLazyQuery, useMutation, useSubscription } from "@apollo/client";
 
 const BreastCancer = ({
   saveSynopticReport,
@@ -25,9 +27,9 @@ const BreastCancer = ({
 }) => {
   const toast = useToast();
   const [newInputData, setNewInputData] = useState("");
+  const [onSaveSynopticReport, { data: analysis_data, error: analysis_error }] =
+    useMutation(SAVE_SYNOPTIC_REPORT);
 
-
-  
   const [inputData, setInputData] = useState({
     dataRecieved: "",
     specimenType: "",
@@ -248,8 +250,73 @@ const BreastCancer = ({
       }));
   };
   // submit report handler
+  // const submitReport = async () => {
+  //   try {
+
+  //     toast({
+  //       description: "Report submitted sucessfully",
+  //       status: "success",
+  //       duration: 2000,
+  //     });
+  //     setSynopticType("");
+  //   } catch (err) {
+  //     toast({
+  //       description: err?.data?.message
+  //         ? err?.data?.message
+  //         : "something went wrong",
+  //       status: "error",
+  //       duration: 2000,
+  //     });
+  //   }
+  // };
   const submitReport = async () => {
     try {
+      const { data } = await onSaveSynopticReport({
+        variables: {
+          body: {
+            caseId,
+            data: {
+              dataRecieved: inputData.dataRecieved,
+              specimenType: inputData.specimenType,
+              specimenRadiographProvided: inputData.specimenRadiographProvided,
+              radiologyAbnormalitySeen: inputData.radiologyAbnormalitySeen,
+              rGrade: inputData.rGrade,
+              radiologyLesion: inputData.radiologyLesion,
+              specimenWeight: inputData.specimenWeight,
+              ellipseOfSkin: inputData.ellipseOfSkin,
+              nipple: inputData.nipple,
+              histologicalClassificationPresent:
+                inputData.histologicalClassificationPresent,
+              fibrofattyTissue: inputData.fibrofattyTissue,
+              lesionMeasures: inputData.lesionMeasures,
+              site: inputData.site,
+              macroscopicDistanceToMargin: inputData.macroscopicDistance,
+              comments: inputData.comments,
+              invasiveTumourSize: inputData.invasiveTumourSize,
+              wholeTumourSize: inputData.wholeTumourSize,
+              invasiveGrade: inputData.invasiveGrade,
+              tumourExtent: inputData.tumourExtent,
+              type: inputData.type,
+              typeForComponents: inputData.typeForComponents,
+              grade: inputData.grade,
+              associatedDcis: inputData.associatedDcis,
+              isSituLobularNeoplasia: inputData.isSituLobularNeoplasia,
+              dcisGrade: inputData.dcisGrade,
+              isPagetDisease: inputData.isPagetDisease,
+              isLcis: inputData.isLcis,
+              pureDcisSize: inputData.pureDcisSize,
+              pureDcisGrade: inputData.pureDcisGrade,
+              dcisArchitecture: inputData.dcisArchitecture,
+              dcisNecrosis: inputData.dcisNecrosis,
+              microInvasion: inputData.microInvasion,
+              pagetDisease: inputData.pagetDisease,
+              reportType: "breast-cancer-report",
+            },
+          },
+        },
+      });
+
+      // send data to hospital DB
       await saveSynopticReport({
         dataRecieved: inputData.dataRecieved,
         specimenType: inputData.specimenType,
@@ -289,22 +356,30 @@ const BreastCancer = ({
         caseId,
         reportType: "breast-cancer-report",
       }).unwrap();
+      if (data && data.autoSaveSynopticReport.success) {
+        toast({
+          description: "Report submitted successfully",
+          status: "success",
+          duration: 2000,
+        });
+        setSynopticType("");
+      } else {
+        toast({
+          description:
+            data.autoSaveSynopticReport.message || "Something went wrong",
+          status: "error",
+          duration: 2000,
+        });
+      }
+    } catch (error) {
       toast({
-        description: "Report submitted sucessfully",
-        status: "success",
-        duration: 2000,
-      });
-      setSynopticType("");
-    } catch (err) {
-      toast({
-        description: err?.data?.message
-          ? err?.data?.message
-          : "something went wrong",
+        description: error.message || "Something went wrong",
         status: "error",
         duration: 2000,
       });
     }
   };
+
   // handle report update
   const handleUpdate = async () => {
     try {
@@ -339,7 +414,7 @@ const BreastCancer = ({
     }
   };
   return synopticReportData === "Loading" ? (
-    <Flex w="100%" h="100%" justifyContent="center"  alignItems="center">
+    <Flex w="100%" h="100%" justifyContent="center" alignItems="center">
       <Loading />
     </Flex>
   ) : (
@@ -370,14 +445,17 @@ const BreastCancer = ({
             w="4vw"
             size="sm"
             defaultValue={
-              synopticReportData !== ""
-                ? synopticReportData?.macroscopicDistanceToMargin
+              synopticReportData.message === "Report successfully found"
+                ? synopticReportData?.data?.macroscopicDistanceToMargin
                 : inputData.macroscopicDistance
             }
             name="macroscopicDistance"
             type="number"
             onWheel={(e) => e.target.blur()}
             onChange={handleInput}
+            disabled={
+              synopticReportData.message === "Report successfully found"
+            }
           />{" "}
           MARGIN
         </Text>
@@ -388,11 +466,14 @@ const BreastCancer = ({
             name="comments"
             onChange={handleInput}
             defaultValue={
-              synopticReportData !== ""
-                ? synopticReportData?.comments
+              synopticReportData.message === "Report successfully found"
+                ? synopticReportData?.data?.comments
                 : inputData.comments
             }
-            style={{ width: '340px' }}
+            style={{ width: "340px" }}
+            disabled={
+              synopticReportData.message === "Report successfully found"
+            }
           />
         </VStack>
         <Flex
@@ -414,12 +495,15 @@ const BreastCancer = ({
               size="sm"
               name="invasiveTumourSize"
               defaultValue={
-                synopticReportData?.invasiveTumourSize ||
+                synopticReportData?.data?.invasiveTumourSize ||
                 inputData.invasiveTumourSize
               }
               type="number"
               onWheel={(e) => e.target.blur()}
               onChange={handleInput}
+              disabled={
+                synopticReportData.message === "Report successfully found"
+              }
             />
             MM
           </Text>
@@ -430,16 +514,20 @@ const BreastCancer = ({
               size="sm"
               name="wholeTumourSize"
               defaultValue={
-                synopticReportData?.wholeTumourSize || inputData.wholeTumourSize
+                synopticReportData?.data?.wholeTumourSize ||
+                inputData.wholeTumourSize
               }
               type="number"
               onWheel={(e) => e.target.blur()}
               onChange={handleInput}
+              disabled={
+                synopticReportData.message === "Report successfully found"
+              }
             />{" "}
             MM
           </Text>
         </HStack>
-        <Flex  flex="1" flexWrap="wrap" justifyContent="space-between">
+        <Flex flex="1" flexWrap="wrap" justifyContent="space-between">
           {reportData.slice(13, 22).map((inputField, index) => {
             return (
               <SRHelper
@@ -471,10 +559,13 @@ const BreastCancer = ({
             name="pureDcisSize"
             onChange={handleInput}
             defaultValue={
-              synopticReportData?.pureDcisSize || inputData.pureDcisSize
+              synopticReportData?.data?.pureDcisSize || inputData.pureDcisSize
             }
             type="number"
             onWheel={(e) => e.target.blur()}
+            disabled={
+              synopticReportData.message === "Report successfully found"
+            }
           />{" "}
           MM IN MAXIMUM EXTENT
         </Text>
@@ -492,7 +583,7 @@ const BreastCancer = ({
           })}
         </Flex> */}
       </Flex>
-      {userInfo?.userType !== "technologist" && (
+      {userInfo?.userType !== "technologist" && synopticReportData.message === "Report not found"  ? (
         <SubmitHelper
           userInfo={userInfo}
           reportedStatus={reportedStatus}
@@ -501,6 +592,8 @@ const BreastCancer = ({
           newInputData={newInputData}
           handleUpdate={handleUpdate}
         />
+      ) : (
+        ""
       )}
     </Flex>
   );

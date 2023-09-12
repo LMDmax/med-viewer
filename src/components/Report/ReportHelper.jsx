@@ -27,6 +27,8 @@ import ProstateCancer from "../SynopticReport/ProstateCancer";
 import Lymphoma from "../SynopticReport/Lymphoma";
 import SynopticReport from "../SynopticReport/SynopticReport";
 import { BsChevronCompactDown } from "react-icons/bs";
+import { useMutation } from "@apollo/client";
+import { SAVE_STANDARD_REPORT } from "../../graphql/annotaionsQuery";
 
 const ShowReport = ({ showReport, openReport }) => {
   return showReport ? (
@@ -105,48 +107,48 @@ const OpenReportButton = ({ openReport }) => {
 
 const SubmitReportButton = ({ userInfo, reportData, handleReportsubmit }) => {
   return (
-   <Box>
-     <Tooltip
-      label="Submit Report"
-      placement="bottom"
-      openDelay={0}
-      bg="#E4E5E8"
-      color="rgba(89, 89, 89, 1)"
-      fontSize="14px"
-      fontFamily="inter"
-      hasArrow
-      borderRadius="0px"
-      size="20px"
-    >
-      <Button
-        variant="solid"
-        h="32px"
-        // mr="15px"
-        borderRadius="0px"
-        backgroundColor="#00153F"
-        _hover={{}}
-        _focus={{
-          border: "none",
-        }}
-        color="#fff"
-        fontFamily="inter"
+    <Box>
+      <Tooltip
+        label="Submit Report"
+        placement="bottom"
+        openDelay={0}
+        bg="#E4E5E8"
+        color="rgba(89, 89, 89, 1)"
         fontSize="14px"
-        fontWeight="500"
-        disabled={
-          userInfo.userType !== "pathologist" ||
-          (!reportData?.clinicalStudy &&
-            !reportData?.grossDescription &&
-            !reportData?.microscopicDescription &&
-            !reportData?.impression &&
-            !reportData?.advice &&
-            !reportData?.annotedSlides)
-        }
-        onClick={handleReportsubmit}
+        fontFamily="inter"
+        hasArrow
+        borderRadius="0px"
+        size="20px"
       >
-        Submit Report
-      </Button>
-    </Tooltip>
-   </Box>
+        <Button
+          variant="solid"
+          h="32px"
+          // mr="15px"
+          borderRadius="0px"
+          backgroundColor="#00153F"
+          _hover={{}}
+          _focus={{
+            border: "none",
+          }}
+          color="#fff"
+          fontFamily="inter"
+          fontSize="14px"
+          fontWeight="500"
+          disabled={
+            userInfo.userType !== "pathologist" ||
+            (!reportData?.clinicalStudy &&
+              !reportData?.grossDescription &&
+              !reportData?.microscopicDescription &&
+              !reportData?.impression &&
+              !reportData?.advice &&
+              !reportData?.annotedSlides)
+          }
+          onClick={handleReportsubmit}
+        >
+          Submit Report
+        </Button>
+      </Tooltip>
+    </Box>
   );
 };
 
@@ -177,8 +179,9 @@ const ReportHelper = ({
   const { viewerWindow } = fabricOverlayState;
   const { slideId } = viewerWindow[viewerId];
   const toast = useToast();
-
-
+  console.log(userInfo);
+  const [onSaveStandardReport, { data: analysis_data, error: analysis_error }] =
+    useMutation(SAVE_STANDARD_REPORT);
 
   const openReport = () => {
     setSynopticType("");
@@ -217,6 +220,24 @@ const ReportHelper = ({
     });
     const { data } = await mediaUpload(annotedSlidesForm);
     try {
+      const { standardData } = await onSaveStandardReport({
+        variables: {
+          body: {
+            caseId: caseInfo._id,
+            data: {
+              clinicalDescription: reportData?.clinicalStudy,
+              grossDescription: reportData?.grossDescription,
+              microscopicDescription: reportData?.microscopicDescription,
+              impression: reportData?.impression,
+              advise: reportData?.advice,
+              annotatedSlides: reportData?.annotedSlides,
+              mediaUrls: data?.urls,
+              uploadedBy: `${userInfo?.firstName} ${userInfo?.lasttName} `,
+            },
+          },
+        },
+      });
+
       const resp = await saveReport({
         caseId: caseInfo._id,
         subClaim: userInfo?.subClaim,
@@ -248,13 +269,8 @@ const ReportHelper = ({
         isClosable: true,
       });
     }
+    console.log("ASDSAAAAAAAAAAAA");
   };
-
-  // if (slideData) {
-  //   return
-  // }
-
-  // console.log(showReport);
 
   return (
     <Box ml="-82px">
@@ -277,53 +293,83 @@ const ReportHelper = ({
               Standard Report
             </MenuItem>
             <Accordion allowToggle>
-            <AccordionItem>
-              <AccordionButton
-                _focus={{ outline: "none" }}
-                justifyContent="space-between"
-                alignItems="center"
-                borderBottom="1px solid #DEDEDE"
-              >
-                <Text fontSize="14px">Synoptic Report</Text>
-                <AccordionIcon />
-              </AccordionButton>
-              <AccordionPanel pb={4} px="0">
-                <MenuItemOption
-                  value="breast-cancer"
-                  minH="32px"
-                  onClick={() => setSynopticType("breast-cancer")}
-                  _hover={{ bg: "#f6f6f6" }}
-                  isDisabled={!caseInfo?.organs[0].organName.includes("breast")}
-                  color={caseInfo?.organs[0].organName.includes("breast") ? "black" : "gray"}
-                  cursor={caseInfo?.organs[0].organName.includes("breast") ? "pointer" : "not-allowed"}
+              <AccordionItem>
+                <AccordionButton
+                  _focus={{ outline: "none" }}
+                  justifyContent="space-between"
+                  alignItems="center"
+                  borderBottom="1px solid #DEDEDE"
                 >
-                  Breast cancer
-                </MenuItemOption>
-                <MenuItemOption
-                  value="prostate-cancer"
-                  minH="32px"
-                  onClick={() => setSynopticType("prostate-cancer")}
-                  _hover={{ bg: "#f6f6f6" }}
-                  isDisabled={!caseInfo?.organs[0].organName.includes("prostate")}
-                  color={caseInfo?.organs[0].organName.includes("prostate") ? "black" : "gray"}
-                  cursor={caseInfo?.organs[0].organName.includes("prostate") ? "pointer" : "not-allowed"}
-                >
-                  Prostate cancer
-                </MenuItemOption>
-                <MenuItemOption
-                  value="lymphoma"
-                  minH="32px"
-                  onClick={() => setSynopticType("lymphoma")}
-                  _hover={{ bg: "#f6f6f6" }}
-                  isDisabled={!caseInfo?.organs[0].organName.includes("lymph")}
-                  color={caseInfo?.organs[0].organName.includes("lymph") ? "black" : "gray"}
-                  cursor={caseInfo?.organs[0].organName.includes("lymph") ? "pointer" : "not-allowed"}
-                >
-                  Lymphoma
-                </MenuItemOption>
-              </AccordionPanel>
-            </AccordionItem>
-          </Accordion>
+                  <Text fontSize="14px">Synoptic Report</Text>
+                  <AccordionIcon />
+                </AccordionButton>
+                <AccordionPanel pb={4} px="0">
+                  <MenuItemOption
+                    value="breast-cancer"
+                    minH="32px"
+                    onClick={() => setSynopticType("breast-cancer")}
+                    _hover={{ bg: "#f6f6f6" }}
+                    isDisabled={
+                      !caseInfo?.organs[0].organName.includes("breast")
+                    }
+                    color={
+                      caseInfo?.organs[0].organName.includes("breast")
+                        ? "black"
+                        : "gray"
+                    }
+                    cursor={
+                      caseInfo?.organs[0].organName.includes("breast")
+                        ? "pointer"
+                        : "not-allowed"
+                    }
+                  >
+                    Breast cancer
+                  </MenuItemOption>
+                  <MenuItemOption
+                    value="prostate-cancer"
+                    minH="32px"
+                    onClick={() => setSynopticType("prostate-cancer")}
+                    _hover={{ bg: "#f6f6f6" }}
+                    isDisabled={
+                      !caseInfo?.organs[0].organName.includes("prostate")
+                    }
+                    color={
+                      caseInfo?.organs[0].organName.includes("prostate")
+                        ? "black"
+                        : "gray"
+                    }
+                    cursor={
+                      caseInfo?.organs[0].organName.includes("prostate")
+                        ? "pointer"
+                        : "not-allowed"
+                    }
+                  >
+                    Prostate cancer
+                  </MenuItemOption>
+                  <MenuItemOption
+                    value="lymphoma"
+                    minH="32px"
+                    onClick={() => setSynopticType("lymphoma")}
+                    _hover={{ bg: "#f6f6f6" }}
+                    isDisabled={
+                      !caseInfo?.organs[0].organName.includes("lymph")
+                    }
+                    color={
+                      caseInfo?.organs[0].organName.includes("lymph")
+                        ? "black"
+                        : "gray"
+                    }
+                    cursor={
+                      caseInfo?.organs[0].organName.includes("lymph")
+                        ? "pointer"
+                        : "not-allowed"
+                    }
+                  >
+                    Lymphoma
+                  </MenuItemOption>
+                </AccordionPanel>
+              </AccordionItem>
+            </Accordion>
           </MenuList>
         </Menu>
       ) : (

@@ -178,8 +178,6 @@ function FunctionsMenu({
     }));
   };
 
-  console.log("C2", userInfo);
-
   // console.log("slideInforFromMEanu",slideInfo)
   const handleUpload = (e) => {
     const { files } = e.target;

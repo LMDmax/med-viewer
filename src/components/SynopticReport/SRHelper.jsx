@@ -3,6 +3,9 @@ import _ from "lodash";
 import React from "react";
 
 const SRHelper = ({ inputField, handleInput, synopticReportData }) => {
+  const isReportFound =
+    synopticReportData.message === "Report successfully found";
+
   return (
     <Flex
       alignItems="flex-start"
@@ -24,45 +27,61 @@ const SRHelper = ({ inputField, handleInput, synopticReportData }) => {
         direction="column"
       >
         {inputField?.options ? (
-          <RadioGroup
-            pl="-16px"
-            // border="1px solid red"
-            defaultValue={synopticReportData?.[inputField?.inputName]}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              flexWrap: "wrap",
-              alignItems: "flex-start",
-            }}
-          >
-            {inputField?.options?.map((option, i) => {
-              return (
-                <label>
-                  <Flex alignItems="center">
-                    <input
-                      type="radio"
-                      key={`${i + 1}`}
-                      value={option}
-                      style={{ marginLeft: "16px" }}
-                      name={inputField?.inputName}
-                      onChange={(e) => handleInput(e)}
-                    />
-                    <Text
-                      ml="10px"
-                      wordBreak="break-word"
-                      whiteSpace="pre-wrap"
-                      maxWidth="100%"
-                      overflowWrap="break-word"
-                      cursor="pointer"
-                      color="black"
-                    >
-                      {option}
-                    </Text>
-                  </Flex>
-                </label>
-              );
-            })}
-          </RadioGroup>
+          isReportFound ? (
+            <Text
+              ml="10px"
+              wordBreak="break-word"
+              whiteSpace="pre-wrap"
+              maxWidth="100%"
+              overflowWrap="break-word"
+              cursor="default"
+              color="black"
+            >
+              {synopticReportData?.data?.[inputField?.inputName] !== ""
+                ? synopticReportData?.data?.[inputField?.inputName]
+                : "No Response"}
+            </Text>
+          ) : (
+            <RadioGroup
+              pl="-16px"
+              // border="1px solid red"
+              defaultValue={synopticReportData.data?.[inputField?.inputName]}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                flexWrap: "wrap",
+                alignItems: "flex-start",
+              }}
+            >
+              {inputField?.options?.map((option, i) => {
+                return (
+                  <label>
+                    <Flex alignItems="center">
+                      <input
+                        type="radio"
+                        key={`${i + 1}`}
+                        value={option}
+                        style={{ marginLeft: "16px" }}
+                        name={inputField?.inputName}
+                        onChange={(e) => handleInput(e)}
+                      />
+                      <Text
+                        ml="10px"
+                        wordBreak="break-word"
+                        whiteSpace="pre-wrap"
+                        maxWidth="100%"
+                        overflowWrap="break-word"
+                        cursor="pointer"
+                        color="black"
+                      >
+                        {option}
+                      </Text>
+                    </Flex>
+                  </label>
+                );
+              })}
+            </RadioGroup>
+          )
         ) : (
           <Box w="300px">
             <Input
@@ -73,14 +92,17 @@ const SRHelper = ({ inputField, handleInput, synopticReportData }) => {
               borderRadius="0"
               name={inputField?.inputName}
               defaultValue={
-                synopticReportData?.[inputField?.inputName]
-                  ? synopticReportData?.[inputField?.inputName]
+                synopticReportData?.data?.[inputField?.inputName]
+                  ? synopticReportData?.data?.[inputField?.inputName]
                   : ""
               }
               // readOnly={synopticReportData?.[inputField?.inputName]}
               type={inputField?.type === "number" ? "number" : "text"}
               onWheel={(e) => e.target.blur()}
               onChange={handleInput}
+              disabled={
+                synopticReportData.message === "Report successfully found"
+              }
             />
           </Box>
         )}

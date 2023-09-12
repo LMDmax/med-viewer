@@ -49,9 +49,8 @@ function CLSReportHelper({
   async function fetchResponse() {
     const response = await questionnaireResponse({
       [key]: value,
-      slide_id : slideId,
     });
-    console.log(response);
+    // console.log(response);
     setQuestionsResponse(response?.data?.data);
     setErrorMessage(response?.error?.response?.data?.message);
   }
@@ -68,13 +67,12 @@ function CLSReportHelper({
   };
   const response = Object.values(slideQna?.qna);
   const submitQnaReport = async () => {
-    console.log("SUBMIT", response);
+    // console.log("SUBMIT", response);
     try {
       setLoading(true);
       await responseHandler({
         [key]: value,
         response,
-        slide_id: slideId,
       });
       fetchResponse();
       setShowCLSReport(false);
@@ -171,7 +169,7 @@ function CLSReportHelper({
               (application === "clinical" && userInfo.role === "PI")
             }
           >
-            Submit Reports
+            Submit Report
           </Button>
         </Tooltip>
       ) : showCLSreport ? (

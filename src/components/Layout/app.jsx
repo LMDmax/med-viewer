@@ -35,7 +35,10 @@ import LayoutAppBody from "./body";
 import LayoutInnerBody from "./innerbody";
 import LayoutOuterBody from "./outerbody";
 import LayoutAppSidebar from "./sidebar";
-import { GET_STANDARD_REPORT, GET_SYNOPTIC_REPORT } from "../../graphql/annotaionsQuery";
+import {
+  GET_STANDARD_REPORT,
+  GET_SYNOPTIC_REPORT,
+} from "../../graphql/annotaionsQuery";
 
 function LayoutApp({
   userInfo,
@@ -146,7 +149,7 @@ function LayoutApp({
   const [synopticReportData, setSynopticReportData] = useState("");
   const [getStandardReport, { data: standardReportData, standardReportError }] =
     useLazyQuery(GET_STANDARD_REPORT);
-	const [getSynopticReportData, { data: synopticReport, synopticReportError }] =
+  const [getSynopticReportData, { data: synopticReport, synopticReportError }] =
     useLazyQuery(GET_SYNOPTIC_REPORT);
 
   const caseId = caseInfo?._id;
@@ -154,12 +157,12 @@ function LayoutApp({
   useEffect(() => {
     if (synopticType === "breast-cancer") {
       setSynopticReportType("breast-cancer");
-    }
-    if (synopticType === "prostate-cancer") {
+    } else if (synopticType === "prostate-cancer") {
       setSynopticReportType("prostate-cancer");
-    }
-    if (synopticType === "lymphoma") {
+    } else if (synopticType === "lymphoma") {
       setSynopticReportType("lymphoma-cancer");
+    } else {
+      setSynopticReportType("");
     }
   }, [synopticType]);
 
@@ -183,9 +186,9 @@ function LayoutApp({
             },
             fetchPolicy: "network-only",
           });
-        //   console.log(response.data.loadReport.data);
+          setSynopticReportData(response.data.loadSynopticReport);
         } catch (error) {
-        //   console.error("Error fetching data:", error);
+          //   console.error("Error fetching data:", error);
         }
       };
       fetchData();
@@ -211,7 +214,9 @@ function LayoutApp({
           fetchPolicy: "network-only",
         });
         // You can also update the slide data with the new standardReportData
-        setSlideData(response.data.loadReport.data);
+        if (response.data.loadReport.message !== "Report not found") {
+          setSlideData(response.data.loadReport);
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -413,16 +418,16 @@ function LayoutApp({
   // connect websocket
 
   useEffect(() => {
-  	connectWebSocket()
-  		.then((socket) => {
-  			// console.log('WebSocket connection established.');
-  			socketRef.current = socket;
-  			// console.log(socketRef);
-  			setSocketIsConnected(true);
-  		})
-  		.catch((error) => {
-  			console.error("WebSocket connection error:", error);
-  		});
+    connectWebSocket()
+      .then((socket) => {
+        // console.log('WebSocket connection established.');
+        socketRef.current = socket;
+        // console.log(socketRef);
+        setSocketIsConnected(true);
+      })
+      .catch((error) => {
+        console.error("WebSocket connection error:", error);
+      });
   }, []);
 
   let h;

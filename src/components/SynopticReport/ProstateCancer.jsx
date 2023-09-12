@@ -13,7 +13,8 @@ import {
 import SRHelper from "./SRHelper";
 import Loading from "../Loading/loading";
 import SubmitHelper from "./SubmitHelper";
-
+import { SAVE_SYNOPTIC_REPORT } from "../../graphql/annotaionsQuery";
+import { useLazyQuery, useMutation, useSubscription } from "@apollo/client";
 const ProstateCancer = ({
   slideId,
   caseId,
@@ -26,7 +27,8 @@ const ProstateCancer = ({
   updateSynopticReport,
 }) => {
   const toast = useToast();
-
+  const [onSaveSynopticReport, { data: analysis_data, error: analysis_error }] =
+    useMutation(SAVE_SYNOPTIC_REPORT);
   const [newInputData, setNewInputData] = useState("");
   const [inputData, setInputData] = useState({
     isPreviousHistory: "",
@@ -259,8 +261,130 @@ const ProstateCancer = ({
       }));
   };
 
+  // const submitReport = async () => {
+  //   try {
+  //     await saveSynopticReport({
+  //       isPreviousHistory: inputData.isPreviousHistory,
+  //       previousBiopsy: inputData.previousBiopsy,
+  //       previousTherapy: inputData.previousTherapy,
+  //       preBiopsySerumPSA: inputData.preBiopsySerumPSA,
+  //       clinicalSymptoms: inputData.clinicalSymptoms,
+  //       clinicalStage: inputData.clinicalStage,
+  //       leftBaseCores: inputData.leftBaseCores,
+  //       leftBaseLength: inputData.leftBaseLength,
+  //       leftBaseHistologicalTumourType:
+  //         inputData.leftBaseHistologicalTumourType,
+  //       coExistentPathology: inputData.coExistentPathology,
+  //       leftMidCores: inputData.leftMidCores,
+  //       leftMidLength: inputData.leftMidLength,
+  //       leftMidHistologicalTumourType: inputData.leftMidHistologicalTumourType,
+  //       leftMidGleasonScore: inputData.leftMidGleasonScore,
+  //       isUpGrade: inputData.isUpGrade,
+  //       gleasonPattern: inputData.gleasonPattern,
+  //       leftMidPerineuralInvasion: inputData.leftMidPerineuralInvasion,
+  //       leftMidSeminalInvasion: inputData.leftMidSeminalInvasion,
+  //       leftMidLymphovascularInvasion: inputData.leftMidLymphovascularInvasion,
+  //       leftMidExtraprostateExtension: inputData.leftMidExtraprostateExtension,
+  //       leftMidIntraductualProstate: inputData.leftMidIntraductualProstate,
+  //       leftMidCoexistentExtension: inputData.leftMidCoexistentExtension,
+  //       leftApexCores: inputData.leftApexCores,
+  //       leftApexLength: inputData.leftApexLength,
+  //       leftApexPerineuralInvasion: inputData.leftApexPerineuralInvasion,
+  //       leftApexSeminalInvasion: inputData.leftApexSeminalInvasion,
+  //       leftApexLymphovascularInvasion:
+  //         inputData.leftApexLymphovascularInvasion,
+  //       leftApexExtraprostateExtension:
+  //         inputData.leftApexExtraprostateExtension,
+  //       leftApexIntraductualProstate: inputData.leftApexIntraductualProstate,
+  //       leftApexCoexistentExtension: inputData.leftApexCoexistentExtension,
+  //       rightBaseCores: inputData.rightBaseCores,
+  //       rightBaseLength: inputData.rightBaseLength,
+  //       rightMidCores: inputData.rightMidCores,
+  //       rightMidLength: inputData.rightMidLength,
+  //       rightApexCores: inputData.rightApexCores,
+  //       rightApexLength: inputData.rightApexLength,
+  //       comments: inputData.comments,
+  //       slideId,
+  //       caseId,
+  //       reportType: "prostate-cancer-report",
+  //     }).unwrap();
+  //     toast({
+  //       description: "Report submitted sucessfully",
+  //       status: "success",
+  //       duration: 2000,
+  //     });
+  //     setSynopticType("");
+  //   } catch (err) {
+  //     toast({
+  //       description: err?.data?.message
+  //         ? err?.data?.message
+  //         : "something went wrong",
+  //       status: "error",
+  //       duration: 2000,
+  //     });
+  //   }
+  // };
+
   const submitReport = async () => {
     try {
+      const { data } = await onSaveSynopticReport({
+        variables: {
+          body: {
+            caseId,
+            data: {
+              isPreviousHistory: inputData.isPreviousHistory,
+              previousBiopsy: inputData.previousBiopsy,
+              previousTherapy: inputData.previousTherapy,
+              preBiopsySerumPSA: inputData.preBiopsySerumPSA,
+              clinicalSymptoms: inputData.clinicalSymptoms,
+              clinicalStage: inputData.clinicalStage,
+              leftBaseCores: inputData.leftBaseCores,
+              leftBaseLength: inputData.leftBaseLength,
+              leftBaseHistologicalTumourType:
+                inputData.leftBaseHistologicalTumourType,
+              coExistentPathology: inputData.coExistentPathology,
+              leftMidCores: inputData.leftMidCores,
+              leftMidLength: inputData.leftMidLength,
+              leftMidHistologicalTumourType:
+                inputData.leftMidHistologicalTumourType,
+              leftMidGleasonScore: inputData.leftMidGleasonScore,
+              isUpGrade: inputData.isUpGrade,
+              gleasonPattern: inputData.gleasonPattern,
+              leftMidPerineuralInvasion: inputData.leftMidPerineuralInvasion,
+              leftMidSeminalInvasion: inputData.leftMidSeminalInvasion,
+              leftMidLymphovascularInvasion:
+                inputData.leftMidLymphovascularInvasion,
+              leftMidExtraprostateExtension:
+                inputData.leftMidExtraprostateExtension,
+              leftMidIntraductualProstate:
+                inputData.leftMidIntraductualProstate,
+              leftMidCoexistentExtension: inputData.leftMidCoexistentExtension,
+              leftApexCores: inputData.leftApexCores,
+              leftApexLength: inputData.leftApexLength,
+              leftApexPerineuralInvasion: inputData.leftApexPerineuralInvasion,
+              leftApexSeminalInvasion: inputData.leftApexSeminalInvasion,
+              leftApexLymphovascularInvasion:
+                inputData.leftApexLymphovascularInvasion,
+              leftApexExtraprostateExtension:
+                inputData.leftApexExtraprostateExtension,
+              leftApexIntraductualProstate:
+                inputData.leftApexIntraductualProstate,
+              leftApexCoexistentExtension:
+                inputData.leftApexCoexistentExtension,
+              rightBaseCores: inputData.rightBaseCores,
+              rightBaseLength: inputData.rightBaseLength,
+              rightMidCores: inputData.rightMidCores,
+              rightMidLength: inputData.rightMidLength,
+              rightApexCores: inputData.rightApexCores,
+              rightApexLength: inputData.rightApexLength,
+              comments: inputData.comments,
+              reportType: "prostate-cancer-report",
+            },
+          },
+        },
+      });
+
+      // send data to hospital DB
       await saveSynopticReport({
         isPreviousHistory: inputData.isPreviousHistory,
         previousBiopsy: inputData.previousBiopsy,
@@ -306,22 +430,30 @@ const ProstateCancer = ({
         caseId,
         reportType: "prostate-cancer-report",
       }).unwrap();
+      if (data && data.autoSaveSynopticReport.success) {
+        toast({
+          description: "Report submitted successfully",
+          status: "success",
+          duration: 2000,
+        });
+        setSynopticType("");
+      } else {
+        toast({
+          description:
+            data.autoSaveSynopticReport.message || "Something went wrong",
+          status: "error",
+          duration: 2000,
+        });
+      }
+    } catch (error) {
       toast({
-        description: "Report submitted sucessfully",
-        status: "success",
-        duration: 2000,
-      });
-      setSynopticType("");
-    } catch (err) {
-      toast({
-        description: err?.data?.message
-          ? err?.data?.message
-          : "something went wrong",
+        description: error.message || "Something went wrong",
         status: "error",
         duration: 2000,
       });
     }
   };
+
   // check the values of inputData
   const answeredAll = Object.keys(inputData).every((k) => inputData[k] !== "");
 
@@ -438,39 +570,57 @@ const ProstateCancer = ({
         </Flex>
 
         <Text fontWeight="600">4.RIGHT BASE</Text>
-        <HStack flex="1" flexDirection="column" alignItems="flex-start" my="1vh" mt="-0rem !important">
+        <HStack
+          flex="1"
+          flexDirection="column"
+          alignItems="flex-start"
+          my="1vh"
+          mt="-0rem !important"
+        >
           <VStack w="50%" alignItems="flex-start">
             <Text fontWeight="600">NUMBER OF CORES</Text>
-            <HStack mt="-0rem !important" color="#8F8F8F">
-              <RadioGroup defaultValue={synopticReportData?.rightBaseCores}>
-                <Radio value="1" onChange={handleInput} name="rightBaseCores">
-                  1
-                </Radio>
-                <Radio
-                  ml="16px"
+            {synopticReportData.message === "Report successfully found" ? (
+              <Text>{synopticReportData?.data?.rightBaseCores}</Text>
+            ) : (
+              <HStack mt="-0rem !important" color="#8F8F8F">
+                <input
+                  type="radio"
+                  id="rightBaseCores1"
+                  name="rightBaseCores"
+                  value="1"
+                  onClick={handleInput}
+                  // checked={synopticReportData?.data?.rightBaseCores === "1"}
+                />
+                <label htmlFor="rightBaseCores1">1</label>
+
+                <input
+                  type="radio"
+                  id="rightBaseCores2"
+                  name="rightBaseCores"
                   value="2"
+                  onClick={handleInput}
+                  // checked={synopticReportData?.data?.rightBaseCores === "2"}
+                />
+                <label htmlFor="rightBaseCores2">2</label>
+
+                <input
+                  type="radio"
+                  id="rightBaseCores3"
                   name="rightBaseCores"
-                  onChange={handleInput}
-                >
-                  2
-                </Radio>
-                <Radio
-                  ml="16px"
                   value="3"
-                  name="rightBaseCores"
-                  onChange={handleInput}
-                >
-                  3
-                </Radio>
-              </RadioGroup>
-            </HStack>
+                  onClick={handleInput}
+                  // checked={synopticReportData?.data?.rightBaseCores === "3"}
+                />
+                <label htmlFor="rightBaseCores3">3s</label>
+              </HStack>
+            )}
           </VStack>
           <VStack w="50%" alignItems="flex-start">
             <Text fontWeight="600">LENGHTS(S)</Text>
             <Input
               size="sm"
               borderRadius="0"
-              defaultValue={synopticReportData?.rightBaseLength}
+              defaultValue={synopticReportData?.data?.rightBaseLength}
               name="rightBaseLength"
               onChange={handleInput}
               type="number"
@@ -479,84 +629,131 @@ const ProstateCancer = ({
           </VStack>
         </HStack>
         <Text fontWeight="600">5.RIGHT MID</Text>
-        <HStack flex="1" flexDirection="column" alignItems="flex-start" my="1vh" mt="-0rem !important">
-          <VStack minW="50%" alignItems="flex-start">
-            <Text fontWeight="600">NUMBER OF CORES</Text>
-            <HStack mt="-0rem !important" color="#8F8F8F">
-              <RadioGroup defaultValue={synopticReportData?.rightMidCores}>
-                <Radio value="1" name="rightMidCores" onChange={handleInput}>
-                  1
-                </Radio>
-                <Radio
-                  ml="16px"
-                  value="2"
-                  name="rightMidCores"
-                  onChange={handleInput}
-                >
-                  2
-                </Radio>
-                <Radio
-                  ml="16px"
-                  value="3"
-                  name="rightMidCores"
-                  onChange={handleInput}
-                >
-                  3
-                </Radio>
-              </RadioGroup>
-            </HStack>
-          </VStack>
-          <VStack minW="50%" alignItems="flex-start">
-            <Text fontWeight="600">LENGHTS(S)</Text>
-            <Input
-              size="sm"
-              borderRadius="0"
-              defaultValue={synopticReportData?.rightMidLength}
-              name="rightMidLength"
-              onChange={handleInput}
-              type="number"
-              onWheel={(e) => e.target.blur()}
+        {synopticReportData.message === "Report successfully found" ? (
+          <Text>{synopticReportData?.data?.rightMidCores}</Text>
+        ) : (
+          <HStack mt="-0rem !important" color="#8F8F8F">
+            <input
+              type="radio"
+              id="rightMidCores1"
+              name="rightMidCores"
+              value="1"
+              onClick={handleInput}
+              style={{ cursor: "pointer" }}
+              // checked={synopticReportData?.data?.rightMidCores === "1"}
             />
-          </VStack>
-        </HStack>
+            <label style={{ cursor: "pointer" }} htmlFor="rightMidCores1">
+              1
+            </label>
+
+            <input
+              type="radio"
+              id="rightMidCores2"
+              name="rightMidCores"
+              value="2"
+              onClick={handleInput}
+              style={{ cursor: "pointer" }}
+              // checked={synopticReportData?.data?.rightMidCores === "2"}
+            />
+            <label style={{ cursor: "pointer" }} htmlFor="rightMidCores2">
+              2
+            </label>
+
+            <input
+              type="radio"
+              id="rightMidCores3"
+              name="rightMidCores"
+              value="3"
+              onClick={handleInput}
+              style={{ cursor: "pointer" }}
+              // checked={synopticReportData?.data?.rightMidCores === "3"}
+            />
+            <label style={{ cursor: "pointer" }} htmlFor="rightMidCores3">
+              3
+            </label>
+          </HStack>
+        )}
         <Text fontWeight="600">6.RIGHT APEX</Text>
-        <HStack flex="1" flexDirection="column" alignItems="flex-start" my="1vh" mt="-0rem !important">
+        <HStack
+          flex="1"
+          flexDirection="column"
+          alignItems="flex-start"
+          my="1vh"
+          mt="-0rem !important"
+        >
           <VStack minW="50%" alignItems="flex-start">
             <Text fontWeight="600">NUMBER OF CORES</Text>
-            <HStack mt="-0rem !important" color="#8F8F8F">
-              <RadioGroup defaultValue={synopticReportData?.rightApexCores}>
-                <Radio value="1" name="rightApexCores" onChange={handleInput}>
+            {synopticReportData.message === "Report successfully found" ? (
+              <Text>{synopticReportData?.data?.rightApexCores}</Text>
+            ) : (
+              <HStack mt="-0rem  !important" color="#8F8F8F">
+                <input
+                  type="radio"
+                  id="rightApexCores1"
+                  name="rightApexCores"
+                  value="1"
+                  onClick={handleInput}
+                  style={{ cursor: "pointer" }}
+                  // checked={synopticReportData?.data?.rightApexCores === "1"}
+                  disabled={
+                    synopticReportData.message === "Report successfully found"
+                  }
+                />
+                <label style={{ cursor: "pointer" }} htmlFor="rightApexCores1">
                   1
-                </Radio>
-                <Radio
-                  ml="16px"
+                </label>
+
+                <input
+                  type="radio"
+                  id="rightApexCores2"
+                  name="rightApexCores"
                   value="2"
-                  name="rightApexCores"
-                  onChange={handleInput}
-                >
+                  onClick={handleInput}
+                  style={{ cursor: "pointer" }}
+                  disabled={
+                    synopticReportData.message === "Report successfully found"
+                  }
+                  // checked={synopticReportData?.data?.rightApexCores === "2"}
+                />
+                <label style={{ cursor: "pointer" }} htmlFor="rightApexCores2">
                   2
-                </Radio>
-                <Radio
-                  ml="16px"
-                  value="3"
+                </label>
+
+                <input
+                  type="radio"
+                  id="rightApexCores3"
                   name="rightApexCores"
-                  onChange={handleInput}
-                >
+                  value="3"
+                  onClick={handleInput}
+                  style={{ cursor: "pointer" }}
+                  disabled={
+                    synopticReportData.message === "Report successfully found"
+                  }
+                  // checked={synopticReportData?.data?.rightApexCores === "3"}
+                />
+                <label style={{ cursor: "pointer" }} htmlFor="rightApexCores3">
                   3
-                </Radio>
-              </RadioGroup>
-            </HStack>
+                </label>
+              </HStack>
+            )}
           </VStack>
           <VStack minW="50%" alignItems="flex-start">
             <Text fontWeight="600">LENGHTS(S)</Text>
             <Input
               size="sm"
               borderRadius="0"
-              defaultValue={synopticReportData?.rightApexLength}
+              defaultValue={
+                synopticReportData?.data?.rightApexLength !== ""
+                  ? synopticReportData?.data?.rightApexLength
+                  : ""
+              }
               name="rightApexLength"
               onChange={handleInput}
               type="number"
               onWheel={(e) => e.target.blur()}
+              disabled={
+                synopticReportData.message === "Report successfully found"
+              }
             />
           </VStack>
         </HStack>
@@ -566,20 +763,27 @@ const ProstateCancer = ({
             resize="none"
             w="90%"
             name="comments"
-            defaultValue={synopticReportData?.comments}
+            defaultValue={synopticReportData?.data?.comments}
             onChange={handleInput}
-
+            disabled={
+              synopticReportData.message === "Report successfully found"
+            }
           />
         </VStack>
       </Flex>
-      <SubmitHelper
-        userInfo={userInfo}
-        reportedStatus={reportedStatus}
-        answeredAll={answeredAll}
-        submitReport={submitReport}
-        newInputData={newInputData}
-        handleUpdate={handleUpdate}
-      />
+      {userInfo?.userType !== "technologist" &&
+      synopticReportData.message === "Report not found" ? (
+        <SubmitHelper
+          userInfo={userInfo}
+          reportedStatus={reportedStatus}
+          answeredAll={answeredAll}
+          submitReport={submitReport}
+          newInputData={newInputData}
+          handleUpdate={handleUpdate}
+        />
+      ) : (
+        ""
+      )}
     </Flex>
   );
 };
