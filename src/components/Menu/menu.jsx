@@ -11,7 +11,6 @@ import {
 import { motion } from "framer-motion";
 import { GrFormClose } from "react-icons/gr";
 import axios from "axios";
-import { getMainDefinition } from "@apollo/client/utilities";
 import {
   SlidesIcon,
   TimelineIcon,
@@ -28,15 +27,6 @@ import {
   MessagesIcon,
   MessagesIconSelected,
 } from "../Icons/CustomIcons";
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-  split,
-  HttpLink,
-} from "@apollo/client";
-import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
-import { createClient } from "graphql-ws";
 import SlidesMenu from "./slidesMenu";
 import { useFabricOverlayState } from "../../state/store";
 import Studies from "../Sidebar/studies";
@@ -346,60 +336,6 @@ function FunctionsMenu({
       setSelectedOption("slides");
     }
   }, [showRightPanel, showNormalisation]);
-  const token = localStorage.getItem(Environment.AUTH0_TOKEN);
-  let accessToken;
-  if (token) {
-    const { body } = JSON.parse(token);
-
-    if (body && typeof body === "object") {
-      accessToken = body.access_token;
-    }
-  }
-
-  const httpLink = new HttpLink({
-    uri: "https://development-api.chat.prr.ai",
-
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-
-  const wsLink = new GraphQLWsLink(
-    createClient({
-      url: "wss://development-api.chat.prr.ai",
-    })
-  );
-
-  // The split function takes three parameters:
-
-  //
-
-  // * A function that's called for each operation to execute
-
-  // * The Link to use for an operation if the function returns a "truthy" value
-
-  // * The Link to use for an operation if the function returns a "falsy" value
-
-  const splitLink = split(
-    ({ query }) => {
-      const definition = getMainDefinition(query);
-      return (
-        definition.kind === "OperationDefinition" &&
-        definition.operation === "subscription"
-      );
-    },
-
-    wsLink,
-
-    httpLink
-  );
-
-  const apolloClient = new ApolloClient({
-    link: splitLink,
-
-    cache: new InMemoryCache(),
-  });
-
   // console.log("APOOLO", apolloClient)
   return (
     <Box

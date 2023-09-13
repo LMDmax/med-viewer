@@ -16,11 +16,6 @@ import { RiAttachment2 } from "react-icons/ri";
 import { v4 as uuidv4 } from "uuid";
 import defaultStyle from "./defaultStyle";
 import defaultMentionStyle from "./defaultMentionStyle";
-import {
-  CHAT_SUBSCRIPTION,
-  FETCH_CONVERSATION,
-  SEND_MESSAGE,
-} from "../../state/graphql/ChatQuery";
 import ScrollBar from "../others/ScrollBar";
 import QueryChat from "./QueryChat";
 import { useFabricOverlayState } from "../../state/store";

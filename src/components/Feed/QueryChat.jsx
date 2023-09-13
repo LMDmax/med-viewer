@@ -10,11 +10,6 @@ import {
 } from "@chakra-ui/react";
 import { CloseIcon } from "@chakra-ui/icons";
 import moment from "moment";
-import { useLazyQuery, useSubscription } from "@apollo/client";
-import {
-  CHAT_SUBSCRIPTION,
-  FETCH_CONVERSATION,
-} from "../../state/graphql/ChatQuery";
 import QueryHelper from "./QueryHelper";
 
 const QueryChat = ({

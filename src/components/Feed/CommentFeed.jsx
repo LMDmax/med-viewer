@@ -35,10 +35,7 @@ import { updateAnnotationInDB } from "../../utility";
 import ScrollBar from "../ScrollBar";
 import useCanvasHelpers from "../../hooks/use-fabric-helpers";
 import DeleteConfirmation from "../Annotations/DeleteConfirmation";
-import {
-  DELETE_ANNOTATION,
-  UPDATE_ANNOTATION,
-} from "../../graphql/annotaionsQuery";
+
 
 const EditTextButton = ({ feed, handleEditClick, ...restProps }) => {
   return (

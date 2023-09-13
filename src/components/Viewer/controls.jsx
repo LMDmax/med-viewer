@@ -15,16 +15,6 @@ import Draggable from "react-draggable";
 import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 import { MdOutlineDragIndicator } from "react-icons/md";
 
-import {
-  ANNOTATIONS_SUBSCRIPTION,
-  DELETE_ANNOTATION,
-  GET_ANNOTATION,
-  GET_VHUT_ANALYSIS,
-  GET_XMLANNOTATION,
-  UPDATE_ANNOTATION,
-  VHUT_ANALTSIS,
-  VHUT_ANALYSIS_SUBSCRIPTION,
-} from "../../graphql/annotaionsQuery";
 import useCanvasHelpers from "../../hooks/use-fabric-helpers";
 import {
   updateIsAnnotationLoading,
@@ -58,7 +48,6 @@ import ToolbarButton from "../ViewerToolbar/button";
 import IconSize from "../ViewerToolbar/IconSize";
 import ZoomButton from "../ZoomButton/ZoomButton";
 import ZoomSlider from "../ZoomSlider/slider";
-import { GET_ADJUSTMENT_RESULT } from "../../graphql/filterQuery";
 
 const ViewerControls = ({
   viewerId,

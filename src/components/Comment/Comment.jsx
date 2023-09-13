@@ -12,11 +12,7 @@ import {
 import { fabric } from "openseadragon-fabricjs-overlay";
 import { RiChatQuoteLine } from "react-icons/ri";
 
-import {
-  DELETE_ANNOTATION,
-  SAVE_ANNOTATION,
-  UPDATE_ANNOTATION,
-} from "../../graphql/annotaionsQuery";
+
 import {
   addToActivityFeed,
   updateTool,

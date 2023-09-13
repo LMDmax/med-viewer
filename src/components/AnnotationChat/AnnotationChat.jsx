@@ -19,7 +19,6 @@ import React, { useRef, useState } from "react";
 import { AiOutlineSend } from "react-icons/ai";
 import { HiOutlineArrowRight } from "react-icons/hi";
 import { Mention, MentionsInput } from "react-mentions";
-import { SEND_MESSAGE } from "../../state/graphql/ChatQuery";
 import defaultMentionStyle from "../Feed/defaultMentionStyle";
 import defaultStyle from "../Feed/defaultStyle";
 

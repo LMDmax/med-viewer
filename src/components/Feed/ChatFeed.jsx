@@ -1,16 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-  split,
-  HttpLink,
-} from "@apollo/client";
-import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
-import { getMainDefinition } from "@apollo/client/utilities";
 import { Box, Flex, Text, Tooltip } from "@chakra-ui/react";
-import { createClient } from "graphql-ws";
 import { AiFillLock } from "react-icons/ai";
 import { BiSearch } from "react-icons/bi";
 import { BsFillPeopleFill } from "react-icons/bs";

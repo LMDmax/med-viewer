@@ -1,13 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useMediaQuery, useToast } from "@chakra-ui/react";
-import {
-  GET_TILS_ANALYSIS,
-  TIL_ANALYSIS_SUBSCRIPTION,
-} from "../../graphql/annotaionsQuery";
+
 import { fabric } from "openseadragon-fabricjs-overlay";
 import { useFabricOverlayState } from "../../state/store";
-import { useLazyQuery } from "@apollo/client/react";
-import { useApolloClient, useSubscription } from "@apollo/client";
 import { getFileBucketFolder } from "../../utility";
 
 const Til = ({
