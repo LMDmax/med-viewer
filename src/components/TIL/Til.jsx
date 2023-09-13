@@ -44,7 +44,7 @@ const Til = ({
   const [modifiedTumor, setModifiedTumor] = useState([]);
   const [modifiedLymphocyte, setModifiedLymphocyte] = useState([]);
   const toast = useToast();
-  const client = useApolloClient();
+  // const client = useApolloClient();
   const prevLoadUIRef = useRef(false);
   const { getTils, data, error, refetch, loading } = onGetTILAnalysis;
   const { getTils1, data1, error1, refetch1, loading1 } = onGetHILAnalysis;
@@ -139,7 +139,7 @@ const Til = ({
       //   duration: 1500,
       //   isClosable: true,
       // });
-      client.resetStore();
+      // client.resetStore();
       refetch();
       setNewHilData(false);
       setTimeout(() => {
