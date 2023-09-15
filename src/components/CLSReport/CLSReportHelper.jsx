@@ -200,6 +200,7 @@ function CLSReportHelper({
             questionsResponse={questionsResponse}
             slideId={slideId}
             loading={loading}
+            errorMessage={errorMessage}
             application={application}
             questionIndex={questionIndex}
           />
