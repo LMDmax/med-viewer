@@ -141,6 +141,7 @@ function LayoutApp({
   const [showRightPanel, setShowRightPanel] = useState(false);
   const [originalPixels, setOriginalPixels] = useState([]);
   const [editView, setEditView] = useState(false);
+  const [gleasonScoringData, setGleasonScoringData] = useState({});
   const [gleasonScoring, setGleasonScoring] = useState(false);
   const { tile, viewer } = viewerWindow[currentViewer];
   // meanu_Report
@@ -527,6 +528,7 @@ function LayoutApp({
           getSynopticReport={getSynopticReport}
           updateSynopticReport={updateSynopticReport}
           isXmlAnnotations={isXmlAnnotations}
+          setGleasonScoringData={setGleasonScoringData}
         />
         <LayoutInnerBody>
           {sidebar ? (
@@ -653,6 +655,7 @@ function LayoutApp({
             addUsersToCase={addUsersToCase}
             searchSelectedData={searchSelectedData}
             questionIndex={questionIndex}
+            gleasonScoringData={gleasonScoringData}
           />
         </LayoutInnerBody>
         <Flex

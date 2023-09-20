@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 
 import { useMutation, useSubscription } from "@apollo/client";
+import { BsArrowRepeat } from "react-icons/bs";
 import {
   Box,
   Flex,
@@ -167,10 +168,12 @@ const AnnotationFeed = ({
   isXmlAnnotations,
   activeObject,
   searchSelectedData,
+  gleasonScoringData,
 }) => {
   // const onUpdateAnnotation = (data) => {
   //   console.log("annotationFeed", data);
   // };
+  console.log("ON", gleasonScoringData);
   const toast = useToast();
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
   const [isTILBoxVisible, setIsTilBoxVisible] = useState(false);
@@ -1142,6 +1145,8 @@ const AnnotationFeed = ({
                   >
                     <Flex px="25px" flexDir="column" w="100%">
                       <Flex
+                        borderTop="1px solid lightgray"
+                        borderBottom="1px solid lightgray"
                         my="0"
                         py="10px"
                         alignItems="center"
@@ -1164,12 +1169,15 @@ const AnnotationFeed = ({
                           />
                         )}
                         <Box ml="15px">
-                          <RiCheckboxBlankFill color="#E18B08" />
+                          <RiCheckboxBlankFill color="yellow" />
                         </Box>
                         <Text ml="5px">Pattern 3</Text>
                         <Box w="100%">
                           <Text textAlign="end" mr="5px">
-                            20%
+                            {gleasonScoringData.pattern3 !== null
+                              ? gleasonScoringData.pattern3.toFixed(2)
+                              : "-"}{" "}
+                            %
                           </Text>
                         </Box>
                       </Flex>
@@ -1203,12 +1211,15 @@ const AnnotationFeed = ({
                           />
                         )}
                         <Box ml="15px">
-                          <RiCheckboxBlankFill color="#189B77" />
+                          <RiCheckboxBlankFill color="orange" />
                         </Box>
                         <Text ml="5px">Pattern 4</Text>
                         <Box w="100%">
                           <Text textAlign="end" mr="5px">
-                            80%
+                            {gleasonScoringData.pattern4 !== null
+                              ? gleasonScoringData.pattern4.toFixed(2)
+                              : "-"}{" "}
+                            %
                           </Text>
                         </Box>
                       </Flex>
@@ -1218,40 +1229,204 @@ const AnnotationFeed = ({
                           {/* Add more content here */}
                         </Box>
                       </Collapse>
+                      <Flex
+                        borderBottom="1px solid lightgray"
+                        my="0"
+                        pt="10px"
+                        pb="15px"
+                        alignItems="center"
+                        onClick={() => {
+                          handleCollapseToggle("grade3");
+                        }}
+                      >
+                        {collapseStates.grade3 ? (
+                          <Icon
+                            as={AiFillCaretDown}
+                            color="#3B5D7C"
+                            boxSize={4}
+                          />
+                        ) : (
+                          <Icon
+                            as={AiFillCaretRight}
+                            color="gray"
+                            boxSize={4}
+                          />
+                        )}
+                        <Box ml="15px">
+                          <RiCheckboxBlankFill color="red" />
+                        </Box>
+                        <Text ml="5px">Pattern 5</Text>
+                        <Box w="100%">
+                          <Text textAlign="end" mr="5px">
+                            {gleasonScoringData.pattern5 !== null
+                              ? gleasonScoringData.pattern5.toFixed(2)
+                              : "-"}{" "}
+                            %
+                          </Text>
+                        </Box>
+                      </Flex>
+                      <Collapse in={collapseStates.grade3} animateOpacity>
+                        <Box bg="white" my="5px" p="10px" boxShadow="md">
+                          <Text>Grade 3 Collapse Content</Text>
+                          {/* Add more content here */}
+                        </Box>
+                      </Collapse>
+                      <Flex
+                        borderBottom="1px solid lightgray"
+                        my="0"
+                        pt="10px"
+                        pb="15px"
+                        alignItems="center"
+                        onClick={() => {
+                          handleCollapseToggle("grade4");
+                        }}
+                      >
+                        {collapseStates.grade4 ? (
+                          <Icon
+                            as={AiFillCaretDown}
+                            color="#3B5D7C"
+                            boxSize={4}
+                          />
+                        ) : (
+                          <Icon
+                            as={AiFillCaretRight}
+                            color="gray"
+                            boxSize={4}
+                          />
+                        )}
+                        <Box ml="15px">
+                          <RiCheckboxBlankFill color="green" />
+                        </Box>
+                        <Text ml="5px">Benign Glands</Text>
+                        <Box w="100%">
+                          <Text textAlign="end" mr="5px">
+                            {gleasonScoringData.pattern0 !== null
+                              ? gleasonScoringData.pattern0.toFixed(2)
+                              : "-"}{" "}
+                            %
+                          </Text>
+                        </Box>
+                      </Flex>
+                      <Collapse in={collapseStates.grade4} animateOpacity>
+                        <Box bg="white" my="5px" p="10px" boxShadow="md">
+                          <Text> Benign Glands Collapse Content</Text>
+                          {/* Add more content here */}
+                        </Box>
+                      </Collapse>
+                    </Flex>
+                    <Flex
+                      w="100%"
+                      // border="1px solid red"
+                      // border="1px solid red "
+                      justifyContent="flex-end"
+                      alignItems="center"
+                      height="45px"
+                      px="25px"
+                      my="10px"
+                      bg="#FCFCFC"
+                    >
+                      <Box cursor="not-allowed">
+                        <BsArrowRepeat size={20} style={{ color: "#1B75BC" }} />
+                      </Box>
+                      <Text pl="10px"> Update results</Text>
                     </Flex>
                     <Flex
                       flexDir="column"
                       alignItems="center"
                       justifyContent="space-evenly"
                       mt="15px"
-                      h="180px"
+                      h="400px"
+                      w="95%"
                       bg="white"
                       px="25px"
+                      // border="1px solid red"
+                      cursor="default"
                     >
                       <Flex w="100%" justifyContent="space-between">
-                        <Text>Primary Pattern :</Text>
-                        <Text>4</Text>
+                        <Text>Specimen Type :</Text>
+                        <Text>Needle Biopsy</Text>
+                      </Flex>
+                      <Flex w="100%" justifyContent="space-between">
+                        <Text>Core Length :</Text>
+                        <Text>
+                          {gleasonScoringData.coreLength !== null
+                            ? gleasonScoringData.coreLength
+                            : "-"}
+                        </Text>
+                      </Flex>
+                      <Flex w="100%" justifyContent="space-between">
+                        <Text>Tumor Length :</Text>
+                        <Text>
+                          <Text>
+                            {gleasonScoringData.tumorLength !== null
+                              ? `${(
+                                  parseFloat(
+                                    gleasonScoringData.tumorLength.replace(
+                                      "mm",
+                                      ""
+                                    )
+                                  ) * 1000
+                                ).toFixed(2)}μm`
+                              : "-"}
+                          </Text>{" "}
+                        </Text>
                       </Flex>
                       <Flex
+                        // border="1px solid red"
                         w="100%"
-                        pb="20px"
-                        borderBottom="1px solid lightgray"
+                        alignItems="flex-end"
                         justifyContent="space-between"
                       >
-                        <Text>Secondary Pattern :</Text>
-                        <Text>3</Text>
+                        <Text w="100%">
+                          Prostate tissue involved by
+                          <br /> Tumor :
+                        </Text>
+                        <Text textAlign="right">
+                          {gleasonScoringData.pptTumor !== null
+                            ? `${gleasonScoringData.pptTumor.toFixed(2)} %`
+                            : "-"}
+                        </Text>
+                      </Flex>
+
+                      <Flex w="100%" justifyContent="space-between">
+                        <Text>Primary Pattern :</Text>
+                        <Text>
+                          {gleasonScoringData.primaryPattern !== null
+                            ? gleasonScoringData.primaryPattern
+                            : "-"}
+                        </Text>
+                      </Flex>
+                      <Flex w="100%" justifyContent="space-between">
+                        <Text>Worst remaining Pattern :</Text>
+                        <Text>
+                          {gleasonScoringData.worstPattern !== null
+                            ? gleasonScoringData.worstPattern
+                            : "-"}
+                        </Text>
                       </Flex>
                       <Flex w="100%" justifyContent="space-between">
                         <Text>Gleason Score :</Text>
-                        <Text>7 (4+3)</Text>
+                        <Text>
+                          {gleasonScoringData.gleasonScore !== null
+                            ? gleasonScoringData.gleasonScore
+                            : "-"}
+                        </Text>
                       </Flex>
                       <Flex w="100%" justifyContent="space-between">
                         <Text>Grade Group :</Text>
-                        <Text>3</Text>
+                        <Text>
+                          {gleasonScoringData.gradeGroup !== null
+                            ? gleasonScoringData.gradeGroup
+                            : "-"}
+                        </Text>
                       </Flex>
                       <Flex w="100%" justifyContent="space-between">
                         <Text>Risk Category :</Text>
-                        <Text>intermediate</Text>
+                        <Text>
+                          {gleasonScoringData.riskCategory !== null
+                            ? gleasonScoringData.riskCategory
+                            : "-"}
+                        </Text>
                       </Flex>
                     </Flex>
                   </MotionBox>

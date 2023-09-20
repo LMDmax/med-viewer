@@ -149,6 +149,7 @@ function FunctionsMenu({
   updateSynopticReport,
   searchSelectedData,
   questionIndex,
+  gleasonScoringData,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
@@ -836,6 +837,7 @@ function FunctionsMenu({
                 lymphocyteCount={lymphocyteCount}
                 tilScore={tilScore}
                 searchSelectedData={searchSelectedData}
+                gleasonScoringData={gleasonScoringData}
               />
             ) : selectedOption === "comments" ? (
               <CommentFeed

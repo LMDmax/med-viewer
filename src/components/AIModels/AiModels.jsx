@@ -37,6 +37,7 @@ const AiModels = ({
   bottombottomZoomValue,
   setLoadUI,
   navigatorCounter,
+  setGleasonScoringData,
 }) => {
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { viewerWindow, isViewportAnalysing } = fabricOverlayState;
@@ -147,8 +148,6 @@ const AiModels = ({
     localStorage.removeItem("ModelName");
   }, [showTumor, showGleason]);
 
-  
-
   useEffect(() => {
     if (subscription && detectTumor) {
       // setBinaryMask(dziUrl);
@@ -184,6 +183,21 @@ const AiModels = ({
         setTimeout(() => {
           setShowGleason(true);
         }, 2000);
+        const gleasonDataSet = {
+          coreLength: subscription.conversionStatus.data.coreLength,
+          pattern0: subscription.conversionStatus.data.benign,
+          pattern3: subscription.conversionStatus.data.gleason3,
+          pattern4: subscription.conversionStatus.data.gleason4,
+          pattern5: subscription.conversionStatus.data.gleason5,
+          gleasonScore: subscription.conversionStatus.data.gleasonScore,
+          gradeGroup: subscription.conversionStatus.data.gradeGroup,
+          pptTumor: subscription.conversionStatus.data.pptTumor,
+          primaryPattern: subscription.conversionStatus.data.primaryPattern,
+          riskCategory: subscription.conversionStatus.data.riskCategory,
+          tumorLength: subscription.conversionStatus.data.tumorLength,
+          worstPattern: subscription.conversionStatus.data.worstRemainingPattern,
+        };
+        setGleasonScoringData(gleasonDataSet);
       }
     } else {
       setShowTumor(false);
@@ -203,8 +217,8 @@ const AiModels = ({
       setGleasonScoring(false);
       setPRRHover(false);
       setShowTumor(false);
-      setDetectTumor(false)
-        setTilActiveState(false);
+      setDetectTumor(false);
+      setTilActiveState(false);
       setToolSelected("");
       setModelname("");
     }

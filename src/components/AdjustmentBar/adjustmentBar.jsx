@@ -99,6 +99,7 @@ function AdjustmentBar({
   chatHover,
   isXmlAnnotations,
   Environment,
+  setGleasonScoringData,
 }) {
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
   const { fabricOverlayState } = useFabricOverlayState();
@@ -182,6 +183,7 @@ function AdjustmentBar({
         setIsNavigatorActive={setIsNavigatorActive}
         setTotalCells={setTotalCells}
         isXmlAnnotations={isXmlAnnotations}
+        setGleasonScoringData={setGleasonScoringData}
       />
       {/* <ActionTools setToolSelected={setToolSelected} viewerId={currentViewer} /> */}
       <ScreenTools

@@ -78,6 +78,7 @@ function Move({
   mongoId,
   toolSelected,
   isXmlAnnotations,
+  setGleasonScoringData,
 }) {
   const [ifBiggerScreen] = useMediaQuery("(min-width:2000px)");
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
@@ -305,6 +306,7 @@ function Move({
             setBinaryMask={setBinaryMask}
             navigatorCounter={navigatorCounter}
             slide={slide}
+            setGleasonScoringData={setGleasonScoringData}
             setToolSelected={setToolSelected}
           />
         ) : null}

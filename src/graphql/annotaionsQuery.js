@@ -501,6 +501,21 @@ export const TUMOR_DETECTION_SUBSCRIPTION = gql`
         originalUrl
         key
         slideid
+        Version
+        bucketName
+        benign
+        gleason3
+        gleason4
+        gleason5
+        worstRemainingPattern
+        coreLength
+        gleasonScore
+        gradeGroup
+        pptTumor
+        primaryPattern
+        tumorLength
+        riskCategory
+        Status
       }
       type
     }
