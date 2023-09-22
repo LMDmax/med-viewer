@@ -82,7 +82,9 @@ const Til = ({
       },
     });
 
-// console.log(tilSubscriptionData)
+  console.log("tilSubData", tilSubscriptionData);
+  console.log("dataQuery", data);
+
 // console.log(data)
   // ------------------------------
   // ------------- updating state if data found,if hideModification button clicked,if hook data recived

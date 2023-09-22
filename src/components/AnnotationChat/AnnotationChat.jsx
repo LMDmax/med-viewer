@@ -34,6 +34,8 @@ const AnnotationChat = ({
   mentionUsers,
   addUsersToCase,
   annotationObject,
+  caseInfo,
+  slideId,
 }) => {
   const [groupMessages, setGroupMessages] = useState([]);
   const [messageInput, setMessageInput] = useState({
@@ -50,6 +52,7 @@ const AnnotationChat = ({
   const sendMessage = async (e) => {
     onClose();
     e.preventDefault();
+
     const ids = messageInput?.mentionedUsers?.map((item) => item.toId);
     const newIds = [...new Set(ids)];
     const userIds = mentionUsers
@@ -67,7 +70,6 @@ const AnnotationChat = ({
         fromName: `${userInfo.firstName} ${userInfo.lastName}`,
       },
     ]);
-
     const { data } = await sendNewMessage({
       variables: {
         body: {
@@ -79,6 +81,8 @@ const AnnotationChat = ({
             types: "message",
           },
           to: chatId,
+          caseId: caseInfo._id,
+          slideId,
           toName: "",
           fromImage: "",
           fromName: `${userInfo.firstName} ${userInfo.lastName}`,
@@ -89,6 +93,7 @@ const AnnotationChat = ({
             top: annotationObject?.top,
             height: annotationObject?.height,
             zoomLevel: annotationObject?.zoomLevel,
+            hash: annotationObject?.hash,
           },
         },
       },

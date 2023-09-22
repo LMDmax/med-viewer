@@ -66,7 +66,10 @@ export const SEND_MESSAGE = gql`
           width
           height
           zoomLevel
+          hash
         }
+        slideId
+        caseId
         isDeleted
         createdAt
         updatedAt

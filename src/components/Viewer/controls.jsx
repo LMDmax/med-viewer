@@ -1450,6 +1450,8 @@ const ViewerControls = ({
               chatId={caseInfo?._id}
               annotationObject={annotationObject}
               addUsersToCase={addUsersToCase}
+              slideId={slideId}
+              caseInfo={caseInfo}
             />
           )}
           <ShowMetric viewerId={viewerId} slide={slide} />
