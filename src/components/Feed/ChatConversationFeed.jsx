@@ -20,7 +20,6 @@ import ScrollBar from "../others/ScrollBar";
 import QueryChat from "./QueryChat";
 import { useFabricOverlayState } from "../../state/store";
 
-
 const formats = {
   sameDay: "[Today]",
   nextDay: "[Tomorrow]",
@@ -44,7 +43,6 @@ const DateSeperatorComponent = ({ messageSepratorDate }) => {
   );
 };
 const RightMessageComponent = ({ data, setQueryChat, zoomIntoAnnotation }) => {
-  console.log("DATA", data)
   return data?.mentionedUsers?.length > 0 ? (
     <Box
       key={uuidv4()}
@@ -229,7 +227,7 @@ const ChatConversationFeed = ({
   viewerId,
   getMessagesFromDB,
   onSendMessage,
-  useGetMessageSubcription
+  useGetMessageSubcription,
 }) => {
   let lastDate = "1999-01-01";
   const [groupMessages, setGroupMessages] = useState([]);
@@ -272,6 +270,11 @@ const ChatConversationFeed = ({
   //   },
   // ];
 
+  const { subscribedMessageData, errorMessage } = useGetMessageSubcription(
+    groupChatId,
+    userInfo?._id
+  );
+
   const { fetchMessages, isConversationLoading, msgData, refetch, error } =
     getMessagesFromDB;
 
@@ -310,6 +313,7 @@ const ChatConversationFeed = ({
               limit: 25,
               pageNumber,
             },
+            fetchPolicy: "no-cache",
           },
         },
       });
@@ -318,7 +322,7 @@ const ChatConversationFeed = ({
 
   useEffect(() => {
     setGroupMessages([]);
-
+    // console.log("@2222222");
     fetchMessages({
       variables: {
         query: {
@@ -336,7 +340,7 @@ const ChatConversationFeed = ({
     });
     setPageNumber(1);
     setTotalPage(1);
-  }, [groupChatId]);
+  }, [groupChatId, subscribedMessageData]);
 
   useEffect(() => {
     // 👇️ scroll to bottom every time messages change
@@ -421,9 +425,8 @@ const ChatConversationFeed = ({
   //   },
   // });
 
-
-  const { subscribedMessageData } = useGetMessageSubcription(groupChatId,userInfo?._id)
   // console.log(client2);
+
   useEffect(() => {
     if (subscribedMessageData) {
       const newMessages = [

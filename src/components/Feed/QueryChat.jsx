@@ -27,59 +27,46 @@ const QueryChat = ({
   const { fetchMessages, isConversationLoading, msgData, refetch, error } =
     getMessagesFromDB;
 
-  useEffect(() => {
-    if (msgData && msgData.readChat.success) {
-      const totalPages = msgData.readChat?.meta?.totalPages;
-      if (totalPages) {
-        setTotalPage(totalPages);
-      }
+ 
 
-      if (pageNumber === 1) setGroupMessages(msgData.readChat.data.reverse());
-      else {
-        const newData = [...msgData.readChat.data];
-        setGroupMessages(newData.reverse().concat(groupMessages));
-      }
-    }
-  }, [msgData]);
+  // useEffect(() => {
+  //   if (pageNumber > 1) {
+  //     fetchMessages({
+  //       variables: {
+  //         query: {
+  //           filter: {
+  //             toId: queryChat?._id,
+  //           },
+  //           paginate: {
+  //             limit: 25,
+  //             pageNumber,
+  //           },
+  //         },
+  //       },
+  //     });
+  //   }
+  // }, [pageNumber]);
 
-  useEffect(() => {
-    if (pageNumber > 1) {
-      fetchMessages({
-        variables: {
-          query: {
-            filter: {
-              toId: queryChat?._id,
-            },
-            paginate: {
-              limit: 25,
-              pageNumber,
-            },
-          },
-        },
-      });
-    }
-  }, [pageNumber]);
+  // useEffect(() => {
+  //   setGroupMessages([]);
 
-  useEffect(() => {
-    setGroupMessages([]);
-
-    fetchMessages({
-      variables: {
-        query: {
-          filter: {
-            toId: queryChat?._id,
-          },
-          paginate: {
-            limit: 25,
-            pageNumber: 1,
-          },
-        },
-      },
-      fetchPolicy: "no-cache",
-    });
-    setPageNumber(1);
-    setTotalPage(1);
-  }, [queryChat?._id]);
+  //   fetchMessages({
+  //     variables: {
+  //       query: {
+  //         filter: {
+  //           toId: queryChat?._id,
+  //         },
+  //         paginate: {
+  //           limit: 25,
+  //           pageNumber: 1,
+  //         },
+  //       },
+  //     },
+  //     fetchPolicy: "no-cache",
+  //   });
+  //   setPageNumber(1);
+  //   setTotalPage(1);
+  // }, [queryChat?._id]);
 
   const groupChatId = queryChat?._id;
   const userData = userInfo?._id;
