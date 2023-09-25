@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import OpenSeadragon from "openseadragon";
 import "./zoom-levels";
 import "./openseadragon-scalebar";
-import { fabric } from "fabric"; 
+import { fabric } from "fabric";
 import { useLazyQuery, useMutation, useSubscription } from "@apollo/client";
 import {
   VStack,
@@ -68,6 +68,7 @@ import IconSize from "../ViewerToolbar/IconSize";
 import ZoomButton from "../ZoomButton/ZoomButton";
 import ZoomSlider from "../ZoomSlider/slider";
 import { GET_ADJUSTMENT_RESULT } from "../../graphql/filterQuery";
+import { useLocation } from "react-router-dom";
 
 const ViewerControls = ({
   viewerId,
@@ -111,6 +112,8 @@ const ViewerControls = ({
   } = useCanvasHelpers(viewerId);
 
   const [isAnnotationLoaded, setIsAnnotationLoaded] = useState(false);
+  const location = useLocation();
+  const [hash, setHash] = useState(location.state.hash || "");
   const [isRightClickActive, setIsRightClickActive] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ left: 0, top: 0 });
   const [annotationObject, setAnnotationObject] = useState(null);
@@ -184,6 +187,23 @@ const ViewerControls = ({
     }
   );
   // console.log(annotationData);
+
+  useEffect(() => {
+    if (annotationData?.loadAnnotation?.data.length > 0) {
+      const selectedChatAnnotation = annotationData?.loadAnnotation?.data.find(
+        (item) => item.hash === hash
+      );
+      if (selectedChatAnnotation) {
+        const { left, width, top, height, zoomLevel } = selectedChatAnnotation;
+        const vpoint = viewer.viewport.imageToViewportRectangle(
+          left + width / 2,
+          top + height / 2
+        );
+        viewer.viewport.zoomTo(zoomLevel * 2);
+        viewer.viewport.panTo(vpoint);
+      }
+    }
+  }, [annotationData]);
 
   // #################### VHUT_ANALYSIS_SUBSCRIPTION ##############
   const { data: vhutSubscriptionData, error: vhutSubscription_error } =
@@ -730,7 +750,8 @@ const ViewerControls = ({
               });
             }
             const textAnnotation = annotatedData.filter(
-              (eachAnnotation) => eachAnnotation.type == "textbox" && eachAnnotation.text !== ""
+              (eachAnnotation) =>
+                eachAnnotation.type == "textbox" && eachAnnotation.text !== ""
             );
             if (textAnnotation.length > 0) {
               toast({

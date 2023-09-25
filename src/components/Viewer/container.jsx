@@ -54,6 +54,8 @@ const ViewerContainer = ({
   const { viewerWindow } = fabricOverlayState;
   const { fabricOverlay, userCanvases, tile } = viewerWindow[viewerId];
 
+  // console.log(location);
+
   const newCanvasTitle =
     location.state && location.state.canvasTitle
       ? location.state.canvasTitle

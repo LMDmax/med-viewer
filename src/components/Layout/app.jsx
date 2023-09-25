@@ -144,6 +144,7 @@ function LayoutApp({
   const [gleasonScoringData, setGleasonScoringData] = useState({});
   const [gleasonScoring, setGleasonScoring] = useState(false);
   const { tile, viewer } = viewerWindow[currentViewer];
+
   // meanu_Report
   const [slideData, setSlideData] = useState(null);
   const [reportedStatus, setReportedStatus] = useState(false);
@@ -154,6 +155,13 @@ function LayoutApp({
     useLazyQuery(GET_SYNOPTIC_REPORT);
 
   const caseId = caseInfo?._id;
+
+
+  // useEffect(() => {
+  //   if (hash !== "") {
+  //     zoomToLevel(hash)
+  //   }
+  // },[hash])
 
   useEffect(() => {
     if (synopticType === "breast-cancer") {
