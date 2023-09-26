@@ -403,22 +403,21 @@ export const VHUT_ANALYSIS_SUBSCRIPTION = gql`
 export const TIL_ANALYSIS_SUBSCRIPTION = gql`
   subscription Subscription($body: AnalysisInput) {
     tilStatus(body: $body) {
-      status
-      message
       data {
-        lymphocyte_cords
-        stroma_cords
-        tumor_cords
         slideId
-        status
-        key_name
         bucket_name
+        key_name
+        status
+        lymphocyte_cords
         TILS_score
         lymphocyte_count
         stroma_area
         tumor_area
+        stroma_url
+        tumor_url
       }
-      analysisType
+      message
+      status
     }
   }
 `;
@@ -469,16 +468,17 @@ export const GET_TILS_ANALYSIS = gql`
   query Query($query: GetTilInput) {
     getTils(query: $query) {
       data {
+        TILS_score
         bucket_name
         key_name
-        slideId
-        stroma_cords
         lymphocyte_cords
-        tumor_cords
-        TILS_score
         lymphocyte_count
+        slideId
+        status
         stroma_area
+        stroma_url
         tumor_area
+        tumor_url
       }
       message
       status
