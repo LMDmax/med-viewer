@@ -7,6 +7,7 @@ import {
   Text,
   Spinner,
   Button,
+  Image,
 } from "@chakra-ui/react";
 import { AiOutlineClose } from "react-icons/ai";
 import { PDFDownloadLink } from "@react-pdf/renderer";
@@ -51,6 +52,7 @@ function CLSReport({
           // h="4vh"
           minH="5vh"
           border="1px solid #000"
+          px="1vw"
         >
           <Text fontSize="16px" color="1B75BC">
             {application === "clinical" ? "Questionnaire" : "Questions"}
@@ -59,29 +61,11 @@ function CLSReport({
             userInfo?.role === "Pathologist" &&
             errorMessage?.data?.status !== "400" &&
             questionsResponse?.finalQuestionnaireResponse?.length > 0 && (
-              <PDFDownloadLink
-                document={
                   <DownloadReport
-                    report={questionsResponse?.finalQuestionnaireResponse}
+                    report={questionsResponse}
                     caseInfo={caseInfo}
                     userInfo={userInfo}
                   />
-                }
-                fileName="study-report.pdf"
-              >
-                <Button
-                  leftIcon={<GrDownload />}
-                  size="sm"
-                  fontWeight="400"
-                  borderRadius="0px"
-                  _active={{ outline: "none" }}
-                  _focus={{ outline: "none" }}
-                  bg="#fff"
-                  _hover={{ bg: "#fff" }}
-                >
-                  Download
-                </Button>
-              </PDFDownloadLink>
             )}
         </Flex>
 
