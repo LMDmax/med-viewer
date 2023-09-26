@@ -877,6 +877,7 @@ function FunctionsMenu({
                     questions={questions}
                     app={app}
                     showReport={showReport}
+                    selectedOption={selectedOption}
                     setSlideId={setSlideId}
                     responseHandler={responseHandler}
                     questionnaireResponse={questionnaireResponse}
@@ -892,7 +893,8 @@ function FunctionsMenu({
                     setAnnotedSlideImages={setAnnotedSlideImages}
                     slideData={slideData}
                     setSlideData={setSlideData}
-                    questionIndex={questionIndex}
+                            questionIndex={questionIndex}
+                            setIsOpen={setIsOpen}
                   />
                   {showReport || synopticType ? (
                     <GrFormClose

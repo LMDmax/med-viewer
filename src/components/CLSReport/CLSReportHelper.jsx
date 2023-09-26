@@ -22,6 +22,7 @@ function CLSReportHelper({
   userInfo,
   app,
   setSlideId,
+  setIsOpen,
   responseHandler,
   questionnaireResponse,
   questionIndex,
@@ -62,6 +63,13 @@ function CLSReportHelper({
     fetchResponse();
   }, [showCLSreport]);
 
+
+  useEffect(() => {
+    if (app === "clinical") {
+      setShowCLSReport(true);
+    }
+  },[app])
+
   const handleCLSReport = () => {
     setShowCLSReport(!showCLSreport);
     setSlideQna({ qna: {} });
@@ -77,6 +85,9 @@ function CLSReportHelper({
         slide_id: slideId,
       });
       fetchResponse();
+      if (app === "clinical") {
+        setIsOpen(false);
+      }
       setShowCLSReport(false);
       setLoading(false);
     } catch (err) {

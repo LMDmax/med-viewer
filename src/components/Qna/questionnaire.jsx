@@ -14,6 +14,7 @@ function Questionnaire({
   setSlideQna,
   projectQnaType,
   questionIndex,
+  showResponseRefetch,
   slideId,
   application,
   ...restProps

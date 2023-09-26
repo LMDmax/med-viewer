@@ -57,7 +57,8 @@ function CLSReport({
           </Text>
           {application === "clinical" &&
             userInfo?.role === "Pathologist" &&
-            errorMessage?.data?.status !== "400" && (
+            errorMessage?.data?.status !== "400" &&
+            questionsResponse?.finalQuestionnaireResponse?.length > 0 && (
               <PDFDownloadLink
                 document={
                   <DownloadReport

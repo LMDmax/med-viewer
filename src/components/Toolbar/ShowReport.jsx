@@ -34,6 +34,7 @@ function ShowReport({
 	slideData,
 	setSlideData,
 	questionIndex,
+	setIsOpen,
 }) {
 	if (application === "hospital")
 		return (
@@ -73,6 +74,7 @@ function ShowReport({
 				responseHandler={responseHandler}
 				viewerId={viewerId}
 				app={app}
+				setIsOpen={setIsOpen}
 				setSlideId={setSlideId}
 				questionnaireResponse={questionnaireResponse}
 				questionIndex={questionIndex}
