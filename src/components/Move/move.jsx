@@ -84,6 +84,7 @@ function Move({
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
   const [typeToolsToggle, setTypeToolsToggle] = useState(false);
   const [popup, setPopup] = useState(false);
+  const [TILReady, setTILReady] = useState(false);
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { activeTool, viewerWindow } = fabricOverlayState;
 
@@ -280,6 +281,7 @@ function Move({
           modelName={modelName}
           setToolSelected={setToolSelected}
           mongoId={mongoId}
+          setTILReady={setTILReady}
           setLoadUI={setLoadUI}
           setNewHilData={setNewHilData}
           refreshHil={refreshHil}
@@ -300,6 +302,7 @@ function Move({
             setLoadUI={setLoadUI}
             Environment={Environment}
             viewerIds={viewerIds}
+            TILReady={TILReady}
             gleasonScoring={gleasonScoring}
             setGleasonScoring={setGleasonScoring}
             setModelname={setModelname}

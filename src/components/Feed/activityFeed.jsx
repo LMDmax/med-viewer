@@ -173,7 +173,7 @@ const AnnotationFeed = ({
   // const onUpdateAnnotation = (data) => {
   //   console.log("annotationFeed", data);
   // };
-  console.log("ON", gleasonScoringData);
+  // console.log("ON", gleasonScoringData);
   const toast = useToast();
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
   const [isTILBoxVisible, setIsTilBoxVisible] = useState(false);
@@ -959,6 +959,9 @@ const AnnotationFeed = ({
                             _hover={{ bgColor: "none" }}
                             bg="transparent"
                             borderRadius={0}
+                            disabled={
+                              hideStroma === true || hideLymphocyte === true
+                            }
                             onClick={() => {
                               setHideTumor(!hideTumor);
                               setHideStroma(false);
@@ -1014,6 +1017,9 @@ const AnnotationFeed = ({
                             _hover={{ bgColor: "none" }}
                             backgroundColor="transparent"
                             borderRadius={0}
+                            disabled={
+                              hideTumor === true || hideLymphocyte === true
+                            }
                             onClick={() => {
                               setHideStroma(!hideStroma);
                               setHideLymphocyte(false);
@@ -1064,6 +1070,9 @@ const AnnotationFeed = ({
                             _hover={{ bgColor: "none" }}
                             bg="transparent"
                             borderRadius={0}
+                            disabled={
+                              hideStroma === true || hideTumor === true
+                            }
                             onClick={() => {
                               setHideLymphocyte(!hideLymphocyte);
                               setHideStroma(false);

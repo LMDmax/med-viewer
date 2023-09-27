@@ -33,6 +33,7 @@ const AiModels = ({
   setGleasonScoring,
   Environment,
   viewerId,
+  TILReady,
   bottomZoomValue,
   bottombottomZoomValue,
   setLoadUI,
@@ -53,6 +54,7 @@ const AiModels = ({
   const [detectTumor, setDetectTumor] = useState(false);
   const [modelType, setModelType] = useState("");
   const [showGleason, setShowGleason] = useState(false);
+  const [showTILS, setShowTILS] = useState(false);
   const [onTumorAnalysis, { data: analysis_data, error: analysis_error }] =
     useMutation(TUMOR_ANALYSIS);
 
@@ -70,8 +72,8 @@ const AiModels = ({
     }
   );
 
-  console.log("subscriptionAI", subscription);
-  console.log("subscriptionErrorAI", subscription_error);
+  // console.log("subscriptionAI", subscription);
+  // console.log("subscriptionErrorAI", subscription_error);
 
   const reinhardFilter = async (context, callback) => {
     // console.log("object");
@@ -135,7 +137,7 @@ const AiModels = ({
   }, [gleasonScoring]);
 
   useEffect(() => {
-    if (showTumor || showGleason) {
+    if (showTumor || showGleason || showTILS) {
       // console.log("object");
       viewer.setFilterOptions({
         filters: {
@@ -143,10 +145,17 @@ const AiModels = ({
         },
         loadMode: "async",
       });
-      setLoadUI(true);
+      if (!showTILS) {
+        setLoadUI(true);
+        localStorage.removeItem("ModelName");
+      }
+      else {
+        // setLoadUI(false);
+        localStorage.setItem("ModelName", "TIL");
+      }
     }
-    localStorage.removeItem("ModelName");
-  }, [showTumor, showGleason]);
+    
+  }, [showTumor, showGleason, showTILS,]);
 
   useEffect(() => {
     if (subscription && detectTumor) {
@@ -266,9 +275,11 @@ const AiModels = ({
     if (slide.stainType === "H&E") {
       if (TilActiveState) {
         setModelname("TIL");
+        setShowTILS(true)
       } else {
         // console.log("TILClear")
         setModelname("TILClear");
+        setShowTILS(false);
       }
       // console.log("object");
     } else {
@@ -468,7 +479,11 @@ const AiModels = ({
                       e.target.style.color = "black";
                     }}
                     onClick={() => {
-                      setTilActiveState(!TilActiveState);
+                      if (TILReady) {
+                        setTilActiveState(!TilActiveState);
+                      } else {
+                        setToolSelected("TILLoading")
+                      }
                     }}
                   >
                     TILS
