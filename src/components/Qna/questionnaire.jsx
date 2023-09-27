@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 
-import { Box, Flex, Stack, Text, VStack } from "@chakra-ui/react";
+import { Box, Flex, Image, Stack, Text, VStack } from "@chakra-ui/react";
 import _ from "lodash";
 
 import QuestionType from "./questionType";
@@ -201,6 +201,14 @@ function Questionnaire({
               </Stack>
             );
           })}
+          {application === "clinical" && response?.signature_file &&
+          <Flex direction="column">
+            <Image w="11vw" h="10vh"src={response?.signature_file} />
+            <Text color="#3B5D7C">{`${response?.first_name} ${response?.last_name}`}</Text>
+            <Text>{response?.highest_qualification}</Text>
+            <Text>{response?.Institute}</Text>
+          </Flex>
+          }
       {/* {questions[0].LessonQuestions?.map((question, index) => (
 				
 				
