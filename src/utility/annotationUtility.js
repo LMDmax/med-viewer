@@ -73,7 +73,9 @@ export const createAnnotationMessage = ({
 
   // if annotation data is available
   // else create a new one
+
   if (annotation) {
+    // console.log("AAA", annotation);
     const {
       slide,
       hash,
@@ -164,6 +166,42 @@ export const createAnnotationMessage = ({
   return message;
 };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // create annotation from the annotation data
 export const createAnnotation = (annotation) => {
   let shape;
@@ -175,9 +213,9 @@ export const createAnnotation = (annotation) => {
         top: annotation.top,
         width: annotation.width,
         height: annotation.height,
-        color: "black",
+        color: annotation.stroke,
         fill: annotation.fill,
-        stroke: annotation?.color ? annotation?.color : "#000",
+        stroke: annotation.stroke ? annotation.stroke : "#000",
         strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         strokeUniform: annotation.strokeUniform,
         rx: annotation.rx,
@@ -215,12 +253,13 @@ export const createAnnotation = (annotation) => {
         top: annotation.top,
         width: annotation.width,
         height: annotation.height,
-        color: "black",
+        color: annotation.stroke,
         fill: annotation.fill,
         angle: annotation.angle,
-        stroke: annotation?.color ? annotation?.color : "#000",
+        stroke: annotation.stroke ? annotation.stroke : "#000",
         strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         strokeUniform: annotation.strokeUniform,
+        strokeDashArray: annotation.strokeDashArray,
         hasControls: annotation.globalCompositeOperation,
         hasRotatingPoint: annotation.globalCompositeOperation,
         lockMovementX: !annotation.globalCompositeOperation,
@@ -230,7 +269,7 @@ export const createAnnotation = (annotation) => {
 
     case "polygon":
       shape = new fabric.Polygon(annotation.points, {
-        stroke: annotation?.color ? annotation?.color : "#000",
+        stroke: annotation.stroke ? annotation.stroke : "#000",
         strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         fill: annotation.fill,
         strokeUniform: annotation.strokeUniform,
@@ -244,8 +283,8 @@ export const createAnnotation = (annotation) => {
 
     case "path":
       shape = new fabric.Path(annotation.path, {
-        color: "black",
-        stroke: annotation?.color ? annotation?.color : "#000",
+        color: annotation.stroke,
+        stroke: annotation.stroke ? annotation.stroke : "#000",
         strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         strokeUniform: annotation.strokeUniform,
         fill: annotation.fill,
@@ -259,8 +298,8 @@ export const createAnnotation = (annotation) => {
 
     case "line":
       shape = new fabric.Line(annotation.cords, {
-        color: "black",
-        stroke: annotation?.color ? annotation?.color : "#000",
+        color: annotation.stroke,
+        stroke: annotation.stroke ? annotation.stroke : "#000",
         strokeWidth: annotation.strokeWidth ? annotation.strokeWidth : 30,
         strokeUniform: annotation.strokeUniform,
         fill: annotation.fill,
@@ -397,6 +436,7 @@ export const addAnnotationsToCanvas = ({
   canvas.renderOnAddRemove = false;
 
   const feed = [];
+  // console.log("AAA", annotations);
 
   annotations.forEach((annotation) => {
     const shape = createAnnotation(annotation);

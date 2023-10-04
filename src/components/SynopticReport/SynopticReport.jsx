@@ -26,7 +26,7 @@ const SynopticReport = ({
   userInfo,
 }) => {
   const [ifwidthLessthan1920] = useMediaQuery("(max-width:1920px)");
-  console.log("sadsads", synopticReportData)
+  // console.log("sadsads", synopticReportData)
   return (
     <Flex
       fontSize={ifwidthLessthan1920 ? "14px" : "0.729vw"}

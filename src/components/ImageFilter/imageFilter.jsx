@@ -104,7 +104,7 @@ const ImageFilter = ({
   // console.log("Open Connections:", connectionCountRef.current);
 
   const sendRequest = (pixelsData) => {
-    console.log(pixelsData);
+    // console.log(pixelsData);
     return new Promise((resolve) => {
       const requestCallback = (imageData) => {
         resolve(imageData);
@@ -113,7 +113,7 @@ const ImageFilter = ({
       requestQueueRef.current.push(requestCallback);
       // console.log(isConnected);
       if (array.length > 0) {
-        console.log("sending");
+        // console.log("sending");
         setLoadUI(false);
         socketRef.current.send(JSON.stringify(pixelsData));
       }

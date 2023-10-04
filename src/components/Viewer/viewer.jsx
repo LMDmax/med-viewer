@@ -78,6 +78,7 @@ const Viewer = ({
   accessToken,
   setIsXmlAnnotations,
   handleAnnotationClick,
+
 }) => {
   const { setFabricOverlayState } = useFabricOverlayState();
   const [viewer, setViewer] = useState(null);

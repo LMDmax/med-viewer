@@ -46,7 +46,8 @@ const ViewerContainer = ({
 	accessToken,
   binaryMask,
 	setIsXmlAnnotations,
-	handleAnnotationClick,
+  handleAnnotationClick,
+
 }) => {
   const location = useLocation();
 
@@ -124,7 +125,7 @@ const ViewerContainer = ({
       isXmlAnnotations={isXmlAnnotations}
 			accessToken={accessToken}
 			setIsXmlAnnotations={setIsXmlAnnotations}
-			handleAnnotationClick={handleAnnotationClick}
+      handleAnnotationClick={handleAnnotationClick}
 		/>
 	);
 }

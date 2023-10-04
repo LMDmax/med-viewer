@@ -87,7 +87,6 @@ function LayoutApp({
   const { viewerWindow, isAnnotationLoading } = fabricOverlayState;
   const [newHilData, setNewHilData] = useState(false);
   const [refreshHil, setRefreshHil] = useState(0);
-  const [hideModification, setHideModification] = useState(false);
   const [totalCells, setTotalCells] = useState(0);
   const [tilScore, setTilScore] = useState();
   const [tumorArea, setTumorArea] = useState();
@@ -119,13 +118,9 @@ function LayoutApp({
   const [tILFedBar, setTILFedBar] = useState(false);
   const [showReport, setShowReport] = useState(false);
   const [feedTab, setFeedBar] = useState(0);
-  const [pathStroma, setPathStroma] = useState(null);
   const [synopticType, setSynopticType] = useState("");
   const [synopticReportType, setSynopticReportType] = useState("");
   const [chatHover, setChatHover] = useState(false);
-  const [hideTumor, setHideTumor] = useState(false);
-  const [hideStroma, setHideStroma] = useState(false);
-  const [hideLymphocyte, setHideLymphocyte] = useState(false);
   const [annotationObject, setAnnotationObject] = useState("");
   const [toolSelected, setToolSelected] = useState("Loading");
   const [bottomZoomValue, setBottomZoomValue] = useState("");
@@ -144,18 +139,31 @@ function LayoutApp({
   const [gleasonScoringData, setGleasonScoringData] = useState({});
   const [gleasonScoring, setGleasonScoring] = useState(false);
   const { tile, viewer } = viewerWindow[currentViewer];
-
+  const [newToolSettings, setNewToolSettings] = useState({
+    strokeColor: "",
+    strokeType: "",
+    fillColor: "",
+  });
+  const [pattern3Color, setPattern3Color] = useState({});
+  const [pattern4Color, setPattern4Color] = useState({});
+  const [pattern5Color, setPattern5Color] = useState({});
+  const [benignColor, SetBenignColor] = useState({});
+  const [tumorColor, setTumorColor] = useState({});
+  const [stromaColor, setStromaColor] = useState({});
+  const [lymphocyteColor, setLymphocyteColor] = useState({});
   // meanu_Report
   const [slideData, setSlideData] = useState(null);
   const [reportedStatus, setReportedStatus] = useState(false);
+  const [selectedPattern, setSelectedPattern] = useState("");
   const [synopticReportData, setSynopticReportData] = useState("");
   const [getStandardReport, { data: standardReportData, standardReportError }] =
     useLazyQuery(GET_STANDARD_REPORT);
   const [getSynopticReportData, { data: synopticReport, synopticReportError }] =
     useLazyQuery(GET_SYNOPTIC_REPORT);
 
-  const caseId = caseInfo?._id;
+  // Human - In - The -Loop
 
+  const caseId = caseInfo?._id;
 
   // useEffect(() => {
   //   if (hash !== "") {
@@ -379,6 +387,9 @@ function LayoutApp({
     case "Error":
       returnText = "Something Went Wrong!";
       break;
+    case "AddMask":
+      returnText = "Please draw to add mask";
+      break;
 
     default:
       returnText = "";
@@ -449,15 +460,20 @@ function LayoutApp({
     // Handle other cases or provide a default value for h
   }
 
+  useEffect(() => {
+    setSelectedPattern("");
+    localStorage.removeItem("til");
+    localStorage.removeItem("ModelName");
+    // console.log("FFFFFF");
+  }, [navigatorCounter]);
+  // console.log("slide", navigatorCounter);
+
   return (
     <Flex style={{ height: h }} direction="column">
       <LayoutOuterBody>
         <AdjustmentBar
           userInfo={userInfo}
-          hideStroma={hideStroma}
-          hideTumor={hideTumor}
           lessonId={lessonId}
-          hideLymphocyte={hideLymphocyte}
           imageFilter={imageFilter}
           chatFeedBar={chatFeedBar}
           setImageFilter={setImageFilter}
@@ -479,7 +495,6 @@ function LayoutApp({
           navigatorCounter={navigatorCounter}
           base64URL={base64URL}
           setNavigatorCounter={setNavigatorCounter}
-          pathStroma={pathStroma}
           hitTil={hitTil}
           zoomValue={zoomValue}
           setTumorArea={setTumorArea}
@@ -492,7 +507,6 @@ function LayoutApp({
           slides={slides}
           socketRef={socketRef}
           annotations={annotations}
-          hideModification={hideModification}
           report={report}
           enableAI={enableAI}
           modelName={modelName}
@@ -537,6 +551,24 @@ function LayoutApp({
           updateSynopticReport={updateSynopticReport}
           isXmlAnnotations={isXmlAnnotations}
           setGleasonScoringData={setGleasonScoringData}
+          selectedPattern={selectedPattern}
+          setNewToolSettings={setNewToolSettings}
+          newToolSettings={newToolSettings}
+          setSelectedPattern={setSelectedPattern}
+          SetBenignColor={SetBenignColor}
+          setPattern5Color={setPattern5Color}
+          setTumorColor={setTumorColor}
+          tumorColor={tumorColor}
+          setPattern4Color={setPattern4Color}
+          setPattern3Color={setPattern3Color}
+          pattern3Color={pattern3Color}
+          pattern4Color={pattern4Color}
+          pattern5Color={pattern5Color}
+          benignColor={benignColor}
+          setStromaColor={setStromaColor}
+          stromaColor={stromaColor}
+          lymphocyteColor={lymphocyteColor}
+          setLymphocyteColor={setLymphocyteColor}
         />
         <LayoutInnerBody>
           {sidebar ? (
@@ -598,19 +630,13 @@ function LayoutApp({
             isNavigatorActive={isNavigatorActive}
             isMultiview={isMultiview}
             slide={viewerIds?.[0]}
-            hideTumor={hideTumor}
             originalPixels={originalPixels}
             viewerIds={viewerIds}
-            setHideTumor={setHideTumor}
             setToolSelected={setToolSelected}
             setAdjustmentTool={setAdjustmentTool}
-            hideLymphocyte={hideLymphocyte}
             slideData={slideData}
             setSlideData={setSlideData}
             gleasonScoring={gleasonScoring}
-            setHideLymphocyte={setHideLymphocyte}
-            setHideStroma={setHideStroma}
-            hideStroma={hideStroma}
             reportedStatus={reportedStatus}
             synopticReportData={synopticReportData}
             setSlideName2={setSlideName2}
@@ -661,9 +687,18 @@ function LayoutApp({
             client2={client2}
             mentionUsers={mentionUsers}
             addUsersToCase={addUsersToCase}
+            setSelectedPattern={setSelectedPattern}
+            selectedPattern={selectedPattern}
             searchSelectedData={searchSelectedData}
             questionIndex={questionIndex}
             gleasonScoringData={gleasonScoringData}
+            pattern3Color={pattern3Color}
+            pattern4Color={pattern4Color}
+            pattern5Color={pattern5Color}
+            benignColor={benignColor}
+            tumorColor={tumorColor}
+            stromaColor={stromaColor}
+            lymphocyteColor={lymphocyteColor}
           />
         </LayoutInnerBody>
         <Flex

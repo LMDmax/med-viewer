@@ -18,7 +18,13 @@ import {
   saveAnnotationToDB,
 } from "../../utility";
 
-const Line = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
+const Line = ({
+  viewerId,
+  onSaveAnnotation,
+  setToolSelected,
+  setNewToolSettings,
+  newToolSettings,
+}) => {
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { activeTool, viewerWindow, color } = fabricOverlayState;
   const { fabricOverlay, viewer, slideId } = viewerWindow[viewerId];
@@ -106,7 +112,7 @@ const Line = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
       const scaleFactor = getScaleFactor(viewer);
 
       const fillProps = {
-        stroke: "black",
+        stroke: newToolSettings.strokeColor || "black",
         strokeWidth: 2 / scaleFactor,
         strokeUniform: true,
       };
@@ -216,15 +222,13 @@ const Line = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
         shape,
         viewer,
         type: "line",
-        isClosed:false,
+        isClosed: false,
       });
 
       const { x1, y1, x2, y2 } = message.object;
       message.object.set({
         cords: [x1, y1, x2, y2],
       });
-
-    
 
       saveAnnotationToDB({
         slideId,
@@ -242,7 +246,6 @@ const Line = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
 
     // change tool back to move
     setFabricOverlayState(updateTool({ tool: "Move" }));
-
   }, [shape]);
 
   const handleClick = () => {

@@ -25,7 +25,7 @@ export const connectWebSocket = () => {
 
 export const sendRequest = (data) => {
   if (socket && socket.readyState === WebSocket.OPEN) {
-    console.log(data);
+    // console.log(data);
     socket.send(data);
   }
 };

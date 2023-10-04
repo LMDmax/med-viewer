@@ -32,18 +32,10 @@ const Til = ({
   navigatorCounter,
   setTilScore,
   setLymphocyteCount,
-  hitTil,
-  slide,
-  refreshHil,
-  hideTumor,
-  hideStroma,
-  loadUI,
   modelName,
   setLoadUI,
-  hideModification,
-  pathStroma,
   setTILReady,
-  hideLymphocyte,
+  lymphocyteColor,
 }) => {
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
   const [TilHover, setTilHover] = useState(false);
@@ -51,17 +43,11 @@ const Til = ({
   const { viewerWindow } = fabricOverlayState;
   const { fabricOverlay, viewer, slideId } = viewerWindow[viewerId];
   const [tilCords, setTilCords] = useState([]);
-  const [allPathStroma, setAllPathStroma] = useState([]);
   const [tumorCords, setTumorCords] = useState([]);
-  const [originalTil, setOriginalTil] = useState();
   const [stromaCords, setStromaCords] = useState([]);
   const [Tilloading, setTilLoading] = useState(true);
   const [cords, setCords] = useState({});
   const [TILPlotted, setTILPlotted] = useState(false);
-  const [modifiedStroma, setModifiedStroma] = useState([]);
-  const [modifiedTumor, setModifiedTumor] = useState([]);
-  const [modifiedLymphocyte, setModifiedLymphocyte] = useState([]);
-  const [noOfSwitchLayer, SetNoOfSwitchLayer] = useState(0);
   const toast = useToast();
   const client = useApolloClient();
   const prevLoadUIRef = useRef(false);
@@ -85,7 +71,7 @@ const Til = ({
       },
     });
 
-  // console.log("tilSubData", tilSubscriptionData);
+  // console.log("tilSubData", lymphocyteColor);
 
   useEffect(() => {
     if (data?.getTils?.message === "Til found") {
@@ -93,6 +79,54 @@ const Til = ({
       setTILReady(true);
     }
   }, [data]);
+
+  // chnage lymphocyte color to custoom color
+
+  useEffect(() => {
+    if (lymphocyteColor.patternName === "Lymphocytes") {
+      const canvas = fabricOverlay.fabricCanvas();
+      var objects = canvas.getObjects();
+      for (var i = 0; i < objects.length; i++) {
+        if (objects[i].roiType === "TIL") {
+          canvas.remove(objects[i]);
+        }
+      }
+      canvas.renderAll();
+      const lymphocyteCords = data?.getTils?.data?.lymphocyte_cords;
+      const roi = lymphocyteCords.flat(2).map((TIL_cord) => {
+        return new fabric.Rect({
+          top: TIL_cord[1],
+          left: TIL_cord[0],
+          width: TIL_cord[2] - TIL_cord[0],
+          height: TIL_cord[3] - TIL_cord[1],
+          stroke: `rgba(${lymphocyteColor.color.r}, ${lymphocyteColor.color.g}, ${
+            lymphocyteColor.color.b
+          }, ${lymphocyteColor.color.a * 255})`, // Red in RGB format
+          fill: "transparent",
+          strokeWidth: 1,
+          opacity: 1,
+          strokeUniform: true,
+          objectCaching: false,
+        });
+      });
+      const t = new fabric.Group([...roi], {
+        selectable: false,
+        lockMovementX: false,
+        lockMovementY: false,
+        lockRotation: false,
+        lockScalingX: false,
+        lockScalingY: false,
+        lockUniScaling: false,
+        hoverCursor: "auto",
+        evented: false,
+        stroke: "",
+        strokeWidth: 1,
+        objectCaching: false,
+        roiType: "TIL",
+      });
+      canvas.add(t).requestRenderAll();
+    }
+  }, [lymphocyteColor]);
 
   // console.log(data)
   // ------------------------------
@@ -106,12 +140,6 @@ const Til = ({
       setTilScore(data?.getTils?.data?.TILS_score);
       setLymphocyteCount(data?.getTils?.data?.lymphocyte_count);
     }
-    if (hideModification) {
-      setStromaArea(data1?.getTils?.data?.stroma_area);
-      setTumorArea(data1?.getTils?.data?.tumor_area);
-      setTilScore(data1?.getTils?.data?.TILS_score);
-      setLymphocyteCount(data1?.getTils?.data?.lymphocyte_count);
-    }
     if (tilSubscriptionData) {
       setStromaArea(tilSubscriptionData?.tilStatus?.data?.stroma_area);
       setTumorArea(tilSubscriptionData?.tilStatus?.data?.tumor_area);
@@ -120,7 +148,7 @@ const Til = ({
         tilSubscriptionData?.tilStatus?.data?.lymphocyte_count
       );
     }
-  }, [data, hideModification, tilSubscriptionData]);
+  }, [data, tilSubscriptionData]);
 
   // ------------------------------
   // ------------- updating state for existing slide
@@ -640,7 +668,7 @@ const Til = ({
       const canvas = fabricOverlay.fabricCanvas();
       const tumorDzi = data?.getTils?.data?.tumor_url;
       const stromaDzi = data?.getTils?.data?.stroma_url;
-      const lymphocyteCords = data.getTils.data.lymphocyte_cords;
+      const lymphocyteCords = data?.getTils?.data?.lymphocyte_cords;
 
       const roi = lymphocyteCords.flat(2).map((TIL_cord) => {
         return new fabric.Rect({
@@ -678,7 +706,7 @@ const Til = ({
           x: 0,
           y: 0,
           width: 1,
-          opacity: 0.2,
+          opacity: 0.5,
         });
 
         viewer.addTiledImage({
@@ -686,7 +714,7 @@ const Til = ({
           x: 0,
           y: 0,
           width: 1,
-          opacity: 0.2,
+          opacity: 0.5,
         });
       }, 2000);
       setTimeout(() => {
@@ -706,11 +734,8 @@ const Til = ({
       setTILPlotted(false);
       localStorage.removeItem("til", "TIL");
       const canvas = fabricOverlay.fabricCanvas();
-      const tumorDzi = data?.getTils?.data?.tumor_url;
-      const stromaDzi = data?.getTils?.data?.stroma_url;
-      const lymphocyteCords = data.getTils.data.lymphocyte_cords;
-      var topImage = viewer?.world?.getItemAt(2);
-      var lowImage = viewer?.world?.getItemAt(1);
+      var topImage = viewer?.world?.getItemAt(1);
+      var lowImage = viewer?.world?.getItemAt(2);
       if (topImage || lowImage) {
         viewer.world.removeItem(topImage);
         viewer.world.removeItem(lowImage);
@@ -726,7 +751,6 @@ const Til = ({
   };
   console.log(TILPlotted);
 
-  
   //   if (TILPlotted) {
   //     var noOfTimesSwitchedLayer = 0;
   //     if (hideTumor && !hideStroma && !hideLymphocyte) {
@@ -763,133 +787,6 @@ const Til = ({
   // ------------------------------
   // ------------- hiding stroma or tumor or lymphocytes
   // ------------------
-
-  useEffect(() => {
-    if (TILPlotted) {
-      if (hideTumor && !hideStroma && !hideLymphocyte) {
-      
-        var lowImage = viewer?.world?.getItemAt(1);
-        if (lowImage) {
-          viewer.world.removeItem(lowImage);
-        
-        }
-
-        SetNoOfSwitchLayer(noOfSwitchLayer + 1);
-        // Rest of the code for this condition
-      }
-      if (hideStroma && !hideTumor && !hideLymphocyte) {
-      
-        var topImage = viewer?.world?.getItemAt(2);
-        if (topImage) {
-          viewer.world.removeItem(topImage);
-         
-        }
-        SetNoOfSwitchLayer(noOfSwitchLayer + 1);
-      }
-      if (!hideLymphocyte && !hideStroma && !hideTumor && noOfSwitchLayer > 0) {
-       
-        localStorage.setItem("ModelName", "TIL");
-        setLoadUI(false);
-        const canvas = fabricOverlay.fabricCanvas();
-        var topImage = viewer?.world?.getItemAt(2);
-        var lowImage = viewer?.world?.getItemAt(1);
-        if (topImage || lowImage) {
-          viewer.world.removeItem(topImage);
-          viewer.world.removeItem(lowImage);
-        }
-        var objects = canvas.getObjects();
-        for (var i = 0; i < objects.length; i++) {
-          if (objects[i].roiType === "TIL") {
-            canvas.remove(objects[i]);
-          }
-        }
-        canvas.renderAll();
-
-        setTimeout(() => {
-          const canvas = fabricOverlay.fabricCanvas();
-          const tumorDzi = data?.getTils?.data?.tumor_url;
-          const stromaDzi = data?.getTils?.data?.stroma_url;
-          const lymphocyteCords = data.getTils.data.lymphocyte_cords;
-          const roi = lymphocyteCords.flat(2).map((TIL_cord) => {
-            return new fabric.Rect({
-              top: TIL_cord[1],
-              left: TIL_cord[0],
-              width: TIL_cord[2] - TIL_cord[0],
-              height: TIL_cord[3] - TIL_cord[1],
-              stroke: "red",
-              fill: "transparent",
-              strokeWidth: 1,
-              opacity: 1,
-              strokeUniform: true,
-              objectCaching: false,
-            });
-          });
-          const t = new fabric.Group([...roi], {
-            selectable: false,
-            lockMovementX: false,
-            lockMovementY: false,
-            lockRotation: false,
-            lockScalingX: false,
-            lockScalingY: false,
-            lockUniScaling: false,
-            hoverCursor: "auto",
-            evented: false,
-            stroke: "",
-            strokeWidth: 1,
-            objectCaching: false,
-            roiType: "TIL",
-          });
-          setTimeout(() => {
-            canvas.add(t).requestRenderAll();
-            viewer.addTiledImage({
-              tileSource: stromaDzi,
-              x: 0,
-              y: 0,
-              width: 1,
-              opacity: 0.2,
-            });
-
-            viewer.addTiledImage({
-              tileSource: tumorDzi,
-              x: 0,
-              y: 0,
-              width: 1,
-              opacity: 0.2,
-            });
-          }, 2000);
-          setTimeout(() => {
-            requestAnimationFrame(() => {
-              // console.log("Task completed by requestAnimationFrame");
-              setTimeout(() => {
-                setLoadUI(true);
-                localStorage.removeItem("ModelName");
-                localStorage.setItem("til", "TIL");
-                setToolSelected("TIL");
-              }, 4000);
-            });
-          }, 1000);
-        }, 1000);
-        SetNoOfSwitchLayer(noOfSwitchLayer + 1);
-
-        // Rest of the code for this condition
-      }
-      if (hideLymphocyte && !hideStroma && !hideTumor) {
-       
-        const canvas = fabricOverlay.fabricCanvas();
-        var objects = canvas.getObjects();
-        for (var i = 0; i < objects.length; i++) {
-          if (objects[i].roiType === "TIL") {
-            canvas.remove(objects[i]);
-          }
-        }
-        canvas.renderAll();
-        SetNoOfSwitchLayer(noOfSwitchLayer + 1);
-
-        // Rest of the code for this condition
-      }
-     
-    }
-  }, [hideLymphocyte, hideStroma, hideTumor]);
 
   useEffect(() => {
     if (modelName === "TIL" && data) {

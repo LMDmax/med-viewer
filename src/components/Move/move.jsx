@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-
+import Draggable from "react-draggable";
 import {
   Flex,
   IconButton,
@@ -9,7 +9,8 @@ import {
   Image,
   Box,
 } from "@chakra-ui/react";
-
+import { RiDeleteBin7Fill } from "react-icons/ri";
+import { MdOutlineDragIndicator } from "react-icons/md";
 import { updateTool } from "../../state/actions/fabricOverlayActions";
 import { useFabricOverlayState } from "../../state/store";
 import TooltipLabel from "../AdjustmentBar/ToolTipLabel";
@@ -54,22 +55,17 @@ function Move({
   setToolSelected,
   setTilScore,
   setLymphocyteCount,
-  pathStroma,
-  hideModification,
   setNewHilData,
   sidebar,
   navigatorCounter,
   isMultiview,
-  hideStroma,
   setIsMultiview,
   setNavigatorCounter,
-  hideLymphocyte,
   modelName,
   isNavigatorActive,
   setIsNavigatorActive,
   setTotalCells,
   application,
-  hideTumor,
   zoomValue,
   viewerIds,
   setModelname,
@@ -79,19 +75,37 @@ function Move({
   toolSelected,
   isXmlAnnotations,
   setGleasonScoringData,
+  selectedPattern,
+  newToolSettings,
+  setNewToolSettings,
+  setSelectedPattern,
+  SetBenignColor,
+  setPattern5Color,
+  setPattern4Color,
+  setPattern3Color,
+  pattern3Color,
+  pattern4Color,
+  pattern5Color,
+  benignColor,
+  tumorColor,
+  setTumorColor,
+  setStromaColor,
+  stromaColor,
+  setLymphocyteColor,
+  lymphocyteColor,
 }) {
   const [ifBiggerScreen] = useMediaQuery("(min-width:2000px)");
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
   const [typeToolsToggle, setTypeToolsToggle] = useState(false);
   const [popup, setPopup] = useState(false);
   const [TILReady, setTILReady] = useState(false);
+
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { activeTool, viewerWindow } = fabricOverlayState;
-
   const { fabricOverlay } = viewerWindow[viewerId];
   let isActive = activeTool === "Move";
   const [activeAnnotations, setActiveAnnotations] = useState(false);
-  // console.log(application);
+
   useEffect(() => {
     if (typeToolsToggle) {
       setToolSelected("Annotation");
@@ -270,12 +284,8 @@ function Move({
         ) : null}
 
         <Til
-          hideLymphocyte={hideLymphocyte}
-          hideStroma={hideStroma}
-          hideTumor={hideTumor}
           handleTILFeedBar={handleTILFeedBar}
           viewerIds={viewerIds}
-          hideModification={hideModification}
           slide={slide}
           hitTil={hitTil}
           modelName={modelName}
@@ -290,8 +300,8 @@ function Move({
           setTumorArea={setTumorArea}
           setTilScore={setTilScore}
           setLymphocyteCount={setLymphocyteCount}
-          pathStroma={pathStroma}
           navigatorCounter={navigatorCounter}
+          lymphocyteColor={lymphocyteColor}
         />
         {!isXmlAnnotations && application !== "education" ? (
           <AiModels
@@ -311,6 +321,20 @@ function Move({
             slide={slide}
             setGleasonScoringData={setGleasonScoringData}
             setToolSelected={setToolSelected}
+            newToolSettings={newToolSettings}
+            selectedPattern={selectedPattern}
+            setSelectedPattern={setSelectedPattern}
+            setNewToolSettings={setNewToolSettings}
+            pattern3Color={pattern3Color}
+            pattern4Color={pattern4Color}
+            pattern5Color={pattern5Color}
+            benignColor={benignColor}
+            SetBenignColor={SetBenignColor}
+            setPattern5Color={setPattern5Color}
+            setPattern4Color={setPattern4Color}
+            setPattern3Color={setPattern3Color}
+            tumorColor={tumorColor}
+            stromaColor={stromaColor}
           />
         ) : null}
       </Flex>
@@ -328,7 +352,7 @@ function Move({
         zIndex="1000"
         ml={ifBiggerScreen ? "100px" : ""}
       >
-        {typeToolsToggle ? (
+        {typeToolsToggle || selectedPattern ? (
           <TypeTools
             application={application}
             enableAI={enableAI}
@@ -340,10 +364,20 @@ function Move({
             caseInfo={caseInfo}
             lessonId={lessonId}
             setTotalCells={setTotalCells}
+            selectedPattern={selectedPattern}
+            setNewToolSettings={setNewToolSettings}
+            newToolSettings={newToolSettings}
+            setPattern3Color={setPattern3Color}
+            setPattern5Color={setPattern5Color}
+            setPattern4Color={setPattern4Color}
+            SetBenignColor={SetBenignColor}
+            setTumorColor={setTumorColor}
+            setStromaColor={setStromaColor}
+            setLymphocyteColor={setLymphocyteColor}
+            lymphocyteColor={lymphocyteColor}
           />
         ) : null}
       </Flex>
-
       {/* Dummy component */}
       <Popup
         handlePopup={() => {

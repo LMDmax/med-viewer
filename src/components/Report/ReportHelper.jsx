@@ -179,7 +179,7 @@ const ReportHelper = ({
   const { viewerWindow } = fabricOverlayState;
   const { slideId } = viewerWindow[viewerId];
   const toast = useToast();
-  console.log(userInfo);
+  // console.log(userInfo);
   const [onSaveStandardReport, { data: analysis_data, error: analysis_error }] =
     useMutation(SAVE_STANDARD_REPORT);
 
@@ -269,7 +269,7 @@ const ReportHelper = ({
         isClosable: true,
       });
     }
-    console.log("ASDSAAAAAAAAAAAA");
+    // console.log("ASDSAAAAAAAAAAAA");
   };
 
   return (

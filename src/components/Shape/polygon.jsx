@@ -16,7 +16,13 @@ import { PolygonIcon, PolygonIconFilled } from "../Icons/CustomIcons";
 const MAX = 999999;
 const MIN = 99;
 
-const Polygon = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
+const Polygon = ({
+  viewerId,
+  onSaveAnnotation,
+  setToolSelected,
+  setNewToolSettings,
+  newToolSettings,
+}) => {
   const toast = useToast();
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { color, viewerWindow, activeTool } = fabricOverlayState;
@@ -88,7 +94,7 @@ const Polygon = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
 
       const scaleFactor = getScaleFactor(viewer);
       const polygon = new fabric.Polygon(points, {
-        stroke: "black",
+        stroke: newToolSettings.strokeColor || "black",
         strokeWidth: 2 / scaleFactor,
         fill: "",
         strokeUniform: true,
@@ -113,7 +119,7 @@ const Polygon = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
       const circle = new fabric.Circle({
         radius: 4 / scaleFactor,
         fill: "#ffffff",
-        stroke: "#333333",
+        stroke: newToolSettings.strokeColor || "black",
         strokeWidth: 2 / scaleFactor,
         left: pointer.x,
         top: pointer.y,
@@ -134,7 +140,7 @@ const Polygon = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
       const line = new fabric.Line(points, {
         strokeWidth: 2 / scaleFactor,
         fill: `${myStateRef.current.color.hex}40`,
-        stroke: "black",
+        stroke: newToolSettings.strokeColor || "black",
         class: "line",
         originX: "center",
         originY: "center",
@@ -154,7 +160,7 @@ const Polygon = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
           y: pointer.y,
         });
         polygon = new fabric.Polygon(points, {
-          stroke: "black",
+          stroke: newToolSettings.strokeColor || "black",
           strokeWidth: 2 / scaleFactor,
           fill: `${myStateRef.current.color.hex}40`,
           selectable: false,
@@ -172,7 +178,7 @@ const Polygon = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
           },
         ];
         polygon = new fabric.Polygon(polyPoint, {
-          stroke: "black",
+          stroke: newToolSettings.strokeColor || "black",
           strokeWidth: 2 / scaleFactor,
           fill: `${myStateRef.current.color.hex}40`,
           selectable: false,
@@ -261,7 +267,13 @@ const Polygon = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
     setToolSelected("RunRoi");
 
     const addToFeed = async () => {
-      const message = createAnnotationMessage({ slideId, shape, viewer, type:"polygon",isClosed:true, });
+      const message = createAnnotationMessage({
+        slideId,
+        shape,
+        viewer,
+        type: "polygon",
+        isClosed: true,
+      });
 
       saveAnnotationToDB({
         slideId,
@@ -302,7 +314,7 @@ const Polygon = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
       icon={isActive ? <PolygonIconFilled /> : <PolygonIcon />}
       onClick={() => {
         handleClick();
-				setToolSelected("PolygonTool");
+        setToolSelected("PolygonTool");
         toast({
           title: "Polygon annotation tool selected",
           status: "success",

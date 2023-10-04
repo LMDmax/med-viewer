@@ -729,12 +729,12 @@ const ViewerControls = ({
 
         if (status === "success") {
           if (feed) {
+            // console.log(feed);
             setFabricOverlayState(
               updateActivityFeed({ id: viewerId, fullFeed: feed })
             );
             setActiveFeed(feed);
           }
-
           canvas.requestRenderAll();
           // console.log(annotatedData);
           if (annotatedData?.length > 0 && navigatorCounter === 0) {
@@ -1331,6 +1331,7 @@ const ViewerControls = ({
         <Loading position="absolute" w="100%" zIndex="3" h="79vh" />
       ) : null}
       <Box position="absolute" left="2vw" top="5vh">
+        
         <Flex direction="column" alignItems="end" mr="23px">
           <Draggable
             bounds={{
@@ -1452,6 +1453,7 @@ const ViewerControls = ({
             handleAnnotationChat={handleAnnotationChat}
             application={application}
           />
+          
           <EditText
             isOpen={isEditOpen}
             onClose={closeEdit}
@@ -1476,8 +1478,12 @@ const ViewerControls = ({
             />
           )}
           <ShowMetric viewerId={viewerId} slide={slide} />
+          
         </Flex>
+        
       </Box>
+      
+      
     </Box>
   );
 };

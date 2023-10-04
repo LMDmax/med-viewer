@@ -20,20 +20,26 @@ import {
 } from "../../state/actions/fabricOverlayActions";
 import { SquareIcon, SquareIconSelected } from "../Icons/CustomIcons";
 
-const Square = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
+const Square = ({
+  viewerId,
+  onSaveAnnotation,
+  setToolSelected,
+  setNewToolSettings,
+  newToolSettings,
+}) => {
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { color, viewerWindow, activeTool } = fabricOverlayState;
-  
+
   const { fabricOverlay, viewer, slideId } = viewerWindow[viewerId];
-  
+
   const { deselectAll } = useCanvasHelpers(viewerId);
   const isActive = activeTool === "Square";
-  const [toolState, setToolState]  = useState(false);
-  
+  const [toolState, setToolState] = useState(false);
+
   const [shape, setShape] = useState(null);
   const [textbox, setTextbox] = useState(false);
   const toast = useToast();
-  
+
   const [myState, setState] = useState({
     activeShape: null, // active shape in event Panel
     color: null,
@@ -49,7 +55,7 @@ const Square = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
     setState((state) => ({ ...state, ...data }));
   };
   const { isOpen, onClose, onOpen } = useDisclosure();
-  
+
   const screenSize = useMediaQuery([
     "(max-width: 1280px)",
     "(max-width: 1440px)",
@@ -126,10 +132,15 @@ const Square = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
 
       const fillProps = {
         fill: "",
-        stroke: "#000000",
+        stroke: newToolSettings.strokeColor || "black",
         strokeWidth: 2 / scaleFactor,
         strokeUniform: true,
         borderScaleFactor: 0.5,
+        strokeDashArray:
+          newToolSettings.strokeType !== "" &&
+          newToolSettings.strokeType !== "solid"
+            ? [10, 10] // Set the dash array to [10, 10] when strokeDashArray is not empty and strokeType is not solid
+            : [0, 0], // Otherwise, set it to [0, 0]
       };
 
       newShape = new fabric.Rect({
@@ -245,11 +256,19 @@ const Square = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
   // first remove both from canvas then group them and then add group to canvas
   useEffect(() => {
     if (!shape) return;
-            setToolSelected("RunRoi");
+    setToolSelected("RunRoi");
     // console.log(viewerId);
     const addToFeed = async () => {
       // console.log("added");
-      const message = createAnnotationMessage({ slideId, shape, viewer, type:"rect",isClosed:true, });
+      // console.log("shape", shape);
+      const message = createAnnotationMessage({
+        slideId,
+        shape,
+        viewer,
+        type: "rect",
+        isClosed: true,
+      });
+
 
       saveAnnotationToDB({
         slideId,
@@ -301,7 +320,7 @@ const Square = ({ viewerId, onSaveAnnotation, setToolSelected }) => {
       icon={isActive ? <SquareIconSelected /> : <SquareIcon />}
       onClick={() => {
         handleClick();
-        setToolSelected("RectangleTool")
+        setToolSelected("RectangleTool");
         toast({
           title: "Rectangle annotation tool selected",
           status: "success",

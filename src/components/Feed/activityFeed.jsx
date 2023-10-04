@@ -150,13 +150,6 @@ const AnnotationFeed = ({
   userInfo,
   viewerId,
   totalCells,
-  hideTumor,
-  setHideTumor,
-  hideLymphocyte,
-  setHideLymphocyte,
-  setHideStroma,
-  hideStroma,
-  handlePopup,
   gleasonScoring,
   setSelectedOption,
   popup,
@@ -169,17 +162,23 @@ const AnnotationFeed = ({
   activeObject,
   searchSelectedData,
   gleasonScoringData,
+  selectedPattern,
+  setSelectedPattern,
+  pattern3Color,
+  pattern4Color,
+  pattern5Color,
+  benignColor,
+  tumorColor,
+  stromaColor,
+  lymphocyteColor,
 }) => {
   // const onUpdateAnnotation = (data) => {
   //   console.log("annotationFeed", data);
   // };
-  // console.log("ON", gleasonScoringData);
+  // console.log("ON", selectedPattern);
   const toast = useToast();
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
   const [isTILBoxVisible, setIsTilBoxVisible] = useState(false);
-  const [visibleTumor, setVisibleTumor] = useState(true);
-  const [visibleStroma, setVisibleStroma] = useState(true);
-  const [visibleLymphocyte, setVisibleLymphocyte] = useState(true);
   const [selectedItemIndex, setSelectedItemIndex] = useState(null);
   const [
     modifyAnnotation,
@@ -919,171 +918,88 @@ const AnnotationFeed = ({
                     <Flex
                       borderBottom="1px solid lightgray"
                       my="0"
-                      ml="50px"
+                      ml="40px"
                       alignItems="center"
+                      bg={selectedPattern === "Tumor" ? "#DEDEDE" : null}
+                      onClick={() => {
+                        if (selectedPattern === "Tumor") {
+                          setSelectedPattern("");
+                        } else {
+                          setSelectedPattern("Tumor");
+                        }
+                      }}
+                      py="8px"
                     >
-                      <RiCheckboxBlankFill color="#cce6cc" />
+                      <RiCheckboxBlankFill
+                        color={
+                          tumorColor.color
+                            ? `rgba(${tumorColor.color.r}, ${tumorColor.color.g}, ${tumorColor.color.b}, ${tumorColor.color.a})`
+                            : "yellow"
+                        }
+                      />
                       <Text ml="5px">Tumor</Text>
                       <Flex
                         alignItems="flex-end"
                         justifyContent="flex-end"
                         w="100%"
-                      >
-                        <Tooltip
-                          label={
-                            !visibleTumor
-                              ? "Click to enable tumor"
-                              : "Click to disable tumor"
-                          }
-                          placement="left"
-                          hasArrow
-                        >
-                          <IconButton
-                            width={ifScreenlessthan1536px ? "30px" : "40px"}
-                            size={ifScreenlessthan1536px ? 60 : 0}
-                            height={ifScreenlessthan1536px ? "26px" : "34px"}
-                            icon={
-                              !visibleTumor ? (
-                                <BsEyeSlash color="#151C25" />
-                              ) : (
-                                <BsEye color="#3b5d7c" />
-                              )
-                            }
-                            _active={{
-                              bgColor: "none",
-                              outline: "none",
-                            }}
-                            _focus={{
-                              border: "none",
-                            }}
-                            _hover={{ bgColor: "none" }}
-                            bg="transparent"
-                            borderRadius={0}
-                            disabled={
-                              hideStroma === true || hideLymphocyte === true
-                            }
-                            onClick={() => {
-                              setHideTumor(!hideTumor);
-                              setHideStroma(false);
-                              setHideLymphocyte(false);
-                              setVisibleTumor(!visibleTumor);
-                              setVisibleStroma(true);
-                              setVisibleLymphocyte(true);
-                            }}
-                          />
-                        </Tooltip>
-                      </Flex>
+                      ></Flex>
                     </Flex>
                     <Flex
                       borderBottom="1px solid lightgray"
                       my="0"
-                      ml="50px"
+                      ml="40px"
                       alignItems="center"
+                      bg={selectedPattern === "Stroma" ? "#DEDEDE" : null}
+                      onClick={() => {
+                        if (selectedPattern === "Stroma") {
+                          setSelectedPattern("");
+                        } else {
+                          setSelectedPattern("Stroma");
+                        }
+                      }}
+                      py="8px"
                     >
-                      <RiCheckboxBlankFill color="#f7d66e" />
+                      <RiCheckboxBlankFill
+                        color={
+                          stromaColor.color
+                            ? `rgba(${stromaColor.color.r}, ${stromaColor.color.g}, ${stromaColor.color.b}, ${stromaColor.color.a})`
+                            : "#4682B4"
+                        }
+                      />
                       <Text ml="5px">Stroma</Text>
                       <Flex
                         alignItems="flex-end"
                         justifyContent="flex-end"
                         w="100%"
-                      >
-                        <Tooltip
-                          label={
-                            !visibleStroma
-                              ? "Click to enable stroma"
-                              : "Click to disable stroma"
-                          }
-                          placement="left"
-                          hasArrow
-                        >
-                          <IconButton
-                            width={ifScreenlessthan1536px ? "30px" : "40px"}
-                            size={ifScreenlessthan1536px ? 60 : 0}
-                            height={ifScreenlessthan1536px ? "26px" : "34px"}
-                            icon={
-                              !visibleStroma ? (
-                                <BsEyeSlash color="#151C25" />
-                              ) : (
-                                <BsEye color="#3b5d7c" />
-                              )
-                            }
-                            _active={{
-                              bgColor: "none",
-                              outline: "none",
-                            }}
-                            _focus={{
-                              border: "none",
-                            }}
-                            _hover={{ bgColor: "none" }}
-                            backgroundColor="transparent"
-                            borderRadius={0}
-                            disabled={
-                              hideTumor === true || hideLymphocyte === true
-                            }
-                            onClick={() => {
-                              setHideStroma(!hideStroma);
-                              setHideLymphocyte(false);
-                              setHideTumor(false);
-                              setVisibleStroma(!visibleStroma);
-                              setVisibleLymphocyte(true);
-                              setVisibleTumor(true);
-                            }}
-                          />
-                        </Tooltip>
-                      </Flex>
+                      ></Flex>
                     </Flex>
-                    <Flex my="0" ml="50px" alignItems="center">
-                      <RiCheckboxBlankLine color="red" />
+                    <Flex
+                      my="0"
+                      ml="40px"
+                      alignItems="center"
+                      bg={selectedPattern === "Lymphocytes" ? "#DEDEDE" : null}
+                      onClick={() => {
+                        if (selectedPattern === "Lymphocytes") {
+                          setSelectedPattern("");
+                        } else {
+                          setSelectedPattern("Lymphocytes");
+                        }
+                      }}
+                      py="8px"
+                    >
+                      <RiCheckboxBlankLine
+                        color={
+                          tumorColor.color
+                            ? `rgba(${tumorColor.color.r}, ${tumorColor.color.g}, ${tumorColor.color.b}, ${tumorColor.color.a})`
+                            : "red"
+                        }
+                      />
                       <Text ml="5px">Lymphocytes</Text>
                       <Flex
                         alignItems="flex-end"
                         justifyContent="flex-end"
                         w="100%"
-                      >
-                        <Tooltip
-                          label={
-                            !visibleLymphocyte
-                              ? "Click to enable Lymphocytes"
-                              : "Click to disable Lymphocytes"
-                          }
-                          placement="left"
-                          hasArrow
-                        >
-                          <IconButton
-                            width={ifScreenlessthan1536px ? "30px" : "40px"}
-                            size={ifScreenlessthan1536px ? 60 : 0}
-                            height={ifScreenlessthan1536px ? "26px" : "34px"}
-                            icon={
-                              !visibleLymphocyte ? (
-                                <BsEyeSlash color="#151C25" />
-                              ) : (
-                                <BsEye color="#3b5d7c" />
-                              )
-                            }
-                            _active={{
-                              bgColor: "none",
-                              outline: "none",
-                            }}
-                            _focus={{
-                              border: "none",
-                            }}
-                            _hover={{ bgColor: "none" }}
-                            bg="transparent"
-                            borderRadius={0}
-                            disabled={
-                              hideStroma === true || hideTumor === true
-                            }
-                            onClick={() => {
-                              setHideLymphocyte(!hideLymphocyte);
-                              setHideStroma(false);
-                              setHideTumor(false);
-                              setVisibleLymphocyte(!visibleLymphocyte);
-                              setVisibleTumor(true);
-                              setVisibleStroma(true);
-                            }}
-                          />
-                        </Tooltip>
-                      </Flex>
+                      ></Flex>
                     </Flex>
                     <Box w="100%" mx="25px" my="10px" textAlign="left">
                       <Text color="#3B5D7C">TIL Values</Text>
@@ -1156,29 +1072,31 @@ const AnnotationFeed = ({
                       <Flex
                         borderTop="1px solid lightgray"
                         borderBottom="1px solid lightgray"
+                        onClick={() => {
+                          if (
+                            selectedPattern === "" ||
+                            selectedPattern === "Pattern 4" ||
+                            selectedPattern === "Pattern 5" ||
+                            selectedPattern === "Benign"
+                          ) {
+                            setSelectedPattern("Pattern 3");
+                          } else {
+                            setSelectedPattern("");
+                          }
+                        }}
                         my="0"
                         py="10px"
+                        bg={selectedPattern === "Pattern 3" ? "#DEDEDE" : null}
                         alignItems="center"
-                        onClick={() => {
-                          handleCollapseToggle("grade1");
-                        }}
-                        // border="1px solid red"
                       >
-                        {collapseStates.grade1 ? (
-                          <Icon
-                            as={AiFillCaretDown}
-                            color="#3B5D7C"
-                            boxSize={4}
-                          />
-                        ) : (
-                          <Icon
-                            as={AiFillCaretRight}
-                            color="gray"
-                            boxSize={4}
-                          />
-                        )}
                         <Box ml="15px">
-                          <RiCheckboxBlankFill color="yellow" />
+                          <RiCheckboxBlankFill
+                            color={
+                              pattern3Color.color
+                                ? `rgba(${pattern3Color.color.r}, ${pattern3Color.color.g}, ${pattern3Color.color.b}, ${pattern3Color.color.a})`
+                                : "yellow"
+                            }
+                          />
                         </Box>
                         <Text ml="5px">Pattern 3</Text>
                         <Box w="100%">
@@ -1190,12 +1108,7 @@ const AnnotationFeed = ({
                           </Text>
                         </Box>
                       </Flex>
-                      <Collapse in={collapseStates.grade1} animateOpacity>
-                        <Box bg="white" my="5px" p="10px" boxShadow="md">
-                          <Text>Grade 1 Collapse Content</Text>
-                          {/* Add more content here */}
-                        </Box>
-                      </Collapse>
+
                       <Flex
                         borderBottom="1px solid lightgray"
                         my="0"
@@ -1203,24 +1116,27 @@ const AnnotationFeed = ({
                         pb="15px"
                         alignItems="center"
                         onClick={() => {
-                          handleCollapseToggle("grade2");
+                          if (
+                            selectedPattern === "" ||
+                            selectedPattern === "Pattern 3" ||
+                            selectedPattern === "Pattern 5" ||
+                            selectedPattern === "Benign"
+                          ) {
+                            setSelectedPattern("Pattern 4");
+                          } else {
+                            setSelectedPattern("");
+                          }
                         }}
+                        bg={selectedPattern === "Pattern 4" ? "#DEDEDE" : null}
                       >
-                        {collapseStates.grade2 ? (
-                          <Icon
-                            as={AiFillCaretDown}
-                            color="#3B5D7C"
-                            boxSize={4}
-                          />
-                        ) : (
-                          <Icon
-                            as={AiFillCaretRight}
-                            color="gray"
-                            boxSize={4}
-                          />
-                        )}
                         <Box ml="15px">
-                          <RiCheckboxBlankFill color="orange" />
+                          <RiCheckboxBlankFill
+                            color={
+                              pattern4Color.color
+                                ? `rgba(${pattern4Color.color.r}, ${pattern4Color.color.g}, ${pattern4Color.color.b}, ${pattern4Color.color.a})`
+                                : "orange"
+                            }
+                          />
                         </Box>
                         <Text ml="5px">Pattern 4</Text>
                         <Box w="100%">
@@ -1232,12 +1148,7 @@ const AnnotationFeed = ({
                           </Text>
                         </Box>
                       </Flex>
-                      <Collapse in={collapseStates.grade2} animateOpacity>
-                        <Box bg="white" my="5px" p="10px" boxShadow="md">
-                          <Text>Grade 2 Collapse Content</Text>
-                          {/* Add more content here */}
-                        </Box>
-                      </Collapse>
+
                       <Flex
                         borderBottom="1px solid lightgray"
                         my="0"
@@ -1245,24 +1156,27 @@ const AnnotationFeed = ({
                         pb="15px"
                         alignItems="center"
                         onClick={() => {
-                          handleCollapseToggle("grade3");
+                          if (
+                            selectedPattern === "" ||
+                            selectedPattern === "Pattern 3" ||
+                            selectedPattern === "Pattern 4" ||
+                            selectedPattern === "Benign"
+                          ) {
+                            setSelectedPattern("Pattern 5");
+                          } else {
+                            setSelectedPattern("");
+                          }
                         }}
+                        bg={selectedPattern === "Pattern 5" ? "#DEDEDE" : null}
                       >
-                        {collapseStates.grade3 ? (
-                          <Icon
-                            as={AiFillCaretDown}
-                            color="#3B5D7C"
-                            boxSize={4}
-                          />
-                        ) : (
-                          <Icon
-                            as={AiFillCaretRight}
-                            color="gray"
-                            boxSize={4}
-                          />
-                        )}
                         <Box ml="15px">
-                          <RiCheckboxBlankFill color="red" />
+                          <RiCheckboxBlankFill
+                            color={
+                              pattern5Color.color
+                                ? `rgba(${pattern5Color.color.r}, ${pattern5Color.color.g}, ${pattern5Color.color.b}, ${pattern5Color.color.a})`
+                                : "red"
+                            }
+                          />
                         </Box>
                         <Text ml="5px">Pattern 5</Text>
                         <Box w="100%">
@@ -1274,12 +1188,7 @@ const AnnotationFeed = ({
                           </Text>
                         </Box>
                       </Flex>
-                      <Collapse in={collapseStates.grade3} animateOpacity>
-                        <Box bg="white" my="5px" p="10px" boxShadow="md">
-                          <Text>Grade 3 Collapse Content</Text>
-                          {/* Add more content here */}
-                        </Box>
-                      </Collapse>
+
                       <Flex
                         borderBottom="1px solid lightgray"
                         my="0"
@@ -1287,24 +1196,27 @@ const AnnotationFeed = ({
                         pb="15px"
                         alignItems="center"
                         onClick={() => {
-                          handleCollapseToggle("grade4");
+                          if (
+                            selectedPattern === "" ||
+                            selectedPattern === "Pattern 3" ||
+                            selectedPattern === "Pattern 5" ||
+                            selectedPattern === "Pattern 4"
+                          ) {
+                            setSelectedPattern("Benign");
+                          } else {
+                            setSelectedPattern("");
+                          }
                         }}
+                        bg={selectedPattern === "Benign" ? "#DEDEDE" : null}
                       >
-                        {collapseStates.grade4 ? (
-                          <Icon
-                            as={AiFillCaretDown}
-                            color="#3B5D7C"
-                            boxSize={4}
-                          />
-                        ) : (
-                          <Icon
-                            as={AiFillCaretRight}
-                            color="gray"
-                            boxSize={4}
-                          />
-                        )}
                         <Box ml="15px">
-                          <RiCheckboxBlankFill color="green" />
+                          <RiCheckboxBlankFill
+                            color={
+                              benignColor.color
+                                ? `rgba(${benignColor.color.r}, ${benignColor.color.g}, ${benignColor.color.b}, ${benignColor.color.a})`
+                                : "green"
+                            }
+                          />
                         </Box>
                         <Text ml="5px">Benign Glands</Text>
                         <Box w="100%">
@@ -1316,12 +1228,6 @@ const AnnotationFeed = ({
                           </Text>
                         </Box>
                       </Flex>
-                      <Collapse in={collapseStates.grade4} animateOpacity>
-                        <Box bg="white" my="5px" p="10px" boxShadow="md">
-                          <Text> Benign Glands Collapse Content</Text>
-                          {/* Add more content here */}
-                        </Box>
-                      </Collapse>
                     </Flex>
                     <Flex
                       w="100%"

@@ -31,14 +31,25 @@ const AiModels = ({
   setBinaryMask,
   viewerIds,
   setGleasonScoring,
-  Environment,
   viewerId,
   TILReady,
   bottomZoomValue,
-  bottombottomZoomValue,
   setLoadUI,
   navigatorCounter,
   setGleasonScoringData,
+  newToolSettings,
+  selectedPattern,
+  setSelectedPattern,
+  pattern3Color,
+  pattern5Color,
+  pattern4Color,
+  benignColor,
+  SetBenignColor,
+  setPattern5Color,
+  setPattern4Color,
+  setPattern3Color,
+  tumorColor,
+  stromaColor,
 }) => {
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { viewerWindow, isViewportAnalysing } = fabricOverlayState;
@@ -72,8 +83,112 @@ const AiModels = ({
     }
   );
 
-  // console.log("subscriptionAI", subscription);
+  console.log("subscriptionAI", stromaColor);
   // console.log("subscriptionErrorAI", subscription_error);
+
+  // ################################# change color as user Input for gleason #####################################################
+  // console.log(newToolSettings);
+  // console.log(selectedPattern);
+
+  useEffect(() => {
+    if (newToolSettings.fillColor !== "" && selectedPattern !== "") {
+      if (
+        newToolSettings.fillColor.r !== "" ||
+        newToolSettings.fillColor.g !== "" ||
+        newToolSettings.fillColor.b !== "" ||
+        newToolSettings.fillColor.a !== ""
+      ) {
+        viewer.setFilterOptions({
+          filters: {
+            processors: changeColorSegment,
+          },
+          loadMode: "async",
+        });
+      }
+    }
+  }, [newToolSettings]);
+
+  const changeColorSegment = async (context, callback) => {
+    // console.log("object");
+    const imgData = context.getImageData(
+      0,
+      0,
+      context.canvas.width,
+      context.canvas.height
+    );
+
+    const pixelsData = imgData.data;
+    // console.log(pixelsData);
+    const length = pixelsData.length;
+
+    for (let i = 0; i < length; i += 4) {
+      const red = pixelsData[i];
+      const green = pixelsData[i + 1];
+      const blue = pixelsData[i + 2];
+      const alpha = pixelsData[i + 3];
+      // Check if the pixel is black (RGB: 0, 0, 0) or inside the red range (adjust the threshold values as needed)
+      if (
+        (red === 0 && green === 0 && blue === 0) ||
+        (red < 100 && green < 100 && blue < 100)
+      ) {
+        // Set alpha to 0 for black pixels or pixels inside the red range
+        pixelsData[i + 3] = 0;
+      }
+      // Change green pixels to custom color by modifying RGB values
+      if (green > 100 && red < 150 && blue < 150 && benignColor.color) {
+        pixelsData[i] = benignColor.color.r; // Brown: R
+        pixelsData[i + 1] = benignColor.color.g; // Brown: G
+        pixelsData[i + 2] = benignColor.color.b; // Brown: B
+        pixelsData[i + 3] = Math.round(benignColor.color.a * 255); // Green: A
+      }
+      // Change yellow pixels to custom color by modifying RGB values
+      if (red > 200 && green > 200 && blue < 100 && pattern3Color.color) {
+        // Change yellow pixels to green by modifying RGB values
+        pixelsData[i] = pattern3Color.color.r; // Brown: R
+        pixelsData[i + 1] = pattern3Color.color.g; // Brown: G
+        pixelsData[i + 2] = pattern3Color.color.b; // Brown: B
+        pixelsData[i + 3] = Math.round(pattern3Color.color.a * 255); // Green: A
+      }
+      if (red > 200 && green < 100 && blue < 100 && pattern5Color.color) {
+        // Change red pixels to custom color by modifying RGB values
+        pixelsData[i] = pattern5Color.color.r; // Brown: R
+        pixelsData[i + 1] = pattern5Color.color.g; // Brown: G
+        pixelsData[i + 2] = pattern5Color.color.b; // Brown: B
+        pixelsData[i + 3] = Math.round(pattern5Color.color.a * 255); // Green: A
+      }
+      if (
+        red > 200 &&
+        green > 100 &&
+        green < 200 &&
+        blue < 100 &&
+        pattern4Color.color
+      ) {
+        // Change orange pixels to a custom color by modifying RGB values
+        pixelsData[i] = pattern4Color.color.r; // Brown: R
+        pixelsData[i + 1] = pattern4Color.color.g; // Brown: G
+        pixelsData[i + 2] = pattern4Color.color.b; // Brown: B
+        pixelsData[i + 3] = Math.round(pattern4Color.color.a * 255); // Green: A
+      }
+      if (red > 200 && green > 200 && blue < 100 && tumorColor.color) {
+        // Change yellow pixels to green by modifying RGB values
+        pixelsData[i] = tumorColor.color.r; // Brown: R
+        pixelsData[i + 1] = tumorColor.color.g; // Brown: G
+        pixelsData[i + 2] = tumorColor.color.b; // Brown: B
+        pixelsData[i + 3] = Math.round(tumorColor.color.a * 255); // Green: A
+      }
+
+      if (blue > 150 && green > 100 && red < 150 && stromaColor.color) {
+        // Change blue pixels to a custom color (e.g., red)
+        pixelsData[i] = stromaColor.color.r; // Custom Color: R
+        pixelsData[i + 1] = stromaColor.color.g; // Custom Color: G
+        pixelsData[i + 2] = stromaColor.color.b; // Custom Color: B
+        pixelsData[i + 3] = Math.round(stromaColor.color.a * 255); // Custom Color: A
+      }
+    }
+
+    context.putImageData(imgData, 0, 0);
+    callback();
+  };
 
   const reinhardFilter = async (context, callback) => {
     // console.log("object");
@@ -93,7 +208,6 @@ const AiModels = ({
       const green = pixelsData[i + 1];
       const blue = pixelsData[i + 2];
       const alpha = pixelsData[i + 3];
-
       // Check if the pixel is black (RGB: 0, 0, 0) or inside the red range (adjust the threshold values as needed)
       if (
         (red === 0 && green === 0 && blue === 0) ||
@@ -133,6 +247,11 @@ const AiModels = ({
         viewer.world.removeItem(topImage);
       }
       setShowGleason(false);
+      setSelectedPattern("");
+      SetBenignColor({});
+      setPattern5Color({});
+      setPattern4Color({});
+      setPattern3Color({});
     }
   }, [gleasonScoring]);
 
@@ -148,14 +267,12 @@ const AiModels = ({
       if (!showTILS) {
         setLoadUI(true);
         localStorage.removeItem("ModelName");
-      }
-      else {
+      } else {
         // setLoadUI(false);
         localStorage.setItem("ModelName", "TIL");
       }
     }
-    
-  }, [showTumor, showGleason, showTILS,]);
+  }, [showTumor, showGleason, showTILS]);
 
   useEffect(() => {
     if (subscription && detectTumor) {
@@ -187,7 +304,7 @@ const AiModels = ({
           x: 0,
           y: 0,
           width: 1,
-          opacity: 0.2,
+          opacity: 0.5,
         });
         setTimeout(() => {
           setShowGleason(true);
@@ -204,7 +321,8 @@ const AiModels = ({
           primaryPattern: subscription.conversionStatus.data.primaryPattern,
           riskCategory: subscription.conversionStatus.data.riskCategory,
           tumorLength: subscription.conversionStatus.data.tumorLength,
-          worstPattern: subscription.conversionStatus.data.worstRemainingPattern,
+          worstPattern:
+            subscription.conversionStatus.data.worstRemainingPattern,
         };
         setGleasonScoringData(gleasonDataSet);
       }
@@ -275,7 +393,7 @@ const AiModels = ({
     if (slide.stainType === "H&E") {
       if (TilActiveState) {
         setModelname("TIL");
-        setShowTILS(true)
+        setShowTILS(true);
       } else {
         // console.log("TILClear")
         setModelname("TILClear");
@@ -482,7 +600,7 @@ const AiModels = ({
                       if (TILReady) {
                         setTilActiveState(!TilActiveState);
                       } else {
-                        setToolSelected("TILLoading")
+                        setToolSelected("TILLoading");
                       }
                     }}
                   >

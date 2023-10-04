@@ -1,17 +1,24 @@
 import React, { useState, useEffect, useRef } from "react";
 import { BsPencil } from "react-icons/bs";
-import { useDisclosure, IconButton, useToast } from "@chakra-ui/react";
+import {
+  useDisclosure,
+  IconButton,
+  Tooltip,
+  useToast,
+  Box,
+  Flex,
+} from "@chakra-ui/react";
 import {
   createAnnotationMessage,
   getScaleFactor,
   saveAnnotationToDB,
-} from "../../utility";
-import { widths } from "./width";
-import { useFabricOverlayState } from "../../state/store";
+} from "../utility";
+import { widths } from "../components/Draw/width";
+import { useFabricOverlayState } from "../state/store";
 import {
   addToActivityFeed,
   updateTool,
-} from "../../state/actions/fabricOverlayActions";
+} from "../state/actions/fabricOverlayActions";
 
 const getDrawCursor = (brushSize, brushColor) => {
   brushSize = brushSize < 4 ? 8 : brushSize * 3;
@@ -40,11 +47,15 @@ const createFreeDrawingCursor = (brushWidth, brushColor) => {
   }, crosshair`;
 };
 
-const Draw = ({
+const RemovePath = ({
   viewerId,
   onSaveAnnotation,
   setToolSelected,
+  selectedPattern,
+  isHILToolEnabled,
   newToolSettings,
+  setHitlAnnotations,
+  hitlAnnotations,
 }) => {
   const toast = useToast();
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
@@ -52,11 +63,10 @@ const Draw = ({
 
   const { fabricOverlay, viewer, slideId } = viewerWindow[viewerId];
 
-  const isActive = activeTool === "DRAW";
+  const isActive = activeTool === "REMOVEPATH";
 
   const [path, setPath] = useState(null);
   const [textbox, setTextbox] = useState(false);
-
   const [myState, setState] = useState({
     width: widths[0],
     isActive: false,
@@ -133,9 +143,9 @@ const Draw = ({
 
   // group drawing (path) and textbox together
   // first remove both from canvas then group them and then add group to canvas
-  
   useEffect(() => {
     if (!path) return;
+
     const canvas = fabricOverlay.fabricCanvas();
     const pathLength = path.path.length;
     // Check if the path is closed
@@ -149,18 +159,8 @@ const Draw = ({
     const distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     // console.log(distance);
 
-    if (distance < 5) {
+    if (distance < 5 && path.path.length > 2) {
       // console.log("Path is closed");
-      setToolSelected("RunRoi");
-      path.isClosed = true;
-    } else {
-      // console.log("Path is open");
-      setToolSelected("pathError");
-      // console.log(path);
-      path.isClosed = false;
-    }
-
-    if (path.path.length > 2) {
       const addToFeed = async () => {
         const message = createAnnotationMessage({
           slideId,
@@ -169,37 +169,43 @@ const Draw = ({
           type: "path",
           isClosed: path.isClosed,
         });
-
-        // console.log(message.object);
-
-        saveAnnotationToDB({
-          slideId,
-          annotation: message.object,
-          onSaveAnnotation,
-        });
-        setFabricOverlayState(
-          addToActivityFeed({
-            id: viewerId,
-            feed: message,
-          })
-        );
-
         setPath(null);
         setTextbox(false);
+        const addMask = {
+          annotation: message.object,
+          type: "remove",
+          modelName: selectedPattern !== "" ? "gleason" : "",
+          slideId,
+          isProcessed: false,
+          patternName: selectedPattern
+        };
 
-        // send annotation
-        // socket.emit(
-        //   "send_annotations",
-        //   JSON.stringify({
-        //     roomName,
-        //     username,
-        //     content: canvas,
-        //     feed: [...activityFeed, message],
-        //   })
-        // );
+        // console.log("addd", addMask);
+        path.isClosed = true;
       };
-
       addToFeed();
+    } else {
+      // console.log("Path is open");
+      setTimeout(() => {
+        const canvas = fabricOverlay.fabricCanvas();
+        const objects = canvas.getObjects();
+        const lastObject = objects[objects.length - 1];
+        canvas.remove(lastObject);
+      }, 2000);
+      toast({
+        title: "Mask Error",
+        description: "Please draw a closed  annotation",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      // add a chakra ui modal here
+      // setToolSelected("pathError");
+      // console.log(path);
+      path.isClosed = false;
+    }
+
+    if (path.path.length > 2) {
     }
     if (path.path.length <= 2) {
       const canvas = fabricOverlay.fabricCanvas();
@@ -219,40 +225,69 @@ const Draw = ({
   }, [path]);
 
   const handleToolbarClick = () => {
-    setFabricOverlayState(updateTool({ tool: "DRAW" }));
+    setFabricOverlayState(updateTool({ tool: "REMOVEPATH" }));
   };
 
-  // const handleSave = ({ text, tag }) => {
-  //   path.set({ isExist: true, text, tag });
-  //   setTextbox(true);
-  //   onClose();
-  // };
-
-  // const handleClose = () => {
-  //   path.set({ isExist: true, text: "" });
-  //   setTextbox(true);
-  //   onClose();
-  // };
-
   return (
-    <IconButton
-      icon={<BsPencil size={20} color={isActive ? "#3B5D7C" : "#000"} />}
-      onClick={() => {
-        handleToolbarClick();
-        setToolSelected("FreeHand");
-      }}
-      borderRadius={0}
+    <Tooltip label="Subtract Selection" hasArrow bg="#D8E7F3" color="black" fontSize="xs">
+    <Flex
+      justifyContent="center"
+      alignItems="center"
       bg={isActive ? "#DEDEDE" : "#F6F6F6"}
-      title="Free Draw"
+      w="40px"
+      h="39px"
+      p="5px"
       _focus={{ border: "none" }}
+      onClick={() => {
+        if (isHILToolEnabled) {
+          handleToolbarClick();
+          setToolSelected("AddMask");
+        }
+      }}
       boxShadow={
         isActive
           ? "inset -2px -2px 2px rgba(0, 0, 0, 0.1), inset 2px 2px 2px rgba(0, 0, 0, 0.1)"
           : null
       }
-      _hover={{ bgColor: "rgba(228, 229, 232, 1)" }}
-    />
+      _hover={isHILToolEnabled ? { bgColor: "rgba(228, 229, 232, 1)" } : ""}
+      cursor={isHILToolEnabled ? "pointer" : "not-allowed"}
+    >
+       <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="19"
+        height="19"
+        viewBox="0 0 19 19"
+        fill="none"
+      >
+        <path
+          d="M1.25 1.25H12.75V12.75H1.25V1.25Z"
+          stroke="#212224"
+          stroke-opacity="0.5"
+          stroke-width="0.5"
+        />
+        <rect
+          x="7.25"
+          y="7.25"
+          width="11.5"
+          height="11.5"
+          stroke="#212224"
+          stroke-opacity="0.5"
+          stroke-width="0.5"
+        />
+        <path
+          d="M13 1H1V13H7V7H13V1Z"
+          stroke={
+            isActive
+              ? "#3B5D7C" // if isActive is true
+              : isHILToolEnabled
+              ? "#000" // if isHILToolEnabled is true and isActive is false
+              : "grey" // if isHILToolEnabled is false
+          }
+        />
+      </svg>
+      </Flex>
+      </Tooltip>
   );
 };
 
-export default Draw;
+export default RemovePath;

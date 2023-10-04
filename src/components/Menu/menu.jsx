@@ -80,9 +80,7 @@ function FunctionsMenu({
   viewerIds,
   setIsMultiview,
   setOriginalPixels,
-  hideTumor,
   originalPixels,
-  setHideTumor,
   setNewSliderInputs,
   handleReportsubmit,
   synopticReportData,
@@ -94,16 +92,12 @@ function FunctionsMenu({
   setNormalizeDefault,
   gleasonScoring,
   setBase64URL,
-  hideLymphocyte,
   setSlideName2,
   setNavigatorCounter,
   setSlideName,
   showRightPanel,
   navigatorCounter,
-  setHideLymphocyte,
   setToolSelected,
-  setHideStroma,
-  hideStroma,
   setIsNavigatorActive,
   toolSelected,
   setShowRightPanel,
@@ -149,7 +143,16 @@ function FunctionsMenu({
   updateSynopticReport,
   searchSelectedData,
   questionIndex,
+  setSelectedPattern,
+  selectedPattern,
   gleasonScoringData,
+  pattern3Color,
+  pattern4Color,
+  pattern5Color,
+  benignColor,
+  tumorColor,
+  stromaColor,
+  lymphocyteColor,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
@@ -825,19 +828,22 @@ function FunctionsMenu({
                 viewerId={viewerId}
                 tumorArea={tumorArea}
                 activeObject={activeObject}
-                hideTumor={hideTumor}
-                setHideTumor={setHideTumor}
-                hideLymphocyte={hideLymphocyte}
-                setHideLymphocyte={setHideLymphocyte}
                 setSelectedOption={setSelectedOption}
                 gleasonScoring={gleasonScoring}
-                setHideStroma={setHideStroma}
-                hideStroma={hideStroma}
                 stromaArea={stromaArea}
                 lymphocyteCount={lymphocyteCount}
                 tilScore={tilScore}
                 searchSelectedData={searchSelectedData}
                 gleasonScoringData={gleasonScoringData}
+                selectedPattern={selectedPattern}
+                setSelectedPattern={setSelectedPattern}
+                pattern3Color={pattern3Color}
+                pattern4Color={pattern4Color}
+                pattern5Color={pattern5Color}
+                benignColor={benignColor}
+                tumorColor={tumorColor}
+                stromaColor={stromaColor}
+                lymphocyteColo={lymphocyteColor}
               />
             ) : selectedOption === "comments" ? (
               <CommentFeed
@@ -893,8 +899,8 @@ function FunctionsMenu({
                     setAnnotedSlideImages={setAnnotedSlideImages}
                     slideData={slideData}
                     setSlideData={setSlideData}
-                            questionIndex={questionIndex}
-                            setIsOpen={setIsOpen}
+                    questionIndex={questionIndex}
+                    setIsOpen={setIsOpen}
                   />
                   {showReport || synopticType ? (
                     <GrFormClose

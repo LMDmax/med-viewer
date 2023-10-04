@@ -1,17 +1,24 @@
 import React, { useState, useEffect, useRef } from "react";
 import { BsPencil } from "react-icons/bs";
-import { useDisclosure, IconButton, useToast } from "@chakra-ui/react";
+import {
+  useDisclosure,
+  IconButton,
+  useToast,
+  Box,
+  Flex,
+  Tooltip,
+} from "@chakra-ui/react";
 import {
   createAnnotationMessage,
   getScaleFactor,
   saveAnnotationToDB,
-} from "../../utility";
-import { widths } from "./width";
-import { useFabricOverlayState } from "../../state/store";
+} from "../utility";
+import { widths } from "../components/Draw/width";
+import { useFabricOverlayState } from "../state/store";
 import {
   addToActivityFeed,
   updateTool,
-} from "../../state/actions/fabricOverlayActions";
+} from "../state/actions/fabricOverlayActions";
 
 const getDrawCursor = (brushSize, brushColor) => {
   brushSize = brushSize < 4 ? 8 : brushSize * 3;
@@ -40,11 +47,15 @@ const createFreeDrawingCursor = (brushWidth, brushColor) => {
   }, crosshair`;
 };
 
-const Draw = ({
+const AddPath = ({
   viewerId,
   onSaveAnnotation,
   setToolSelected,
+  selectedPattern,
+  isHILToolEnabled,
   newToolSettings,
+  setHitlAnnotations,
+  hitlAnnotations,
 }) => {
   const toast = useToast();
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
@@ -52,11 +63,10 @@ const Draw = ({
 
   const { fabricOverlay, viewer, slideId } = viewerWindow[viewerId];
 
-  const isActive = activeTool === "DRAW";
+  const isActive = activeTool === "ADDPATH";
 
   const [path, setPath] = useState(null);
   const [textbox, setTextbox] = useState(false);
-
   const [myState, setState] = useState({
     width: widths[0],
     isActive: false,
@@ -133,9 +143,9 @@ const Draw = ({
 
   // group drawing (path) and textbox together
   // first remove both from canvas then group them and then add group to canvas
-  
   useEffect(() => {
     if (!path) return;
+
     const canvas = fabricOverlay.fabricCanvas();
     const pathLength = path.path.length;
     // Check if the path is closed
@@ -149,18 +159,8 @@ const Draw = ({
     const distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     // console.log(distance);
 
-    if (distance < 5) {
+    if (distance < 5 && path.path.length > 2) {
       // console.log("Path is closed");
-      setToolSelected("RunRoi");
-      path.isClosed = true;
-    } else {
-      // console.log("Path is open");
-      setToolSelected("pathError");
-      // console.log(path);
-      path.isClosed = false;
-    }
-
-    if (path.path.length > 2) {
       const addToFeed = async () => {
         const message = createAnnotationMessage({
           slideId,
@@ -169,37 +169,44 @@ const Draw = ({
           type: "path",
           isClosed: path.isClosed,
         });
-
-        // console.log(message.object);
-
-        saveAnnotationToDB({
-          slideId,
-          annotation: message.object,
-          onSaveAnnotation,
-        });
-        setFabricOverlayState(
-          addToActivityFeed({
-            id: viewerId,
-            feed: message,
-          })
-        );
-
         setPath(null);
         setTextbox(false);
+        const addMask = {
+          annotation: message.object,
+          type: "add",
+          modelName: "gleason",
+          slideId,
+          isProcessed: false,
+          patternName: selectedPattern,
+        };
 
-        // send annotation
-        // socket.emit(
-        //   "send_annotations",
-        //   JSON.stringify({
-        //     roomName,
-        //     username,
-        //     content: canvas,
-        //     feed: [...activityFeed, message],
-        //   })
-        // );
+        // console.log("addd", addMask);
+        // setToolSelected("RunRoi");
+        path.isClosed = true;
       };
-
       addToFeed();
+    } else {
+      // console.log("Path is open");
+      setTimeout(() => {
+        const canvas = fabricOverlay.fabricCanvas();
+        const objects = canvas.getObjects();
+        const lastObject = objects[objects.length - 1];
+        canvas.remove(lastObject);
+      }, 2000);
+      toast({
+        title: "Mask Error",
+        description: "Please draw a closed  annotation",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
+      // add a chakra ui modal here
+      // setToolSelected("pathError");
+      // console.log(path);
+      path.isClosed = false;
+    }
+
+    if (path.path.length > 2) {
     }
     if (path.path.length <= 2) {
       const canvas = fabricOverlay.fabricCanvas();
@@ -219,40 +226,54 @@ const Draw = ({
   }, [path]);
 
   const handleToolbarClick = () => {
-    setFabricOverlayState(updateTool({ tool: "DRAW" }));
+    setFabricOverlayState(updateTool({ tool: "ADDPATH" }));
   };
 
-  // const handleSave = ({ text, tag }) => {
-  //   path.set({ isExist: true, text, tag });
-  //   setTextbox(true);
-  //   onClose();
-  // };
-
-  // const handleClose = () => {
-  //   path.set({ isExist: true, text: "" });
-  //   setTextbox(true);
-  //   onClose();
-  // };
-
   return (
-    <IconButton
-      icon={<BsPencil size={20} color={isActive ? "#3B5D7C" : "#000"} />}
-      onClick={() => {
-        handleToolbarClick();
-        setToolSelected("FreeHand");
-      }}
-      borderRadius={0}
-      bg={isActive ? "#DEDEDE" : "#F6F6F6"}
-      title="Free Draw"
-      _focus={{ border: "none" }}
-      boxShadow={
-        isActive
-          ? "inset -2px -2px 2px rgba(0, 0, 0, 0.1), inset 2px 2px 2px rgba(0, 0, 0, 0.1)"
-          : null
-      }
-      _hover={{ bgColor: "rgba(228, 229, 232, 1)" }}
-    />
+    <Tooltip label="Add Selection" hasArrow bg="#D8E7F3" color="black" fontSize="xs">
+      <Flex
+        justifyContent="center"
+        alignItems="center"
+        bg={isActive ? "#DEDEDE" : "#F6F6F6"}
+        w="40px"
+        h="39px"
+        p="5px"
+        _focus={{ border: "none" }}
+        onClick={() => {
+          if (isHILToolEnabled) {
+            handleToolbarClick();
+            setToolSelected("AddMask");
+          }
+        }}
+        boxShadow={
+          isActive
+            ? "inset -2px -2px 2px rgba(0, 0, 0, 0.1), inset 2px 2px 2px rgba(0, 0, 0, 0.1)"
+            : null
+        }
+        _hover={isHILToolEnabled ? { bgColor: "rgba(228, 229, 232, 1)" } : ""}
+        cursor={isHILToolEnabled ? "pointer" : "not-allowed"}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="18"
+          height="18"
+          viewBox="0 0 18 18"
+          fill="none"
+        >
+          <path
+            d="M6.5 12V11.5H6H0.5V0.5H11.5V6V6.5H12H17.5V17.5H6.5V12Z"
+            stroke={
+              isActive
+                ? "#3B5D7C" // if isActive is true
+                : isHILToolEnabled
+                ? "#000" // if isHILToolEnabled is true and isActive is false
+                : "grey" // if isHILToolEnabled is false
+            }
+          />
+        </svg>
+      </Flex>
+    </Tooltip>
   );
 };
 
-export default Draw;
+export default AddPath;

@@ -24,11 +24,8 @@ function AdjustmentBar({
   slides,
   slide,
   refreshHil,
-  setTumorArea,
-  setStromaArea,
   setToolSelected,
   setTilScore,
-  setLymphocyteCount,
   hitTil,
   report,
   setLoadUI,
@@ -38,8 +35,6 @@ function AdjustmentBar({
   viewerIds,
   enableAI,
   chatFeedBar,
-  hideStroma,
-  hideTumor,
   enableFilters,
   currentViewer,
   setGleasonScoring,
@@ -57,10 +52,8 @@ function AdjustmentBar({
   handleAnnotationBar,
   saveReport,
   saveSynopticReport,
-  pathStroma,
   handleTILFeedBar,
   mediaUpload,
-  hideLymphocyte,
   setChatHover,
   lessonId,
   slideInfo,
@@ -76,11 +69,13 @@ function AdjustmentBar({
   questions,
   setBinaryMask,
   setOriginalPixels,
-  hideModification,
   setNavigatorCounter,
   newSliderInputs,
   setImageFilter,
   app,
+  setTumorArea,
+  setStromaArea,
+  setLymphocyteCount,
   setModelname,
   setShowRightPanel,
   gleasonScoring,
@@ -100,6 +95,24 @@ function AdjustmentBar({
   isXmlAnnotations,
   Environment,
   setGleasonScoringData,
+  selectedPattern,
+  newToolSettings,
+  setNewToolSettings,
+  setSelectedPattern,
+  SetBenignColor,
+  setPattern5Color,
+  setPattern4Color,
+  setPattern3Color,
+  pattern3Color,
+  pattern4Color,
+  pattern5Color,
+  benignColor,
+  setTumorColor,
+  tumorColor,
+  setStromaColor,
+  stromaColor,
+  setLymphocyteColor,
+  lymphocyteColor,
 }) {
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
   const { fabricOverlayState } = useFabricOverlayState();
@@ -137,14 +150,11 @@ function AdjustmentBar({
         userInfo={userInfo}
         sidebar={sidebar}
         navigatorCounter={navigatorCounter}
-        hideTumor={hideTumor}
-        hideStroma={hideStroma}
         setModelname={setModelname}
         setBinaryMask={setBinaryMask}
         toolSelected={toolSelected}
         lessonId={lessonId}
         newSliderInputs={newSliderInputs}
-        hideLymphocyte={hideLymphocyte}
         Environment={Environment}
         slide={slide}
         gleasonScoring={gleasonScoring}
@@ -155,7 +165,6 @@ function AdjustmentBar({
         modelName={modelName}
         refreshHil={refreshHil}
         setGleasonScoring={setGleasonScoring}
-        hideModification={hideModification}
         handleTILFeedBar={handleTILFeedBar}
         zoomValue={zoomValue}
         annotations={annotations}
@@ -166,7 +175,6 @@ function AdjustmentBar({
         socketIsConnected={socketIsConnected}
         setLoadUI={setLoadUI}
         enableFilters={enableFilters}
-        pathStroma={pathStroma}
         setTumorArea={setTumorArea}
         setImageFilter={setImageFilter}
         setStromaArea={setStromaArea}
@@ -184,6 +192,24 @@ function AdjustmentBar({
         setTotalCells={setTotalCells}
         isXmlAnnotations={isXmlAnnotations}
         setGleasonScoringData={setGleasonScoringData}
+        selectedPattern={selectedPattern}
+        setNewToolSettings={setNewToolSettings}
+        newToolSettings={newToolSettings}
+        setSelectedPattern={setSelectedPattern}
+        SetBenignColor={SetBenignColor}
+        setPattern5Color={setPattern5Color}
+        setPattern4Color={setPattern4Color}
+        setPattern3Color={setPattern3Color}
+        pattern3Color={pattern3Color}
+        pattern4Color={pattern4Color}
+        pattern5Color={pattern5Color}
+        benignColor={benignColor}
+        setTumorColor={setTumorColor}
+        tumorColor={tumorColor}
+        setStromaColor={setStromaColor}
+        stromaColor={stromaColor}
+        setLymphocyteColor={setLymphocyteColor}
+        lymphocyteColor={lymphocyteColor}
       />
       {/* <ActionTools setToolSelected={setToolSelected} viewerId={currentViewer} /> */}
       <ScreenTools
