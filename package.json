@@ -35,6 +35,7 @@
     "openseadragon-fabricjs-overlay": "github:LMDmax/OpenseadragonFabricjsOverlay",
     "prop-types": "^15.7.2",
     "random-username-generator": "^1.0.4",
+    "react-colorful": "^5.6.1",
     "react-custom-scrollbars": "^4.2.1",
     "react-device-detect": "^1.17.0",
     "react-div-100vh": "^0.5.6",
