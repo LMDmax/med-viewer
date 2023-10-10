@@ -843,7 +843,7 @@ function FunctionsMenu({
                 benignColor={benignColor}
                 tumorColor={tumorColor}
                 stromaColor={stromaColor}
-                lymphocyteColo={lymphocyteColor}
+                lymphocyteColor={lymphocyteColor}
               />
             ) : selectedOption === "comments" ? (
               <CommentFeed

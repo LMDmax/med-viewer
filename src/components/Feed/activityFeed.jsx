@@ -172,6 +172,7 @@ const AnnotationFeed = ({
   stromaColor,
   lymphocyteColor,
 }) => {
+  console.log("lymphocyteColor", lymphocyteColor);
   // const onUpdateAnnotation = (data) => {
   //   console.log("annotationFeed", data);
   // };
@@ -989,8 +990,8 @@ const AnnotationFeed = ({
                     >
                       <RiCheckboxBlankLine
                         color={
-                          tumorColor.color
-                            ? `rgba(${tumorColor.color.r}, ${tumorColor.color.g}, ${tumorColor.color.b}, ${tumorColor.color.a})`
+                          lymphocyteColor.color
+                            ? `rgba(${lymphocyteColor.color.r}, ${lymphocyteColor.color.g}, ${lymphocyteColor.color.b}, ${lymphocyteColor.color.a})`
                             : "red"
                         }
                       />
@@ -1020,7 +1021,7 @@ const AnnotationFeed = ({
                         Tumor Area : {tumorArea}
                       </Text>
                       <Text mb="10px" borderBottom="1px solid lightgray">
-                        Stroma Area : {stromaArea}
+                        Intra-Tumoral Stroma Area: : {stromaArea}
                       </Text>
                       <Text borderBottom="1px solid lightgray">
                         Lymphocytes Count : {lymphocyteCount}
