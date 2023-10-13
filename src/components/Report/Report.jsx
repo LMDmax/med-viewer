@@ -27,7 +27,7 @@ const Report = ({
 }) => {
   const [ifwidthLessthan1920] = useMediaQuery("(max-width:1920px)");
 
-  // console.log(caseInfo);
+  console.log(reportedData?.data);
 
   const currentDate = new Date();
 
@@ -197,7 +197,11 @@ const Report = ({
               <HStack minW="50%" h="100%">
                 <Text>Hospital:</Text>
                 <Tooltip
-                  label={caseInfo?.treatingHospitalDetails?.hospitalName.length > 20 ? caseInfo?.treatingHospitalDetails?.hospitalName : ""}
+                  label={
+                    caseInfo?.treatingHospitalDetails?.hospitalName.length > 20
+                      ? caseInfo?.treatingHospitalDetails?.hospitalName
+                      : ""
+                  }
                   placement="left"
                   hasArrow
                 >
@@ -246,12 +250,12 @@ const Report = ({
                   CLINICAL HISTORY:
                 </Text>
                 {reportedData ? (
-                  <Text>{reportedData?.clinicalStudy}</Text>
+                  <Text>{reportedData?.data?.clinicalDescription}</Text>
                 ) : (
                   <>
                     <Textarea
                       onChange={handleReportData("clinicalStudy")}
-                      defaultValue={reportData.clinicalStudy}
+                      defaultValue={reportedData?.data?.clinicalDescription}
                       h="full"
                       w="28vw"
                       minH="12px"
@@ -274,7 +278,7 @@ const Report = ({
                       h="auto"
                       p="0"
                     >
-                      {reportData?.clinicalStudy}
+                      {reportedData?.data?.clinicalDescription}
                     </Textarea>
                   </>
                 )}
@@ -286,12 +290,12 @@ const Report = ({
                   GROSS DESCRIPTION:
                 </Text>
                 {reportedData ? (
-                  <Text>{reportedData?.grossDescription}</Text>
+                  <Text>{reportedData?.data?.grossDescription}</Text>
                 ) : (
                   <>
                     <Textarea
                       onChange={handleReportData("grossDescription")}
-                      defaultValue={reportData.grossDescription}
+                      defaultValue={reportedData?.data?.grossDescription}
                       w="28vw"
                       h="full"
                       minH="12px"
@@ -315,7 +319,7 @@ const Report = ({
                       h="auto"
                       p="0"
                     >
-                      {reportData?.grossDescription}
+                      {reportedData?.data?.grossDescription}
                     </Textarea>
                   </>
                 )}
@@ -327,12 +331,12 @@ const Report = ({
                   MICROSCOPIC DESCRIPTION:
                 </Text>
                 {reportedData ? (
-                  <Text>{reportedData?.microscopicDescription}</Text>
+                  <Text>{reportedData?.data?.microscopicDescription}</Text>
                 ) : (
                   <>
                     <Textarea
                       onChange={handleReportData("microscopicDescription")}
-                      defaultValue={reportData?.microscopicDescription}
+                      defaultValue={reportedData?.data?.microscopicDescription}
                       w="28vw"
                       h="full"
                       minH="12px"
@@ -354,7 +358,7 @@ const Report = ({
                       h="auto"
                       p="0"
                     >
-                      {reportData?.microscopicDescription}
+                      {reportedData?.data?.microscopicDescription}
                     </Textarea>
                   </>
                 )}
@@ -366,12 +370,12 @@ const Report = ({
                   IMPRESSION:
                 </Text>
                 {reportedData ? (
-                  <Text>{reportedData?.impression}</Text>
+                  <Text>{reportedData?.data?.impression}</Text>
                 ) : (
                   <>
                     <Textarea
                       onChange={handleReportData("impression")}
-                      defaultValue={reportData?.impression}
+                      defaultValue={reportedData?.data?.impression}
                       w="28vw"
                       h="full"
                       minH="12px"
@@ -393,7 +397,7 @@ const Report = ({
                       h="auto"
                       p="0"
                     >
-                      {reportData?.impression}
+                      {reportedData?.data?.impression}
                     </Textarea>
                   </>
                 )}
@@ -405,12 +409,12 @@ const Report = ({
                   ADVICE:
                 </Text>
                 {reportedData ? (
-                  <Text>{reportedData?.advise}</Text>
+                  <Text>{reportedData?.data?.advise}</Text>
                 ) : (
                   <>
                     <Textarea
                       onChange={handleReportData("advice")}
-                      defaultValue={reportData?.advice}
+                      defaultValue={reportData?.data?.advice}
                       w="28vw"
                       h="full"
                       minH="12px"
@@ -432,7 +436,7 @@ const Report = ({
                       h="auto"
                       p="0"
                     >
-                      {reportData?.advice}
+                      {reportData?.data?.advice}
                     </Textarea>
                   </>
                 )}
@@ -444,12 +448,12 @@ const Report = ({
                   ANNOTED SLIDES:
                 </Text>
                 {reportedData ? (
-                  <Text>{reportedData?.annotedSlides}</Text>
+                  <Text>{reportedData?.data?.annotedSlides}</Text>
                 ) : (
                   <>
                     <Textarea
                       onChange={handleReportData("annotedSlides")}
-                      defaultValue={reportData?.annotedSlides}
+                      defaultValue={reportData?.data?.annotedSlides}
                       w="28vw"
                       h="full"
                       minH="12px"
@@ -472,7 +476,7 @@ const Report = ({
                       h="auto"
                       p="0"
                     >
-                      {reportData?.annotedSlides}
+                      {reportData?.data?.annotedSlides}
                     </Textarea>
                   </>
                 )}
@@ -480,7 +484,7 @@ const Report = ({
             </HStack>
             <Flex w="100%" pt="2vh" alignItems="flex-start" flexWrap="wrap">
               {reportedData
-                ? reportedData?.mediaURLs?.map((url) => {
+                ? reportedData?.data?.mediaUrls?.map((url) => {
                     return (
                       <Image
                         key={url}

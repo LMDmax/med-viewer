@@ -209,10 +209,6 @@ const ReportHelper = ({
     });
     setAnnotedSlideImages([]);
   };
-  const handleReport = () => {
-    setShowReport(!showReport);
-    clearValues();
-  };
 
   const handleReportsubmit = async () => {
     annotedSlideImages.forEach((element, i) => {
@@ -237,20 +233,9 @@ const ReportHelper = ({
           },
         },
       });
-
-      const resp = await saveReport({
-        caseId: caseInfo._id,
-        subClaim: userInfo?.subClaim,
-        clinicalStudy: reportData?.clinicalStudy,
-        grossDescription: reportData?.grossDescription,
-        microscopicDescription: reportData?.microscopicDescription,
-        impression: reportData?.impression,
-        advise: reportData?.advice,
-        annotatedSlides: reportData?.annotedSlides,
-        mediaURLs: data?.urls,
-      }).unwrap();
       clearValues();
-      setSlideData(resp);
+      // setSlideData(resp);
+      // console.log(standardData)
       setShowReport(!showReport);
 
       toast({

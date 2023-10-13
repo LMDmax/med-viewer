@@ -240,7 +240,7 @@ function LayoutApp({
     };
 
     fetchData();
-  }, [caseInfo]);
+  }, [caseInfo, showReport]);
 
   useEffect(() => {
     const UnitStore = localStorage.getItem("unit");
