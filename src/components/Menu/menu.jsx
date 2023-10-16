@@ -846,6 +846,9 @@ function FunctionsMenu({
                 tumorColor={tumorColor}
                 stromaColor={stromaColor}
                 lymphocyteColo={lymphocyteColor}
+                setLoadUI={setLoadUI}
+                maskAnnotationData={maskAnnotationData}
+                setToolSelected={setToolSelected}
               />
             ) : selectedOption === "comments" ? (
               <CommentFeed
