@@ -849,6 +849,7 @@ function FunctionsMenu({
                 setLoadUI={setLoadUI}
                 maskAnnotationData={maskAnnotationData}
                 setToolSelected={setToolSelected}
+                viewerIds={viewerIds}
               />
             ) : selectedOption === "comments" ? (
               <CommentFeed

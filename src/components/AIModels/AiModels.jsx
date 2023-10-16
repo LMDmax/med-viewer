@@ -502,6 +502,7 @@ const AiModels = ({
         // console.log("TILClear")
         setModelname("TILClear");
         setShowTILS(false);
+        setSelectedPattern("");
       }
       // console.log("object");
     } else {

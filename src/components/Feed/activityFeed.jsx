@@ -62,7 +62,7 @@ import {
 } from "../../graphql/annotaionsQuery";
 import useCanvasHelpers from "../../hooks/use-fabric-helpers";
 import { useFabricOverlayState } from "../../state/store";
-import { updateAnnotationInDB } from "../../utility";
+import { getFileBucketFolder, updateAnnotationInDB } from "../../utility";
 import DeleteConfirmation from "../Annotations/DeleteConfirmation";
 import { GroupTil } from "../Icons/CustomIcons";
 import ScrollBar from "../ScrollBar";
@@ -175,6 +175,7 @@ const AnnotationFeed = ({
   setLoadUI,
   maskAnnotationData,
   setToolSelected,
+  viewerIds
 }) => {
   // console.log("lymphocyteColor", lymphocyteColor);
   // const onUpdateAnnotation = (data) => {
@@ -416,7 +417,7 @@ const AnnotationFeed = ({
   const handleupdateResult = () => {
     setToolSelected("UpdateMask");
     const data = {
-      key: gleasonScoringData.key,
+      key: `${getFileBucketFolder(viewerIds[0].originalFileUrl)}`,
       slideId: gleasonScoringData.slideId,
     };
     onHITLInput({ variables: { body: data } });
@@ -1008,7 +1009,7 @@ const AnnotationFeed = ({
                     >
                       <RiCheckboxBlankLine
                         color={
-                          lymphocyteColor.color
+                          lymphocyteColor?.color
                             ? `rgba(${lymphocyteColor.color.r}, ${lymphocyteColor.color.g}, ${lymphocyteColor.color.b}, ${lymphocyteColor.color.a})`
                             : "red"
                         }
