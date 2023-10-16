@@ -1,6 +1,13 @@
 import React, { memo, useEffect, useState } from "react";
 
-import { Flex, Text, useMediaQuery, Box } from "@chakra-ui/react";
+import {
+  Flex,
+  Text,
+  useMediaQuery,
+  Box,
+  HStack,
+  Divider,
+} from "@chakra-ui/react";
 import axios from "axios";
 import { GoChevronLeft } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +24,7 @@ import "../../styles/viewer.css";
 import ToolbarButton from "../ViewerToolbar/button";
 import IconSize from "../ViewerToolbar/IconSize";
 import TooltipLabel from "./ToolTipLabel";
+import HITLControls from "../HITLControls/HITLControls";
 
 function AdjustmentBar({
   userInfo,
@@ -113,10 +121,15 @@ function AdjustmentBar({
   stromaColor,
   setLymphocyteColor,
   lymphocyteColor,
+  setUndoRedoCounter,
+  undoRedoCounter,
+  gleasonScoringData,
+  setMaskAnnotationData,
 }) {
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
   const { fabricOverlayState } = useFabricOverlayState();
   const { viewerWindow, isAnnotationLoading } = fabricOverlayState;
+  const [showGleason, setShowGleason] = useState(false);
   const { tile } = viewerWindow[currentViewer];
   const [mongoId, setMongoId] = useState("");
 
@@ -132,19 +145,25 @@ function AdjustmentBar({
       w="100%"
       justifyContent="space-between"
       height={ifWidthLessthan1920 ? "7vh" : "8vh"}
-      // border="2px solid red"
       boxShadow="0px 0px 1px 0.1px"
       px="30px"
       bg="white"
-      // py="5px"
       fontFamily="fira sans"
       fontSize={ifWidthLessthan1920 ? "14px" : "16px"}
       fontWeight="500"
       zIndex={2}
     >
-      <Box w="25%" h="100%">
+      <HStack w="25%" h="100%" spacing="20px">
         <Cancel />
-      </Box>
+        <Divider borderColor="#EEEEEE" orientation="vertical" />
+        <HITLControls
+          setUndoRedoCounter={setUndoRedoCounter}
+          undoRedoCounter={undoRedoCounter}
+          gleasonScoringData={gleasonScoringData}
+          showGleason={showGleason}
+        />
+        <Divider borderColor="#EEEEEE" orientation="vertical" />
+      </HStack>
       <Move
         application={application}
         userInfo={userInfo}
@@ -210,6 +229,12 @@ function AdjustmentBar({
         stromaColor={stromaColor}
         setLymphocyteColor={setLymphocyteColor}
         lymphocyteColor={lymphocyteColor}
+        undoRedoCounter={undoRedoCounter}
+        gleasonScoringData={gleasonScoringData}
+        setUndoRedoCounter={setUndoRedoCounter}
+        setShowGleason={setShowGleason}
+        showGleason={showGleason}
+        setMaskAnnotationData={setMaskAnnotationData}
       />
       {/* <ActionTools setToolSelected={setToolSelected} viewerId={currentViewer} /> */}
       <ScreenTools

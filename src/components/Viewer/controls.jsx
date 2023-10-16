@@ -682,7 +682,6 @@ const ViewerControls = ({
       });
       setIsXmlAnnotations(true);
     } else {
-      // console.log("abcd")
       getAnnotation({
         variables: {
           query: {

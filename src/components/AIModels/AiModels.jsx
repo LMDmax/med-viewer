@@ -50,6 +50,11 @@ const AiModels = ({
   setPattern3Color,
   tumorColor,
   stromaColor,
+  undoRedoCounter,
+  setUndoRedoCounter,
+  showGleason,
+  setShowGleason,
+  setMaskAnnotationData,
 }) => {
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { viewerWindow, isViewportAnalysing } = fabricOverlayState;
@@ -61,10 +66,12 @@ const AiModels = ({
   const [TilActiveState, setTilActiveState] = useState(false);
   const [infoBox, setInfoBox] = useState(false);
   const [infoItem, setInfoItem] = useState("");
+  const [gleasonEntries, setGleasonEntries] = useState([]);
+  const [currentIndexDZIMask, setCurrentIndexDZIMask] = useState();
   const [showTumor, setShowTumor] = useState(false);
   const [detectTumor, setDetectTumor] = useState(false);
   const [modelType, setModelType] = useState("");
-  const [showGleason, setShowGleason] = useState(false);
+
   const [showTILS, setShowTILS] = useState(false);
   const [onTumorAnalysis, { data: analysis_data, error: analysis_error }] =
     useMutation(TUMOR_ANALYSIS);
@@ -80,10 +87,11 @@ const AiModels = ({
           },
         },
       },
+      fetchPolicy: "network-only", // Set the fetchPolicy to 'no-cache'
     }
   );
 
-  console.log("subscriptionAI", stromaColor);
+  console.log("subscriptionAI1st", subscription);
   // console.log("subscriptionErrorAI", subscription_error);
 
   // ################################# change color as user Input for gleason #####################################################
@@ -296,20 +304,25 @@ const AiModels = ({
       // Change the duration (in milliseconds) as per your requirement
     }
     if (subscription && gleasonScoring) {
-      if (subscription.conversionStatus.data.dziUrl !== null) {
-        // console.log("11", subscription.conversionStatus.data.dziUrl);
-        const dziUrl = subscription.conversionStatus.data.dziUrl;
-        viewer.addTiledImage({
-          tileSource: dziUrl,
-          x: 0,
-          y: 0,
-          width: 1,
-          opacity: 0.5,
-        });
-        setTimeout(() => {
-          setShowGleason(true);
-        }, 2000);
-        const gleasonDataSet = {
+      var topImage = viewer?.world?.getItemAt(1);
+      if (topImage) {
+        viewer.world.removeItem(topImage);
+      }
+      sortGleasonEntries(subscription);
+    } else {
+      setShowTumor(false);
+      setShowGleason(false);
+    }
+  }, [subscription]);
+
+  // console.log("HHHHHHHHHHHHHHHHHHH", gleasonEntries);
+
+  // ################HITL CODE#############                 ################HITL CODE#############
+
+  const sortGleasonEntries = (subscription) => {
+    const originalMask = subscription.conversionStatus.data.dziUrl
+      ? {
+          dziUrl: subscription.conversionStatus.data.dziUrl,
           coreLength: subscription.conversionStatus.data.coreLength,
           pattern0: subscription.conversionStatus.data.benign,
           pattern3: subscription.conversionStatus.data.gleason3,
@@ -321,16 +334,107 @@ const AiModels = ({
           primaryPattern: subscription.conversionStatus.data.primaryPattern,
           riskCategory: subscription.conversionStatus.data.riskCategory,
           tumorLength: subscription.conversionStatus.data.tumorLength,
+          key: subscription.conversionStatus.data.key,
+          slideId: subscription.conversionStatus.data.slideid,
           worstPattern:
             subscription.conversionStatus.data.worstRemainingPattern,
+          hilLength: subscription?.conversionStatus?.data?.hil?.length,
+        }
+      : null;
+
+    const hilDziArray =
+      subscription?.conversionStatus?.data?.hil?.length > 0
+        ? subscription.conversionStatus.data.hil
+            .filter((hilObj) => hilObj.dziUrl)
+            .map((hilObj) => ({
+              dziUrl: hilObj.dziUrl,
+              version: hilObj.Version,
+              dziUrl: hilObj.dziUrl,
+              coreLength: hilObj.coreLength,
+              gleason0: hilObj.benign,
+              gleason3: hilObj.gleason3,
+              gleason4: hilObj.gleason4,
+              gleason5: hilObj.gleason5,
+              gleasonScore: hilObj.gleasonScore,
+              gradeGroup: hilObj.gradeGroup,
+              pptTumor: hilObj.pptTumor,
+              primaryPattern: hilObj.primaryPattern,
+              riskCategory: hilObj.riskCategory,
+              tumorLength: hilObj.tumorLength,
+              key: subscription.conversionStatus.data.key,
+              slideId: subscription.conversionStatus.data.slideid,
+              worstPattern: hilObj.worstRemainingPattern,
+              hilLength: subscription?.conversionStatus?.data?.hil?.length,
+            }))
+        : null;
+
+    const allObjects = originalMask
+      ? hilDziArray
+        ? [originalMask, ...hilDziArray]
+        : [originalMask]
+      : hilDziArray
+      ? hilDziArray
+      : null;
+
+    setCurrentIndexDZIMask(allObjects ? allObjects.length - 1 : -1);
+    setGleasonEntries(allObjects);
+  };
+  // console.log("undoRedoCounter", undoRedoCounter);
+  // console.log("currentIndexDZIMask", currentIndexDZIMask);
+
+  useEffect(() => {
+    if (undoRedoCounter !== currentIndexDZIMask) {
+      var topImage = viewer?.world?.getItemAt(1);
+      if (topImage) {
+        viewer.world.removeItem(topImage);
+        setLoadUI(false);
+      }
+      setTimeout(() => {
+        setCurrentIndexDZIMask(undoRedoCounter);
+        setLoadUI(true);
+      }, 1000);
+    }
+  }, [undoRedoCounter]);
+  useEffect(() => {
+    if (currentIndexDZIMask >= 0) {
+      setUndoRedoCounter(currentIndexDZIMask);
+      setMaskAnnotationData([]);
+      const currentMaskData = gleasonEntries[currentIndexDZIMask];
+      if (currentMaskData) {
+        setLoadUI(true);
+        viewer.addTiledImage({
+          tileSource: currentMaskData.dziUrl,
+          x: 0,
+          y: 0,
+          width: 1,
+          opacity: 0.5,
+        });
+        const gleasonDataSet = {
+          coreLength: currentMaskData.coreLength,
+          pattern0: currentMaskData.gleason0 || currentMaskData.pattern0,
+          pattern3: currentMaskData.gleason3 || currentMaskData.pattern3,
+          pattern4: currentMaskData.gleason4 || currentMaskData.pattern4,
+          pattern5: currentMaskData.gleason5 || currentMaskData.pattern5,
+          gleasonScore: currentMaskData.gleasonScore,
+          gradeGroup: currentMaskData.gradeGroup,
+          pptTumor: currentMaskData.pptTumor,
+          primaryPattern: currentMaskData.primaryPattern,
+          riskCategory: currentMaskData.riskCategory,
+          tumorLength: currentMaskData.tumorLength,
+          key: subscription.conversionStatus.data.key,
+          slideId: subscription.conversionStatus.data.slideid,
+          worstPattern: currentMaskData.worstRemainingPattern,
+          hilLength: subscription?.conversionStatus?.data?.hil?.length,
         };
         setGleasonScoringData(gleasonDataSet);
+        // console.log(gleasonDataSet);
+
+        setTimeout(() => {
+          setShowGleason(true);
+        }, 2000);
       }
-    } else {
-      setShowTumor(false);
-      setShowGleason(false);
     }
-  }, [subscription]);
+  }, [currentIndexDZIMask, gleasonEntries]);
 
   useEffect(() => {
     if (!PRRHover) {
@@ -449,6 +553,7 @@ const AiModels = ({
       }
     }
   }, [detectTumor]);
+
 
   return (
     <>

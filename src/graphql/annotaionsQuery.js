@@ -218,6 +218,10 @@ export const SAVE_ANNOTATION = gql`
         createdBy
         caseId
         usingAs
+        modelName
+        patternName
+        isProcessed
+        processType
       }
       message
       success
@@ -491,6 +495,12 @@ export const TUMOR_ANALYSIS = gql`
   }
 `;
 
+export const HITL_INPUT = gql`
+  mutation Mutation($body: hilGleasonMutationInput!) {
+    hilGleason(body: $body)
+  }
+`;
+
 export const TUMOR_DETECTION_SUBSCRIPTION = gql`
   subscription ConversionStatus($body: ConversionInput!) {
     conversionStatus(body: $body) {
@@ -503,19 +513,40 @@ export const TUMOR_DETECTION_SUBSCRIPTION = gql`
         slideid
         Version
         bucketName
-        benign
-        gleason3
-        gleason4
-        gleason5
-        worstRemainingPattern
         coreLength
         gleasonScore
         gradeGroup
         pptTumor
         primaryPattern
-        tumorLength
         riskCategory
+        tumorLength
+        worstRemainingPattern
+        benign
+        gleason3
+        gleason4
+        gleason5
         Status
+        hil {
+          dziUrl
+          originalUrl
+          key
+          slideid
+          Version
+          bucketName
+          coreLength
+          gleasonScore
+          gradeGroup
+          pptTumor
+          primaryPattern
+          riskCategory
+          tumorLength
+          worstRemainingPattern
+          benign
+          gleason3
+          gleason4
+          gleason5
+          Status
+        }
       }
       type
     }

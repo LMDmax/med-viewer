@@ -153,6 +153,8 @@ function FunctionsMenu({
   tumorColor,
   stromaColor,
   lymphocyteColor,
+  setLoadUI,
+  maskAnnotationData,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
@@ -844,6 +846,9 @@ function FunctionsMenu({
                 tumorColor={tumorColor}
                 stromaColor={stromaColor}
                 lymphocyteColo={lymphocyteColor}
+                setLoadUI={setLoadUI}
+                maskAnnotationData={maskAnnotationData}
+                setToolSelected={setToolSelected}
               />
             ) : selectedOption === "comments" ? (
               <CommentFeed

@@ -57,6 +57,7 @@ import { v4 as uuidv4 } from "uuid";
 import {
   DELETE_ANNOTATION,
   UPDATE_ANNOTATION,
+  HITL_INPUT,
   VHUT_ANALYSIS_SUBSCRIPTION,
 } from "../../graphql/annotaionsQuery";
 import useCanvasHelpers from "../../hooks/use-fabric-helpers";
@@ -171,7 +172,11 @@ const AnnotationFeed = ({
   tumorColor,
   stromaColor,
   lymphocyteColor,
+  setLoadUI,
+  maskAnnotationData,
+  setToolSelected,
 }) => {
+  // console.log("FFFFFFF", gleasonScoringData);
   // const onUpdateAnnotation = (data) => {
   //   console.log("annotationFeed", data);
   // };
@@ -180,6 +185,8 @@ const AnnotationFeed = ({
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
   const [isTILBoxVisible, setIsTilBoxVisible] = useState(false);
   const [selectedItemIndex, setSelectedItemIndex] = useState(null);
+  const [onHITLInput, { data: analysis_data, error: analysis_error }] =
+    useMutation(HITL_INPUT);
   const [
     modifyAnnotation,
     { data: updatedData, error: updateError, loading: updateLoading },
@@ -403,6 +410,18 @@ const AnnotationFeed = ({
     canvas.requestRenderAll();
   };
   // console.log(annotationFeed);
+
+  // UPDATE HITL RESULT
+
+  const handleupdateResult = () => {
+    setToolSelected("UpdateMask");
+    const data = {
+      key: gleasonScoringData.key,
+      slideId: gleasonScoringData.slideId,
+    };
+    onHITLInput({ variables: { body: data } });
+    // console.log(gleasonScoringData);
+  };
 
   return (
     <Flex
@@ -1101,8 +1120,8 @@ const AnnotationFeed = ({
                         <Text ml="5px">Pattern 3</Text>
                         <Box w="100%">
                           <Text textAlign="end" mr="5px">
-                            {gleasonScoringData.pattern3 !== null
-                              ? gleasonScoringData.pattern3.toFixed(2)
+                            {gleasonScoringData?.pattern3 !== null
+                              ? gleasonScoringData?.pattern3?.toFixed(2)
                               : "-"}{" "}
                             %
                           </Text>
@@ -1141,8 +1160,8 @@ const AnnotationFeed = ({
                         <Text ml="5px">Pattern 4</Text>
                         <Box w="100%">
                           <Text textAlign="end" mr="5px">
-                            {gleasonScoringData.pattern4 !== null
-                              ? gleasonScoringData.pattern4.toFixed(2)
+                            {gleasonScoringData?.pattern4 !== null
+                              ? gleasonScoringData?.pattern4?.toFixed(2)
                               : "-"}{" "}
                             %
                           </Text>
@@ -1181,8 +1200,8 @@ const AnnotationFeed = ({
                         <Text ml="5px">Pattern 5</Text>
                         <Box w="100%">
                           <Text textAlign="end" mr="5px">
-                            {gleasonScoringData.pattern5 !== null
-                              ? gleasonScoringData.pattern5.toFixed(2)
+                            {gleasonScoringData?.pattern5 !== null
+                              ? gleasonScoringData?.pattern5?.toFixed(2)
                               : "-"}{" "}
                             %
                           </Text>
@@ -1221,8 +1240,8 @@ const AnnotationFeed = ({
                         <Text ml="5px">Benign Glands</Text>
                         <Box w="100%">
                           <Text textAlign="end" mr="5px">
-                            {gleasonScoringData.pattern0 !== null
-                              ? gleasonScoringData.pattern0.toFixed(2)
+                            {gleasonScoringData?.pattern0 !== null
+                              ? gleasonScoringData?.pattern0?.toFixed(2)
                               : "-"}{" "}
                             %
                           </Text>
@@ -1231,20 +1250,66 @@ const AnnotationFeed = ({
                     </Flex>
                     <Flex
                       w="100%"
-                      // border="1px solid red"
-                      // border="1px solid red "
-                      justifyContent="flex-end"
                       alignItems="center"
+                      justifyContent="flex-end"
                       height="45px"
                       px="25px"
                       my="10px"
                       bg="#FCFCFC"
                     >
-                      <Box cursor="not-allowed">
-                        <BsArrowRepeat size={20} style={{ color: "#1B75BC" }} />
+                      <Box
+                        w="52%"
+                        display="flex"
+                        justifyContent="flex-end"
+                        onClick={() => {
+                          if (
+                            (gleasonScoringData.hilLength < 2 ||
+                              gleasonScoringData.hilLength === undefined) &&
+                            maskAnnotationData.length > 0
+                          ) {
+                            maskAnnotationData.map((eachAnnotationData) => {
+                              const canvas = fabricOverlay.fabricCanvas();
+                              canvas.remove(eachAnnotationData.object);
+                            });
+                            setLoadUI(false);
+                            handleupdateResult();
+                          }
+                          if (
+                            maskAnnotationData.length < 0
+                          ) {
+                            toast({
+                              title: "HITL Error",
+                              description: "No mask selection is done",
+                              status: "error",
+                              duration: 1500,
+                              isClosable: true,
+                            });
+                          } if(gleasonScoringData.hilLength >= 2) {
+                            toast({
+                              title: "HITL Error",
+                              description:
+                                "HITL can't be run more than 2 times",
+                              status: "error",
+                              duration: 1500,
+                              isClosable: true,
+                            });
+                          }
+                        }}
+                      >
+                        {" "}
+                        {/* Wrap the Flex to control its alignment */}
+                        <Flex alignItems="center">
+                          <Box cursor="pointer">
+                            <BsArrowRepeat
+                              size={20}
+                              style={{ color: "#1B75BC" }}
+                            />
+                          </Box>
+                          <Text pl="10px"> Update Results</Text>
+                        </Flex>
                       </Box>
-                      <Text pl="10px"> Update results</Text>
                     </Flex>
+
                     <Flex
                       flexDir="column"
                       alignItems="center"
@@ -1264,8 +1329,8 @@ const AnnotationFeed = ({
                       <Flex w="100%" justifyContent="space-between">
                         <Text>Core Length :</Text>
                         <Text>
-                          {gleasonScoringData.coreLength !== null
-                            ? gleasonScoringData.coreLength
+                          {gleasonScoringData?.coreLength !== null
+                            ? gleasonScoringData?.coreLength
                             : "-"}
                         </Text>
                       </Flex>
@@ -1273,10 +1338,10 @@ const AnnotationFeed = ({
                         <Text>Tumor Length :</Text>
                         <Text>
                           <Text>
-                            {gleasonScoringData.tumorLength !== null
+                            {gleasonScoringData?.tumorLength !== null
                               ? `${(
                                   parseFloat(
-                                    gleasonScoringData.tumorLength.replace(
+                                    gleasonScoringData?.tumorLength.replace(
                                       "mm",
                                       ""
                                     )
@@ -1297,8 +1362,8 @@ const AnnotationFeed = ({
                           <br /> Tumor :
                         </Text>
                         <Text textAlign="right">
-                          {gleasonScoringData.pptTumor !== null
-                            ? `${gleasonScoringData.pptTumor.toFixed(2)} %`
+                          {gleasonScoringData?.pptTumor !== null
+                            ? `${gleasonScoringData?.pptTumor.toFixed(2)} %`
                             : "-"}
                         </Text>
                       </Flex>
@@ -1306,40 +1371,40 @@ const AnnotationFeed = ({
                       <Flex w="100%" justifyContent="space-between">
                         <Text>Primary Pattern :</Text>
                         <Text>
-                          {gleasonScoringData.primaryPattern !== null
-                            ? gleasonScoringData.primaryPattern
+                          {gleasonScoringData?.primaryPattern !== null
+                            ? gleasonScoringData?.primaryPattern
                             : "-"}
                         </Text>
                       </Flex>
                       <Flex w="100%" justifyContent="space-between">
                         <Text>Worst remaining Pattern :</Text>
                         <Text>
-                          {gleasonScoringData.worstPattern !== null
-                            ? gleasonScoringData.worstPattern
+                          {gleasonScoringData?.worstPattern !== null
+                            ? gleasonScoringData?.worstPattern
                             : "-"}
                         </Text>
                       </Flex>
                       <Flex w="100%" justifyContent="space-between">
                         <Text>Gleason Score :</Text>
                         <Text>
-                          {gleasonScoringData.gleasonScore !== null
-                            ? gleasonScoringData.gleasonScore
+                          {gleasonScoringData?.gleasonScore !== null
+                            ? gleasonScoringData?.gleasonScore
                             : "-"}
                         </Text>
                       </Flex>
                       <Flex w="100%" justifyContent="space-between">
                         <Text>Grade Group :</Text>
                         <Text>
-                          {gleasonScoringData.gradeGroup !== null
-                            ? gleasonScoringData.gradeGroup
+                          {gleasonScoringData?.gradeGroup !== null
+                            ? gleasonScoringData?.gradeGroup
                             : "-"}
                         </Text>
                       </Flex>
                       <Flex w="100%" justifyContent="space-between">
                         <Text>Risk Category :</Text>
                         <Text>
-                          {gleasonScoringData.riskCategory !== null
-                            ? gleasonScoringData.riskCategory
+                          {gleasonScoringData?.riskCategory !== null
+                            ? gleasonScoringData?.riskCategory
                             : "-"}
                         </Text>
                       </Flex>

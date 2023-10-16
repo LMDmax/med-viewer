@@ -156,6 +156,8 @@ function LayoutApp({
   const [reportedStatus, setReportedStatus] = useState(false);
   const [selectedPattern, setSelectedPattern] = useState("");
   const [synopticReportData, setSynopticReportData] = useState("");
+  const [undoRedoCounter, setUndoRedoCounter] = useState(0);
+  const [maskAnnotationData, setMaskAnnotationData] = useState([]);
   const [getStandardReport, { data: standardReportData, standardReportError }] =
     useLazyQuery(GET_STANDARD_REPORT);
   const [getSynopticReportData, { data: synopticReport, synopticReportError }] =
@@ -390,6 +392,9 @@ function LayoutApp({
     case "AddMask":
       returnText = "Please draw to add mask";
       break;
+      case "UpdateResult":
+        returnText = "Updating result";
+        break;
 
     default:
       returnText = "";
@@ -466,7 +471,7 @@ function LayoutApp({
     localStorage.removeItem("ModelName");
     // console.log("FFFFFF");
   }, [navigatorCounter]);
-  // console.log("slide", navigatorCounter);
+  // console.log("slideABCD", maskAnnotationData);
 
   return (
     <Flex style={{ height: h }} direction="column">
@@ -569,6 +574,10 @@ function LayoutApp({
           stromaColor={stromaColor}
           lymphocyteColor={lymphocyteColor}
           setLymphocyteColor={setLymphocyteColor}
+          setUndoRedoCounter={setUndoRedoCounter}
+          undoRedoCounter={undoRedoCounter}
+          gleasonScoringData={gleasonScoringData}
+          setMaskAnnotationData={setMaskAnnotationData}
         />
         <LayoutInnerBody>
           {sidebar ? (
@@ -699,6 +708,8 @@ function LayoutApp({
             tumorColor={tumorColor}
             stromaColor={stromaColor}
             lymphocyteColor={lymphocyteColor}
+            setLoadUI={setLoadUI}
+            maskAnnotationData={maskAnnotationData}
           />
         </LayoutInnerBody>
         <Flex

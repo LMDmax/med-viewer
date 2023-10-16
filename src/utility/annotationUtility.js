@@ -29,6 +29,10 @@ export const getAnnotationJSON = (annotation) => {
     "isAnalysed",
     "analysedROI",
     "timeStamp",
+    "modelName",
+    "isProcessed",
+    "patternName",
+    "processType"
   ]);
 };
 
@@ -63,6 +67,10 @@ export const createAnnotationMessage = ({
   type,
   isClosed,
   usingAs,
+  processType,
+  patternName,
+  isProcessed,
+  modelName,
 }) => {
   if (!viewer || !shape) return null;
   const message = {
@@ -75,7 +83,7 @@ export const createAnnotationMessage = ({
   // else create a new one
 
   if (annotation) {
-    // console.log("AAA", annotation);
+    console.log("AAA", annotation);
     const {
       slide,
       hash,
@@ -93,6 +101,10 @@ export const createAnnotationMessage = ({
       endPoints,
       isAnalysed,
       analysedROI,
+      processType,
+      patternName,
+      isProcessed,
+      modelName,
     } = annotation;
 
     if (shape.type === "viewport") {
@@ -131,6 +143,10 @@ export const createAnnotationMessage = ({
         endPoints,
         isAnalysed,
         analysedROI,
+        processType,
+        patternName,
+        isProcessed,
+        modelName,
       });
     }
   } else {
@@ -159,48 +175,16 @@ export const createAnnotationMessage = ({
         type: type || "",
         isClosed,
         usingAs: usingAs || "",
+        processType: processType || "",
+        patternName: patternName || "",
+        isProcessed: isProcessed || false,
+        modelName: modelName || "",
       });
     }
   }
 
   return message;
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // create annotation from the annotation data
 export const createAnnotation = (annotation) => {
@@ -625,9 +609,9 @@ export const saveAnnotationToDB = async ({
   onSaveAnnotation,
 }) => {
   if (!slideId || !annotation || !onSaveAnnotation) return false;
-  // console.log(annotation);
+  console.log(annotation);
   const annotationJSON = getAnnotationJSON(annotation);
-  // console.log(annotationJSON);
+  console.log(annotationJSON);
   try {
     if (annotationJSON.type === "line") {
       annotationJSON.x1 = annotationJSON.cords[0];

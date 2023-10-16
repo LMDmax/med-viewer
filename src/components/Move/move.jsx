@@ -93,6 +93,12 @@ function Move({
   stromaColor,
   setLymphocyteColor,
   lymphocyteColor,
+  undoRedoCounter,
+  gleasonScoringData,
+  setUndoRedoCounter,
+  showGleason,
+  setShowGleason,
+  setMaskAnnotationData,
 }) {
   const [ifBiggerScreen] = useMediaQuery("(min-width:2000px)");
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
@@ -105,6 +111,7 @@ function Move({
   const { fabricOverlay } = viewerWindow[viewerId];
   let isActive = activeTool === "Move";
   const [activeAnnotations, setActiveAnnotations] = useState(false);
+  
 
   useEffect(() => {
     if (typeToolsToggle) {
@@ -335,6 +342,12 @@ function Move({
             setPattern3Color={setPattern3Color}
             tumorColor={tumorColor}
             stromaColor={stromaColor}
+            undoRedoCounter={undoRedoCounter}
+            gleasonScoringData={gleasonScoringData}
+            setUndoRedoCounter={setUndoRedoCounter}
+            setShowGleason={setShowGleason}
+            showGleason={showGleason}
+            setMaskAnnotationData={setMaskAnnotationData}
           />
         ) : null}
       </Flex>
@@ -375,6 +388,8 @@ function Move({
             setStromaColor={setStromaColor}
             setLymphocyteColor={setLymphocyteColor}
             lymphocyteColor={lymphocyteColor}
+            showGleason={showGleason}
+            setMaskAnnotationData={setMaskAnnotationData}
           />
         ) : null}
       </Flex>

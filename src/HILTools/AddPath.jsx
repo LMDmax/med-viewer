@@ -54,8 +54,7 @@ const AddPath = ({
   selectedPattern,
   isHILToolEnabled,
   newToolSettings,
-  setHitlAnnotations,
-  hitlAnnotations,
+  setMaskAnnotationData,
 }) => {
   const toast = useToast();
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
@@ -159,7 +158,7 @@ const AddPath = ({
     const distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     // console.log(distance);
 
-    if (distance < 5 && path.path.length > 2) {
+    if (distance < 20 && path.path.length > 2) {
       // console.log("Path is closed");
       const addToFeed = async () => {
         const message = createAnnotationMessage({
@@ -168,20 +167,29 @@ const AddPath = ({
           viewer,
           type: "path",
           isClosed: path.isClosed,
-        });
-        setPath(null);
-        setTextbox(false);
-        const addMask = {
-          annotation: message.object,
-          type: "add",
-          modelName: "gleason",
-          slideId,
+          modelName: "Gleason",
           isProcessed: false,
-          patternName: selectedPattern,
-        };
+          patternName:
+            selectedPattern === "Pattern 3"
+              ? "3"
+              : selectedPattern === "Pattern 4"
+              ? "4"
+              : selectedPattern === "Pattern 5"
+              ? "5"
+              : selectedPattern === "Benign"
+              ? "0"
+              : "",
+          processType: "add",
+        });
 
-        // console.log("addd", addMask);
-        // setToolSelected("RunRoi");
+        setMaskAnnotationData((prevData) => [...prevData, message]);
+
+        saveAnnotationToDB({
+          slideId,
+          annotation: message.object,
+          onSaveAnnotation,
+        });
+
         path.isClosed = true;
       };
       addToFeed();
@@ -202,7 +210,7 @@ const AddPath = ({
       });
       // add a chakra ui modal here
       // setToolSelected("pathError");
-      // console.log(path);
+      // console.log("path is open");
       path.isClosed = false;
     }
 
@@ -230,7 +238,13 @@ const AddPath = ({
   };
 
   return (
-    <Tooltip label="Add Selection" hasArrow bg="#D8E7F3" color="black" fontSize="xs">
+    <Tooltip
+      label="Add Selection"
+      hasArrow
+      bg="#D8E7F3"
+      color="black"
+      fontSize="xs"
+    >
       <Flex
         justifyContent="center"
         alignItems="center"

@@ -48,7 +48,8 @@ const TypeTools = ({
   setTumorColor,
   setStromaColor,
   setLymphocyteColor,
-  lymphocyteColor,
+  showGleason,
+  setMaskAnnotationData,
 }) => {
   const { fabricOverlayState } = useFabricOverlayState();
   const toast = useToast();
@@ -126,7 +127,7 @@ const TypeTools = ({
 
   useEffect(() => {
     if (selectedPattern !== "") {
-      // setIsHILToolEnabled(true);
+      setIsHILToolEnabled(true);
       if (selectedPattern === "Pattern 3") {
         setColor({ r: 255, g: 255, b: 0, a: 1 });
       }
@@ -365,6 +366,9 @@ const TypeTools = ({
             isHILToolEnabled={isHILToolEnabled}
             onSaveAnnotation={onSaveAnnotation}
             newToolSettings={newToolSettings}
+            selectedPattern={selectedPattern}
+            setMaskAnnotationData={setMaskAnnotationData}
+
           />
           <RemovePath
             setToolSelected={setToolSelected}
@@ -372,6 +376,9 @@ const TypeTools = ({
             isHILToolEnabled={isHILToolEnabled}
             onSaveAnnotation={onSaveAnnotation}
             newToolSettings={newToolSettings}
+            selectedPattern={selectedPattern}
+            setMaskAnnotationData={setMaskAnnotationData}
+
           />
         </SimpleGrid>
         <Divider mb="5px" borderColor={"#EEEEEE"} />

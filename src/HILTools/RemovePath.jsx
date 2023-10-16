@@ -54,8 +54,7 @@ const RemovePath = ({
   selectedPattern,
   isHILToolEnabled,
   newToolSettings,
-  setHitlAnnotations,
-  hitlAnnotations,
+  setMaskAnnotationData,
 }) => {
   const toast = useToast();
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
@@ -158,8 +157,7 @@ const RemovePath = ({
 
     const distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     // console.log(distance);
-
-    if (distance < 5 && path.path.length > 2) {
+    if (distance < 20 && path.path.length > 2) {
       // console.log("Path is closed");
       const addToFeed = async () => {
         const message = createAnnotationMessage({
@@ -168,19 +166,30 @@ const RemovePath = ({
           viewer,
           type: "path",
           isClosed: path.isClosed,
-        });
-        setPath(null);
-        setTextbox(false);
-        const addMask = {
-          annotation: message.object,
-          type: "remove",
-          modelName: selectedPattern !== "" ? "gleason" : "",
-          slideId,
+          modelName: "Gleason",
           isProcessed: false,
-          patternName: selectedPattern
-        };
+          patternName:
+            selectedPattern === "Pattern 3"
+              ? "3"
+              : selectedPattern === "Pattern 4"
+              ? "4"
+              : selectedPattern === "Pattern 5"
+              ? "5"
+              : selectedPattern === "Benign"
+              ? "0"
+              : "",
+          processType: "remove",
+        });
 
-        // console.log("addd", addMask);
+        // console.log(message.object);
+        setMaskAnnotationData(prevData => [...prevData, message]);
+
+        saveAnnotationToDB({
+          slideId,
+          annotation: message.object,
+          onSaveAnnotation,
+        });
+
         path.isClosed = true;
       };
       addToFeed();
@@ -229,64 +238,70 @@ const RemovePath = ({
   };
 
   return (
-    <Tooltip label="Subtract Selection" hasArrow bg="#D8E7F3" color="black" fontSize="xs">
-    <Flex
-      justifyContent="center"
-      alignItems="center"
-      bg={isActive ? "#DEDEDE" : "#F6F6F6"}
-      w="40px"
-      h="39px"
-      p="5px"
-      _focus={{ border: "none" }}
-      onClick={() => {
-        if (isHILToolEnabled) {
-          handleToolbarClick();
-          setToolSelected("AddMask");
-        }
-      }}
-      boxShadow={
-        isActive
-          ? "inset -2px -2px 2px rgba(0, 0, 0, 0.1), inset 2px 2px 2px rgba(0, 0, 0, 0.1)"
-          : null
-      }
-      _hover={isHILToolEnabled ? { bgColor: "rgba(228, 229, 232, 1)" } : ""}
-      cursor={isHILToolEnabled ? "pointer" : "not-allowed"}
+    <Tooltip
+      label="Subtract Selection"
+      hasArrow
+      bg="#D8E7F3"
+      color="black"
+      fontSize="xs"
     >
-       <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="19"
-        height="19"
-        viewBox="0 0 19 19"
-        fill="none"
-      >
-        <path
-          d="M1.25 1.25H12.75V12.75H1.25V1.25Z"
-          stroke="#212224"
-          stroke-opacity="0.5"
-          stroke-width="0.5"
-        />
-        <rect
-          x="7.25"
-          y="7.25"
-          width="11.5"
-          height="11.5"
-          stroke="#212224"
-          stroke-opacity="0.5"
-          stroke-width="0.5"
-        />
-        <path
-          d="M13 1H1V13H7V7H13V1Z"
-          stroke={
-            isActive
-              ? "#3B5D7C" // if isActive is true
-              : isHILToolEnabled
-              ? "#000" // if isHILToolEnabled is true and isActive is false
-              : "grey" // if isHILToolEnabled is false
+      <Flex
+        justifyContent="center"
+        alignItems="center"
+        bg={isActive ? "#DEDEDE" : "#F6F6F6"}
+        w="40px"
+        h="39px"
+        p="5px"
+        _focus={{ border: "none" }}
+        onClick={() => {
+          if (isHILToolEnabled) {
+            handleToolbarClick();
+            setToolSelected("AddMask");
           }
-        />
-      </svg>
+        }}
+        boxShadow={
+          isActive
+            ? "inset -2px -2px 2px rgba(0, 0, 0, 0.1), inset 2px 2px 2px rgba(0, 0, 0, 0.1)"
+            : null
+        }
+        _hover={isHILToolEnabled ? { bgColor: "rgba(228, 229, 232, 1)" } : ""}
+        cursor={isHILToolEnabled ? "pointer" : "not-allowed"}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="19"
+          height="19"
+          viewBox="0 0 19 19"
+          fill="none"
+        >
+          <path
+            d="M1.25 1.25H12.75V12.75H1.25V1.25Z"
+            stroke="#212224"
+            stroke-opacity="0.5"
+            stroke-width="0.5"
+          />
+          <rect
+            x="7.25"
+            y="7.25"
+            width="11.5"
+            height="11.5"
+            stroke="#212224"
+            stroke-opacity="0.5"
+            stroke-width="0.5"
+          />
+          <path
+            d="M13 1H1V13H7V7H13V1Z"
+            stroke={
+              isActive
+                ? "#3B5D7C" // if isActive is true
+                : isHILToolEnabled
+                ? "#000" // if isHILToolEnabled is true and isActive is false
+                : "grey" // if isHILToolEnabled is false
+            }
+          />
+        </svg>
       </Flex>
-      </Tooltip>
+    </Tooltip>
   );
 };
 
