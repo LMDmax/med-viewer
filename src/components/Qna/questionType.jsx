@@ -19,7 +19,7 @@ function QuestionType({
 
   if (
     question?.Question?.questionType === "multiple-choice" ||
-    question?.question_type === "multiple choice"
+    question?.question_type === "Multiple Choice"
   )
     return (
       <RadioType
@@ -46,7 +46,7 @@ function QuestionType({
     );
   if (
     question?.Question?.questionType === "checkbox" ||
-    question?.question_type === "checkbox"
+    question?.question_type === "Checkbox" 
   )
     return (
       <CheckboxType

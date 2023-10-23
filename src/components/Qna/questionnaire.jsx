@@ -27,7 +27,6 @@ function Questionnaire({
       return { qna: newQna };
     });
   };
-  console.log(application)
 
   useEffect(() => {
     if (questionIndex >= 0) {
@@ -38,7 +37,7 @@ function Questionnaire({
       });
     }
   }, [questionIndex]);
-
+  const responsesToSubmit = Object.values(slideQna?.qna);
   // console.log("RESPONSE", response)
   return (
     <VStack
@@ -162,23 +161,56 @@ function Questionnaire({
                 key={index}
                 direction={direction}
                 spacing={4}
-                mt="15px"
+                mt="10px"
                 ref={scrollRef}
                 w="100%"
                 maxW="100%"
-                pb="10px"
+                // pb="10px"
+                display={questionResponse ? "block" :question?.question_link_id && !responsesToSubmit?.find((element)=>element?.questionId ===question?.question_link_id && element?.choice?.includes(question?.conditional_value)) ? "none" :"block"}
               >
+                {question?.is_section  && (
+                <Text fontWeight="600">Section</Text>)}
                 <Text
                   wordBreak="break-word"
                   whiteSpace="pre-wrap"
                   maxWidth="100%"
                   overflowWrap="break-word"
                 >
-                  <span>{`Q${index + 1}:`}</span>
-                  {` ${question?.question_text}`}
+                  {`Q${index + 1} ${question?.question_text ? question?.question_text :question?.section_heading}`}
                 </Text>
-                {response ? null : (
-                  <Box>
+                {question?.is_section ? question?.section_questions?.map((sectionQuestion,i)=>{return(
+                  <Box px="0.6rem">
+                    <Text
+                  wordBreak="break-word"
+                  whiteSpace="pre-wrap"
+                  maxWidth="100%"
+                  overflowWrap="break-word"
+                  mb="0.2rem"
+                >
+                  {`Q${i + 1} ${sectionQuestion?.question_text}`}
+                </Text>
+                {!questionResponse ?(
+                    <QuestionType
+                      question={sectionQuestion}
+                      direction={direction}
+                      application={application}
+                      response={response}
+                      setQnaResponse={setQnaResponse}
+                      projectQnaType={projectQnaType}
+                      slideQna={slideQna}
+                    />
+                ):(
+                  <Text>
+                    Your response:{" "}
+                    {questionResponse?.response
+                      ?.replace(/[{"]+/g, "")
+                      ?.replace(/[}"]+/g, "")}
+                  </Text>
+                )}
+                  </Box>
+                )}) :(
+                  !questionResponse ?(
+<Box>
                     <QuestionType
                       question={question}
                       direction={direction}
@@ -189,15 +221,17 @@ function Questionnaire({
                       slideQna={slideQna}
                     />
                   </Box>
-                )}
-                {questionResponse && (
-                  <Text>
+                  )
+                  :(
+                    <Text>
                     Your response:{" "}
-                    {questionResponse.response
-                      .replace(/[{"]+/g, "")
-                      .replace(/[}"]+/g, "")}
+                    {questionResponse?.response
+                      ?.replace(/[{"]+/g, "")
+                      ?.replace(/[}"]+/g, "")}
                   </Text>
+                  )
                 )}
+                 
               </Stack>
             );
           })}

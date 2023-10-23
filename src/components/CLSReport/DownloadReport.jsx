@@ -18,21 +18,54 @@ const DownloadReport = ({ report, caseInfo, userInfo }) => {
     yPosition +=10
 
     report?.finalQuestionnaireResponse?.forEach((row, i) => {
-        doc.text(`Q${i + 1} : ${row?.questionText}`,10,yPosition,{maxWidth:190});
-        const textSize = doc.splitTextToSize(row?.questionText, 190);
-        const dim = doc.getTextDimensions(row?.questionText).h;
+        doc.text(`Q${i + 1} : ${row?.question_text ||row?.section_heading}`,10,yPosition,{maxWidth:190});
+        const textSize = doc.splitTextToSize(row?.question_text || row?.section_heading, 190);
+        const dim = doc.getTextDimensions(row?.question_text || row?.section_heading).h;
         yPosition += textSize.length * dim+3.5;
+        row?.section_questions?.length &&
+          row?.section_questions?.forEach((question, i) => {
+            if (!checkPageHeight(yPosition, 10, doc)) {
+              doc.addPage();
+              yPosition = 10;
+            }
+            doc.text(`Q${i + 1} : ${question?.question_text}`, 15, yPosition, {
+              maxWidth: 190,
+            });
+            const textSize = doc.splitTextToSize(question?.question_text, 190);
+            const dim = doc.getTextDimensions(question?.question_text).h;
+            yPosition += textSize.length * dim + 3;
+            if (!checkPageHeight(yPosition, 10, doc)) {
+              doc.addPage();
+              yPosition = 10;
+            }
+            doc.text(
+              `  A : ${question?.response
+                ?.replace(/{"/g, "")
+                .replace(/"}/g, "")
+                .replace(/"/g, "")}`,
+              15,
+              yPosition,
+              { maxWidth: 190 }
+            );
+            yPosition += 6;
+          });
          if (!checkPageHeight(yPosition, 10, doc)) {
            doc.addPage();
            yPosition = 10;
          }
-        doc.text(
+         !row?.section_questions?.length && doc.text(
           `A : ${row?.response
-            .replace(/{"/g, "")
-            .replace(/"}/g, "")
-            .replace(/"/g, "")}`,10,yPosition,{maxWidth:190});
-            const responseSize = doc.splitTextToSize(row?.response, 190);
-            const responseDim = doc.getTextDimensions(row?.response).h;
+            ?.replace(/{"/g, "")
+            ?.replace(/"}/g, "")
+            ?.replace(/"/g, "")}`,10,yPosition,{maxWidth:190});
+            const responseSize = doc.splitTextToSize(`${row.response
+              ?.replace(/{"/g, "")
+              .replace(/"}/g, "")
+              .replace(/"/g, "")}`, 190);
+            const responseDim = doc.getTextDimensions(`${row.response
+              ?.replace(/{"/g, "")
+              .replace(/"}/g, "")
+              .replace(/"/g, "")}`).h;
             yPosition += responseSize.length * responseDim +5;
           }
          )
