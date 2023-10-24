@@ -201,10 +201,10 @@ function Questionnaire({
                     />
                 ):(
                   <Text>
-                    Your response:{" "}
-                    {sectionQuestion?.response
+                    {`Your response:
+                    ${questionResponse?.section_questions[i]?.response
                       ?.replace(/[{"]+/g, "")
-                      ?.replace(/[}"]+/g, "")}
+                      ?.replace(/[}"]+/g, "")}`}
                   </Text>
                 )}
                   </Box>
