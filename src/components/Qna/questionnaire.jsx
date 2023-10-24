@@ -202,7 +202,7 @@ function Questionnaire({
                 ):(
                   <Text>
                     Your response:{" "}
-                    {questionResponse?.response
+                    {sectionQuestion?.response
                       ?.replace(/[{"]+/g, "")
                       ?.replace(/[}"]+/g, "")}
                   </Text>
