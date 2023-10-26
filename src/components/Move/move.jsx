@@ -99,6 +99,7 @@ function Move({
   showGleason,
   setShowGleason,
   setMaskAnnotationData,
+  addLocalRegion,
 }) {
   const [ifBiggerScreen] = useMediaQuery("(min-width:2000px)");
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
@@ -111,7 +112,6 @@ function Move({
   const { fabricOverlay } = viewerWindow[viewerId];
   let isActive = activeTool === "Move";
   const [activeAnnotations, setActiveAnnotations] = useState(false);
-  
 
   useEffect(() => {
     if (typeToolsToggle) {
@@ -308,7 +308,6 @@ function Move({
           setTilScore={setTilScore}
           setLymphocyteCount={setLymphocyteCount}
           navigatorCounter={navigatorCounter}
-          lymphocyteColor={lymphocyteColor}
         />
         {!isXmlAnnotations && application !== "education" ? (
           <AiModels
@@ -348,6 +347,7 @@ function Move({
             setShowGleason={setShowGleason}
             showGleason={showGleason}
             setMaskAnnotationData={setMaskAnnotationData}
+            lymphocyteColor={lymphocyteColor}
           />
         ) : null}
       </Flex>
@@ -365,7 +365,7 @@ function Move({
         zIndex="1000"
         ml={ifBiggerScreen ? "100px" : ""}
       >
-        {typeToolsToggle || selectedPattern ? (
+        {typeToolsToggle || selectedPattern || addLocalRegion ? (
           <TypeTools
             application={application}
             enableAI={enableAI}
@@ -390,6 +390,7 @@ function Move({
             lymphocyteColor={lymphocyteColor}
             showGleason={showGleason}
             setMaskAnnotationData={setMaskAnnotationData}
+            addLocalRegion={addLocalRegion}
           />
         ) : null}
       </Flex>

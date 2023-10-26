@@ -24,6 +24,7 @@ const Line = ({
   setToolSelected,
   setNewToolSettings,
   newToolSettings,
+  addLocalRegion,
 }) => {
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { activeTool, viewerWindow, color } = fabricOverlayState;
@@ -275,6 +276,7 @@ const Line = ({
       bg={isActive ? "#DEDEDE" : "#F6F6F6"}
       title="Line Annotations"
       _focus={{ border: "none" }}
+      disabled={addLocalRegion ? true : false}
       boxShadow={
         isActive
           ? "inset -2px -2px 2px rgba(0, 0, 0, 0.1), inset 2px 2px 2px rgba(0, 0, 0, 0.1)"

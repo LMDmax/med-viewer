@@ -163,6 +163,10 @@ function LayoutApp({
   const [getSynopticReportData, { data: synopticReport, synopticReportError }] =
     useLazyQuery(GET_SYNOPTIC_REPORT);
 
+  //############## ADD LOCAL REGION IN TILS ###############
+
+  const [addLocalRegion, setAddLocalRegion] = useState(false);
+
   // Human - In - The -Loop
 
   const caseId = caseInfo?._id;
@@ -213,6 +217,21 @@ function LayoutApp({
       fetchData();
     }
   }, [caseInfo?._id, synopticReportType]);
+
+  const sendReportDataToHospital = (reportData, data) => {
+    const resp = saveReport({
+      caseId: caseInfo._id,
+      subClaim: userInfo?.subClaim,
+      clinicalStudy: reportData?.clinicalStudy,
+      grossDescription: reportData?.grossDescription,
+      microscopicDescription: reportData?.microscopicDescription,
+      impression: reportData?.impression,
+      advise: reportData?.advice,
+      annotatedSlides: reportData?.annotedSlides,
+      mediaURLs: data?.urls,
+    }).unwrap();
+    console.log(resp);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -392,9 +411,9 @@ function LayoutApp({
     case "AddMask":
       returnText = "Please draw to add mask";
       break;
-      case "UpdateResult":
-        returnText = "Updating result";
-        break;
+    case "UpdateResult":
+      returnText = "Updating result";
+      break;
 
     default:
       returnText = "";
@@ -578,6 +597,7 @@ function LayoutApp({
           undoRedoCounter={undoRedoCounter}
           gleasonScoringData={gleasonScoringData}
           setMaskAnnotationData={setMaskAnnotationData}
+          addLocalRegion={addLocalRegion}
         />
         <LayoutInnerBody>
           {sidebar ? (
@@ -710,6 +730,9 @@ function LayoutApp({
             lymphocyteColor={lymphocyteColor}
             setLoadUI={setLoadUI}
             maskAnnotationData={maskAnnotationData}
+            setAddLocalRegion={setAddLocalRegion}
+            addLocalRegion={addLocalRegion}
+            sendReportDataToHospital={sendReportDataToHospital}
           />
         </LayoutInnerBody>
         <Flex

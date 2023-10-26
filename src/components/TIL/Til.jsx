@@ -82,51 +82,51 @@ const Til = ({
 
   // chnage lymphocyte color to custoom color
 
-  useEffect(() => {
-    if (lymphocyteColor.patternName === "Lymphocytes") {
-      const canvas = fabricOverlay.fabricCanvas();
-      var objects = canvas.getObjects();
-      for (var i = 0; i < objects.length; i++) {
-        if (objects[i].roiType === "TIL") {
-          canvas.remove(objects[i]);
-        }
-      }
-      canvas.renderAll();
-      const lymphocyteCords = data?.getTils?.data?.lymphocyte_cords;
-      const roi = lymphocyteCords.flat(2).map((TIL_cord) => {
-        return new fabric.Rect({
-          top: TIL_cord[1],
-          left: TIL_cord[0],
-          width: TIL_cord[2] - TIL_cord[0],
-          height: TIL_cord[3] - TIL_cord[1],
-          stroke: `rgba(${lymphocyteColor.color.r}, ${lymphocyteColor.color.g}, ${
-            lymphocyteColor.color.b
-          }, ${lymphocyteColor.color.a * 255})`, // Red in RGB format
-          fill: "transparent",
-          strokeWidth: 1,
-          opacity: 1,
-          strokeUniform: true,
-          objectCaching: false,
-        });
-      });
-      const t = new fabric.Group([...roi], {
-        selectable: false,
-        lockMovementX: false,
-        lockMovementY: false,
-        lockRotation: false,
-        lockScalingX: false,
-        lockScalingY: false,
-        lockUniScaling: false,
-        hoverCursor: "auto",
-        evented: false,
-        stroke: "",
-        strokeWidth: 1,
-        objectCaching: false,
-        roiType: "TIL",
-      });
-      canvas.add(t).requestRenderAll();
-    }
-  }, [lymphocyteColor]);
+  // useEffect(() => {
+  //   if (lymphocyteColor.patternName === "Lymphocytes") {
+  //     const canvas = fabricOverlay.fabricCanvas();
+  //     var objects = canvas.getObjects();
+  //     for (var i = 0; i < objects.length; i++) {
+  //       if (objects[i].roiType === "TIL") {
+  //         canvas.remove(objects[i]);
+  //       }
+  //     }
+  //     canvas.renderAll();
+  //     const lymphocyteCords = data?.getTils?.data?.lymphocyte_cords;
+  //     const roi = lymphocyteCords.flat(2).map((TIL_cord) => {
+  //       return new fabric.Rect({
+  //         top: TIL_cord[1],
+  //         left: TIL_cord[0],
+  //         width: TIL_cord[2] - TIL_cord[0],
+  //         height: TIL_cord[3] - TIL_cord[1],
+  //         stroke: `rgba(${lymphocyteColor.color.r}, ${lymphocyteColor.color.g}, ${
+  //           lymphocyteColor.color.b
+  //         }, ${lymphocyteColor.color.a * 255})`, // Red in RGB format
+  //         fill: "transparent",
+  //         strokeWidth: 1,
+  //         opacity: 1,
+  //         strokeUniform: true,
+  //         objectCaching: false,
+  //       });
+  //     });
+  //     const t = new fabric.Group([...roi], {
+  //       selectable: false,
+  //       lockMovementX: false,
+  //       lockMovementY: false,
+  //       lockRotation: false,
+  //       lockScalingX: false,
+  //       lockScalingY: false,
+  //       lockUniScaling: false,
+  //       hoverCursor: "auto",
+  //       evented: false,
+  //       stroke: "",
+  //       strokeWidth: 1,
+  //       objectCaching: false,
+  //       roiType: "TIL",
+  //     });
+  //     canvas.add(t).requestRenderAll();
+  //   }
+  // }, [lymphocyteColor]);
 
   // console.log(data)
   // ------------------------------
@@ -169,13 +169,13 @@ const Til = ({
         },
         fetchPolicy: "network-only",
       });
-      if (data?.getTils?.data) {
-        // console.log(data);
-        setTilCords(data?.getTils?.data?.lymphocyte_cords);
-        setTumorCords(data?.getTils?.data?.tumor_cords);
-        setStromaCords(data?.getTils?.data?.stroma_cords);
-        setTilLoading(false);
-      }
+      // if (data?.getTils?.data) {
+      //   // console.log(data);
+      //   setTilCords(data?.getTils?.data?.lymphocyte_cords);
+      //   setTumorCords(data?.getTils?.data?.tumor_cords);
+      //   setStromaCords(data?.getTils?.data?.stroma_cords);
+      //   setTilLoading(false);
+      // }
     }
     // console.log("data",data);
     // console.log("eror",error);
@@ -666,51 +666,11 @@ const Til = ({
   const handleTIL = () => {
     if (modelName === "TIL") {
       const canvas = fabricOverlay.fabricCanvas();
-      const tumorDzi = data?.getTils?.data?.tumor_url;
-      const stromaDzi = data?.getTils?.data?.stroma_url;
-      const lymphocyteCords = data?.getTils?.data?.lymphocyte_cords;
+      const tilURL = data?.getTils?.data?.tumor_url;
 
-      const roi = lymphocyteCords.flat(2).map((TIL_cord) => {
-        return new fabric.Rect({
-          top: TIL_cord[1],
-          left: TIL_cord[0],
-          width: TIL_cord[2] - TIL_cord[0],
-          height: TIL_cord[3] - TIL_cord[1],
-          stroke: "red",
-          fill: "transparent",
-          strokeWidth: 1,
-          opacity: 1,
-          strokeUniform: true,
-          objectCaching: false,
-        });
-      });
-      const t = new fabric.Group([...roi], {
-        selectable: false,
-        lockMovementX: false,
-        lockMovementY: false,
-        lockRotation: false,
-        lockScalingX: false,
-        lockScalingY: false,
-        lockUniScaling: false,
-        hoverCursor: "auto",
-        evented: false,
-        stroke: "",
-        strokeWidth: 1,
-        objectCaching: false,
-        roiType: "TIL",
-      });
       setTimeout(() => {
-        canvas.add(t).requestRenderAll();
         viewer.addTiledImage({
-          tileSource: stromaDzi,
-          x: 0,
-          y: 0,
-          width: 1,
-          opacity: 0.5,
-        });
-
-        viewer.addTiledImage({
-          tileSource: tumorDzi,
+          tileSource: tilURL,
           x: 0,
           y: 0,
           width: 1,

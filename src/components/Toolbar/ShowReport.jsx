@@ -35,6 +35,7 @@ function ShowReport({
 	setSlideData,
 	questionIndex,
 	setIsOpen,
+	sendReportDataToHospital,
 }) {
 	if (application === "hospital")
 		return (
@@ -61,6 +62,7 @@ function ShowReport({
 				setAnnotedSlideImages={setAnnotedSlideImages}
 				slideData={slideData}
 				setSlideData={setSlideData}
+				sendReportDataToHospital={sendReportDataToHospital}
 			/>
 		);
 

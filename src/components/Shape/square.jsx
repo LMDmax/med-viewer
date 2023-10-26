@@ -26,6 +26,7 @@ const Square = ({
   setToolSelected,
   setNewToolSettings,
   newToolSettings,
+  addLocalRegion,
 }) => {
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { color, viewerWindow, activeTool } = fabricOverlayState;
@@ -267,9 +268,10 @@ const Square = ({
         viewer,
         type: "rect",
         isClosed: true,
+        addLocalRegion: addLocalRegion ? true : false
       });
 
-
+console.log(message);
       saveAnnotationToDB({
         slideId,
         annotation: message.object,

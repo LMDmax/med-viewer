@@ -48,8 +48,8 @@ const TypeTools = ({
   setTumorColor,
   setStromaColor,
   setLymphocyteColor,
-  showGleason,
   setMaskAnnotationData,
+  addLocalRegion,
 }) => {
   const { fabricOverlayState } = useFabricOverlayState();
   const toast = useToast();
@@ -313,6 +313,7 @@ const TypeTools = ({
             onSaveAnnotation={onSaveAnnotation}
             setNewToolSettings={setNewToolSettings}
             newToolSettings={newToolSettings}
+            addLocalRegion={addLocalRegion}
           />
           {enableAI && (
             <MagicWandTool
@@ -330,6 +331,7 @@ const TypeTools = ({
             onSaveAnnotation={onSaveAnnotation}
             setNewToolSettings={setNewToolSettings}
             newToolSettings={newToolSettings}
+            addLocalRegion={addLocalRegion}
           />
           <Circle
             setToolSelected={setToolSelected}
@@ -337,6 +339,7 @@ const TypeTools = ({
             onSaveAnnotation={onSaveAnnotation}
             setNewToolSettings={setNewToolSettings}
             newToolSettings={newToolSettings}
+            addLocalRegion={addLocalRegion}
           />
           <Polygon
             setToolSelected={setToolSelected}
@@ -344,6 +347,7 @@ const TypeTools = ({
             onSaveAnnotation={onSaveAnnotation}
             setNewToolSettings={setNewToolSettings}
             newToolSettings={newToolSettings}
+            addLocalRegion={addLocalRegion}
           />
           <Draw
             setToolSelected={setToolSelected}
@@ -351,6 +355,7 @@ const TypeTools = ({
             onSaveAnnotation={onSaveAnnotation}
             setNewToolSettings={setNewToolSettings}
             newToolSettings={newToolSettings}
+            addLocalRegion={addLocalRegion}
           />
           <RemoveObject
             viewerId={viewerId}
@@ -368,7 +373,6 @@ const TypeTools = ({
             newToolSettings={newToolSettings}
             selectedPattern={selectedPattern}
             setMaskAnnotationData={setMaskAnnotationData}
-
           />
           <RemovePath
             setToolSelected={setToolSelected}
@@ -378,7 +382,6 @@ const TypeTools = ({
             newToolSettings={newToolSettings}
             selectedPattern={selectedPattern}
             setMaskAnnotationData={setMaskAnnotationData}
-
           />
         </SimpleGrid>
         <Divider mb="5px" borderColor={"#EEEEEE"} />

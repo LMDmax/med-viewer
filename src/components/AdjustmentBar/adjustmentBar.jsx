@@ -125,6 +125,7 @@ function AdjustmentBar({
   undoRedoCounter,
   gleasonScoringData,
   setMaskAnnotationData,
+  addLocalRegion,
 }) {
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
   const { fabricOverlayState } = useFabricOverlayState();
@@ -235,6 +236,7 @@ function AdjustmentBar({
         setShowGleason={setShowGleason}
         showGleason={showGleason}
         setMaskAnnotationData={setMaskAnnotationData}
+        addLocalRegion={addLocalRegion}
       />
       {/* <ActionTools setToolSelected={setToolSelected} viewerId={currentViewer} /> */}
       <ScreenTools

@@ -70,6 +70,7 @@ export const createAnnotationMessage = ({
   processType,
   patternName,
   isProcessed,
+  addLocalRegion,
   modelName,
 }) => {
   if (!viewer || !shape) return null;
@@ -104,6 +105,7 @@ export const createAnnotationMessage = ({
       processType,
       patternName,
       isProcessed,
+      addLocalRegion,
       modelName,
     } = annotation;
 
@@ -146,6 +148,7 @@ export const createAnnotationMessage = ({
         processType,
         patternName,
         isProcessed,
+        addLocalRegion,
         modelName,
       });
     }
@@ -178,6 +181,7 @@ export const createAnnotationMessage = ({
         processType: processType || "",
         patternName: patternName || "",
         isProcessed: isProcessed || false,
+        addLocalRegion: addLocalRegion || false,
         modelName: modelName || "",
       });
     }

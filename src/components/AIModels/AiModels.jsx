@@ -55,6 +55,7 @@ const AiModels = ({
   showGleason,
   setShowGleason,
   setMaskAnnotationData,
+  lymphocyteColor,
 }) => {
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { viewerWindow, isViewportAnalysing } = fabricOverlayState;
@@ -177,20 +178,34 @@ const AiModels = ({
         pixelsData[i + 2] = pattern4Color.color.b; // Brown: B
         pixelsData[i + 3] = Math.round(pattern4Color.color.a * 255); // Green: A
       }
-      if (red > 200 && green > 200 && blue < 100 && tumorColor.color) {
+      if (red > 200 && green < 100 && blue < 100 && lymphocyteColor.color) {
+        // Change red pixels to a custom color (e.g., brown)
+        pixelsData[i] = lymphocyteColor.color.r; // Brown: R
+        pixelsData[i + 1] = lymphocyteColor.color.g; // Brown: G
+        pixelsData[i + 2] = lymphocyteColor.color.b; // Brown: B
+        pixelsData[i + 3] = Math.round(lymphocyteColor.color.a * 255); // Brown: A
+      }
+      if (red > 200 && green > 200 && blue < 100 && stromaColor.color) {
         // Change yellow pixels to green by modifying RGB values
-        pixelsData[i] = tumorColor.color.r; // Brown: R
-        pixelsData[i + 1] = tumorColor.color.g; // Brown: G
-        pixelsData[i + 2] = tumorColor.color.b; // Brown: B
-        pixelsData[i + 3] = Math.round(tumorColor.color.a * 255); // Green: A
+        pixelsData[i] = stromaColor.color.r; // Brown: R
+        pixelsData[i + 1] = stromaColor.color.g; // Brown: G
+        pixelsData[i + 2] = stromaColor.color.b; // Brown: B
+        pixelsData[i + 3] = Math.round(stromaColor.color.a * 255); // Green: A
       }
 
-      if (blue > 150 && green > 100 && red < 150 && stromaColor.color) {
+      if (
+        pixelsData[i + 2] > pixelsData[i] &&
+        pixelsData[i + 2] > pixelsData[i + 1] &&
+        pixelsData[i + 2] > 100 &&
+        pixelsData[i] < 100 &&
+        pixelsData[i + 1] < 50 &&
+        tumorColor.color
+      ) {
         // Change blue pixels to a custom color (e.g., red)
-        pixelsData[i] = stromaColor.color.r; // Custom Color: R
-        pixelsData[i + 1] = stromaColor.color.g; // Custom Color: G
-        pixelsData[i + 2] = stromaColor.color.b; // Custom Color: B
-        pixelsData[i + 3] = Math.round(stromaColor.color.a * 255); // Custom Color: A
+        pixelsData[i] = tumorColor.color.r; // Custom Color: R
+        pixelsData[i + 1] = tumorColor.color.g; // Custom Color: G
+        pixelsData[i + 2] = tumorColor.color.b; // Custom Color: B
+        pixelsData[i + 3] = Math.round(tumorColor.color.a * 255); // Custom Color: A
       }
     }
 
@@ -554,7 +569,6 @@ const AiModels = ({
       }
     }
   }, [detectTumor]);
-
 
   return (
     <>

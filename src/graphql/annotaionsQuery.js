@@ -475,12 +475,10 @@ export const GET_TILS_ANALYSIS = gql`
         TILS_score
         bucket_name
         key_name
-        lymphocyte_cords
         lymphocyte_count
         slideId
         status
         stroma_area
-        stroma_url
         tumor_area
         tumor_url
       }
