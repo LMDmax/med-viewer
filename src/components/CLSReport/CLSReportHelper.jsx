@@ -176,9 +176,7 @@ function CLSReportHelper({
               (application === "education"
                 ? questions &&
                   questions[0]?.LessonQuestions?.length !== response?.length
-                : questions &&
-                  questions?.data?.desiredQuestionsInfo?.length !==
-                    response?.length) ||
+                : questions && !response?.length) ||
               (application === "clinical" && userInfo.role === "PI")
             }
           >
