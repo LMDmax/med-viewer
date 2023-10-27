@@ -174,6 +174,7 @@ const ReportHelper = ({
   setAnnotedSlideImages,
   slideData,
   setSlideData,
+  sendReportDataToHospital,
 }) => {
   const { fabricOverlayState } = useFabricOverlayState();
   const { viewerWindow } = fabricOverlayState;
@@ -233,17 +234,17 @@ const ReportHelper = ({
           },
         },
       });
-      clearValues();
-      // setSlideData(resp);
-      // console.log(standardData)
+      sendReportDataToHospital(reportData, data)
       setShowReport(!showReport);
-
       toast({
         status: "success",
         title: "Successfully Reported",
         duration: 1500,
         isClosable: true,
       });
+      clearValues();
+      // setSlideData(resp);
+      // console.log(standardData)
     } catch (err) {
       console.error(err);
       toast({

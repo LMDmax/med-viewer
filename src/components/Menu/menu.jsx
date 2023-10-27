@@ -155,6 +155,9 @@ function FunctionsMenu({
   lymphocyteColor,
   setLoadUI,
   maskAnnotationData,
+  setAddLocalRegion,
+  addLocalRegion,
+  sendReportDataToHospital,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
@@ -850,6 +853,8 @@ function FunctionsMenu({
                 maskAnnotationData={maskAnnotationData}
                 setToolSelected={setToolSelected}
                 viewerIds={viewerIds}
+                setAddLocalRegion={setAddLocalRegion}
+                addLocalRegion={addLocalRegion}
               />
             ) : selectedOption === "comments" ? (
               <CommentFeed
@@ -907,6 +912,7 @@ function FunctionsMenu({
                     setSlideData={setSlideData}
                     questionIndex={questionIndex}
                     setIsOpen={setIsOpen}
+                    sendReportDataToHospital={sendReportDataToHospital}
                   />
                   {showReport || synopticType ? (
                     <GrFormClose

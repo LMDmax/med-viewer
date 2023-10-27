@@ -34,6 +34,7 @@ import {
   AiOutlineEyeInvisible,
 } from "react-icons/ai";
 import { BiRectangle, BiText } from "react-icons/bi";
+import { AiOutlinePlusCircle } from "react-icons/ai";
 import {
   BsEye,
   BsEyeSlash,
@@ -175,7 +176,9 @@ const AnnotationFeed = ({
   setLoadUI,
   maskAnnotationData,
   setToolSelected,
-  viewerIds
+  viewerIds,
+  setAddLocalRegion,
+  addLocalRegion,
 }) => {
   // console.log("lymphocyteColor", lymphocyteColor);
   // const onUpdateAnnotation = (data) => {
@@ -935,6 +938,7 @@ const AnnotationFeed = ({
                     mt={2}
                     //   onClick={handleBoxClick}
                   >
+                    {/* // ###### Tumor ############ */}
                     <Flex
                       borderBottom="1px solid lightgray"
                       my="0"
@@ -951,10 +955,11 @@ const AnnotationFeed = ({
                       py="8px"
                     >
                       <RiCheckboxBlankFill
+                        size="30px"
                         color={
                           tumorColor.color
                             ? `rgba(${tumorColor.color.r}, ${tumorColor.color.g}, ${tumorColor.color.b}, ${tumorColor.color.a})`
-                            : "yellow"
+                            : "#8080fc"
                         }
                       />
                       <Text ml="5px">Tumor</Text>
@@ -964,6 +969,7 @@ const AnnotationFeed = ({
                         w="100%"
                       ></Flex>
                     </Flex>
+                    {/* // ###### Stroma ############ */}
                     <Flex
                       borderBottom="1px solid lightgray"
                       my="0"
@@ -980,10 +986,11 @@ const AnnotationFeed = ({
                       py="8px"
                     >
                       <RiCheckboxBlankFill
+                        size="30px"
                         color={
                           stromaColor.color
                             ? `rgba(${stromaColor.color.r}, ${stromaColor.color.g}, ${stromaColor.color.b}, ${stromaColor.color.a})`
-                            : "#4682B4"
+                            : "yellow"
                         }
                       />
                       <Text ml="5px">Stroma</Text>
@@ -993,10 +1000,12 @@ const AnnotationFeed = ({
                         w="100%"
                       ></Flex>
                     </Flex>
+                    {/* // ###### Lymphocytes ############ */}
                     <Flex
                       my="0"
                       ml="40px"
                       alignItems="center"
+                      borderBottom="1px solid lightgray"
                       bg={selectedPattern === "Lymphocytes" ? "#DEDEDE" : null}
                       onClick={() => {
                         if (selectedPattern === "Lymphocytes") {
@@ -1007,7 +1016,8 @@ const AnnotationFeed = ({
                       }}
                       py="8px"
                     >
-                      <RiCheckboxBlankLine
+                      <RiCheckboxBlankFill
+                        size="30px"
                         color={
                           lymphocyteColor?.color
                             ? `rgba(${lymphocyteColor.color.r}, ${lymphocyteColor.color.g}, ${lymphocyteColor.color.b}, ${lymphocyteColor.color.a})`
@@ -1021,13 +1031,35 @@ const AnnotationFeed = ({
                         w="100%"
                       ></Flex>
                     </Flex>
+                    <Flex
+                      my="0"
+                      ml="40px"
+                      alignItems="center"
+                      py="8px"
+                      bg="#FCFCFC"
+                      // onClick={() => {
+                      //   setAddLocalRegion(!addLocalRegion);
+                      // }}
+
+                      cursor="not-allowed"
+                    >
+                      <AiOutlinePlusCircle size="30px" color="#1B75BC" />
+                      <Text ml="5px" color="#1B75BC">
+                        Add Local Region
+                      </Text>
+                      <Flex
+                        alignItems="flex-end"
+                        justifyContent="flex-end"
+                        w="100%"
+                      ></Flex>
+                    </Flex>
                     <Box w="100%" mx="25px" my="10px" textAlign="left">
                       <Text color="#3B5D7C">TIL Values</Text>
                     </Box>
                     <Box px="25px">
-                      {/* <Text mb="10px" borderBottom="1px solid lightgray">
-                        TIL Score : {tilScore}
-                      </Text> */}
+                      <Text mb="10px" borderTop="1px solid lightgray">
+                        Global TIL Score : {tilScore}
+                      </Text>
                       {/* <Text mb="10px">
                         TIL Formula : <br /> (Lymphocyte Area / Stroma Area) *
                         100
@@ -1275,9 +1307,7 @@ const AnnotationFeed = ({
                             setLoadUI(false);
                             handleupdateResult();
                           }
-                          if (
-                            maskAnnotationData.length < 0
-                          ) {
+                          if (maskAnnotationData.length < 0) {
                             toast({
                               title: "HITL Error",
                               description: "No mask selection is done",
@@ -1285,7 +1315,8 @@ const AnnotationFeed = ({
                               duration: 1500,
                               isClosable: true,
                             });
-                          } if(gleasonScoringData.hilLength >= 2) {
+                          }
+                          if (gleasonScoringData.hilLength >= 2) {
                             toast({
                               title: "HITL Error",
                               description:
