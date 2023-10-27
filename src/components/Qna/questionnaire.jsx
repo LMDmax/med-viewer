@@ -204,7 +204,7 @@ function Questionnaire({
                     {`Your response:
                     ${questionResponse?.section_questions[i]?.response
                       ?.replace(/[{"]+/g, "")
-                      ?.replace(/[}"]+/g, "")}`}
+                      ?.replace(/[}"]+/g, "") ||"-"}`}
                   </Text>
                 )}
                   </Box>
@@ -227,7 +227,7 @@ function Questionnaire({
                     Your response:{" "}
                     {questionResponse?.response
                       ?.replace(/[{"]+/g, "")
-                      ?.replace(/[}"]+/g, "")}
+                      ?.replace(/[}"]+/g, "") ||"-"}
                   </Text>
                   )
                 )}
