@@ -63,12 +63,11 @@ function CLSReportHelper({
     fetchResponse();
   }, [showCLSreport]);
 
-
   useEffect(() => {
     if (app === "clinical") {
       setShowCLSReport(true);
     }
-  },[app])
+  }, [app]);
 
   const handleCLSReport = () => {
     setShowCLSReport(!showCLSreport);
@@ -180,7 +179,7 @@ function CLSReportHelper({
               (application === "clinical" && userInfo.role === "PI")
             }
           >
-            Submit Report
+            {app === "clinical" ? "Submit" : "Submit Report"}
           </Button>
         </Tooltip>
       ) : showCLSreport ? (

@@ -877,7 +877,7 @@ function FunctionsMenu({
                   // p="5px 5px 0px 20px"
                 >
                   <Text fontFamily="Inter" color="#3B5D7C" mr="60%">
-                    Report
+                            { app === "clinical" ? "Questionnaire" : "Report"}
                   </Text>
 
                   <ShowReport

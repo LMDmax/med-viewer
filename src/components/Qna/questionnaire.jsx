@@ -28,6 +28,32 @@ function Questionnaire({
     });
   };
 
+  const toRoman = (num) => {
+    const romanNumerals = [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v",
+      "vi",
+      "vii",
+      "viii",
+      "ix",
+      "x",
+      "xi",
+      "xii",
+      "xiii",
+      "xiv",
+      "xv",
+      "xvi",
+      "xvii",
+      "xviii",
+      "xix",
+      "xx",
+    ];
+    return romanNumerals[num] || num;
+  };
+
   useEffect(() => {
     if (questionIndex >= 0) {
       scrollRef.current.scrollIntoView({
@@ -80,7 +106,7 @@ function Questionnaire({
                   // 	padding: index === questionIndex && "0.3rem 1rem",
                   // 	borderRadius: index === questionIndex && "0% 50% 50% 0%",
                   // }}
-                  >{`Q${index + 1}:`}</span>
+                  >{`Q ${index + 1}:`}</span>
                   {` ${question?.Question?.questionText}`}
                 </Text>
                 {question?.Question?.referenceToSlides[0]?.slideData && (
@@ -166,51 +192,73 @@ function Questionnaire({
                 w="100%"
                 maxW="100%"
                 // pb="10px"
-                display={questionResponse ? "block" :question?.question_link_id && !responsesToSubmit?.find((element)=>element?.questionId ===question?.question_link_id && element?.choice?.includes(question?.conditional_value)) ? "none" :"block"}
+                display={
+                  questionResponse
+                    ? "block"
+                    : question?.question_link_id &&
+                      !responsesToSubmit?.find(
+                        (element) =>
+                          element?.questionId === question?.question_link_id &&
+                          element?.choice?.includes(question?.conditional_value)
+                      )
+                    ? "none"
+                    : "block"
+                }
               >
-                {question?.is_section  && (
-                <Text fontWeight="600">Section</Text>)}
+                {question?.is_section && <Text fontWeight="600">Section</Text>}
                 <Text
                   wordBreak="break-word"
                   whiteSpace="pre-wrap"
                   maxWidth="100%"
                   overflowWrap="break-word"
                 >
-                  {`Q${index + 1} ${question?.question_text ? question?.question_text :question?.section_heading}`}
+                  <span style={{ fontWeight: "bold" }}>{`Q ${index + 1}`}</span>
+                  {`     ${
+                    question?.question_text
+                      ? question?.question_text
+                      : question?.section_heading
+                  }`}
                 </Text>
-                {question?.is_section ? question?.section_questions?.map((sectionQuestion,i)=>{return(
-                  <Box px="0.6rem">
-                    <Text
-                  wordBreak="break-word"
-                  whiteSpace="pre-wrap"
-                  maxWidth="100%"
-                  overflowWrap="break-word"
-                  mb="0.2rem"
-                >
-                  {`Q${i + 1} ${sectionQuestion?.question_text}`}
-                </Text>
-                {!questionResponse ?(
-                    <QuestionType
-                      question={sectionQuestion}
-                      direction={direction}
-                      application={application}
-                      response={response}
-                      setQnaResponse={setQnaResponse}
-                      projectQnaType={projectQnaType}
-                      slideQna={slideQna}
-                    />
-                ):(
-                  <Text>
-                    {`Your response:
-                    ${questionResponse?.section_questions[i]?.response
-                      ?.replace(/[{"]+/g, "")
-                      ?.replace(/[}"]+/g, "") ||"-"}`}
-                  </Text>
-                )}
-                  </Box>
-                )}) :(
-                  !questionResponse ?(
-<Box>
+                {question?.is_section ? (
+                  question?.section_questions?.map((sectionQuestion, i) => {
+                    return (
+                      <Box px="0.6rem">
+                        <Text
+                          wordBreak="break-word"
+                          whiteSpace="pre-wrap"
+                          maxWidth="100%"
+                          overflowWrap="break-word"
+                          mb="0.2rem"
+                          // border="1px solid red"
+                          ml="34px"
+                        >
+                          {`Q ${toRoman(i)}   ${sectionQuestion?.question_text}`}
+                        </Text>
+                        {!questionResponse ? (
+                          <QuestionType
+                            question={sectionQuestion}
+                            direction={direction}
+                            application={application}
+                            response={response}
+                            setQnaResponse={setQnaResponse}
+                            projectQnaType={projectQnaType}
+                            slideQna={slideQna}
+                          />
+                        ) : (
+                          <Text>
+                            {`Your response:
+                    ${
+                      questionResponse?.section_questions[i]?.response
+                        ?.replace(/[{"]+/g, "")
+                        ?.replace(/[}"]+/g, "") || "-"
+                    }`}
+                          </Text>
+                        )}
+                      </Box>
+                    );
+                  })
+                ) : !questionResponse ? (
+                  <Box>
                     <QuestionType
                       question={question}
                       direction={direction}
@@ -221,28 +269,25 @@ function Questionnaire({
                       slideQna={slideQna}
                     />
                   </Box>
-                  )
-                  :(
-                    <Text>
+                ) : (
+                  <Text>
                     Your response:{" "}
                     {questionResponse?.response
                       ?.replace(/[{"]+/g, "")
-                      ?.replace(/[}"]+/g, "") ||"-"}
+                      ?.replace(/[}"]+/g, "") || "-"}
                   </Text>
-                  )
                 )}
-                 
               </Stack>
             );
           })}
-          {application === "clinical" && response?.signature_file &&
-          <Flex direction="column">
-            <Image w="11vw" h="10vh"src={response?.signature_file} />
-            <Text color="#3B5D7C">{`${response?.first_name} ${response?.last_name}`}</Text>
-            <Text>{response?.highest_qualification}</Text>
-            <Text>{response?.Institute}</Text>
-          </Flex>
-          }
+      {application === "clinical" && response?.signature_file && (
+        <Flex direction="column">
+          <Image w="11vw" h="10vh" src={response?.signature_file} />
+          <Text color="#3B5D7C">{`${response?.first_name} ${response?.last_name}`}</Text>
+          <Text>{response?.highest_qualification}</Text>
+          <Text>{response?.Institute}</Text>
+        </Flex>
+      )}
       {/* {questions[0].LessonQuestions?.map((question, index) => (
 				
 				

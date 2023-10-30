@@ -51,12 +51,9 @@ function CLSReport({
           alignItems="center"
           // h="4vh"
           minH="5vh"
-          border="1px solid #000"
+
           px="1vw"
         >
-          <Text fontSize="16px" color="1B75BC">
-            {application === "clinical" ? "Questionnaire" : "Questions"}
-          </Text>
           {application === "clinical" &&
             userInfo?.role === "Pathologist" &&
             errorMessage?.data?.status !== "400" &&

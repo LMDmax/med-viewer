@@ -46,7 +46,7 @@ function RadioType({ question, response, handleChange, application }) {
           ))
         : question?.choices?.map((choice, index) => (
             <label key={index + 1}>
-              <Flex alignItems="center">
+              <Flex alignItems="center" ml="40px">
                 <input
                   type="radio"
                   name={question?.question_id}
