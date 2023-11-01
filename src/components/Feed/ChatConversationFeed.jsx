@@ -75,7 +75,7 @@ const RightMessageComponent = ({ data, setQueryChat, zoomIntoAnnotation }) => {
       </Flex>
 
       <Text color="#52585D" fontSize="12px" fontWeight="bold">
-        {data.payload.body}
+        {data?.payload?.body}
       </Text>
       <Flex alignItems="Center" justifyContent="space-between" w="100%">
         {data?.annotation && (
@@ -118,7 +118,7 @@ const RightMessageComponent = ({ data, setQueryChat, zoomIntoAnnotation }) => {
       borderRadius="14px 0px 14px 14px"
     >
       <Text color="#52585D" fontSize="12px">
-        {data.payload.body}
+        {data?.payload?.body}
       </Text>
       <Text color="#212224" fontSize="10px" textAlign="right">
         {/* {data.sendAt.fromNow()} */}
@@ -162,7 +162,7 @@ const LeftMessageComponent = ({ data, setQueryChat, zoomIntoAnnotation }) => {
             <Text>{`${data.fromName}`}</Text>
           </Flex>
           <Text color="#52585D" fontSize="12px" fontWeight="bold">
-            {data.payload.body}
+            {data?.payload?.body}
           </Text>
           <Flex alignItems="Center" justifyContent="space-between" w="100%">
             {data?.annotation && (
@@ -210,7 +210,7 @@ const LeftMessageComponent = ({ data, setQueryChat, zoomIntoAnnotation }) => {
             {data.fromName}{" "}
           </Text>
           <Text color="#52585D" fontSize="12px">
-            {data.payload.body}
+            {data?.payload?.body}
           </Text>
 
           <Text textAlign="right" fontSize="10px" color="#6588DE">
