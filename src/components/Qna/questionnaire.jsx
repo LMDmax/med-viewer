@@ -20,7 +20,6 @@ import _ from "lodash";
 import QuestionType from "./questionType";
 import { changeTile } from "../../state/actions/fabricOverlayActions";
 import { useFabricOverlayState } from "../../state/store";
-import { useGetReportResponseQuery } from "../../../../state/api/medicalApi";
 
 function Questionnaire({
   direction,
