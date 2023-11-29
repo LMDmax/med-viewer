@@ -27,7 +27,7 @@ const Report = ({
 }) => {
   const [ifwidthLessthan1920] = useMediaQuery("(max-width:1920px)");
 
-  console.log(reportedData?.data);
+
 
   const currentDate = new Date();
 

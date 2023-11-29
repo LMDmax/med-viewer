@@ -268,10 +268,10 @@ const Square = ({
         viewer,
         type: "rect",
         isClosed: true,
-        addLocalRegion: addLocalRegion ? true : false
+        addLocalRegion: addLocalRegion ? true : false,
       });
 
-console.log(message);
+      console.log({ message });
       saveAnnotationToDB({
         slideId,
         annotation: message.object,

@@ -98,6 +98,7 @@ const TypeTools = ({
           app: application,
           createdBy: `${userInfo?.firstName} ${userInfo?.lastName}`,
           // caseId: caseId? caseId : lessonId
+          addLocalRegion: addLocalRegion ? true : false,
           caseId:
             application === "hospital"
               ? caseId

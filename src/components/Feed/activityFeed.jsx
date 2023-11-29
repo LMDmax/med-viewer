@@ -1017,7 +1017,7 @@ const AnnotationFeed = ({
                       py="8px"
                     >
                       <RiCheckboxBlankFill
-                        size="30px"
+                        size="25px"
                         color={
                           lymphocyteColor?.color
                             ? `rgba(${lymphocyteColor.color.r}, ${lymphocyteColor.color.g}, ${lymphocyteColor.color.b}, ${lymphocyteColor.color.a})`
@@ -1025,23 +1025,90 @@ const AnnotationFeed = ({
                         }
                       />
                       <Text ml="5px">Lymphocytes</Text>
-                      <Flex
-                        alignItems="flex-end"
-                        justifyContent="flex-end"
-                        w="100%"
-                      ></Flex>
                     </Flex>
+                    <Flex w="100%" h="auto">
+                      <Accordion w="100%" defaultIndex={[0]} allowMultiple>
+                        <AccordionItem>
+                          <h2>
+                            <AccordionButton>
+                              <Flex ml="30px" as="span" textAlign="left">
+                                <Box >
+                                  <GroupTil />
+                                </Box>
+                                <Text
+                                  ml="0.8vw"
+                                >
+                                  Local Region 1
+                                </Text>
+                              </Flex>
+                              <AccordionIcon />
+                            </AccordionButton>
+                          </h2>
+                          <AccordionPanel w="100%">
+                            <Flex
+                              w="100%"
+                              flexDir="column"
+                              h="125px"
+                              justifyContent="space-between"
+                              border="2px solid red"
+                            >
+                              <Box>
+                                <Flex
+                                  justifyContent="space-between"
+                                  alignItems="center"
+                                  w="100%"
+                                >
+                                  <p>Lcoal TIL Score :</p>
+                                  <p>213</p>
+                                </Flex>
+                              </Box>
+                              <Box>
+                                <Flex
+                                  justifyContent="space-between"
+                                  alignItems="center"
+                                  w="100%"
+                                >
+                                  <p>Tumor Area :</p>
+                                  <p>56 sq mm </p>
+                                </Flex>
+                              </Box>
+                              <Box>
+                                <Flex
+                                  justifyContent="space-between"
+                                  alignItems="center"
+                                  w="100%"
+                                >
+                                  <p>Intra - tumoral Stroma Area :</p>
+                                  <p>23 sq mm</p>
+                                </Flex>
+                              </Box>
+                              <Box>
+                                <Flex
+                                  justifyContent="space-between"
+                                  alignItems="center"
+                                  w="100%"
+                                >
+                                  <p>Lymphocyte Count :</p>
+                                  <p>213</p>
+                                </Flex>
+                              </Box>
+                            </Flex>
+                          </AccordionPanel>
+                        </AccordionItem>
+                      </Accordion>
+                    </Flex>
+
                     <Flex
                       my="0"
                       ml="40px"
                       alignItems="center"
                       py="8px"
                       bg="#FCFCFC"
-                      // onClick={() => {
-                      //   setAddLocalRegion(!addLocalRegion);
-                      // }}
+                      onClick={() => {
+                        setAddLocalRegion(!addLocalRegion);
+                      }}
 
-                      cursor="not-allowed"
+                      // cursor="not-allowed"
                     >
                       <AiOutlinePlusCircle size="30px" color="#1B75BC" />
                       <Text ml="5px" color="#1B75BC">

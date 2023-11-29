@@ -21,6 +21,7 @@ export const getAnnotationJSON = (annotation) => {
     "cords",
     "timeStamp",
     "isClosed",
+    "addLocalRegion",
     "usingAs",
     "area",
     "perimeter",
@@ -32,7 +33,7 @@ export const getAnnotationJSON = (annotation) => {
     "modelName",
     "isProcessed",
     "patternName",
-    "processType"
+    "processType",
   ]);
 };
 
@@ -66,11 +67,11 @@ export const createAnnotationMessage = ({
   maskType,
   type,
   isClosed,
+  addLocalRegion,
   usingAs,
   processType,
   patternName,
   isProcessed,
-  addLocalRegion,
   modelName,
 }) => {
   if (!viewer || !shape) return null;
@@ -84,7 +85,6 @@ export const createAnnotationMessage = ({
   // else create a new one
 
   if (annotation) {
-    console.log("AAA", annotation);
     const {
       slide,
       hash,
@@ -94,6 +94,7 @@ export const createAnnotationMessage = ({
       zoomLevel,
       points,
       isClosed,
+      addLocalRegion,
       usingAs,
       timeStamp,
       area,
@@ -105,7 +106,6 @@ export const createAnnotationMessage = ({
       processType,
       patternName,
       isProcessed,
-      addLocalRegion,
       modelName,
     } = annotation;
 
@@ -138,6 +138,7 @@ export const createAnnotationMessage = ({
         points,
         timeStamp,
         isClosed,
+        addLocalRegion,
         usingAs,
         area,
         perimeter,
@@ -177,6 +178,7 @@ export const createAnnotationMessage = ({
         maskType: maskType || "",
         type: type || "",
         isClosed,
+        addLocalRegion,
         usingAs: usingAs || "",
         processType: processType || "",
         patternName: patternName || "",

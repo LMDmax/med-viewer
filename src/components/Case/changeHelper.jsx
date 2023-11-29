@@ -11,7 +11,6 @@ const ChangeHelper = ({
   title,
   disabledLeft,
   disabledRight,
-  slideName,
   clickHandler,
   setIsMultiview,
   setIsNavigatorActive,
@@ -19,13 +18,17 @@ const ChangeHelper = ({
   setSelectedOption,
   loadUI,
   isNavigatorActive,
+  viewerId,
   isAnnotationLoading,
 }) => {
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { viewerWindow } = fabricOverlayState;
-  const abbreviatedName = slideName ? slideName.substring(0, 6) : "";
-  var vKeys = Object.keys(viewerWindow);
-// console.log(viewerWindow[vKeys[0]].viewer);
+  const { tile, slideName, viewer, fabricOverlay } = viewerWindow[viewerId];
+  const abbreviatedName = slideName
+    ? `${slideName.substring(0, 6)}...`
+    : slide?.accessionId
+    ? slide?.accessionId
+    : "";
   return (
     <Flex
       justifyContent="space-between"
@@ -78,24 +81,22 @@ const ChangeHelper = ({
           borderRadius="0px"
           size="20px"
         >
-    <Text
-      mr="24px"
-      fontWeight="400"
-      fontSize="14px"
-      lineHeight="25px"
-      letterSpacing="0.0025em"
-      fontFamily="Inter"
-      wordBreak="break-word"
-      noOfLines={1}
-      cursor="pointer"
-      onClick={()=> setSelectedOption("information")}
-      isDisabled={isAnnotationLoading}
-      isActive={isNavigatorActive}
-    >
-      {`${abbreviatedName}...`}
-    </Text>
-
-
+          <Text
+            mr="24px"
+            fontWeight="400"
+            fontSize="14px"
+            lineHeight="25px"
+            letterSpacing="0.0025em"
+            fontFamily="Inter"
+            wordBreak="break-word"
+            noOfLines={1}
+            cursor="pointer"
+            onClick={() => setSelectedOption("information")}
+            isDisabled={isAnnotationLoading}
+            isActive={isNavigatorActive}
+          >
+            {`${abbreviatedName}`}
+          </Text>
         </Tooltip>
         <Tooltip
           label={

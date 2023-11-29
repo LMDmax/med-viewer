@@ -11,12 +11,11 @@ function QuestionType({
   slideQna,
   application,
 }) {
-  console.log(question);
+
   const handleChange = ({ questionId, choice, choiceType = null }) => {
     setQnaResponse({ questionId, choice: [choice], choiceType });
   };
 
-  // console.log(application)
 
   if (
     question?.Question?.questionType === "multiple-choice" ||

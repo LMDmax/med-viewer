@@ -76,10 +76,12 @@ function LayoutApp({
   accessToken,
   searchSelectedData,
   questionIndex,
+  All_Reader_Responses,
 }) {
   // const { handleEvent } = useKeyboardEvents();
 
   const [sidebar, setSidebar] = useState(false);
+  const [changeSlide, setChangeSlide] = useState(false);
   const [zoomValue, setZoomValue] = useState(1);
   const [isNavigatorActive, setIsNavigatorActive] = useState(false);
   const [isMultiview, setIsMultiview] = useState(false);
@@ -109,6 +111,8 @@ function LayoutApp({
   const [currentViewer, setCurrentViewer] = useState(
     viewerIds?.[0]?._id || viewerIds?.[0]?.slideId
   );
+
+  // console.log("casse", changeSlide);
 
   const [showAnnotationsBar, setShowAnnotationsBar] = useState(false);
   const [slideName, setSlideName] = useState(slide?.slideName);
@@ -230,7 +234,7 @@ function LayoutApp({
       annotatedSlides: reportData?.annotedSlides,
       mediaURLs: data?.urls,
     }).unwrap();
-    console.log(resp);
+    // console.log(resp);
   };
 
   useEffect(() => {
@@ -413,6 +417,9 @@ function LayoutApp({
       break;
     case "UpdateResult":
       returnText = "Updating result";
+      break;
+    case "Report_Submitting":
+      returnText = "Report Submitting";
       break;
 
     default:
@@ -733,6 +740,8 @@ function LayoutApp({
             setAddLocalRegion={setAddLocalRegion}
             addLocalRegion={addLocalRegion}
             sendReportDataToHospital={sendReportDataToHospital}
+            setChangeSlide={setChangeSlide}
+            All_Reader_Responses={All_Reader_Responses}
           />
         </LayoutInnerBody>
         <Flex
@@ -768,6 +777,8 @@ function LayoutApp({
                   setIsNavigatorActive={setIsNavigatorActive}
                   isAnnotationLoading={isAnnotationLoading}
                   isNavigatorActive={isNavigatorActive}
+                  changeSlide={changeSlide}
+                  setChangeSlide={setChangeSlide}
                 />
               )}
             </Flex>

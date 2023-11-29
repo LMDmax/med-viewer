@@ -174,7 +174,7 @@ const TILFeedBar = ({
             //
             // }}
             onClick={() => {
-              console.log("object", selectedPattern);
+              // console.log("object", selectedPattern);
               if (selectedPattern === "Lymphocytes") {
                 setSelectedPattern("");
               } else {

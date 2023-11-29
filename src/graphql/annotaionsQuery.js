@@ -222,6 +222,7 @@ export const SAVE_ANNOTATION = gql`
         patternName
         isProcessed
         processType
+        addLocalRegion
       }
       message
       success

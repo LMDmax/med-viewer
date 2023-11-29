@@ -60,6 +60,7 @@ import {
   adjustmentIcon,
   adjustmentIconSelected,
   ModeIcon,
+  QuestionIcon,
   ModeIconSelected,
 } from "../Icons/CustomIcons";
 import Navigator from "../Navigator/navigator";
@@ -158,6 +159,8 @@ function FunctionsMenu({
   setAddLocalRegion,
   addLocalRegion,
   sendReportDataToHospital,
+  setChangeSlide,
+  All_Reader_Responses,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
@@ -196,6 +199,7 @@ function FunctionsMenu({
   };
   const [annotedSlideImages, setAnnotedSlideImages] = useState([]);
   const [timelineData, setTimeLineData] = useState([]);
+
   useEffect(() => {
     if (!chatFeedBar && selectedOption !== "annotations") {
       // setSelectedOption("slides");
@@ -360,8 +364,12 @@ function FunctionsMenu({
   };
 
   useEffect(() => {
-    if (!isOpen) {
+    if (!isOpen && app !== "clinical") {
       setSelectedOption("slides");
+    }
+    if (app === "clinical" && !isOpen) {
+      setSelectedOption("report");
+      // setIsOpen(true);
     }
   }, [isOpen]);
 
@@ -428,6 +436,13 @@ function FunctionsMenu({
     cache: new InMemoryCache(),
   });
 
+  useEffect(() => {
+    if (app === "clinical") {
+      setSelectedOption("report");
+      setIsOpen(true);
+    }
+  }, []);
+
   return (
     <Box
       pos="absolute"
@@ -442,7 +457,7 @@ function FunctionsMenu({
           width: isOpen
             ? ifWidthLessthan1920
               ? selectedOption === "report"
-                ? "40vw"
+                ? "30vw"
                 : "450px"
               : selectedOption === "report"
               ? "40vw"
@@ -461,221 +476,157 @@ function FunctionsMenu({
         }}
       >
         <Flex>
-          <Flex direction="column" h="fit-content">
-            <Button
-              onClick={() => setIsOpen(!isOpen)}
-              w="70px"
-              borderRadius={0}
-              background="#FFFFFF"
-              box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-              _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
-            >
-              {isOpen ? (
-                <HiOutlineChevronDoubleRight size="20px" />
-              ) : (
-                <HiOutlineChevronDoubleLeft size="20px" />
-              )}
-            </Button>
-            <Tooltip label="View slides" placement="left">
+          {app !== "clinical" ? (
+            <Flex direction="column" h="fit-content">
               <Button
-                height="73px"
-                w="73px"
+                onClick={() => setIsOpen(!isOpen)}
+                w="70px"
                 borderRadius={0}
-                background="rgba(255, 255, 255, 0.5)"
-                box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-                onClick={() => {
-                  setSelectedOption("slides");
-                  setIsOpen(true);
-                }}
-                _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
-              >
-                <VStack>
-                  {selectedOption === "slides" ? (
-                    <SlidesIconSelected />
-                  ) : (
-                    <SlidesIcon />
-                  )}
-                  <Text
-                    fontFamily="Inter"
-                    fontStyle="normal"
-                    fontWeight="400"
-                    fontSize="10px"
-                    lineHeight="12px"
-                    letterSpacing="0.0025em"
-                    color={selectedOption === "slides" ? "#3B5D7C" : "fff"}
-                  >
-                    Slides
-                  </Text>
-                </VStack>
-              </Button>
-            </Tooltip>
-            <Tooltip label="View timeline" placement="left">
-              <Button
-                height="73px"
-                w="73px"
-                borderRadius={0}
-                background="rgba(255, 255, 255, 0.5)"
+                background="#FFFFFF"
                 box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
                 _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
-                onClick={() => {
-                  setSelectedOption("timeline");
-                  setIsOpen(true);
-                }}
               >
-                <VStack>
-                  {selectedOption === "timeline" ? (
-                    <TimelineIconSelected />
-                  ) : (
-                    <TimelineIcon />
-                  )}
-                  <Text
-                    fontFamily="Inter"
-                    fontStyle="normal"
-                    fontWeight="400"
-                    fontSize="10px"
-                    lineHeight="12px"
-                    letterSpacing="0.0025em"
-                    color={selectedOption === "timeline" ? "#3B5D7C" : "fff"}
-                  >
-                    Timeline
-                  </Text>
-                </VStack>
+                {isOpen ? (
+                  <HiOutlineChevronDoubleRight size="20px" />
+                ) : (
+                  <HiOutlineChevronDoubleLeft size="20px" />
+                )}
               </Button>
-            </Tooltip>
-            <Tooltip label="View annotations" placement="left">
-              <Button
-                height="73px"
-                w="73px"
-                borderRadius={0}
-                background="rgba(255, 255, 255, 0.5)"
-                box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-                _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
-                onClick={() => {
-                  setSelectedOption("annotations");
-                  setIsOpen(true);
-                }}
-              >
-                <VStack>
-                  {selectedOption === "annotations" ? (
-                    <AnnotationsSelected />
-                  ) : (
-                    <Annotations />
-                  )}
-                  <Text
-                    fontFamily="Inter"
-                    fontStyle="normal"
-                    fontWeight="400"
-                    fontSize="10px"
-                    lineHeight="12px"
-                    letterSpacing="0.0025em"
-                    color={selectedOption === "annotations" ? "#3B5D7C" : "fff"}
-                  >
-                    Annotations
-                  </Text>
-                </VStack>
-              </Button>
-            </Tooltip>
-            <Tooltip label="View comments" placement="left">
-              <Button
-                height="73px"
-                w="73px"
-                background="rgba(255, 255, 255, 0.5)"
-                borderRadius={0}
-                _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
-                box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-                onClick={() => {
-                  setSelectedOption("comments");
-                  setIsOpen(true);
-                }}
-              >
-                <VStack>
-                  {selectedOption === "comments" ? (
-                    <CommentsSelected />
-                  ) : (
-                    <Comments />
-                  )}
-                  <Text
-                    fontFamily="Inter"
-                    fontStyle="normal"
-                    fontWeight="400"
-                    fontSize="10px"
-                    lineHeight="12px"
-                    letterSpacing="0.0025em"
-                    color={selectedOption === "comments" ? "#3B5D7C" : "fff"}
-                  >
-                    Comments
-                  </Text>
-                </VStack>
-              </Button>
-            </Tooltip>
-            <Tooltip label="View slide info" placement="left">
-              <Button
-                height="73px"
-                w="73px"
-                background="rgba(255, 255, 255, 0.5)"
-                borderRadius={0}
-                box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-                _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
-                onClick={() => {
-                  setSelectedOption("information");
-                  setIsOpen(true);
-                }}
-              >
-                <VStack>
-                  {selectedOption === "information" ? (
-                    <InformationSelected />
-                  ) : (
-                    <Information />
-                  )}
-                  <Text
-                    fontFamily="Inter"
-                    fontStyle="normal"
-                    fontWeight="400"
-                    fontSize="10px"
-                    lineHeight="12px"
-                    letterSpacing="0.0025em"
-                    color={selectedOption === "information" ? "#3B5D7C" : "fff"}
-                  >
-                    Information
-                  </Text>
-                </VStack>
-              </Button>
-            </Tooltip>
-            <Tooltip label="Report slide" placement="left">
-              <Button
-                height="73px"
-                w="73px"
-                background="rgba(255, 255, 255, 0.5)"
-                borderRadius={0}
-                box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-                _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
-                onClick={() => {
-                  setSelectedOption("report");
-                  setIsOpen(true);
-                }}
-              >
-                <VStack>
-                  {selectedOption === "report" ? (
-                    <ReportSelected />
-                  ) : (
-                    <ReportIcon />
-                  )}
-                  <Text
-                    fontFamily="Inter"
-                    fontStyle="normal"
-                    fontWeight="400"
-                    fontSize="10px"
-                    lineHeight="12px"
-                    letterSpacing="0.0025em"
-                    color={selectedOption === "report" ? "#3B5D7C" : "fff"}
-                  >
-                    Reports
-                  </Text>
-                </VStack>
-              </Button>
-            </Tooltip>
-            {chatFeedBar ? (
-              <Tooltip label=" View Conversation" placement="left">
+              <Tooltip label="View slides" placement="left">
+                <Button
+                  height="73px"
+                  w="73px"
+                  borderRadius={0}
+                  background="rgba(255, 255, 255, 0.5)"
+                  box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
+                  onClick={() => {
+                    setSelectedOption("slides");
+                    setIsOpen(true);
+                  }}
+                  _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
+                >
+                  <VStack>
+                    {selectedOption === "slides" ? (
+                      <SlidesIconSelected />
+                    ) : (
+                      <SlidesIcon />
+                    )}
+                    <Text
+                      fontFamily="Inter"
+                      fontStyle="normal"
+                      fontWeight="400"
+                      fontSize="10px"
+                      lineHeight="12px"
+                      letterSpacing="0.0025em"
+                      color={selectedOption === "slides" ? "#3B5D7C" : "fff"}
+                    >
+                      Slides
+                    </Text>
+                  </VStack>
+                </Button>
+              </Tooltip>
+              <Tooltip label="View timeline" placement="left">
+                <Button
+                  height="73px"
+                  w="73px"
+                  borderRadius={0}
+                  background="rgba(255, 255, 255, 0.5)"
+                  box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
+                  _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
+                  onClick={() => {
+                    setSelectedOption("timeline");
+                    setIsOpen(true);
+                  }}
+                >
+                  <VStack>
+                    {selectedOption === "timeline" ? (
+                      <TimelineIconSelected />
+                    ) : (
+                      <TimelineIcon />
+                    )}
+                    <Text
+                      fontFamily="Inter"
+                      fontStyle="normal"
+                      fontWeight="400"
+                      fontSize="10px"
+                      lineHeight="12px"
+                      letterSpacing="0.0025em"
+                      color={selectedOption === "timeline" ? "#3B5D7C" : "fff"}
+                    >
+                      Timeline
+                    </Text>
+                  </VStack>
+                </Button>
+              </Tooltip>
+              <Tooltip label="View annotations" placement="left">
+                <Button
+                  height="73px"
+                  w="73px"
+                  borderRadius={0}
+                  background="rgba(255, 255, 255, 0.5)"
+                  box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
+                  _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
+                  onClick={() => {
+                    setSelectedOption("annotations");
+                    setIsOpen(true);
+                  }}
+                >
+                  <VStack>
+                    {selectedOption === "annotations" ? (
+                      <AnnotationsSelected />
+                    ) : (
+                      <Annotations />
+                    )}
+                    <Text
+                      fontFamily="Inter"
+                      fontStyle="normal"
+                      fontWeight="400"
+                      fontSize="10px"
+                      lineHeight="12px"
+                      letterSpacing="0.0025em"
+                      color={
+                        selectedOption === "annotations" ? "#3B5D7C" : "fff"
+                      }
+                    >
+                      Annotations
+                    </Text>
+                  </VStack>
+                </Button>
+              </Tooltip>
+              <Tooltip label="View comments" placement="left">
+                <Button
+                  height="73px"
+                  w="73px"
+                  background="rgba(255, 255, 255, 0.5)"
+                  borderRadius={0}
+                  _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
+                  box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
+                  onClick={() => {
+                    setSelectedOption("comments");
+                    setIsOpen(true);
+                  }}
+                >
+                  <VStack>
+                    {selectedOption === "comments" ? (
+                      <CommentsSelected />
+                    ) : (
+                      <Comments />
+                    )}
+                    <Text
+                      fontFamily="Inter"
+                      fontStyle="normal"
+                      fontWeight="400"
+                      fontSize="10px"
+                      lineHeight="12px"
+                      letterSpacing="0.0025em"
+                      color={selectedOption === "comments" ? "#3B5D7C" : "fff"}
+                    >
+                      Comments
+                    </Text>
+                  </VStack>
+                </Button>
+              </Tooltip>
+              <Tooltip label="View slide info" placement="left">
                 <Button
                   height="73px"
                   w="73px"
@@ -684,15 +635,50 @@ function FunctionsMenu({
                   box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
                   _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
                   onClick={() => {
-                    setSelectedOption("messages");
+                    setSelectedOption("information");
                     setIsOpen(true);
                   }}
                 >
                   <VStack>
-                    {selectedOption === "messages" ? (
-                      <MessagesIconSelected />
+                    {selectedOption === "information" ? (
+                      <InformationSelected />
                     ) : (
-                      <MessagesIcon />
+                      <Information />
+                    )}
+                    <Text
+                      fontFamily="Inter"
+                      fontStyle="normal"
+                      fontWeight="400"
+                      fontSize="10px"
+                      lineHeight="12px"
+                      letterSpacing="0.0025em"
+                      color={
+                        selectedOption === "information" ? "#3B5D7C" : "fff"
+                      }
+                    >
+                      Information
+                    </Text>
+                  </VStack>
+                </Button>
+              </Tooltip>
+              <Tooltip label="Report slide" placement="left">
+                <Button
+                  height="73px"
+                  w="73px"
+                  background="rgba(255, 255, 255, 0.5)"
+                  borderRadius={0}
+                  box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
+                  _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
+                  onClick={() => {
+                    setSelectedOption("report");
+                    setIsOpen(true);
+                  }}
+                >
+                  <VStack>
+                    {selectedOption === "report" ? (
+                      <ReportSelected />
+                    ) : (
+                      <ReportIcon />
                     )}
                     <Text
                       fontFamily="Inter"
@@ -703,14 +689,142 @@ function FunctionsMenu({
                       letterSpacing="0.0025em"
                       color={selectedOption === "report" ? "#3B5D7C" : "fff"}
                     >
-                      Messages
+                      Reports
                     </Text>
                   </VStack>
                 </Button>
               </Tooltip>
-            ) : null}
-            {toolSelected === "Filter" ? (
-              <Tooltip label=" Adjustments" placement="left">
+              {chatFeedBar ? (
+                <Tooltip label=" View Conversation" placement="left">
+                  <Button
+                    height="73px"
+                    w="73px"
+                    background="rgba(255, 255, 255, 0.5)"
+                    borderRadius={0}
+                    box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
+                    _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
+                    onClick={() => {
+                      setSelectedOption("messages");
+                      setIsOpen(true);
+                    }}
+                  >
+                    <VStack>
+                      {selectedOption === "messages" ? (
+                        <MessagesIconSelected />
+                      ) : (
+                        <MessagesIcon />
+                      )}
+                      <Text
+                        fontFamily="Inter"
+                        fontStyle="normal"
+                        fontWeight="400"
+                        fontSize="10px"
+                        lineHeight="12px"
+                        letterSpacing="0.0025em"
+                        color={selectedOption === "report" ? "#3B5D7C" : "fff"}
+                      >
+                        Messages
+                      </Text>
+                    </VStack>
+                  </Button>
+                </Tooltip>
+              ) : null}
+              {toolSelected === "Filter" ? (
+                <Tooltip label=" Adjustments" placement="left">
+                  <Button
+                    height="73px"
+                    w="73px"
+                    background="rgba(255, 255, 255, 0.5)"
+                    borderRadius={0}
+                    box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
+                    _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
+                    onClick={() => {
+                      setSelectedOption("adjustments");
+                      setIsOpen(true);
+                    }}
+                  >
+                    <VStack>
+                      {selectedOption === "adjustments" ? (
+                        //  <adjustmentIconSelected />
+                        // <MessagesIconSelected />
+                        // <HiOutlineAdjustmentsHorizontal />
+                        <BsSliders size="28px" color="#3B5D7C" />
+                      ) : (
+                        // <adjustmentIconSelected />
+                        <BsSliders size="28px" color="black" />
+                      )}
+                      <Text
+                        fontFamily="Inter"
+                        fontStyle="normal"
+                        fontWeight="400"
+                        fontSize="10px"
+                        lineHeight="12px"
+                        letterSpacing="0.0025em"
+                        color={selectedOption === "report" ? "#3B5D7C" : "fff"}
+                      >
+                        Adjustments
+                      </Text>
+                    </VStack>
+                  </Button>
+                </Tooltip>
+              ) : null}
+              {showRightPanel ? (
+                <Tooltip label=" Mode" placement="left">
+                  <Button
+                    height="73px"
+                    w="73px"
+                    background="rgba(255, 255, 255, 0.5)"
+                    borderRadius={0}
+                    box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
+                    _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
+                    onClick={() => {
+                      setSelectedOption("mode");
+                      setIsOpen(true);
+                    }}
+                  >
+                    <VStack>
+                      {selectedOption === "mode" ? (
+                        //  <adjustmentIconSelected />
+                        // <MessagesIconSelected />
+                        // <HiOutlineAdjustmentsHorizontal />
+                        <ModeIconSelected transform="scale(1.5)" color="red" />
+                      ) : (
+                        // <adjustmentIconSelected />
+                        <ModeIcon transform="scale(1.5)" color="#3B5D7C" />
+                      )}
+                      <Text
+                        fontFamily="Inter"
+                        fontStyle="normal"
+                        fontWeight="400"
+                        fontSize="10px"
+                        lineHeight="12px"
+                        letterSpacing="0.0025em"
+                        color={selectedOption === "mode" ? "#3B5D7C" : "fff"}
+                      >
+                        Modes
+                      </Text>
+                    </VStack>
+                  </Button>
+                </Tooltip>
+              ) : null}
+            </Flex>
+          ) : (
+            <Flex direction="column" h="fit-content">
+              <Button
+                onClick={() => setIsOpen(!isOpen)}
+                w="70px"
+                borderRadius={0}
+                background="#FFFFFF"
+                box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
+                _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
+              >
+                {isOpen ? (
+                  <HiOutlineChevronDoubleRight size="20px" />
+                ) : (
+                  <HiOutlineChevronDoubleLeft size="20px" />
+                )}
+              </Button>
+              <Tooltip label="Report slide" placement="left">
                 <Button
                   height="73px"
                   w="73px"
@@ -719,19 +833,15 @@ function FunctionsMenu({
                   box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
                   _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
                   onClick={() => {
-                    setSelectedOption("adjustments");
+                    setSelectedOption("report");
                     setIsOpen(true);
                   }}
                 >
                   <VStack>
-                    {selectedOption === "adjustments" ? (
-                      //  <adjustmentIconSelected />
-                      // <MessagesIconSelected />
-                      // <HiOutlineAdjustmentsHorizontal />
-                      <BsSliders size="28px" color="#3B5D7C" />
+                    {selectedOption === "report" ? (
+                      <ReportSelected />
                     ) : (
-                      // <adjustmentIconSelected />
-                      <BsSliders size="28px" color="black" />
+                      <ReportIcon />
                     )}
                     <Text
                       fontFamily="Inter"
@@ -742,35 +852,29 @@ function FunctionsMenu({
                       letterSpacing="0.0025em"
                       color={selectedOption === "report" ? "#3B5D7C" : "fff"}
                     >
-                      Adjustments
+                      {app !== "clinical" ? "Reports" : "Questions"}
                     </Text>
                   </VStack>
                 </Button>
               </Tooltip>
-            ) : null}
-            {showRightPanel ? (
-              <Tooltip label=" Mode" placement="left">
+              <Tooltip label="View slides" placement="left">
                 <Button
                   height="73px"
                   w="73px"
-                  background="rgba(255, 255, 255, 0.5)"
                   borderRadius={0}
+                  background="rgba(255, 255, 255, 0.5)"
                   box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
-                  _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
                   onClick={() => {
-                    setSelectedOption("mode");
+                    setSelectedOption("slides");
                     setIsOpen(true);
                   }}
+                  _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
                 >
                   <VStack>
-                    {selectedOption === "mode" ? (
-                      //  <adjustmentIconSelected />
-                      // <MessagesIconSelected />
-                      // <HiOutlineAdjustmentsHorizontal />
-                      <ModeIconSelected transform="scale(1.5)" color="red" />
+                    {selectedOption === "slides" ? (
+                      <SlidesIconSelected />
                     ) : (
-                      // <adjustmentIconSelected />
-                      <ModeIcon transform="scale(1.5)" color="#3B5D7C" />
+                      <SlidesIcon />
                     )}
                     <Text
                       fontFamily="Inter"
@@ -779,15 +883,265 @@ function FunctionsMenu({
                       fontSize="10px"
                       lineHeight="12px"
                       letterSpacing="0.0025em"
-                      color={selectedOption === "mode" ? "#3B5D7C" : "fff"}
+                      color={selectedOption === "slides" ? "#3B5D7C" : "fff"}
                     >
-                      Modes
+                      Slides
                     </Text>
                   </VStack>
                 </Button>
               </Tooltip>
-            ) : null}
-          </Flex>
+              <Tooltip label="View timeline" placement="left">
+                <Button
+                  height="73px"
+                  w="73px"
+                  borderRadius={0}
+                  background="rgba(255, 255, 255, 0.5)"
+                  box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
+                  _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
+                  onClick={() => {
+                    setSelectedOption("timeline");
+                    setIsOpen(true);
+                  }}
+                >
+                  <VStack>
+                    {selectedOption === "timeline" ? (
+                      <TimelineIconSelected />
+                    ) : (
+                      <TimelineIcon />
+                    )}
+                    <Text
+                      fontFamily="Inter"
+                      fontStyle="normal"
+                      fontWeight="400"
+                      fontSize="10px"
+                      lineHeight="12px"
+                      letterSpacing="0.0025em"
+                      color={selectedOption === "timeline" ? "#3B5D7C" : "fff"}
+                    >
+                      Timeline
+                    </Text>
+                  </VStack>
+                </Button>
+              </Tooltip>
+              <Tooltip label="View annotations" placement="left">
+                <Button
+                  height="73px"
+                  w="73px"
+                  borderRadius={0}
+                  background="rgba(255, 255, 255, 0.5)"
+                  box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
+                  _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
+                  onClick={() => {
+                    setSelectedOption("annotations");
+                    setIsOpen(true);
+                  }}
+                >
+                  <VStack>
+                    {selectedOption === "annotations" ? (
+                      <AnnotationsSelected />
+                    ) : (
+                      <Annotations />
+                    )}
+                    <Text
+                      fontFamily="Inter"
+                      fontStyle="normal"
+                      fontWeight="400"
+                      fontSize="10px"
+                      lineHeight="12px"
+                      letterSpacing="0.0025em"
+                      color={
+                        selectedOption === "annotations" ? "#3B5D7C" : "fff"
+                      }
+                    >
+                      Annotations
+                    </Text>
+                  </VStack>
+                </Button>
+              </Tooltip>
+              <Tooltip label="View comments" placement="left">
+                <Button
+                  height="73px"
+                  w="73px"
+                  background="rgba(255, 255, 255, 0.5)"
+                  borderRadius={0}
+                  _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
+                  box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
+                  onClick={() => {
+                    setSelectedOption("comments");
+                    setIsOpen(true);
+                  }}
+                >
+                  <VStack>
+                    {selectedOption === "comments" ? (
+                      <CommentsSelected />
+                    ) : (
+                      <Comments />
+                    )}
+                    <Text
+                      fontFamily="Inter"
+                      fontStyle="normal"
+                      fontWeight="400"
+                      fontSize="10px"
+                      lineHeight="12px"
+                      letterSpacing="0.0025em"
+                      color={selectedOption === "comments" ? "#3B5D7C" : "fff"}
+                    >
+                      Comments
+                    </Text>
+                  </VStack>
+                </Button>
+              </Tooltip>
+              <Tooltip label="View slide info" placement="left">
+                <Button
+                  height="73px"
+                  w="73px"
+                  background="rgba(255, 255, 255, 0.5)"
+                  borderRadius={0}
+                  box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
+                  _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
+                  onClick={() => {
+                    setSelectedOption("information");
+                    setIsOpen(true);
+                  }}
+                >
+                  <VStack>
+                    {selectedOption === "information" ? (
+                      <InformationSelected />
+                    ) : (
+                      <Information />
+                    )}
+                    <Text
+                      fontFamily="Inter"
+                      fontStyle="normal"
+                      fontWeight="400"
+                      fontSize="10px"
+                      lineHeight="12px"
+                      letterSpacing="0.0025em"
+                      color={
+                        selectedOption === "information" ? "#3B5D7C" : "fff"
+                      }
+                    >
+                      Information
+                    </Text>
+                  </VStack>
+                </Button>
+              </Tooltip>
+
+              {chatFeedBar ? (
+                <Tooltip label=" View Conversation" placement="left">
+                  <Button
+                    height="73px"
+                    w="73px"
+                    background="rgba(255, 255, 255, 0.5)"
+                    borderRadius={0}
+                    box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
+                    _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
+                    onClick={() => {
+                      setSelectedOption("messages");
+                      setIsOpen(true);
+                    }}
+                  >
+                    <VStack>
+                      {selectedOption === "messages" ? (
+                        <MessagesIconSelected />
+                      ) : (
+                        <MessagesIcon />
+                      )}
+                      <Text
+                        fontFamily="Inter"
+                        fontStyle="normal"
+                        fontWeight="400"
+                        fontSize="10px"
+                        lineHeight="12px"
+                        letterSpacing="0.0025em"
+                        color={selectedOption === "report" ? "#3B5D7C" : "fff"}
+                      >
+                        Messages
+                      </Text>
+                    </VStack>
+                  </Button>
+                </Tooltip>
+              ) : null}
+              {toolSelected === "Filter" ? (
+                <Tooltip label=" Adjustments" placement="left">
+                  <Button
+                    height="73px"
+                    w="73px"
+                    background="rgba(255, 255, 255, 0.5)"
+                    borderRadius={0}
+                    box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
+                    _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
+                    onClick={() => {
+                      setSelectedOption("adjustments");
+                      setIsOpen(true);
+                    }}
+                  >
+                    <VStack>
+                      {selectedOption === "adjustments" ? (
+                        //  <adjustmentIconSelected />
+                        // <MessagesIconSelected />
+                        // <HiOutlineAdjustmentsHorizontal />
+                        <BsSliders size="28px" color="#3B5D7C" />
+                      ) : (
+                        // <adjustmentIconSelected />
+                        <BsSliders size="28px" color="black" />
+                      )}
+                      <Text
+                        fontFamily="Inter"
+                        fontStyle="normal"
+                        fontWeight="400"
+                        fontSize="10px"
+                        lineHeight="12px"
+                        letterSpacing="0.0025em"
+                        color={selectedOption === "report" ? "#3B5D7C" : "fff"}
+                      >
+                        Adjustments
+                      </Text>
+                    </VStack>
+                  </Button>
+                </Tooltip>
+              ) : null}
+              {showRightPanel ? (
+                <Tooltip label=" Mode" placement="left">
+                  <Button
+                    height="73px"
+                    w="73px"
+                    background="rgba(255, 255, 255, 0.5)"
+                    borderRadius={0}
+                    box-shadow="0px 4px 7px rgba(0, 0, 0, 0.05)"
+                    _hover={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
+                    onClick={() => {
+                      setSelectedOption("mode");
+                      setIsOpen(true);
+                    }}
+                  >
+                    <VStack>
+                      {selectedOption === "mode" ? (
+                        //  <adjustmentIconSelected />
+                        // <MessagesIconSelected />
+                        // <HiOutlineAdjustmentsHorizontal />
+                        <ModeIconSelected transform="scale(1.5)" color="red" />
+                      ) : (
+                        // <adjustmentIconSelected />
+                        <ModeIcon transform="scale(1.5)" color="#3B5D7C" />
+                      )}
+                      <Text
+                        fontFamily="Inter"
+                        fontStyle="normal"
+                        fontWeight="400"
+                        fontSize="10px"
+                        lineHeight="12px"
+                        letterSpacing="0.0025em"
+                        color={selectedOption === "mode" ? "#3B5D7C" : "fff"}
+                      >
+                        Modes
+                      </Text>
+                    </VStack>
+                  </Button>
+                </Tooltip>
+              ) : null}
+            </Flex>
+          )}
           <Flex
             w="100%"
             position="relative"
@@ -873,11 +1227,18 @@ function FunctionsMenu({
                   w="100%"
                   direction="row"
                   alignItems="center"
-                  justifyContent="space-evenly"
+                  justifyContent={
+                    app === "clinical" ? "center" : "space-evenly"
+                  }
                   // p="5px 5px 0px 20px"
+                  // borderBottom="1px solid #DEDEDE"
                 >
-                  <Text fontFamily="Inter" color="#3B5D7C" mr="60%">
-                            { app === "clinical" ? "Questionnaire" : "Report"}
+                  <Text
+                    fontFamily="Inter"
+                    color="#3B5D7C"
+                    mr={app === "clinical" ? "0px" : "60%"}
+                  >
+                    {app === "clinical" ? "Questionnaire" : "Report"}
                   </Text>
 
                   <ShowReport
@@ -912,7 +1273,14 @@ function FunctionsMenu({
                     setSlideData={setSlideData}
                     questionIndex={questionIndex}
                     setIsOpen={setIsOpen}
+                    viewerWindow={viewerWindow}
                     sendReportDataToHospital={sendReportDataToHospital}
+                    setChangeSlide={setChangeSlide}
+                    setLoadUI={setLoadUI}
+                    setToolSelected={setToolSelected}
+                    setSelectedOption={setSelectedOption}
+                    slide={slide}
+                    All_Reader_Responses={All_Reader_Responses}
                   />
                   {showReport || synopticType ? (
                     <GrFormClose

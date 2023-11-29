@@ -70,8 +70,8 @@ function CheckboxType({ question, response, setQnaResponse, application }) {
 	ml="10px"
 	onChange={handleChange}
 >
-	<Stack spacing={4} wrap="wrap" fontSize="12px" fontFamily="inter">
-		{question?.choices?.map((choice, index) => (
+	<Stack spacing={4} wrap="wrap" fontSize="12px" ml="40px" fontFamily="inter">
+	{question?.choices?.map((choice, index) => (
 			<Checkbox
 				borderColor="#000"
 				key={`${index + 1}`}

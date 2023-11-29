@@ -13,6 +13,7 @@ import { AiOutlineClose } from "react-icons/ai";
 
 import { useFabricOverlayState } from "../../state/store";
 import CLSReport from "./CLSReport";
+import { changeTile } from "../../state/actions/fabricOverlayActions";
 
 function CLSReportHelper({
   restProps,
@@ -27,10 +28,13 @@ function CLSReportHelper({
   questionnaireResponse,
   questionIndex,
   application,
+  setChangeSlide,
+  setLoadUI,
+  setToolSelected,
+  slideInfo,
+  setSelectedOption,
+  All_Reader_Responses,
 }) {
-  const { fabricOverlayState } = useFabricOverlayState();
-  const { viewerWindow } = fabricOverlayState;
-  const { slideId } = viewerWindow[viewerId];
   const [showCLSreport, setShowCLSReport] = useState(false);
   const [questionsResponse, setQuestionsResponse] = useState();
   const [errorMessage, setErrorMessage] = useState();
@@ -42,7 +46,10 @@ function CLSReportHelper({
     qna: {},
   });
 
-  // console.log("slideQNA", slideQna)
+  const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
+  const { viewerWindow, isAnnotationLoading } = fabricOverlayState;
+  const { viewer, fabricOverlay, slideId, slideName } = viewerWindow[viewerId];
+
   // get questions and response
   const lessonId = caseInfo?.id || caseInfo.caseId;
   const key = application === "education" ? "lessonId" : "case_id"; // key as payload
@@ -52,10 +59,17 @@ function CLSReportHelper({
       [key]: value,
       slide_id: slideId,
     });
-    // console.log(response);
+    // console.log("FetchResponse", response);
     setQuestionsResponse(response?.data?.data);
     setErrorMessage(response?.error?.response?.data?.message);
   }
+
+  // useEffect(() => {
+  //
+  // }, [questionsResponse]);
+
+  // console.log({ slideInfo });
+
   useEffect(() => {
     setIsUpdating(true);
     if (app === "education") setSlideId(slideId);
@@ -68,6 +82,10 @@ function CLSReportHelper({
       setShowCLSReport(true);
     }
   }, [app]);
+
+  useEffect(() => {
+    fetchResponse();
+  }, [slideId]);
 
   const handleCLSReport = () => {
     setShowCLSReport(!showCLSreport);
@@ -82,10 +100,20 @@ function CLSReportHelper({
         [key]: value,
         response,
         slide_id: slideId,
+        slide_type: slideInfo?.slideType || "",
       });
       fetchResponse();
-      if (app === "clinical") {
+      if (app === "clinical" && caseInfo?.slides?.length >= 1) {
         setIsOpen(false);
+        setLoadUI(false);
+        setToolSelected("Report_Submitting");
+        setSelectedOption("slides");
+        setTimeout(() => {
+          setIsOpen(true);
+          setToolSelected("Report_Submitting");
+          setSelectedOption("report");
+          setLoadUI(true);
+        }, 1000);
       }
       setShowCLSReport(false);
       setLoading(false);
@@ -105,96 +133,100 @@ function CLSReportHelper({
       setShowCLSReport(true);
     }
   }, [questionIndex]);
+
+  // console.log({ slideInfo });
   return (
     <Flex direction="column">
-      {!showCLSreport ? (
-        <Tooltip
-          label="Report"
-          placement="bottom"
-          openDelay={0}
-          bg="#E4E5E8"
-          color="rgba(89, 89, 89, 1)"
-          fontSize="14px"
-          fontFamily="inter"
-          hasArrow
-          borderRadius="0px"
-          size="20px"
-        >
-          <Button
-            variant="solid"
-            h="32px"
-            ml="15px"
-            borderRadius="0px"
-            backgroundColor="#00153F"
-            _hover={{}}
-            _focus={{
-              border: "none",
-            }}
-            color="#fff"
-            fontFamily="inter"
+      {app !== "clinical" ? (
+        !showCLSreport && app ? (
+          <Tooltip
+            label="Report"
+            placement="bottom"
+            openDelay={0}
+            bg="#E4E5E8"
+            color="rgba(89, 89, 89, 1)"
             fontSize="14px"
-            fontWeight="500"
-            {...restProps}
-            onClick={handleCLSReport}
-          >
-            Report
-          </Button>
-        </Tooltip>
-      ) : !questionsResponse &&
-        userInfo?.userType !== "professor" &&
-        errorMessage !== "Result  is not publish yet" ? (
-        <Tooltip
-          label="Submit-Report"
-          placement="bottom"
-          openDelay={0}
-          bg="#E4E5E8"
-          color="rgba(89, 89, 89, 1)"
-          fontSize="14px"
-          fontFamily="inter"
-          hasArrow
-          borderRadius="0px"
-          size="20px"
-        >
-          <Button
-            variant="solid"
-            h="32px"
-            ml="15px"
-            borderRadius="0px"
-            backgroundColor="#00153F"
-            _hover={{}}
-            _focus={{
-              border: "none",
-            }}
-            color="#fff"
             fontFamily="inter"
-            fontSize="14px"
-            fontWeight="500"
-            {...restProps}
-            onClick={submitQnaReport}
-            disabled={
-              (application === "education"
-                ? questions &&
-                  questions[0]?.LessonQuestions?.length !== response?.length
-                : questions && !response?.length) ||
-              (application === "clinical" && userInfo.role === "PI")
-            }
+            hasArrow
+            borderRadius="0px"
+            size="20px"
           >
-            {app === "clinical" ? "Submit" : "Submit Report"}
-          </Button>
-        </Tooltip>
-      ) : showCLSreport ? (
-        <Flex w="100%" justifyContent="flex-end">
-          <IconButton
-            icon={<AiOutlineClose />}
-            onClick={handleCLSReport}
-            borderRadius="0"
-            background="#fcfcfc"
-            size="sm"
-            _focus={{}}
-          />
-        </Flex>
+            <Button
+              variant="solid"
+              h="32px"
+              ml="15px"
+              borderRadius="0px"
+              backgroundColor="#00153F"
+              _hover={{}}
+              _focus={{
+                border: "none",
+              }}
+              color="#fff"
+              fontFamily="inter"
+              fontSize="14px"
+              fontWeight="500"
+              {...restProps}
+              onClick={handleCLSReport}
+            >
+              Report
+            </Button>
+          </Tooltip>
+        ) : !questionsResponse &&
+          userInfo?.userType !== "professor" &&
+          errorMessage !== "Result  is not publish yet" ? (
+          <Tooltip
+            label="Submit-Report"
+            placement="bottom"
+            openDelay={0}
+            bg="#E4E5E8"
+            color="rgba(89, 89, 89, 1)"
+            fontSize="14px"
+            fontFamily="inter"
+            hasArrow
+            borderRadius="0px"
+            size="20px"
+          >
+            <Button
+              variant="solid"
+              h="32px"
+              ml="15px"
+              borderRadius="0px"
+              backgroundColor="#00153F"
+              _hover={{}}
+              _focus={{
+                border: "none",
+              }}
+              color="#fff"
+              fontFamily="inter"
+              fontSize="14px"
+              fontWeight="500"
+              {...restProps}
+              onClick={submitQnaReport}
+              disabled={
+                (application === "education"
+                  ? questions &&
+                    questions[0]?.LessonQuestions?.length !== response?.length
+                  : questions && !response?.length) ||
+                (application === "clinical" && userInfo.role === "PI")
+              }
+            >
+              Report
+            </Button>
+          </Tooltip>
+        ) : showCLSreport ? (
+          <Flex w="100%" justifyContent="flex-end">
+            <IconButton
+              icon={<AiOutlineClose />}
+              onClick={handleCLSReport}
+              borderRadius="0"
+              background="#fcfcfc"
+              size="sm"
+              _focus={{}}
+            />
+          </Flex>
+        ) : null
       ) : null}
-      <Flex>
+      <Flex w="100%">
         {showCLSreport && errorMessage !== "Result  is not publish yet" && (
           <CLSReport
             isUpdating={isUpdating}
@@ -209,8 +241,14 @@ function CLSReportHelper({
             slideId={slideId}
             loading={loading}
             errorMessage={errorMessage}
+            viewerId={viewerId}
             application={application}
             questionIndex={questionIndex}
+            setChangeSlide={setChangeSlide}
+            submitQnaReport={submitQnaReport}
+            slideInfo={slideInfo}
+            slideName={slideName !== "" ? slideName : slideInfo.accessionId}
+            All_Reader_Responses={All_Reader_Responses}
           />
         )}
       </Flex>

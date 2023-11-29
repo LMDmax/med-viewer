@@ -29,6 +29,7 @@ function Circle({
   setToolSelected,
   setNewToolSettings,
   newToolSettings,
+  addLocalRegion,
 }) {
   const toast = useToast();
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
@@ -293,6 +294,7 @@ function Circle({
         viewer,
         type: "ellipse",
         isClosed: true,
+        addLocalRegion: addLocalRegion ? true : false,
       });
 
       saveAnnotationToDB({

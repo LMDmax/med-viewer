@@ -45,6 +45,7 @@ const Draw = ({
   onSaveAnnotation,
   setToolSelected,
   newToolSettings,
+  addLocalRegion,
 }) => {
   const toast = useToast();
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
@@ -133,7 +134,7 @@ const Draw = ({
 
   // group drawing (path) and textbox together
   // first remove both from canvas then group them and then add group to canvas
-  
+
   useEffect(() => {
     if (!path) return;
     const canvas = fabricOverlay.fabricCanvas();
@@ -168,6 +169,7 @@ const Draw = ({
           viewer,
           type: "path",
           isClosed: path.isClosed,
+          addLocalRegion: addLocalRegion ? true : false,
         });
 
         // console.log(message.object);

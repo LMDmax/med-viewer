@@ -192,8 +192,8 @@ const ImageFilter = ({
   useEffect(() => {
     if (navigatorCounter > 0) {
       setIsActive(false);
-      viewer.setFilterOptions(null);
-      viewer.viewport.zoomBy(1.01);
+      viewer?.setFilterOptions(null);
+      viewer?.viewport.zoomBy(1.01);
       localStorage.removeItem("mode");
     }
   }, [navigatorCounter]);

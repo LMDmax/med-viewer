@@ -2,9 +2,19 @@ import React from "react";
 import _ from "lodash";
 import { Box, Text, Flex } from "@chakra-ui/react";
 
-function RadioType({ question, response, handleChange, application }) {
-  // console.log(question?.Question?.choices)
-  // console.log(application)
+function RadioType({
+  question,
+  response,
+  handleChange,
+  application,
+  selectedAnswers,
+}) {
+
+
+  const answersChoosed = selectedAnswers?.qnaArray.find(
+    (answer) => answer?.questionId === question?.question_id
+  );
+
   return (
     <Box w="100%">
       {application === "education"
@@ -52,10 +62,11 @@ function RadioType({ question, response, handleChange, application }) {
                   name={question?.question_id}
                   value={choice}
                   checked={
-                    !_.isEmpty(response)
+                    answersChoosed?.choice[0] === choice ||
+                    (!_.isEmpty(response)
                       ? response[question?.question_id]?.choiceId === choice
                       : question?.Question?.correctAnswer &&
-                        question?.Question?.correctAnswer[0] === choice
+                        question?.Question?.correctAnswer[0] === choice)
                   }
                   onChange={(e) => {
                     handleChange({

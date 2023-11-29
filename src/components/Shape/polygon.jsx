@@ -22,6 +22,7 @@ const Polygon = ({
   setToolSelected,
   setNewToolSettings,
   newToolSettings,
+  addLocalRegion,
 }) => {
   const toast = useToast();
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
@@ -273,6 +274,7 @@ const Polygon = ({
         viewer,
         type: "polygon",
         isClosed: true,
+        addLocalRegion: addLocalRegion ? true : false,
       });
 
       saveAnnotationToDB({
