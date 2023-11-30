@@ -21,6 +21,7 @@ function QuestionType({
     question?.Question?.questionType === "multiple-choice" ||
     question?.question_type === "Multiple Choice"
   )
+
     return (
       <RadioType
         question={question}
@@ -33,7 +34,8 @@ function QuestionType({
     );
   if (
     question?.Question?.questionType === "one-word" ||
-    question?.Question?.questionType === "text"
+    question?.Question?.questionType === "text" ||
+    question?.question_type === "text"
   )
     return (
       <TextType

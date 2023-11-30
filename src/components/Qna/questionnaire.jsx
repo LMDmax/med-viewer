@@ -14,6 +14,7 @@ import {
   ModalHeader,
   ModalBody,
   ModalCloseButton,
+  background,
 } from "@chakra-ui/react";
 import _ from "lodash";
 
@@ -48,8 +49,6 @@ function Questionnaire({
   const { viewerWindow, isAnnotationLoading } = fabricOverlayState;
   // const { viewer, fabricOverlay, slideType } = viewerWindow[viewerId];
   // const { viewer, fabricOverlay, slideId } = viewerWindow[viewerId];
-
-  // console.log({ All_Reader_Responses });
   const handlePreviewModalClose = () => {
     setPreviewModalOpen(false);
   };
@@ -63,7 +62,7 @@ function Questionnaire({
       return { qna: newQna };
     });
   };
-  // console.log({ userInfo });
+  console.log({ selectedAnswers });
 
   const changeSlide = () => {
     if (application === "clinical" && caseInfo?.slides?.length > 1) {
@@ -138,7 +137,9 @@ function Questionnaire({
     }
   }, [questionIndex]);
   const responsesToSubmit = Object.values(slideQna?.qna);
-  // console.log({ slideName });
+  console.log({ slideName });
+  console.log({ slideInfo });
+  console.log({ questions });
   return (
     <VStack
       spacing={6}
@@ -306,7 +307,9 @@ function Questionnaire({
                         {response.slideResponses.map(
                           (slideResponse, slideIndex) => (
                             <Box key={slideIndex} mt="20px">
-                              <p style={{marginBottom:"10px"}}>Q: {slideResponse?.question_text}</p>
+                              <p style={{ marginBottom: "10px" }}>
+                                Q: {slideResponse?.question_text}
+                              </p>
                               <p>
                                 A:{" "}
                                 {slideResponse?.response?.replace(/["{}]/g, "")}
@@ -318,7 +321,10 @@ function Questionnaire({
                     );
                   }
                 })}
-                <img style={{marginTop:"30px"}} src={elem.signature_file}></img>
+                <img
+                  style={{ marginTop: "30px" }}
+                  src={elem.signature_file}
+                ></img>
               </Box>
             );
           })}
@@ -545,6 +551,17 @@ function Questionnaire({
                               </label>
                             </div>
                           ))}
+                        </Box>
+                      )}
+                      {question.question_type === "text" && (
+                        <Box ml="30px">
+                          <input
+                            type="text"
+                            id={index}
+                            value={selectedAnswer?.choice}
+                            style={{ marginRight: "5px" }}
+                            disabled={true}
+                          />
                         </Box>
                       )}
                     </React.Fragment>
