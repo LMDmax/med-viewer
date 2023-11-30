@@ -709,7 +709,7 @@ const Til = ({
       canvas.renderAll();
     }
   };
-  console.log(TILPlotted);
+  // console.log(TILPlotted);
 
   //   if (TILPlotted) {
   //     var noOfTimesSwitchedLayer = 0;

@@ -7,13 +7,13 @@ function RadioType({
   response,
   handleChange,
   application,
+  slideQna,
   selectedAnswers,
 }) {
-
-
   const answersChoosed = selectedAnswers?.qnaArray.find(
     (answer) => answer?.questionId === question?.question_id
   );
+  // console.log({ slideQna });
 
   return (
     <Box w="100%">
@@ -61,13 +61,6 @@ function RadioType({
                   type="radio"
                   name={question?.question_id}
                   value={choice}
-                  checked={
-                    answersChoosed?.choice[0] === choice ||
-                    (!_.isEmpty(response)
-                      ? response[question?.question_id]?.choiceId === choice
-                      : question?.Question?.correctAnswer &&
-                        question?.Question?.correctAnswer[0] === choice)
-                  }
                   onChange={(e) => {
                     handleChange({
                       questionId: question?.question_id,

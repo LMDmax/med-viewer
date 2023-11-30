@@ -40,11 +40,12 @@ function Questionnaire({
   slideId,
   slideName,
   caseInfo,
+  slides,
   All_Reader_Responses,
   ...restProps
 }) {
   const [isPreviewModalOpen, setPreviewModalOpen] = useState(false);
-  const [selectedAnswers, setSelectedAnswers] = useState();
+  const [selectedAnswers, setSelectedAnswers] = useState([]);
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { viewerWindow, isAnnotationLoading } = fabricOverlayState;
   // const { viewer, fabricOverlay, slideType } = viewerWindow[viewerId];
@@ -53,16 +54,63 @@ function Questionnaire({
     setPreviewModalOpen(false);
   };
   const scrollRef = useRef(questionIndex);
-  const setQnaResponse = ({ questionId = null, choice = null, choiceType }) => {
+  const setQnaResponse = ({
+    questionId = null,
+    choice = null,
+    questionText,
+  }) => {
+    const questionArray = questions?.data?.[slideInfo?.slideType];
+    // console.log({ questions });
+
     setSlideQna((state) => {
+      // console.log(question);
       const { qna } = state;
-      const newQna = { ...qna, [questionId]: { questionId, choice } };
+      const newQna = {
+        ...qna,
+        [questionId]: { questionId, choice, questionText },
+      };
+
+      setSlideQna((state) => {
+        const { qna } = state;
+        const newQna = {
+          ...qna,
+          [questionId]: { questionId, choice, questionText },
+        };
+
+        // Check if the specified questionId exists in questionArray[3]
+        const masterQuestionId = questionArray[2]?.question_id;
+
+        if (
+          masterQuestionId &&
+          newQna[masterQuestionId] &&
+          newQna[masterQuestionId].choice[0] === "No"
+        ) {
+          // If the choice is "No," delete all question IDs from newQna
+          questionArray[5].section_questions.forEach((sectionQuestion) => {
+            delete newQna[sectionQuestion.question_id];
+          });
+        }
+        if (
+          masterQuestionId &&
+          newQna[masterQuestionId] &&
+          newQna[masterQuestionId].choice[0] === "Yes"
+        ) {
+          // If the choice is "No," delete all question IDs from newQna
+          delete newQna[questionArray[3]?.question_id];
+          delete newQna[questionArray[4]?.question_id];
+        }
+
+        const qnaArray = Object.values(newQna);
+
+        setSelectedAnswers({ qnaArray: qnaArray });
+        return { qna: newQna };
+      });
       const qnaArray = Object.values(newQna);
-      setSelectedAnswers({ qnaArray });
+
+      setSelectedAnswers({ qnaArray: qnaArray });
       return { qna: newQna };
     });
   };
-  console.log({ selectedAnswers });
 
   const changeSlide = () => {
     if (application === "clinical" && caseInfo?.slides?.length > 1) {
@@ -137,9 +185,12 @@ function Questionnaire({
     }
   }, [questionIndex]);
   const responsesToSubmit = Object.values(slideQna?.qna);
-  console.log({ slideName });
-  console.log({ slideInfo });
-  console.log({ questions });
+  // console.log({ slideName });
+  // console.log({ slideInfo });
+  // console.log({ All_Reader_Responses });
+
+  const currentSlide = slides.find((slide) => slide?._id === slideId);
+  // console.log({ currentSlide });
   return (
     <VStack
       spacing={6}
@@ -288,7 +339,7 @@ function Questionnaire({
                   h="50px"
                 >
                   <Box w="50%" mr="20px" borderRight="1px solid #DEDEDE">
-                    <Text>Accession ID: {slideName}</Text>
+                    <Text>Accession ID: {currentSlide.accessionId}</Text>
                   </Box>
                   <Box>
                     <Text wordBreak="break-word" whiteSpace="break-spaces">
@@ -299,23 +350,76 @@ function Questionnaire({
                 </Flex>
 
                 {elem.reportsResponses.map((response, responseIndex) => {
-                  if (response.accession_id === slideName) {
+                  if (response.accession_id === currentSlide.accessionId) {
                     return (
                       <Box key={responseIndex} mb="20px">
                         {/* Render accession ID information */}
                         {/* Render questions and answers for the current accession ID */}
                         {response.slideResponses.map(
-                          (slideResponse, slideIndex) => (
-                            <Box key={slideIndex} mt="20px">
-                              <p style={{ marginBottom: "10px" }}>
-                                Q: {slideResponse?.question_text}
-                              </p>
-                              <p>
-                                A:{" "}
-                                {slideResponse?.response?.replace(/["{}]/g, "")}
-                              </p>
-                            </Box>
-                          )
+                          (slideResponse, slideIndex) => {
+                            if (slideIndex < 5) {
+                              // Check if slideIndex is between 0 and 4
+                              return (
+                                slideResponse.response !== null && (
+                                  <Box key={slideIndex} mt="20px">
+                                    <p style={{ marginBottom: "10px" }}>
+                                      Q: {slideResponse?.question_text}
+                                    </p>
+                                    <p>
+                                      A:{" "}
+                                      {slideResponse?.response?.replace(
+                                        /["{}]/g,
+                                        ""
+                                      )}
+                                    </p>
+                                  </Box>
+                                )
+                              );
+                            }
+
+                            if (slideIndex === 5) {
+                              // Check if slideIndex is 5
+                              return (
+                                <Box key={slideIndex} mt="20px">
+                                  {/* Render section heading */}
+                                  {/* Map and render section questions and answers */}
+                                  {slideResponse.section_questions.map(
+                                    (sectionQuestion, sectionIndex) =>
+                                      sectionQuestion.response !== null && (
+                                        <Box key={sectionIndex} mt="10px">
+                                          <p style={{ marginBottom: "5px" }}>
+                                            Q: {sectionQuestion?.question_text}
+                                          </p>
+                                          <p>
+                                            A:{" "}
+                                            {sectionQuestion?.response?.replace(
+                                              /["{}]/g,
+                                              ""
+                                            )}
+                                          </p>
+                                        </Box>
+                                      )
+                                  )}
+                                </Box>
+                              );
+                            }
+
+                            // For slideIndex > 5, render questions and answers normally
+                            return (
+                              <Box key={slideIndex} mt="20px">
+                                <p style={{ marginBottom: "10px" }}>
+                                  Q: {slideResponse?.question_text}
+                                </p>
+                                <p>
+                                  A:{" "}
+                                  {slideResponse?.response?.replace(
+                                    /["{}]/g,
+                                    ""
+                                  )}
+                                </p>
+                              </Box>
+                            );
+                          }
                         )}
                       </Box>
                     );
@@ -324,6 +428,7 @@ function Questionnaire({
                 <img
                   style={{ marginTop: "30px" }}
                   src={elem.signature_file}
+                  alt="Signature"
                 ></img>
               </Box>
             );
@@ -335,7 +440,7 @@ function Questionnaire({
           const questionResponse = response
             ? response.finalQuestionnaireResponse[index]
             : null;
-
+          // console.log({ userInfo });
           return (
             <Stack
               key={index}
@@ -465,10 +570,7 @@ function Questionnaire({
             Preview
           </Button>
           <Button
-            disabled={
-              selectedAnswers?.qnaArray?.length !==
-              questions?.data?.[slideInfo.slideType]?.length
-            }
+            disabled={selectedAnswers?.qnaArray?.length < 4}
             bg="#C4DAEC"
             onClick={() => changeSlide()}
           >
@@ -487,87 +589,28 @@ function Questionnaire({
               These are the following answers filled by you. Click save to
               submit and continue
             </Text>
+
             <Flex direction="column" gap="20px">
-              {questions?.data?.[slideInfo.slideType]?.map(
-                (question, index) => {
-                  const selectedAnswer = selectedAnswers?.qnaArray?.find(
-                    (answer) => answer.questionId === question.question_id
-                  );
-                  return (
-                    <React.Fragment key={index}>
-                      <Text
-                        wordBreak="break-word"
-                        whiteSpace="pre-wrap"
-                        maxWidth="100%"
-                        overflowWrap="break-word"
-                      >
-                        <span style={{ fontWeight: "bold" }}>{`Q ${
-                          index + 1
-                        }`}</span>
-                        {`  ${
-                          question?.question_text
-                            ? question?.question_text
-                            : question?.section_heading
-                        }`}
-                      </Text>
-
-                      {/* Render choices based on question type */}
-                      {question.question_type === "Multiple Choice" && (
-                        <Box ml="30px">
-                          {question.choices.map((choice, choiceIndex) => (
-                            <div key={choiceIndex}>
-                              <input
-                                type="radio"
-                                name={`question_${index}`}
-                                value={choice}
-                                style={{ marginRight: "5px" }}
-                                disabled={true}
-                                checked={selectedAnswer?.choice.includes(
-                                  choice
-                                )}
-                              />
-                              <label>{choice}</label>
-                            </div>
-                          ))}
-                        </Box>
-                      )}
-
-                      {question.question_type === "Checkbox" && (
-                        <Box ml="30px">
-                          {question.choices.map((choice, choiceIndex) => (
-                            <div key={choiceIndex}>
-                              <input
-                                type="checkbox"
-                                id={`choice_${choiceIndex}`}
-                                value={choice}
-                                style={{ marginRight: "5px" }}
-                                disabled={true}
-                                checked={selectedAnswer?.choice.includes(
-                                  choice
-                                )}
-                              />
-                              <label htmlFor={`choice_${choiceIndex}`}>
-                                {choice}
-                              </label>
-                            </div>
-                          ))}
-                        </Box>
-                      )}
-                      {question.question_type === "text" && (
-                        <Box ml="30px">
-                          <input
-                            type="text"
-                            id={index}
-                            value={selectedAnswer?.choice}
-                            style={{ marginRight: "5px" }}
-                            disabled={true}
-                          />
-                        </Box>
-                      )}
-                    </React.Fragment>
-                  );
-                }
-              )}
+              {selectedAnswers?.qnaArray?.map((answerResponse, index) => {
+                return (
+                  <React.Fragment key={index}>
+                    <Text
+                      wordBreak="break-word"
+                      whiteSpace="pre-wrap"
+                      maxWidth="100%"
+                      overflowWrap="break-word"
+                    >
+                      <span style={{ fontWeight: "bold" }}>{`Q `}</span>
+                      {answerResponse.questionText}
+                    </Text>
+                    <Text mb="5px">
+                      <span style={{ fontWeight: "bold" }}>{`A `}</span>
+                      {answerResponse?.choice[0]}
+                    </Text>
+                    {/* Render choices based on question type */}
+                  </React.Fragment>
+                );
+              })}
             </Flex>
           </ModalBody>
           <Flex
@@ -587,10 +630,7 @@ function Questionnaire({
             <Button
               onClick={() => changeSlide()}
               bg="#C4DAEC"
-              disabled={
-                selectedAnswers?.qnaArray?.length !==
-                questions?.data?.[slideInfo.slideType]?.length
-              }
+              disabled={selectedAnswers?.qnaArray?.length < 4}
             >
               {" "}
               Saves
@@ -598,6 +638,11 @@ function Questionnaire({
           </Flex>
         </ModalContent>
       </Modal>
+      {questionResponse &&
+      userInfo?.data[0].role === "Pathologist" &&
+      application === "clinical" ? (
+        <img src={userInfo?.data[0].signatureFile} alt="signature" />
+      ) : null}
     </VStack>
   );
 }

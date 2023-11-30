@@ -42,6 +42,7 @@ function ShowReport({
   setToolSelected,
   setSelectedOption,
   slide,
+  slides,
   All_Reader_Responses,
 }) {
   if (application === "hospital")
@@ -93,6 +94,7 @@ function ShowReport({
         setToolSelected={setToolSelected}
         setSelectedOption={setSelectedOption}
         slideInfo={slide}
+        slides={slides}
         All_Reader_Responses={All_Reader_Responses}
       />
     );

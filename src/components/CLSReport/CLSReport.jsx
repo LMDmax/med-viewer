@@ -33,6 +33,7 @@ function CLSReport({
   userInfo,
   caseInfo,
   errorMessage,
+  slides,
   submitQnaReport,
   All_Reader_Responses,
 }) {
@@ -91,6 +92,7 @@ function CLSReport({
           caseInfo={caseInfo}
           slideInfo={slideInfo}
           slideName={slideName}
+          slides={slides}
           All_Reader_Responses={All_Reader_Responses}
         />
       </>

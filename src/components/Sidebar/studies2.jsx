@@ -8,7 +8,7 @@ import "../../styles/scrollBar.css";
 
 const Studies2 = ({ caseInfo, slideInfo }) => {
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
-  console.log(slideInfo);
+  // console.log(slideInfo);
   const uplodadDate = slideInfo.updatedAt;
   const formattedDate = new Date(uplodadDate)
     .toLocaleDateString()

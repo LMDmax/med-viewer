@@ -271,7 +271,7 @@ const Square = ({
         addLocalRegion: addLocalRegion ? true : false,
       });
 
-      console.log({ message });
+      // console.log({ message });
       saveAnnotationToDB({
         slideId,
         annotation: message.object,

@@ -11,17 +11,16 @@ function QuestionType({
   slideQna,
   application,
 }) {
-
-  const handleChange = ({ questionId, choice, choiceType = null }) => {
-    setQnaResponse({ questionId, choice: [choice], choiceType });
+  const questionText = question?.question_text;
+  // console.log({questionText});
+  const handleChange = ({ questionId, choice, choiceType = null,  }) => {
+    setQnaResponse({ questionId, choice: [choice], choiceType, questionText });
   };
-
 
   if (
     question?.Question?.questionType === "multiple-choice" ||
     question?.question_type === "Multiple Choice"
   )
-
     return (
       <RadioType
         question={question}
@@ -48,7 +47,7 @@ function QuestionType({
     );
   if (
     question?.Question?.questionType === "checkbox" ||
-    question?.question_type === "Checkbox" 
+    question?.question_type === "Checkbox"
   )
     return (
       <CheckboxType

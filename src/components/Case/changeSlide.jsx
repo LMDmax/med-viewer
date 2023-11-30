@@ -31,7 +31,7 @@ const ChangeSlide = ({
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { viewerWindow, isAnnotationLoading } = fabricOverlayState;
   const { viewer, fabricOverlay, slideId } = viewerWindow[viewerId];
-  // console.log(slideId)
+  // console.log({ slideId });
   var vKeys = Object.keys(viewerWindow);
   const currentIndex = slides?.findIndex(
     (s) => s.awsImageBucketUrl === slideUrl
@@ -112,6 +112,7 @@ const ChangeSlide = ({
           setIsNavigatorActive={setIsNavigatorActive}
           isNavigatorActive={isNavigatorActive}
           isAnnotationLoading={isAnnotationLoading}
+          
         />
       )}
     </>

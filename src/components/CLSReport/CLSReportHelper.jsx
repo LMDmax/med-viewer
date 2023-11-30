@@ -33,6 +33,7 @@ function CLSReportHelper({
   setToolSelected,
   slideInfo,
   setSelectedOption,
+  slides,
   All_Reader_Responses,
 }) {
   const [showCLSreport, setShowCLSReport] = useState(false);
@@ -48,7 +49,8 @@ function CLSReportHelper({
 
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { viewerWindow, isAnnotationLoading } = fabricOverlayState;
-  const { viewer, fabricOverlay, slideId, slideName } = viewerWindow[viewerId];
+  const { viewer, fabricOverlay, slideId, slideName, slide } =
+    viewerWindow[viewerId];
 
   // get questions and response
   const lessonId = caseInfo?.id || caseInfo.caseId;
@@ -64,11 +66,16 @@ function CLSReportHelper({
     setErrorMessage(response?.error?.response?.data?.message);
   }
 
+  // console.log({ slideName });
+  // console.log({ slideInfo });
+  // console.log({ slideId });
+  // console.log({ All_Reader_Responses });
+
   // useEffect(() => {
   //
   // }, [questionsResponse]);
 
-  // console.log({ slideInfo });
+  // console.log({ slides });
 
   useEffect(() => {
     setIsUpdating(true);
@@ -247,7 +254,8 @@ function CLSReportHelper({
             setChangeSlide={setChangeSlide}
             submitQnaReport={submitQnaReport}
             slideInfo={slideInfo}
-            slideName={slideName !== "" ? slideName : slideInfo.accessionId}
+            slideName={slideName}
+            slides={slides}
             All_Reader_Responses={All_Reader_Responses}
           />
         )}

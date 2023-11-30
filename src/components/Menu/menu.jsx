@@ -1279,7 +1279,8 @@ function FunctionsMenu({
                     setLoadUI={setLoadUI}
                     setToolSelected={setToolSelected}
                     setSelectedOption={setSelectedOption}
-                    slide={slide}
+                            slide={slide}
+                            slides={slides}
                     All_Reader_Responses={All_Reader_Responses}
                   />
                   {showReport || synopticType ? (
