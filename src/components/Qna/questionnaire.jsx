@@ -341,13 +341,15 @@ function Questionnaire({
                   borderLeft="3px solid #DEDEDE"
                   h="50px"
                 >
-                  <Box w="50%" mr="20px" borderRight="3px solid #DEDEDE">
-                    <Text ml="10px">Study No : {caseInfo?.name}</Text>
-                  </Box>
-                  <Box>
-                    <Text wordBreak="break-word" whiteSpace="break-spaces">
+                  <Box w="100%" mx="10px">
+                    <Text
+                      wordBreak="break-word"
+                      whiteSpace="pre-wrap"
+                      maxWidth="100%"
+                      overflowWrap="break-word"
+                    >
                       {" "}
-                      COM : {caseInfo?.firstName} {caseInfo?.lastName}
+                      Accession ID: {currentSlide.accessionId}
                     </Text>
                   </Box>
                 </Flex>
@@ -358,20 +360,13 @@ function Questionnaire({
                   border="3px solid #DEDEDE"
                   h="50px"
                 >
-                  <Box w="50%" mr="20px" borderRight="3px solid #DEDEDE">
+                  <Box w="100%" mx="10px">
                     <Text
                       wordBreak="break-word"
                       whiteSpace="pre-wrap"
                       maxWidth="100%"
                       overflowWrap="break-word"
-                      ml="10px"
                     >
-                      Accession ID: {currentSlide.accessionId}
-                    </Text>
-                  </Box>
-                  <Box>
-                    <Text wordBreak="break-word" whiteSpace="break-spaces">
-                      {" "}
                       Reader : Dr. {elem?.first_name} {elem?.last_name}
                     </Text>
                   </Box>
