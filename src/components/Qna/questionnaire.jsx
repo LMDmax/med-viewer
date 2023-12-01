@@ -50,6 +50,13 @@ function Questionnaire({
   const { viewerWindow, isAnnotationLoading } = fabricOverlayState;
   // const { viewer, fabricOverlay, slideType } = viewerWindow[viewerId];
   // const { viewer, fabricOverlay, slideId } = viewerWindow[viewerId];
+
+  const current_slide = slides.find((slide) => slide._id === slideId);
+
+  console.log({ current_slide });
+  console.log({ slideInfo });
+  console.log({ slideId });
+
   const handlePreviewModalClose = () => {
     setPreviewModalOpen(false);
   };
@@ -59,8 +66,11 @@ function Questionnaire({
     choice = null,
     questionText,
   }) => {
-    const questionArray = questions?.data?.[slideInfo?.slideType];
-    // console.log({ questions });
+    const questionArray = questions?.data?.[current_slide?.slideType];
+    console.log({ questionArray });
+
+    const isLinked = questionArray.some((elem) => elem.question_link_id);
+    console.log({ isLinked });
 
     setSlideQna((state) => {
       // console.log(question);
@@ -80,24 +90,26 @@ function Questionnaire({
         // Check if the specified questionId exists in questionArray[3]
         const masterQuestionId = questionArray[2]?.question_id;
 
-        if (
-          masterQuestionId &&
-          newQna[masterQuestionId] &&
-          newQna[masterQuestionId].choice[0] === "No"
-        ) {
-          // If the choice is "No," delete all question IDs from newQna
-          questionArray[5].section_questions.forEach((sectionQuestion) => {
-            delete newQna[sectionQuestion.question_id];
-          });
-        }
-        if (
-          masterQuestionId &&
-          newQna[masterQuestionId] &&
-          newQna[masterQuestionId].choice[0] === "Yes"
-        ) {
-          // If the choice is "No," delete all question IDs from newQna
-          delete newQna[questionArray[3]?.question_id];
-          delete newQna[questionArray[4]?.question_id];
+        if (isLinked) {
+          if (
+            masterQuestionId &&
+            newQna[masterQuestionId] &&
+            newQna[masterQuestionId].choice[0] === "No"
+          ) {
+            // If the choice is "No," delete all question IDs from newQna
+            questionArray[5]?.section_questions?.forEach((sectionQuestion) => {
+              delete newQna[sectionQuestion.question_id];
+            });
+          }
+          if (
+            masterQuestionId &&
+            newQna[masterQuestionId] &&
+            newQna[masterQuestionId].choice[0] === "Yes"
+          ) {
+            // If the choice is "No," delete all question IDs from newQna
+            delete newQna[questionArray[3]?.question_id];
+            delete newQna[questionArray[4]?.question_id];
+          }
         }
 
         const qnaArray = Object.values(newQna);
@@ -112,8 +124,17 @@ function Questionnaire({
     });
   };
 
+  console.log({ selectedAnswers });
+  console.log("asd", Object.keys(selectedAnswers).length === 0);
+
+  useEffect(() => {
+    setSelectedAnswers({});
+  }, [slideId]);
+
   const changeSlide = () => {
+    submitQnaReport();
     if (application === "clinical" && caseInfo?.slides?.length > 1) {
+      console.log("aaa");
       const totalSlides = caseInfo?.slides;
       const currentSlideId = slideId;
 
@@ -124,25 +145,23 @@ function Questionnaire({
 
       // Log the current slide object
       // console.log(totalSlides[currentIndex]);
-
       // Update the index for the next click
       const nextIndex = (currentIndex + 1) % totalSlides.length;
 
       // Check if the next index is 0 (last element)
       if (nextIndex === 0) {
         // Log all elements
-        submitQnaReport();
-        totalSlides.forEach((slide) => console.log("All Reached"));
+        // console.log("1");
+        // totalSlides.forEach((slide) => console.log("All Reached"));
       } else {
         // Update the slideId with the next slide's _id
-        const nextSlideId = totalSlides[nextIndex]._id;
-
         // Set the next slideId in your state or wherever you are storing it
         // Assuming you have a function to set the slideId, for example:
-        submitQnaReport();
+        // submitQnaReport();
         setChangeSlide(true);
       }
     }
+    // submitQnaReport();
   };
 
   const questionResponse = response
@@ -190,7 +209,7 @@ function Questionnaire({
   // console.log({ All_Reader_Responses });
 
   const currentSlide = slides.find((slide) => slide?._id === slideId);
-  // console.log({ currentSlide });
+  console.log({ response });
   return (
     <VStack
       spacing={6}
@@ -200,6 +219,8 @@ function Questionnaire({
       {...restProps}
       bgColor="#fcfcfc"
       overflowY="scroll"
+      // pb="120px"
+      // border="2px solid red"
       h="80%"
       w="100%"
       fontFamily="inter"
@@ -436,11 +457,11 @@ function Questionnaire({
         </Box>
       ) : (
         questions &&
-        questions?.data?.[slideInfo?.slideType]?.map((question, index) => {
+        questions?.data?.[current_slide?.slideType]?.map((question, index) => {
           const questionResponse = response
             ? response.finalQuestionnaireResponse[index]
             : null;
-          // console.log({ userInfo });
+          console.log({ questionResponse });
           return (
             <Stack
               key={index}
@@ -449,6 +470,7 @@ function Questionnaire({
               mt="10px"
               ref={scrollRef}
               w="100%"
+              // border="2px solid black"
               maxW="100%"
               // pb="10px"
               display={
@@ -464,18 +486,35 @@ function Questionnaire({
                   : "block"
               }
             >
-              {question?.is_section && <Text fontWeight="600">Section</Text>}
+              {question?.is_section && !questionResponse && (
+                <Text fontWeight="600">Section</Text>
+              )}
+              {questionResponse?.section_questions?.find(
+                (sectionQuestion) => sectionQuestion?.response !== null
+              ) && <Text fontWeight="600">Section</Text>}
+
               <Text
                 wordBreak="break-word"
                 whiteSpace="pre-wrap"
                 maxWidth="100%"
                 overflowWrap="break-word"
               >
-                <span style={{ fontWeight: "bold" }}>{`Q ${index + 1}`}</span>
+                {!question?.is_section &&
+                questionResponse?.response !== null ? (
+                  <span style={{ fontWeight: "bold" }}>{`Q ${index + 1}`}</span>
+                ) : questionResponse?.section_questions?.find(
+                    (sectionQuestion) => sectionQuestion?.response !== null
+                  ) || !questionResponse ? (
+                  <span style={{ fontWeight: "bold" }}>{`Q ${index + 1}`}</span>
+                ) : null}
                 {`     ${
-                  question?.question_text
+                  question?.question_text && questionResponse?.response !== null
                     ? question?.question_text
-                    : question?.section_heading
+                    : questionResponse?.section_questions?.find(
+                        (sectionQuestion) => sectionQuestion?.response !== null
+                      ) || !questionResponse
+                    ? question?.section_heading
+                    : ""
                 }`}
               </Text>
               {question?.is_section ? (
@@ -491,7 +530,12 @@ function Questionnaire({
                         // border="1px solid red"
                         ml="34px"
                       >
-                        {`Q ${toRoman(i)}   ${sectionQuestion?.question_text}`}
+                        {questionResponse?.section_questions?.find(
+                          (sectionQuestion) =>
+                            sectionQuestion?.response !== null
+                        ) || !questionResponse
+                          ? `Q ${toRoman(i)}  ${sectionQuestion?.question_text}`
+                          : ""}
                       </Text>
                       {!questionResponse ? (
                         <QuestionType
@@ -503,15 +547,20 @@ function Questionnaire({
                           projectQnaType={projectQnaType}
                           slideQna={slideQna}
                         />
-                      ) : (
+                      ) : questionResponse?.section_questions?.find(
+                          (sectionQuestion) =>
+                            sectionQuestion?.response !== null
+                        ) || !questionResponse ? (
                         <Text>
                           {`Your response:
-                  ${
-                    questionResponse?.section_questions[i]?.response
-                      ?.replace(/[{"]+/g, "")
-                      ?.replace(/[}"]+/g, "") || "-"
-                  }`}
+              ${
+                questionResponse?.section_questions[i]?.response
+                  ?.replace(/[{"]+/g, "")
+                  ?.replace(/[}"]+/g, "") || "-"
+              }`}
                         </Text>
+                      ) : (
+                        ""
                       )}
                     </Box>
                   );
@@ -528,21 +577,28 @@ function Questionnaire({
                     slideQna={slideQna}
                   />
                 </Box>
-              ) : (
+              ) : questionResponse?.response !== null ? (
                 <Text>
                   Your response:{" "}
                   {questionResponse?.response
                     ?.replace(/[{"]+/g, "")
                     ?.replace(/[}"]+/g, "") || "-"}
                 </Text>
+              ) : (
+                ""
               )}
             </Stack>
           );
         })
       )}
-      {application === "clinical" && response?.signature_file && (
+      {application === "clinical" && questionResponse && (
         <Flex direction="column">
-          <Image w="11vw" h="10vh" src={response?.signature_file} />
+          <Image
+            w="11vw"
+            h="10vh"
+            src={response?.signature_file}
+            alt="signature"
+          />
           <Text color="#3B5D7C">{`${response?.first_name} ${response?.last_name}`}</Text>
           <Text>{response?.highest_qualification}</Text>
           <Text>{response?.Institute}</Text>
@@ -570,7 +626,10 @@ function Questionnaire({
             Preview
           </Button>
           <Button
-            disabled={selectedAnswers?.qnaArray?.length < 4}
+            disabled={
+              selectedAnswers?.qnaArray?.length < 4 ||
+              Object.keys(selectedAnswers).length === 0
+            }
             bg="#C4DAEC"
             onClick={() => changeSlide()}
           >
@@ -630,19 +689,17 @@ function Questionnaire({
             <Button
               onClick={() => changeSlide()}
               bg="#C4DAEC"
-              disabled={selectedAnswers?.qnaArray?.length < 4}
+              disabled={
+                selectedAnswers?.qnaArray?.length < 4 ||
+                Object.keys(selectedAnswers).length === 0
+              }
             >
               {" "}
-              Saves
+              Save
             </Button>
           </Flex>
         </ModalContent>
       </Modal>
-      {questionResponse &&
-      userInfo?.data[0].role === "Pathologist" &&
-      application === "clinical" ? (
-        <img src={userInfo?.data[0].signatureFile} alt="signature" />
-      ) : null}
     </VStack>
   );
 }

@@ -99,15 +99,18 @@ function CLSReportHelper({
     setSlideQna({ qna: {} });
   };
   const response = Object.values(slideQna?.qna);
+  const current_Slide = slides.find((slide) => slide._id === slideId);
   const submitQnaReport = async () => {
     // console.log("SUBMIT", response);
+    console.log({ response });
     try {
       setLoading(true);
+      console.log({ response });
       await responseHandler({
         [key]: value,
         response,
         slide_id: slideId,
-        slide_type: slideInfo?.slideType || "",
+        slide_type: current_Slide?.slideType,
       });
       fetchResponse();
       if (app === "clinical" && caseInfo?.slides?.length >= 1) {
