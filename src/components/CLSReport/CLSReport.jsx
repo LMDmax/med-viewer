@@ -59,13 +59,13 @@ function CLSReport({
           minH="5vh"
           px="1vw"
         >
-          <Box w="95%" borderBottom="1px solid #DEDEDE" pb="5px">
+          {/* <Box w="95%" borderBottom="1px solid #DEDEDE" pb="5px">
             {application === "clinical" ? (
               <Text fontWeight="400" fontFamily="inter">
                 PI : Dr. {caseInfo?.firstName} {caseInfo?.lastName}
               </Text>
             ) : null}
-          </Box>
+          </Box> */}
           {application === "clinical" &&
             userInfo?.role === "Pathologist" &&
             errorMessage?.data?.status !== "400" &&

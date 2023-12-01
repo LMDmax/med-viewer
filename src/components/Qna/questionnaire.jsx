@@ -53,9 +53,9 @@ function Questionnaire({
 
   const current_slide = slides.find((slide) => slide._id === slideId);
 
-  console.log({ current_slide });
-  console.log({ slideInfo });
-  console.log({ slideId });
+  // console.log({ current_slide });
+  // console.log({ slideInfo });
+  // console.log({ slideId });
 
   const handlePreviewModalClose = () => {
     setPreviewModalOpen(false);
@@ -167,6 +167,9 @@ function Questionnaire({
   const questionResponse = response
     ? response.finalQuestionnaireResponse[0]
     : null;
+
+  console.log({ questionResponse });
+  console.log({ slideQna });
 
   const toRoman = (num) => {
     const romanNumerals = [
@@ -328,27 +331,23 @@ function Questionnaire({
         <Box w="100%" px="5px">
           {All_Reader_Responses?.data?.finalResponseArray.map((elem, index) => {
             return (
-              <Box
-                w="100%"
-                maxW="100%"
-                h="auto"
-                mb="30px"
-                borderTop="2px solid #DEDEDE"
-              >
+              <Box w="100%" maxW="100%" h="auto" mb="30px">
                 <Flex
                   w="100%"
                   justifyContent="flex-start"
                   alignItems="center"
-                  borderBottom="1px solid #DEDEDE"
+                  borderTop="3px solid #DEDEDE"
+                  borderRight="3px solid #DEDEDE"
+                  borderLeft="3px solid #DEDEDE"
                   h="50px"
                 >
-                  <Box w="50%" mr="20px" borderRight="1px solid #DEDEDE">
-                    <Text>Study No : {caseInfo?.name}</Text>
+                  <Box w="50%" mr="20px" borderRight="3px solid #DEDEDE">
+                    <Text ml="10px">Study No : {caseInfo?.name}</Text>
                   </Box>
                   <Box>
                     <Text wordBreak="break-word" whiteSpace="break-spaces">
                       {" "}
-                      PI : {caseInfo?.firstName} {caseInfo?.lastName}
+                      COM : {caseInfo?.firstName} {caseInfo?.lastName}
                     </Text>
                   </Box>
                 </Flex>
@@ -356,11 +355,19 @@ function Questionnaire({
                   w="100%"
                   justifyContent="flex-start"
                   alignItems="center"
-                  borderBottom="1px solid #DEDEDE"
+                  border="3px solid #DEDEDE"
                   h="50px"
                 >
-                  <Box w="50%" mr="20px" borderRight="1px solid #DEDEDE">
-                    <Text>Accession ID: {currentSlide.accessionId}</Text>
+                  <Box w="50%" mr="20px" borderRight="3px solid #DEDEDE">
+                    <Text
+                      wordBreak="break-word"
+                      whiteSpace="pre-wrap"
+                      maxWidth="100%"
+                      overflowWrap="break-word"
+                      ml="10px"
+                    >
+                      Accession ID: {currentSlide.accessionId}
+                    </Text>
                   </Box>
                   <Box>
                     <Text wordBreak="break-word" whiteSpace="break-spaces">
@@ -446,11 +453,16 @@ function Questionnaire({
                     );
                   }
                 })}
-                <img
-                  style={{ marginTop: "30px" }}
-                  src={elem.signature_file}
-                  alt="Signature"
-                ></img>
+                <Flex direction="column" mt="40px" mb="80px">
+                  <Image
+                    w="10vw"
+                    h="10vh"
+                    src={elem.signature_file}
+                    alt="signature"
+                  />
+                  <Text color="#3B5D7C">{`${elem?.first_name} ${elem?.last_name}`}</Text>
+                  <Text>{elem?.highest_qualification}</Text>
+                </Flex>
               </Box>
             );
           })}
