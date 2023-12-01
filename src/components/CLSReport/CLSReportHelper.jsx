@@ -102,10 +102,10 @@ function CLSReportHelper({
   const current_Slide = slides.find((slide) => slide._id === slideId);
   const submitQnaReport = async () => {
     // console.log("SUBMIT", response);
-    console.log({ response });
+    // console.log({ response });
     try {
       setLoading(true);
-      console.log({ response });
+      // console.log({ response });
       await responseHandler({
         [key]: value,
         response,

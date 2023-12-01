@@ -168,8 +168,8 @@ function Questionnaire({
     ? response.finalQuestionnaireResponse[0]
     : null;
 
-  console.log({ questionResponse });
-  console.log({ slideQna });
+  // console.log({ questionResponse });
+  // console.log({ slideQna });
 
   const toRoman = (num) => {
     const romanNumerals = [
@@ -212,7 +212,7 @@ function Questionnaire({
   // console.log({ All_Reader_Responses });
 
   const currentSlide = slides.find((slide) => slide?._id === slideId);
-  console.log({ response });
+  // console.log({ response });
   return (
     <VStack
       spacing={6}
@@ -468,7 +468,7 @@ function Questionnaire({
           const questionResponse = response
             ? response.finalQuestionnaireResponse[index]
             : null;
-          console.log({ questionResponse });
+          // console.log({ questionResponse });
           return (
             <Stack
               key={index}
@@ -493,35 +493,18 @@ function Questionnaire({
                   : "block"
               }
             >
-              {question?.is_section && !questionResponse && (
-                <Text fontWeight="600">Section</Text>
-              )}
-              {questionResponse?.section_questions?.find(
-                (sectionQuestion) => sectionQuestion?.response !== null
-              ) && <Text fontWeight="600">Section</Text>}
-
               <Text
                 wordBreak="break-word"
                 whiteSpace="pre-wrap"
                 maxWidth="100%"
                 overflowWrap="break-word"
+                color={questionResponse?.response === null? "gray" : "inherit"}
               >
-                {!question?.is_section &&
-                questionResponse?.response !== null ? (
-                  <span style={{ fontWeight: "bold" }}>{`Q ${index + 1}`}</span>
-                ) : questionResponse?.section_questions?.find(
-                    (sectionQuestion) => sectionQuestion?.response !== null
-                  ) || !questionResponse ? (
-                  <span style={{ fontWeight: "bold" }}>{`Q ${index + 1}`}</span>
-                ) : null}
+                <span style={{ fontWeight: "bold" }}>{`Q ${index + 1}`}</span>
                 {`     ${
-                  question?.question_text && questionResponse?.response !== null
+                  question?.question_text
                     ? question?.question_text
-                    : questionResponse?.section_questions?.find(
-                        (sectionQuestion) => sectionQuestion?.response !== null
-                      ) || !questionResponse
-                    ? question?.section_heading
-                    : ""
+                    : question?.section_heading
                 }`}
               </Text>
               {question?.is_section ? (
@@ -542,7 +525,7 @@ function Questionnaire({
                             sectionQuestion?.response !== null
                         ) || !questionResponse
                           ? `Q ${toRoman(i)}  ${sectionQuestion?.question_text}`
-                          : ""}
+                          : null}
                       </Text>
                       {!questionResponse ? (
                         <QuestionType
@@ -558,12 +541,12 @@ function Questionnaire({
                           (sectionQuestion) =>
                             sectionQuestion?.response !== null
                         ) || !questionResponse ? (
-                        <Text>
+                        <Text color={questionResponse?.response === null? "gray" : "inherit"}>
                           {`Your response:
               ${
                 questionResponse?.section_questions[i]?.response
                   ?.replace(/[{"]+/g, "")
-                  ?.replace(/[}"]+/g, "") || "-"
+                  ?.replace(/[}"]+/g, "") || "Not Applicable"
               }`}
                         </Text>
                       ) : (
@@ -584,15 +567,13 @@ function Questionnaire({
                     slideQna={slideQna}
                   />
                 </Box>
-              ) : questionResponse?.response !== null ? (
-                <Text>
+              ) : (
+                <Text color={questionResponse?.response === null? "gray" : "inherit"}>
                   Your response:{" "}
                   {questionResponse?.response
                     ?.replace(/[{"]+/g, "")
-                    ?.replace(/[}"]+/g, "") || "-"}
+                    ?.replace(/[}"]+/g, "") || "Not Applicable"}
                 </Text>
-              ) : (
-                ""
               )}
             </Stack>
           );
