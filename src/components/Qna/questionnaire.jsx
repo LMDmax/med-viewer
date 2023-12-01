@@ -124,8 +124,8 @@ function Questionnaire({
     });
   };
 
-  console.log({ selectedAnswers });
-  console.log("asd", Object.keys(selectedAnswers).length === 0);
+  // console.log({ selectedAnswers });
+  // console.log("asd", Object.keys(selectedAnswers).length === 0);
 
   useEffect(() => {
     setSelectedAnswers({});
@@ -383,20 +383,33 @@ function Questionnaire({
                             if (slideIndex < 5) {
                               // Check if slideIndex is between 0 and 4
                               return (
-                                slideResponse.response !== null && (
-                                  <Box key={slideIndex} mt="20px">
-                                    <p style={{ marginBottom: "10px" }}>
-                                      Q: {slideResponse?.question_text}
-                                    </p>
-                                    <p>
-                                      A:{" "}
-                                      {slideResponse?.response?.replace(
-                                        /["{}]/g,
-                                        ""
-                                      )}
-                                    </p>
-                                  </Box>
-                                )
+                                <Box key={slideIndex} mt="20px">
+                                  <Text
+                                    style={{ marginBottom: "10px" }}
+                                    color={
+                                      slideResponse?.response === null
+                                        ? "gray"
+                                        : "inherit"
+                                    }
+                                  >
+                                    Q: {slideResponse?.question_text}
+                                  </Text>
+                                  <Text
+                                    color={
+                                      slideResponse?.response === null
+                                        ? "gray"
+                                        : "inherit"
+                                    }
+                                  >
+                                    A:{" "}
+                                    {slideResponse?.response !== null
+                                      ? slideResponse?.response?.replace(
+                                          /["{}]/g,
+                                          ""
+                                        )
+                                      : "Not Applicable"}
+                                  </Text>
+                                </Box>
                               );
                             }
 
@@ -406,22 +419,39 @@ function Questionnaire({
                                 <Box key={slideIndex} mt="20px">
                                   {/* Render section heading */}
                                   {/* Map and render section questions and answers */}
+                                  <Text>
+                                    Q: {slideResponse?.section_heading}{" "}
+                                  </Text>
                                   {slideResponse.section_questions.map(
-                                    (sectionQuestion, sectionIndex) =>
-                                      sectionQuestion.response !== null && (
-                                        <Box key={sectionIndex} mt="10px">
-                                          <p style={{ marginBottom: "5px" }}>
-                                            Q: {sectionQuestion?.question_text}
-                                          </p>
-                                          <p>
-                                            A:{" "}
-                                            {sectionQuestion?.response?.replace(
-                                              /["{}]/g,
-                                              ""
-                                            )}
-                                          </p>
-                                        </Box>
-                                      )
+                                    (sectionQuestion, sectionIndex) => (
+                                      <Box key={sectionIndex} mt="10px">
+                                        <Text
+                                          color={
+                                            sectionQuestion?.response === null
+                                              ? "gray"
+                                              : "inherit"
+                                          }
+                                          style={{ marginBottom: "5px" }}
+                                        >
+                                          Q: {sectionQuestion?.question_text}
+                                        </Text>
+                                        <Text
+                                          color={
+                                            sectionQuestion?.response === null
+                                              ? "gray"
+                                              : "inherit"
+                                          }
+                                        >
+                                          A:{" "}
+                                          {sectionQuestion?.response !== null
+                                            ? sectionQuestion?.response?.replace(
+                                                /["{}]/g,
+                                                ""
+                                              )
+                                            : "Not Applicable"}
+                                        </Text>
+                                      </Box>
+                                    )
                                   )}
                                 </Box>
                               );
@@ -498,7 +528,7 @@ function Questionnaire({
                 whiteSpace="pre-wrap"
                 maxWidth="100%"
                 overflowWrap="break-word"
-                color={questionResponse?.response === null? "gray" : "inherit"}
+                color={questionResponse?.response === null ? "gray" : "inherit"}
               >
                 <span style={{ fontWeight: "bold" }}>{`Q ${index + 1}`}</span>
                 {`     ${
@@ -541,7 +571,13 @@ function Questionnaire({
                           (sectionQuestion) =>
                             sectionQuestion?.response !== null
                         ) || !questionResponse ? (
-                        <Text color={questionResponse?.response === null? "gray" : "inherit"}>
+                        <Text
+                          color={
+                            questionResponse?.response === null
+                              ? "gray"
+                              : "inherit"
+                          }
+                        >
                           {`Your response:
               ${
                 questionResponse?.section_questions[i]?.response
@@ -568,7 +604,11 @@ function Questionnaire({
                   />
                 </Box>
               ) : (
-                <Text color={questionResponse?.response === null? "gray" : "inherit"}>
+                <Text
+                  color={
+                    questionResponse?.response === null ? "gray" : "inherit"
+                  }
+                >
                   Your response:{" "}
                   {questionResponse?.response
                     ?.replace(/[{"]+/g, "")
