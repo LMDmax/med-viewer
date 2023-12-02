@@ -67,10 +67,10 @@ function Questionnaire({
     questionText,
   }) => {
     const questionArray = questions?.data?.[current_slide?.slideType];
-    console.log({ questionArray });
+    // console.log({ questionArray });
 
     const isLinked = questionArray.some((elem) => elem.question_link_id);
-    console.log({ isLinked });
+    // console.log({ isLinked });
 
     setSlideQna((state) => {
       // console.log(question);
@@ -134,7 +134,7 @@ function Questionnaire({
   const changeSlide = () => {
     submitQnaReport();
     if (application === "clinical" && caseInfo?.slides?.length > 1) {
-      console.log("aaa");
+      // console.log("aaa");
       const totalSlides = caseInfo?.slides;
       const currentSlideId = slideId;
 
@@ -168,7 +168,7 @@ function Questionnaire({
     ? response.finalQuestionnaireResponse[0]
     : null;
 
-  // console.log({ questionResponse });
+  // console.log({ userInfo});
   // console.log({ slideQna });
 
   const toRoman = (num) => {
@@ -624,7 +624,7 @@ function Questionnaire({
           <Image
             w="11vw"
             h="10vh"
-            src={response?.signature_file}
+            src={userInfo?.data[0]?.signatureFile}
             alt="signature"
           />
           <Text color="#3B5D7C">{`${response?.first_name} ${response?.last_name}`}</Text>
