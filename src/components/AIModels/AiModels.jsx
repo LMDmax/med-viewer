@@ -506,10 +506,10 @@ const AiModels = ({
     }
   };
 
-  // console.log("tilState", TilActiveState)
+  console.log({ slide });
 
   useEffect(() => {
-    if (slide.stainType === "H&E") {
+    if (slide.stainType === "H&E" || slide.slideType === "HAndE") {
       if (TilActiveState) {
         setModelname("TIL");
         setShowTILS(true);

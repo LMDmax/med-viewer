@@ -1026,7 +1026,7 @@ const AnnotationFeed = ({
                       />
                       <Text ml="5px">Lymphocytes</Text>
                     </Flex>
-                    <Flex w="100%" h="auto">
+                    {/* <Flex w="100%" h="auto">
                       <Accordion w="100%" defaultIndex={[0]} allowMultiple>
                         <AccordionItem>
                           <h2>
@@ -1096,7 +1096,7 @@ const AnnotationFeed = ({
                           </AccordionPanel>
                         </AccordionItem>
                       </Accordion>
-                    </Flex>
+                    </Flex> */}
 
                     <Flex
                       my="0"
@@ -1104,14 +1104,14 @@ const AnnotationFeed = ({
                       alignItems="center"
                       py="8px"
                       bg="#FCFCFC"
-                      onClick={() => {
-                        setAddLocalRegion(!addLocalRegion);
-                      }}
+                      // onClick={() => {
+                      //   setAddLocalRegion(!addLocalRegion);
+                      // }}
 
                       // cursor="not-allowed"
                     >
-                      <AiOutlinePlusCircle size="30px" color="#1B75BC" />
-                      <Text ml="5px" color="#1B75BC">
+                      <AiOutlinePlusCircle size="30px" color="gray" />
+                      <Text ml="5px" color="gray">
                         Add Local Region
                       </Text>
                       <Flex
