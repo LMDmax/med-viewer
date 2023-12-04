@@ -67,6 +67,7 @@ const CommentBox = ({
         body: {
           ...data,
           app: application,
+          addLocalRegion: false,
           createdBy:
             application === "hospital"
               ? `${userInfo?.firstName} ${userInfo?.lastName}`
