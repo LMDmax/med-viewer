@@ -237,6 +237,9 @@ const AddPath = ({
     setFabricOverlayState(updateTool({ tool: "ADDPATH" }));
   };
 
+
+  console.log({isHILToolEnabled});
+
   return (
     <Tooltip
       label="Add Selection"

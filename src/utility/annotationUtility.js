@@ -73,10 +73,16 @@ export const createAnnotationMessage = ({
   patternName,
   isProcessed,
   modelName,
+  application,
 }) => {
   if (!viewer || !shape) return null;
   const message = {
-    username: userInfo ? `${userInfo.firstName} ${userInfo.lastName}` : "",
+    username:
+      userInfo && (application === "hospital" || application === "education")
+        ? `${userInfo.firstName} ${userInfo.lastName}`
+        : userInfo && application === "clinical"
+        ? `${userInfo?.data[0]?.firstName} ${userInfo?.data[0]?.lastName}`
+        : "",
     object: shape,
     image: null,
   };

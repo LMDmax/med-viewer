@@ -61,6 +61,8 @@ const CommentBox = ({
     modifyAnnotation,
     { data: updatedData, error: updateError, loading: updateLoading },
   ] = useMutation(UPDATE_ANNOTATION);
+
+  // console.log({ userInfo });
   const onSaveAnnotation = (data) => {
     createAnnotation({
       variables: {
@@ -71,6 +73,8 @@ const CommentBox = ({
           createdBy:
             application === "hospital"
               ? `${userInfo?.firstName} ${userInfo?.lastName}`
+              : application === "clinical"
+              ? `Dr. ${userInfo?.data[0]?.firstName} ${userInfo?.data[0]?.lastName}`
               : `${userInfo?.firstName}`,
           caseId,
         },
@@ -336,10 +340,11 @@ const CommentBox = ({
         viewer,
         userInfo,
         type: "textbox",
+        application,
         isClosed: true,
         usingAs: "comment",
       });
-      // console.log(message)
+      // console.log({message})
       saveAnnotationToDB({
         slideId,
         annotation: message.object,

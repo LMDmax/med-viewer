@@ -7,6 +7,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import {
+  ADD_LOCAL_REGION,
   GET_TILS_ANALYSIS,
   TIL_ANALYSIS_SUBSCRIPTION,
 } from "../../graphql/annotaionsQuery";
@@ -16,7 +17,7 @@ import TooltipLabel from "../AdjustmentBar/ToolTipLabel";
 import { BiTargetLock } from "react-icons/bi";
 import { ImTarget } from "react-icons/im";
 import IconSize from "../ViewerToolbar/IconSize";
-import { useLazyQuery } from "@apollo/client/react";
+import { useLazyQuery, useMutation } from "@apollo/client/react";
 import { useApolloClient, useSubscription } from "@apollo/client";
 import { getFileBucketFolder } from "../../utility";
 import { updateTool } from "../../state/actions/fabricOverlayActions";
@@ -35,6 +36,8 @@ const Til = ({
   modelName,
   setLoadUI,
   setTILReady,
+  isLocalRegion,
+  setIslocalRegion,
   lymphocyteColor,
 }) => {
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
@@ -58,6 +61,7 @@ const Til = ({
     { data: data1, loading: loading1, error: error1, refetch: refetch1 },
   ] = useLazyQuery(GET_TILS_ANALYSIS);
 
+  // const [addRegion, { error: addError }] = useMutation(ADD_LOCAL_REGION);
   // ------------------------------------------------------------------------------
   // --------------------Use subscription hook fethcing data for 1st time-------------------------------
   // ---------------------------------------------------------------------------------------
@@ -79,6 +83,19 @@ const Til = ({
       setTILReady(true);
     }
   }, [data]);
+
+  // useEffect(() => {
+  //   if (isLocalRegion) {
+  //     addRegion({
+  //       variables: {
+  //         body: {
+  //           key: `${getFileBucketFolder(viewerIds[0].originalFileUrl)}`,
+  //           slideId,
+  //         },
+  //       },
+  //     });
+  //   }
+  // }, [isLocalRegion]);
 
   // chnage lymphocyte color to custoom color
 

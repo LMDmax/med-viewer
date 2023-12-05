@@ -798,3 +798,36 @@ export const SAVE_SYNOPTIC_REPORT = gql`
     }
   }
 `;
+
+
+export const ADD_LOCAL_REGION = gql`
+  mutation Mutation($body: GetTilInput!) {
+    sendTils(body: $body) {
+      message
+      success
+    }
+  }
+`;
+
+
+// export const GET_LOCAL_REGION = gql`
+//   subscription Subscription($body: AnalysisInput) {
+//     tilStatus(body: $body) {
+//       data {
+//         slideId
+//         bucket_name
+//         key_name
+//         status
+//         lymphocyte_cords
+//         TILS_score
+//         lymphocyte_count
+//         stroma_area
+//         tumor_area
+//         stroma_url
+//         tumor_url
+//       }
+//       message
+//       status
+//     }
+//   }
+// `;

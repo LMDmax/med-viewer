@@ -1214,6 +1214,7 @@ function FunctionsMenu({
               <CommentFeed
                 viewerId={viewerId}
                 searchSelectedData={searchSelectedData}
+                application={application}
               />
             ) : selectedOption === "report" ? (
               <Flex
@@ -1279,8 +1280,8 @@ function FunctionsMenu({
                     setLoadUI={setLoadUI}
                     setToolSelected={setToolSelected}
                     setSelectedOption={setSelectedOption}
-                            slide={slide}
-                            slides={slides}
+                    slide={slide}
+                    slides={slides}
                     All_Reader_Responses={All_Reader_Responses}
                   />
                   {showReport || synopticType ? (

@@ -56,6 +56,8 @@ const AiModels = ({
   setShowGleason,
   setMaskAnnotationData,
   lymphocyteColor,
+  setShowTILS,
+  showTILS
 }) => {
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { viewerWindow, isViewportAnalysing } = fabricOverlayState;
@@ -73,7 +75,6 @@ const AiModels = ({
   const [detectTumor, setDetectTumor] = useState(false);
   const [modelType, setModelType] = useState("");
 
-  const [showTILS, setShowTILS] = useState(false);
   const [onTumorAnalysis, { data: analysis_data, error: analysis_error }] =
     useMutation(TUMOR_ANALYSIS);
 
@@ -93,6 +94,8 @@ const AiModels = ({
   );
 
   console.log("subscriptionAI1st", subscription);
+
+  // console.log({ showTILS });
   // console.log("subscriptionErrorAI", subscription_error);
 
   // ################################# change color as user Input for gleason #####################################################
@@ -506,7 +509,7 @@ const AiModels = ({
     }
   };
 
-  console.log({ slide });
+  // console.log({ slide });
 
   useEffect(() => {
     if (slide.stainType === "H&E" || slide.slideType === "HAndE") {

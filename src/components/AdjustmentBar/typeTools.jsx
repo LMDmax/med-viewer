@@ -13,6 +13,7 @@ import { fabric } from "openseadragon-fabricjs-overlay";
 import Draggable from "react-draggable";
 import { MdOutlineDragIndicator } from "react-icons/md";
 import {
+  ADD_LOCAL_REGION,
   DELETE_ANNOTATION,
   SAVE_ANNOTATION,
 } from "../../graphql/annotaionsQuery";
@@ -50,6 +51,8 @@ const TypeTools = ({
   setLymphocyteColor,
   setMaskAnnotationData,
   addLocalRegion,
+  showTILS,
+  setIsLocalRegion,
 }) => {
   const { fabricOverlayState } = useFabricOverlayState();
   const toast = useToast();
@@ -73,6 +76,9 @@ const TypeTools = ({
 
   const [removeAnnotation, { error: deleteError }] =
     useMutation(DELETE_ANNOTATION);
+
+
+
   if (deleteError) {
     toast({
       title: "Annotation could not be deleted",
@@ -110,6 +116,10 @@ const TypeTools = ({
         },
       },
     });
+
+    if (showTILS) {
+      setIsLocalRegion(true);
+    }
   };
 
   const [createAnnotation, { error, loading }] = useMutation(SAVE_ANNOTATION);
@@ -365,26 +375,36 @@ const TypeTools = ({
         </SimpleGrid>
         <Divider borderColor={"#EEEEEE"} />
         {/* HITL TOOLS */}
-        <SimpleGrid columns={2} px="8px" bgColor="#FCFCFC" py="8px" spacing={2}>
-          <AddPath
-            setToolSelected={setToolSelected}
-            viewerId={viewerId}
-            isHILToolEnabled={isHILToolEnabled}
-            onSaveAnnotation={onSaveAnnotation}
-            newToolSettings={newToolSettings}
-            selectedPattern={selectedPattern}
-            setMaskAnnotationData={setMaskAnnotationData}
-          />
-          <RemovePath
-            setToolSelected={setToolSelected}
-            viewerId={viewerId}
-            isHILToolEnabled={isHILToolEnabled}
-            onSaveAnnotation={onSaveAnnotation}
-            newToolSettings={newToolSettings}
-            selectedPattern={selectedPattern}
-            setMaskAnnotationData={setMaskAnnotationData}
-          />
-        </SimpleGrid>
+        {!showTILS && (
+          <SimpleGrid
+            columns={2}
+            px="8px"
+            bgColor="#FCFCFC"
+            py="8px"
+            spacing={2}
+          >
+            <AddPath
+              setToolSelected={setToolSelected}
+              viewerId={viewerId}
+              isHILToolEnabled={isHILToolEnabled}
+              onSaveAnnotation={onSaveAnnotation}
+              newToolSettings={newToolSettings}
+              selectedPattern={selectedPattern}
+              setMaskAnnotationData={setMaskAnnotationData}
+              showTILS={showTILS}
+            />
+            <RemovePath
+              setToolSelected={setToolSelected}
+              viewerId={viewerId}
+              isHILToolEnabled={isHILToolEnabled}
+              onSaveAnnotation={onSaveAnnotation}
+              newToolSettings={newToolSettings}
+              selectedPattern={selectedPattern}
+              setMaskAnnotationData={setMaskAnnotationData}
+              showTILS={showTILS}
+            />
+          </SimpleGrid>
+        )}
         <Divider mb="5px" borderColor={"#EEEEEE"} />
         <Flex
           w="100%"

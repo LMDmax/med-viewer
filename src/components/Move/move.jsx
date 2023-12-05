@@ -106,6 +106,8 @@ function Move({
   const [typeToolsToggle, setTypeToolsToggle] = useState(false);
   const [popup, setPopup] = useState(false);
   const [TILReady, setTILReady] = useState(false);
+  const [showTILS, setShowTILS] = useState(false);
+  const [isLocalRegion, setIsLocalRegion] = useState(false);
 
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { activeTool, viewerWindow } = fabricOverlayState;
@@ -308,6 +310,8 @@ function Move({
           setTilScore={setTilScore}
           setLymphocyteCount={setLymphocyteCount}
           navigatorCounter={navigatorCounter}
+          setIsLocalRegion={setIsLocalRegion}
+          isLocalRegion={isLocalRegion}
         />
         {!isXmlAnnotations && application !== "education" ? (
           <AiModels
@@ -348,6 +352,8 @@ function Move({
             showGleason={showGleason}
             setMaskAnnotationData={setMaskAnnotationData}
             lymphocyteColor={lymphocyteColor}
+            setShowTILS={setShowTILS}
+            showTILS={showTILS}
           />
         ) : null}
       </Flex>
@@ -391,6 +397,8 @@ function Move({
             showGleason={showGleason}
             setMaskAnnotationData={setMaskAnnotationData}
             addLocalRegion={addLocalRegion}
+            showTILS={showTILS}
+            setIsLocalRegion={setIsLocalRegion}
           />
         ) : null}
       </Flex>
