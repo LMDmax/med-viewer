@@ -813,10 +813,10 @@ function LayoutApp({
                 <Text fontSize="14px" mr="5px">
                   {bottomZoomValue}X
                 </Text>
-                {/* <Image
+                <Image
                   src="https://i.ibb.co/7CtYTC2/bottom-Bar.png"
                   alt="Bottom Bar"
-                /> */}
+                />
                 <Text ml="5px" fontSize="14px">
                   {unit}
                 </Text>
