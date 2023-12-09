@@ -93,7 +93,7 @@ const AiModels = ({
     }
   );
 
-  console.log("subscriptionAI1st", subscription);
+  // console.log("subscriptionAI1st", subscription);
 
   // console.log({ showTILS });
   // console.log("subscriptionErrorAI", subscription_error);

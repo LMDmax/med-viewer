@@ -799,35 +799,211 @@ export const SAVE_SYNOPTIC_REPORT = gql`
   }
 `;
 
-
 export const ADD_LOCAL_REGION = gql`
-  mutation Mutation($body: GetTilInput!) {
-    sendTils(body: $body) {
+  mutation SendTils($body: GetLocalTilInput) {
+    sendTils(body: $body)
+  }
+`;
+
+export const GET_LOCAL_REGION_SUBS = gql`
+  subscription Subscription($body: AnalysisInput) {
+    localTilStatus(body: $body) {
+      status
       message
-      success
+      data {
+        slideId
+        key
+        info_list {
+          _id
+          stroma_area
+          tils_score
+          counts
+          annotation {
+            slideId
+            type
+            version
+            originX
+            originY
+            left
+            top
+            width
+            height
+            fill
+            stroke
+            strokeWidth
+            strokeLineCap
+            strokeDashOffset
+            strokeLineJoin
+            strokeMiterLimit
+            scaleX
+            scaleY
+            angle
+            flipX
+            flipY
+            opacity
+            visible
+            backgroundColor
+            fillRule
+            paintFirst
+            globalCompositeOperation
+            skewX
+            skewY
+            rx
+            ry
+            hash
+            text
+            zoomLevel
+            tag
+            title
+            x1
+            y1
+            x2
+            y2
+            points {
+              x
+              y
+            }
+            path
+            cords
+            area
+            perimeter
+            centroid
+            end_points
+            isAnalysed
+            isClosed
+            analysedROI
+            classType
+            isDeleted
+            belongsToApp
+            fontSize
+            fontWeight
+            fontFamily
+            fontStyle
+            lineHeight
+            underline
+            overline
+            linethrough
+            textAlign
+            usingAs
+            charSpacing
+            minWidth
+            splitByGrapheme
+            styles
+            textBackgroundColor
+            createdAt
+            updatedAt
+            createdBy
+            caseId
+            modelName
+            patternName
+            isProcessed
+            processType
+            addLocalRegion
+          }
+        }
+      }
+      analysisType
     }
   }
 `;
 
-
-// export const GET_LOCAL_REGION = gql`
-//   subscription Subscription($body: AnalysisInput) {
-//     tilStatus(body: $body) {
-//       data {
-//         slideId
-//         bucket_name
-//         key_name
-//         status
-//         lymphocyte_cords
-//         TILS_score
-//         lymphocyte_count
-//         stroma_area
-//         tumor_area
-//         stroma_url
-//         tumor_url
-//       }
-//       message
-//       status
-//     }
-//   }
-// `;
+export const GET_ALL_LOCAL_REGIONS = gql`
+  query Query($query: String) {
+    checkTils(query: $query) {
+      status
+      message
+      data {
+        slideId
+        key
+        info_list {
+          _id
+          stroma_area
+          tils_score
+          counts
+          annotation {
+            slideId
+            type
+            version
+            originX
+            originY
+            left
+            top
+            width
+            height
+            fill
+            stroke
+            strokeWidth
+            strokeLineCap
+            strokeDashOffset
+            strokeLineJoin
+            strokeMiterLimit
+            scaleX
+            scaleY
+            angle
+            flipX
+            flipY
+            opacity
+            visible
+            backgroundColor
+            fillRule
+            paintFirst
+            globalCompositeOperation
+            skewX
+            skewY
+            rx
+            ry
+            hash
+            text
+            zoomLevel
+            tag
+            title
+            x1
+            y1
+            x2
+            y2
+            points {
+              x
+              y
+            }
+            path
+            cords
+            area
+            perimeter
+            centroid
+            end_points
+            isAnalysed
+            isClosed
+            analysedROI
+            classType
+            isDeleted
+            belongsToApp
+            fontSize
+            fontWeight
+            fontFamily
+            fontStyle
+            lineHeight
+            underline
+            overline
+            linethrough
+            textAlign
+            usingAs
+            charSpacing
+            minWidth
+            splitByGrapheme
+            styles
+            textBackgroundColor
+            createdAt
+            updatedAt
+            createdBy
+            caseId
+            modelName
+            patternName
+            isProcessed
+            processType
+            addLocalRegion
+          }
+        }
+      }
+    }
+  }
+`;

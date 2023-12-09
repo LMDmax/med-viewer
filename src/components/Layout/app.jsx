@@ -421,6 +421,12 @@ function LayoutApp({
     case "Report_Submitting":
       returnText = "Report Submitting";
       break;
+    case "Add_Local_Region":
+      returnText = "Adding Local Region";
+      break;
+    case "Local_Region_Added":
+      returnText = "Local Region Added";
+      break;
 
     default:
       returnText = "";
@@ -605,6 +611,7 @@ function LayoutApp({
           gleasonScoringData={gleasonScoringData}
           setMaskAnnotationData={setMaskAnnotationData}
           addLocalRegion={addLocalRegion}
+          setAddLocalRegion={setAddLocalRegion}
         />
         <LayoutInnerBody>
           {sidebar ? (
@@ -806,10 +813,10 @@ function LayoutApp({
                 <Text fontSize="14px" mr="5px">
                   {bottomZoomValue}X
                 </Text>
-                <Image
+                {/* <Image
                   src="https://i.ibb.co/7CtYTC2/bottom-Bar.png"
                   alt="Bottom Bar"
-                />
+                /> */}
                 <Text ml="5px" fontSize="14px">
                   {unit}
                 </Text>

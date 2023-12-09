@@ -15,6 +15,11 @@ import {
   ModalBody,
   ModalCloseButton,
   background,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
 } from "@chakra-ui/react";
 import _ from "lodash";
 
@@ -209,10 +214,16 @@ function Questionnaire({
   const responsesToSubmit = Object.values(slideQna?.qna);
   // console.log({ slideName });
   // console.log({ slideInfo });
-  // console.log({ All_Reader_Responses });
+  console.log({ All_Reader_Responses });
 
   const currentSlide = slides.find((slide) => slide?._id === slideId);
   // console.log({ response });
+
+  const sortedResponses = All_Reader_Responses?.data?.finalResponseArray
+    .slice()
+    .sort((a, b) => a.first_name.localeCompare(b.first_name));
+
+  console.log({ sortedResponses });
   return (
     <VStack
       spacing={6}
@@ -328,188 +339,162 @@ function Questionnaire({
         })
       ) : userInfo?.data[0].role === "PI" &&
         All_Reader_Responses?.data?.finalResponseArray.length > 0 ? (
-        <Box w="100%" px="5px">
-          {All_Reader_Responses?.data?.finalResponseArray.map((elem, index) => {
-            console.log({ All_Reader_Responses });
-            return (
-              <Box w="100%" maxW="100%" h="auto" mb="30px">
-                <Flex
-                  w="100%"
-                  justifyContent="flex-start"
-                  alignItems="center"
-                  borderTop="3px solid #DEDEDE"
-                  borderRight="3px solid #DEDEDE"
-                  borderLeft="3px solid #DEDEDE"
-                  h="50px"
-                >
-                  <Box w="100%" mx="10px">
-                    <Text
-                      wordBreak="break-word"
-                      whiteSpace="pre-wrap"
-                      maxWidth="100%"
-                      overflowWrap="break-word"
-                    >
-                      {" "}
-                      Accession ID: {currentSlide.accessionId}
+        <Accordion w="100%" allowToggle>
+          {sortedResponses.map((elem, index) => (
+            <AccordionItem key={index}>
+              <h2>
+                <AccordionButton>
+                  <Flex flex="1" textAlign="left" ml="2">
+                    <Text mr="10px">Reader :</Text>
+                    <Text>
+                      Dr. {elem?.first_name} {elem?.last_name}
                     </Text>
-                  </Box>
-                </Flex>
-                <Flex
-                  w="100%"
-                  justifyContent="flex-start"
-                  alignItems="center"
-                  border="3px solid #DEDEDE"
-                  h="50px"
-                  mb="20px"
-                >
-                  <Box w="100%" mx="10px">
-                    <Text
-                      wordBreak="break-word"
-                      whiteSpace="pre-wrap"
-                      maxWidth="100%"
-                      overflowWrap="break-word"
-                    >
-                      Reader : Dr. {elem?.first_name} {elem?.last_name}
-                    </Text>
-                  </Box>
-                </Flex>
-
-                {elem.reportsResponses.some(
-                  (response) =>
-                    response.accession_id === currentSlide.accessionId
-                ) ? (
-                  elem.reportsResponses.map((response, responseIndex) => {
-                    if (response.accession_id === currentSlide.accessionId) {
-                      return (
-                        <Box key={responseIndex} mb="20px">
-                          {/* Render accession ID information */}
-                          {/* Render questions and answers for the current accession ID */}
-                          {response.slideResponses.map(
-                            (slideResponse, slideIndex) => {
-                              if (slideIndex < 5) {
-                                // Check if slideIndex is between 0 and 4
-                                return (
-                                  <Box key={slideIndex} mt="20px">
-                                    <Text
-                                      style={{ marginBottom: "10px" }}
-                                      color={
-                                        slideResponse?.response === null
-                                          ? "gray"
-                                          : "inherit"
-                                      }
-                                    >
-                                      Q: {slideResponse?.question_text}
-                                    </Text>
-                                    <Text
-                                      color={
-                                        slideResponse?.response === null
-                                          ? "gray"
-                                          : "inherit"
-                                      }
-                                    >
-                                      A:{" "}
-                                      {slideResponse?.response !== null
-                                        ? slideResponse?.response?.replace(
-                                            /["{}]/g,
-                                            ""
-                                          )
-                                        : "Not Applicable"}
-                                    </Text>
-                                  </Box>
-                                );
-                              }
-
-                              if (slideIndex === 5) {
-                                // Check if slideIndex is 5
-                                return (
-                                  <Box key={slideIndex} mt="20px">
-                                    {/* Render section heading */}
-                                    {/* Map and render section questions and answers */}
-                                    <Text>
-                                      Q: {slideResponse?.section_heading}{" "}
-                                    </Text>
-                                    {slideResponse.section_questions.map(
-                                      (sectionQuestion, sectionIndex) => (
-                                        <Box key={sectionIndex} mt="10px">
-                                          <Text
-                                            color={
-                                              sectionQuestion?.response === null
-                                                ? "gray"
-                                                : "inherit"
-                                            }
-                                            style={{ marginBottom: "5px" }}
-                                          >
-                                            Q: {sectionQuestion?.question_text}
-                                          </Text>
-                                          <Text
-                                            color={
-                                              sectionQuestion?.response === null
-                                                ? "gray"
-                                                : "inherit"
-                                            }
-                                          >
-                                            A:{" "}
-                                            {sectionQuestion?.response !== null
-                                              ? sectionQuestion?.response?.replace(
-                                                  /["{}]/g,
-                                                  ""
-                                                )
-                                              : "Not Applicable"}
-                                          </Text>
-                                        </Box>
-                                      )
-                                    )}
-                                  </Box>
-                                );
-                              }
-
-                              // For slideIndex > 5, render questions and answers normally
-                              return (
-                                <Box key={slideIndex} mt="20px">
-                                  <p style={{ marginBottom: "10px" }}>
-                                    Q: {slideResponse?.question_text}
-                                  </p>
-                                  <p>
-                                    A:{" "}
-                                    {slideResponse?.response?.replace(
-                                      /["{}]/g,
-                                      ""
-                                    )}
-                                  </p>
-                                </Box>
-                              );
-                            }
-                          )}
-                        </Box>
-                      );
-                    }
-                  })
-                ) : (
-                  <Box>
-                    {console.log("sadsadsadsadsadsad")}
-                    <Text>No Response Submitted</Text>
-                  </Box>
-                )}
-                {elem.reportsResponses.some(
-                  (response) =>
-                    response.accession_id === currentSlide.accessionId
-                ) ? (
-                  <Flex direction="column" mt="40px" mb="80px">
-                    <Image
-                      w="10vw"
-                      h="10vh"
-                      src={elem.signature_file}
-                      alt="signature"
-                    />
-                    <Text color="#3B5D7C">{`${elem?.first_name} ${elem?.last_name}`}</Text>
-                    <Text>{elem?.highest_qualification}</Text>
                   </Flex>
-                ) : // Render something else or leave it empty based on your requirements
-                null}
-              </Box>
-            );
-          })}
-        </Box>
+                  <AccordionIcon />
+                </AccordionButton>
+              </h2>
+              <AccordionPanel>
+                <Box w="100%" px="5px">
+                  {elem.reportsResponses.some(
+                    (response) =>
+                      response.accession_id === currentSlide.accessionId
+                  ) ? (
+                    elem.reportsResponses.map((response, responseIndex) => {
+                      if (response.accession_id === currentSlide.accessionId) {
+                        return (
+                          <Box key={responseIndex} mb="20px">
+                            {/* Render accession ID information */}
+                            {/* Render questions and answers for the current accession ID */}
+                            {response.slideResponses.map(
+                              (slideResponse, slideIndex) => {
+                                if (slideIndex < 5) {
+                                  // Check if slideIndex is between 0 and 4
+                                  return (
+                                    <Box key={slideIndex} mt="20px">
+                                      <Text
+                                        style={{ marginBottom: "10px" }}
+                                        color={
+                                          slideResponse?.response === null
+                                            ? "gray"
+                                            : "inherit"
+                                        }
+                                      >
+                                        Q: {slideResponse?.question_text}
+                                      </Text>
+                                      <Text
+                                        color={
+                                          slideResponse?.response === null
+                                            ? "gray"
+                                            : "inherit"
+                                        }
+                                      >
+                                        A:{" "}
+                                        {slideResponse?.response !== null
+                                          ? slideResponse?.response?.replace(
+                                              /["{}]/g,
+                                              ""
+                                            )
+                                          : "Not Applicable"}
+                                      </Text>
+                                    </Box>
+                                  );
+                                }
+
+                                if (slideIndex === 5) {
+                                  // Check if slideIndex is 5
+                                  return (
+                                    <Box key={slideIndex} mt="20px">
+                                      {/* Render section heading */}
+                                      {/* Map and render section questions and answers */}
+                                      <Text>
+                                        Q: {slideResponse?.section_heading}{" "}
+                                      </Text>
+                                      {slideResponse.section_questions.map(
+                                        (sectionQuestion, sectionIndex) => (
+                                          <Box key={sectionIndex} mt="10px">
+                                            <Text
+                                              color={
+                                                sectionQuestion?.response ===
+                                                null
+                                                  ? "gray"
+                                                  : "inherit"
+                                              }
+                                              style={{ marginBottom: "5px" }}
+                                            >
+                                              Q:{" "}
+                                              {sectionQuestion?.question_text}
+                                            </Text>
+                                            <Text
+                                              color={
+                                                sectionQuestion?.response ===
+                                                null
+                                                  ? "gray"
+                                                  : "inherit"
+                                              }
+                                            >
+                                              A:{" "}
+                                              {sectionQuestion?.response !==
+                                              null
+                                                ? sectionQuestion?.response?.replace(
+                                                    /["{}]/g,
+                                                    ""
+                                                  )
+                                                : "Not Applicable"}
+                                            </Text>
+                                          </Box>
+                                        )
+                                      )}
+                                    </Box>
+                                  );
+                                }
+
+                                // For slideIndex > 5, render questions and answers normally
+                                return (
+                                  <Box key={slideIndex} mt="20px">
+                                    <p style={{ marginBottom: "10px" }}>
+                                      Q: {slideResponse?.question_text}
+                                    </p>
+                                    <p>
+                                      A:{" "}
+                                      {slideResponse?.response?.replace(
+                                        /["{}]/g,
+                                        ""
+                                      )}
+                                    </p>
+                                  </Box>
+                                );
+                              }
+                            )}
+                          </Box>
+                        );
+                      }
+                    })
+                  ) : (
+                    <Box>
+                      <Text>No Response Submitted</Text>
+                    </Box>
+                  )}
+                  {elem.reportsResponses.some(
+                    (response) =>
+                      response.accession_id === currentSlide.accessionId
+                  ) ? (
+                    <Flex direction="column" mt="40px" mb="80px">
+                      <Image
+                        w="10vw"
+                        h="10vh"
+                        src={elem.signature_file}
+                        alt="signature"
+                      />
+                      <Text color="#3B5D7C">{`${elem?.first_name} ${elem?.last_name}`}</Text>
+                      <Text>{elem?.highest_qualification}</Text>
+                    </Flex>
+                  ) : // Render something else or leave it empty based on your requirements
+                  null}
+                </Box>
+              </AccordionPanel>
+            </AccordionItem>
+          ))}
+        </Accordion>
       ) : (
         questions &&
         questions?.data?.[current_slide?.slideType]?.map((question, index) => {

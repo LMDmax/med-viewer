@@ -221,6 +221,7 @@ export const createAnnotation = (annotation) => {
         hasRotatingPoint: annotation.globalCompositeOperation,
         lockMovementX: !annotation.globalCompositeOperation,
         lockMovementY: !annotation.globalCompositeOperation,
+        addLocalRegion: annotation.addLocalRegion,
       });
       break;
 
@@ -260,6 +261,7 @@ export const createAnnotation = (annotation) => {
         hasRotatingPoint: annotation.globalCompositeOperation,
         lockMovementX: !annotation.globalCompositeOperation,
         lockMovementY: !annotation.globalCompositeOperation,
+        addLocalRegion: annotation.addLocalRegion,
       });
       break;
 
@@ -274,6 +276,7 @@ export const createAnnotation = (annotation) => {
         lockMovementX: !annotation.globalCompositeOperation,
         lockMovementY: !annotation.globalCompositeOperation,
         angle: annotation.angle,
+        addLocalRegion: annotation.addLocalRegion,
       });
       break;
 
@@ -289,6 +292,7 @@ export const createAnnotation = (annotation) => {
         lockMovementX: !annotation.globalCompositeOperation,
         lockMovementY: !annotation.globalCompositeOperation,
         angle: annotation.angle,
+        addLocalRegion: annotation.addLocalRegion,
       });
       break;
 
@@ -621,9 +625,9 @@ export const saveAnnotationToDB = async ({
   onSaveAnnotation,
 }) => {
   if (!slideId || !annotation || !onSaveAnnotation) return false;
-  console.log(annotation);
+  // console.log(annotation);
   const annotationJSON = getAnnotationJSON(annotation);
-  console.log(annotationJSON);
+  // console.log(annotationJSON);
   try {
     if (annotationJSON.type === "line") {
       annotationJSON.x1 = annotationJSON.cords[0];

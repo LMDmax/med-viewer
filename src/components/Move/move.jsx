@@ -100,6 +100,7 @@ function Move({
   setShowGleason,
   setMaskAnnotationData,
   addLocalRegion,
+  setAddLocalRegion,
 }) {
   const [ifBiggerScreen] = useMediaQuery("(min-width:2000px)");
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
@@ -312,6 +313,9 @@ function Move({
           navigatorCounter={navigatorCounter}
           setIsLocalRegion={setIsLocalRegion}
           isLocalRegion={isLocalRegion}
+          showTILS={showTILS}
+          addLocalRegion={addLocalRegion}
+          setAddLocalRegion={setAddLocalRegion}
         />
         {!isXmlAnnotations && application !== "education" ? (
           <AiModels
@@ -399,6 +403,7 @@ function Move({
             addLocalRegion={addLocalRegion}
             showTILS={showTILS}
             setIsLocalRegion={setIsLocalRegion}
+            setAddLocalRegion={setAddLocalRegion}
           />
         ) : null}
       </Flex>

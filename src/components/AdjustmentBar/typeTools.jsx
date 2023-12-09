@@ -53,6 +53,7 @@ const TypeTools = ({
   addLocalRegion,
   showTILS,
   setIsLocalRegion,
+  setAddLocalRegion,
 }) => {
   const { fabricOverlayState } = useFabricOverlayState();
   const toast = useToast();
@@ -76,8 +77,6 @@ const TypeTools = ({
 
   const [removeAnnotation, { error: deleteError }] =
     useMutation(DELETE_ANNOTATION);
-
-
 
   if (deleteError) {
     toast({
@@ -119,6 +118,7 @@ const TypeTools = ({
 
     if (showTILS) {
       setIsLocalRegion(true);
+      // setAddLocalRegion(false);
     }
   };
 

@@ -238,7 +238,7 @@ const AddPath = ({
   };
 
 
-  console.log({isHILToolEnabled});
+  // console.log({isHILToolEnabled});
 
   return (
     <Tooltip

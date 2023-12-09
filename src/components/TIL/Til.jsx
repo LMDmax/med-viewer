@@ -36,9 +36,12 @@ const Til = ({
   modelName,
   setLoadUI,
   setTILReady,
+  addLocalRegion,
+  setAddLocalRegion,
   isLocalRegion,
-  setIslocalRegion,
+  setIsLocalRegion,
   lymphocyteColor,
+  showTILS,
 }) => {
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
   const [TilHover, setTilHover] = useState(false);
@@ -61,7 +64,7 @@ const Til = ({
     { data: data1, loading: loading1, error: error1, refetch: refetch1 },
   ] = useLazyQuery(GET_TILS_ANALYSIS);
 
-  // const [addRegion, { error: addError }] = useMutation(ADD_LOCAL_REGION);
+  const [addRegion, { error: addError }] = useMutation(ADD_LOCAL_REGION);
   // ------------------------------------------------------------------------------
   // --------------------Use subscription hook fethcing data for 1st time-------------------------------
   // ---------------------------------------------------------------------------------------
@@ -84,18 +87,36 @@ const Til = ({
     }
   }, [data]);
 
-  // useEffect(() => {
-  //   if (isLocalRegion) {
-  //     addRegion({
-  //       variables: {
-  //         body: {
-  //           key: `${getFileBucketFolder(viewerIds[0].originalFileUrl)}`,
-  //           slideId,
-  //         },
-  //       },
-  //     });
-  //   }
-  // }, [isLocalRegion]);
+  useEffect(() => {
+    if (isLocalRegion) {
+      addRegion({
+        variables: {
+          body: {
+            key: `${getFileBucketFolder(viewerIds[0].originalFileUrl)}`,
+            slideId,
+          },
+        },
+      });
+      setToolSelected("Add_Local_Region");
+      setLoadUI(false);
+      setAddLocalRegion(false);
+      setIsLocalRegion(false);
+    }
+  }, [isLocalRegion]);
+
+  useEffect(() => {
+    if (!showTILS) {
+      const canvas = fabricOverlay?.fabricCanvas();
+      const allAnnotations = canvas?.getObjects();
+      const filteredAnnotations = allAnnotations?.filter(
+        (annotation) => annotation?.addLocalRegion === true
+      );
+      filteredAnnotations?.forEach((obj) => {
+        console.log(obj);
+        canvas?.remove(obj);
+      });
+    }
+  }, [showTILS]);
 
   // chnage lymphocyte color to custoom color
 
