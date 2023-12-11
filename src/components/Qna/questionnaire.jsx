@@ -59,7 +59,7 @@ function Questionnaire({
   const current_slide = slides.find((slide) => slide._id === slideId);
 
   // console.log({ current_slide });
-  // console.log({ slideInfo });
+  // console.log({ selectedAnswers });
   // console.log({ slideId });
 
   const handlePreviewModalClose = () => {
@@ -92,10 +92,12 @@ function Questionnaire({
           [questionId]: { questionId, choice, questionText },
         };
 
+        // console.log({ questionArray });
+
         // Check if the specified questionId exists in questionArray[3]
         const masterQuestionId = questionArray[2]?.question_id;
 
-        if (isLinked) {
+        if (isLinked && currentSlide.slideType === "HAndE") {
           if (
             masterQuestionId &&
             newQna[masterQuestionId] &&
@@ -112,6 +114,26 @@ function Questionnaire({
             newQna[masterQuestionId].choice[0] === "Yes"
           ) {
             // If the choice is "No," delete all question IDs from newQna
+            delete newQna[questionArray[3]?.question_id];
+            delete newQna[questionArray[4]?.question_id];
+          }
+        } else if (isLinked && currentSlide.slideType === "Trichrome") {
+          if (
+            masterQuestionId &&
+            newQna[masterQuestionId] &&
+            newQna[masterQuestionId].choice[0] === "No"
+          ) {
+            // If the choice is "No," delete specific question IDs from newQna
+            questionArray[5]?.section_questions?.forEach((sectionQuestion) => {
+              delete newQna[sectionQuestion.question_id];
+            });
+          }
+          if (
+            masterQuestionId &&
+            newQna[masterQuestionId] &&
+            newQna[masterQuestionId].choice[0] === "Yes"
+          ) {
+            // If the choice is "Yes," delete specific question IDs from newQna
             delete newQna[questionArray[3]?.question_id];
             delete newQna[questionArray[4]?.question_id];
           }
@@ -138,6 +160,9 @@ function Questionnaire({
 
   const changeSlide = () => {
     submitQnaReport();
+    // console.log({
+    //   caseInfo,
+    // });
     if (application === "clinical" && caseInfo?.slides?.length > 1) {
       // console.log("aaa");
       const totalSlides = caseInfo?.slides;
@@ -214,7 +239,7 @@ function Questionnaire({
   const responsesToSubmit = Object.values(slideQna?.qna);
   // console.log({ slideName });
   // console.log({ slideInfo });
-  console.log({ All_Reader_Responses });
+  // console.log({ All_Reader_Responses });
 
   const currentSlide = slides.find((slide) => slide?._id === slideId);
   // console.log({ response });
@@ -223,7 +248,7 @@ function Questionnaire({
     .slice()
     .sort((a, b) => a.first_name.localeCompare(b.first_name));
 
-  console.log({ sortedResponses });
+  // console.log({ sortedResponses });
   return (
     <VStack
       spacing={6}

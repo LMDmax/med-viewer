@@ -120,7 +120,7 @@ function CLSReportHelper({
         setSelectedOption("slides");
         setTimeout(() => {
           setIsOpen(true);
-          setToolSelected("Report_Submitting");
+          setToolSelected("");
           setSelectedOption("report");
           setLoadUI(true);
         }, 1000);

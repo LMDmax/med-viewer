@@ -1183,7 +1183,7 @@ const AnnotationFeed = ({
                           <Accordion
                             allowToggle
                             onClick={() => {
-                              console.log(elem);
+                              // console.log(elem);
                               setLocalRegionsAnnotations(elem.annotation);
                             }}
                             w="100%"
