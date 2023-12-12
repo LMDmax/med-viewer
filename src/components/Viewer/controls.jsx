@@ -28,7 +28,6 @@ import {
   ANNOTATIONS_SUBSCRIPTION,
   DELETE_ANNOTATION,
   GET_ANNOTATION,
-  GET_LOCAL_REGION_SUBS,
   GET_VHUT_ANALYSIS,
   GET_XMLANNOTATION,
   UPDATE_ANNOTATION,
@@ -187,15 +186,6 @@ const ViewerControls = ({
       },
     }
   );
-  const { data: Local_region, error: subscription_error_local_region } =
-    useSubscription(GET_LOCAL_REGION_SUBS, {
-      variables: {
-        body: {
-          slideId,
-        },
-      },
-      fetchPolicy: "network-only", // Set the fetchPolicy to 'no-cache'
-    });
   // console.log(annotationData);
 
   useEffect(() => {
@@ -274,14 +264,12 @@ const ViewerControls = ({
         } catch (err) {
           console.error(err);
         }
-        if (!localStorage.getItem("til")) {
-          toast({
-            title: "Adjustment loaded",
-            status: "success",
-            duration: 1500,
-            isClosable: true,
-          });
-        }
+        toast({
+          title: "Adjustment loaded",
+          status: "success",
+          duration: 1500,
+          isClosable: true,
+        });
       }
     }
   }, [filterResponseData]);
@@ -704,7 +692,7 @@ const ViewerControls = ({
       });
       setIsXmlAnnotations(false);
     }
-  }, [xmlLink, slideId, fabricOverlay, Local_region]);
+  }, [xmlLink, slideId, fabricOverlay]);
 
   // set annotation data
   useEffect(() => {
@@ -752,7 +740,7 @@ const ViewerControls = ({
             const shapeAnnotation = annotatedData.filter(
               (eachAnnotation) => eachAnnotation.type !== "textbox"
             );
-            if (shapeAnnotation.length > 0 && !localStorage.getItem("til")) {
+            if (shapeAnnotation.length > 0) {
               toast({
                 title: "Annotation loaded",
                 status: "success",
@@ -764,7 +752,7 @@ const ViewerControls = ({
               (eachAnnotation) =>
                 eachAnnotation.type == "textbox" && eachAnnotation.text !== ""
             );
-            if (textAnnotation.length > 0 && !localStorage.getItem("til")) {
+            if (textAnnotation.length > 0) {
               toast({
                 title: "Comment loaded",
                 status: "success",
@@ -1342,6 +1330,7 @@ const ViewerControls = ({
         <Loading position="absolute" w="100%" zIndex="3" h="79vh" />
       ) : null}
       <Box position="absolute" left="2vw" top="5vh">
+        
         <Flex direction="column" alignItems="end" mr="23px">
           <Draggable
             bounds={{
@@ -1463,7 +1452,7 @@ const ViewerControls = ({
             handleAnnotationChat={handleAnnotationChat}
             application={application}
           />
-
+          
           <EditText
             isOpen={isEditOpen}
             onClose={closeEdit}
@@ -1488,8 +1477,12 @@ const ViewerControls = ({
             />
           )}
           <ShowMetric viewerId={viewerId} slide={slide} />
+          
         </Flex>
+        
       </Box>
+      
+      
     </Box>
   );
 };

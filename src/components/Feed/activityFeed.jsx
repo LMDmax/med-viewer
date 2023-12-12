@@ -1287,14 +1287,15 @@ const AnnotationFeed = ({
                       alignItems="center"
                       py="8px"
                       bg="#FCFCFC"
-                      onClick={() => {
-                        setAddLocalRegion(!addLocalRegion);
-                      }}
+                      cursor="not-allowed"
+                      // onClick={() => {
+                      //   setAddLocalRegion(!addLocalRegion);
+                      // }}
 
                       // cursor="not-allowed"
                     >
-                      <AiOutlinePlusCircle size="30px" color="#1B75BC" />
-                      <Text ml="5px" color="#1B75BC">
+                      <AiOutlinePlusCircle size="30px" color="gray" />
+                      <Text ml="5px" color="gray">
                         Add Local Region
                       </Text>
                       <Flex
