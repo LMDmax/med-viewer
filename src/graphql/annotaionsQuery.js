@@ -918,6 +918,7 @@ export const GET_ALL_LOCAL_REGIONS = gql`
         info_list {
           _id
           stroma_area
+          tumor_area
           tils_score
           counts
           annotation {

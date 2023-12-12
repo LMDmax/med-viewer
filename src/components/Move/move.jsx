@@ -358,6 +358,7 @@ function Move({
             lymphocyteColor={lymphocyteColor}
             setShowTILS={setShowTILS}
             showTILS={showTILS}
+            setAddLocalRegion={setAddLocalRegion}
           />
         ) : null}
       </Flex>

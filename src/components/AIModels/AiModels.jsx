@@ -57,7 +57,8 @@ const AiModels = ({
   setMaskAnnotationData,
   lymphocyteColor,
   setShowTILS,
-  showTILS
+  showTILS,
+  setAddLocalRegion
 }) => {
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { viewerWindow, isViewportAnalysing } = fabricOverlayState;
@@ -518,6 +519,7 @@ const AiModels = ({
         setShowTILS(true);
       } else {
         // console.log("TILClear")
+        setAddLocalRegion(false);
         setModelname("TILClear");
         setShowTILS(false);
         setSelectedPattern("");

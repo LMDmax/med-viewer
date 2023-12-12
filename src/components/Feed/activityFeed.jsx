@@ -326,7 +326,7 @@ const AnnotationFeed = ({
         },
         fetchPolicy: "network-only",
       });
-      setToolSelected("Local_Region_Added")
+      setToolSelected("Local_Region_Added");
     }
   }, [Local_region, checkTils, slideId]);
 
@@ -337,7 +337,7 @@ const AnnotationFeed = ({
       const infoList = data?.checkTils?.data?.info_list || [];
       setAllLocalRegionAnnotations(infoList);
       setTimeout(() => {
-      setIsTilBoxVisible(true);
+        setIsTilBoxVisible(true);
         setLoadUI(true);
       }, 3000);
     }
@@ -1241,7 +1241,9 @@ const AnnotationFeed = ({
                                     >
                                       <p>Tumor Area :</p>
                                       <p>
-                                        {elem.tumor_area || 0}
+                                        {(elem?.tumor_area / 1000000)?.toFixed(
+                                          2
+                                        )}
                                         sq mm
                                       </p>
                                     </Flex>
@@ -1317,10 +1319,11 @@ const AnnotationFeed = ({
                         borderTop="1px solid lightgray"
                         borderBottom="1px solid lightgray"
                       >
-                        Tumor Area : {tumorArea}
+                        Tumor Area : {(tumorArea / 1000000).toFixed(2)} sq mm
                       </Text>
                       <Text mb="10px" borderBottom="1px solid lightgray">
-                        Intra-Tumoral Stroma Area: : {stromaArea}
+                        Intra-Tumoral Stroma Area: :{" "}
+                        {(stromaArea / 1000000).toFixed(2)} sq mm
                       </Text>
                       <Text borderBottom="1px solid lightgray">
                         Lymphocytes Count : {lymphocyteCount}
