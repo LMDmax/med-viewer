@@ -558,7 +558,7 @@ function Questionnaire({
                 overflowWrap="break-word"
                 color={questionResponse?.response === null ? "gray" : "inherit"}
               >
-                <span style={{ fontWeight: "bold" }}>{`Q ${index + 1}`}</span>
+                <span style={{ fontWeight: "bold" }}>{`Q`}</span>
                 {`     ${
                   question?.question_text
                     ? question?.question_text
