@@ -170,6 +170,8 @@ function LayoutApp({
   //############## ADD LOCAL REGION IN TILS ###############
 
   const [addLocalRegion, setAddLocalRegion] = useState(false);
+  const [isLocalRegion, setIsLocalRegion] = useState(false);
+
 
   // Human - In - The -Loop
 
@@ -427,6 +429,9 @@ function LayoutApp({
     case "Local_Region_Added":
       returnText = "Local Region Added";
       break;
+      case "Local_Region_Deleted":
+      returnText = "Removing Selected Local Region";
+      break;
 
     default:
       returnText = "";
@@ -612,6 +617,8 @@ function LayoutApp({
           setMaskAnnotationData={setMaskAnnotationData}
           addLocalRegion={addLocalRegion}
           setAddLocalRegion={setAddLocalRegion}
+          setIsLocalRegion={setIsLocalRegion}
+          isLocalRegion={isLocalRegion}
         />
         <LayoutInnerBody>
           {sidebar ? (
@@ -660,6 +667,7 @@ function LayoutApp({
               accessToken={accessToken}
               setIsXmlAnnotations={setIsXmlAnnotations}
               handleAnnotationClick={handleAnnotationClick}
+              isLocalRegion={isLocalRegion}
             />
           </LayoutAppBody>
 

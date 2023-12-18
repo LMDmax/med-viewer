@@ -55,7 +55,7 @@ const TypeTools = ({
   setIsLocalRegion,
   setAddLocalRegion,
 }) => {
-  const { fabricOverlayState } = useFabricOverlayState();
+  const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const toast = useToast();
   const [color, setColor] = useState({ r: 217, g: 217, b: 217, a: 1 });
   const [gleasonPatternColor, setGleasonPatternColor] = useState([]);
@@ -116,9 +116,14 @@ const TypeTools = ({
       },
     });
 
-    if (showTILS) {
+    if (showTILS && addLocalRegion) {
       setIsLocalRegion(true);
-      // setAddLocalRegion(false);
+      setAddLocalRegion(false);
+      const canvas = fabricOverlay.fabricCanvas();
+      canvas.clear();
+      setFabricOverlayState(
+        updateActivityFeed({ id: viewerId, fullFeed: [] })
+      );
     }
   };
 

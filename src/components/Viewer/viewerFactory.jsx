@@ -36,7 +36,7 @@ function ViewerFactory({
   accessToken,
   setIsXmlAnnotations,
   handleAnnotationClick,
-
+  isLocalRegion,
 }) {
   const { fabricOverlayState } = useFabricOverlayState();
   const { viewerWindow, sync } = fabricOverlayState;
@@ -131,6 +131,7 @@ function ViewerFactory({
             accessToken={accessToken}
             setIsXmlAnnotations={setIsXmlAnnotations}
             handleAnnotationClick={handleAnnotationClick}
+            isLocalRegion={isLocalRegion}
            
           />
         </Flex>

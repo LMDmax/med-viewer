@@ -127,6 +127,8 @@ function AdjustmentBar({
   setMaskAnnotationData,
   addLocalRegion,
   setAddLocalRegion,
+  setIsLocalRegion,
+  isLocalRegion,
 }) {
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
   const { fabricOverlayState } = useFabricOverlayState();
@@ -239,6 +241,8 @@ function AdjustmentBar({
         setMaskAnnotationData={setMaskAnnotationData}
         addLocalRegion={addLocalRegion}
         setAddLocalRegion={setAddLocalRegion}
+        setIsLocalRegion={setIsLocalRegion}
+        isLocalRegion={isLocalRegion}
       />
       {/* <ActionTools setToolSelected={setToolSelected} viewerId={currentViewer} /> */}
       <ScreenTools

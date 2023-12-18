@@ -12,6 +12,7 @@ export const GET_ANNOTATION = gql`
         originX
         originY
         left
+        addLocalRegion
         top
         width
         height
@@ -803,6 +804,17 @@ export const ADD_LOCAL_REGION = gql`
   mutation SendTils($body: GetLocalTilInput) {
     sendTils(body: $body)
   }
+`;
+
+
+
+export const DELETE_LOCAL_REGION = gql`
+mutation Mutation($body: LocalTilDeleteInput) {
+  deleteLocalTil(body: $body) {
+    status
+    message
+  }
+}
 `;
 
 export const GET_LOCAL_REGION_SUBS = gql`

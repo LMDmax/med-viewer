@@ -62,6 +62,7 @@ import {
   VHUT_ANALYSIS_SUBSCRIPTION,
   GET_LOCAL_REGION_SUBS,
   GET_ALL_LOCAL_REGIONS,
+  DELETE_LOCAL_REGION,
 } from "../../graphql/annotaionsQuery";
 import useCanvasHelpers from "../../hooks/use-fabric-helpers";
 import { useFabricOverlayState } from "../../state/store";
@@ -216,6 +217,10 @@ const AnnotationFeed = ({
 
   const [removeAnnotation, { data: deletedData, error: deleteError }] =
     useMutation(DELETE_ANNOTATION);
+  const [
+    removeLocalRegionAnnotation,
+    { data: deletedLocalRegionData, error: deletedLocalRegionError },
+  ] = useMutation(DELETE_LOCAL_REGION);
   if (deleteError)
     toast({
       title: "Annotation could not be deleted",
@@ -266,8 +271,11 @@ const AnnotationFeed = ({
   const annotationFeed = activityFeed?.filter(
     (eachAnnotation) =>
       eachAnnotation.object.type !== "textbox" &&
-      eachAnnotation.addLocalRegion !== true
+      eachAnnotation.object.addLocalRegion === false
   );
+  // console.log({ annotationFeed });
+  // console.log({ allLocalRegionAnnotations });
+
   // set description text and visibility
   const textObjects = canvas
     .getObjects()
@@ -311,12 +319,14 @@ const AnnotationFeed = ({
     };
 
     fetchData(); // Initial fetch
-
+    if (deletedLocalRegionData?.status == "success") {
+      fetchData(); // Initial fetch
+    }
     return () => {
       // Cleanup function to prevent memory leaks
       // You can cancel subscriptions or perform other cleanup here if needed
     };
-  }, [checkTils, slideId]);
+  }, [checkTils, slideId, deletedLocalRegionData]);
 
   useEffect(() => {
     if (Local_region && Local_region?.localTilStatus?.status === "success") {
@@ -331,7 +341,7 @@ const AnnotationFeed = ({
   }, [Local_region, checkTils, slideId]);
 
   useEffect(() => {
-    if (data) {
+    if (data && localStorage.getItem("til")) {
       // setLoadUI(true);
       setIsTilBoxVisible(false);
       const infoList = data?.checkTils?.data?.info_list || [];
@@ -345,27 +355,33 @@ const AnnotationFeed = ({
 
   useEffect(() => {
     const canvas = fabricOverlay.fabricCanvas();
-    if (allLocalRegionAnnotations.length > 0 && isTILBoxVisible) {
+    if (
+      allLocalRegionAnnotations.length > 0 &&
+      localStorage.getItem("til") &&
+      isTILBoxVisible
+    ) {
+      // console.log("aasd");
       let shape;
       allLocalRegionAnnotations.forEach((eachAnnotation) => {
         shape = createAnnotation(eachAnnotation.annotation);
         shape.set({ selectable: false });
-        canvas.add(shape);
+        canvas.add(shape).requestRenderAll();
       });
     }
-    if (allLocalRegionAnnotations.length > 0 && !isTILBoxVisible) {
+    if (
+      allLocalRegionAnnotations.length > 0 &&
+      localStorage.getItem("til") &&
+      !isTILBoxVisible
+    ) {
       const allAnnotations = canvas?.getObjects();
       const filteredAnnotations = allAnnotations?.filter(
         (annotation) => annotation?.addLocalRegion === true
       );
       filteredAnnotations?.forEach((obj) => {
-        // console.log(obj);
         canvas?.remove(obj);
       });
     }
-  }, [allLocalRegionAnnotations, isTILBoxVisible, data]);
-
-  // console.log({ localRegionsAnnotations });
+  }, [allLocalRegionAnnotations, isTILBoxVisible]);
 
   useEffect(() => {
     if (localRegionsAnnotations !== null) {
@@ -376,50 +392,10 @@ const AnnotationFeed = ({
         shape.top + shape.height / 2
       );
       viewer.viewport.panTo(vpoint);
-      const zoomLevel = localRegionsAnnotations.zoomLevel;
+      viewer.viewport.panTo(vpoint);
       viewer.viewport.zoomTo(3);
     }
   }, [localRegionsAnnotations]);
-
-  // useEffect(() => {
-  //   const canvas = fabricOverlay.fabricCanvas();
-
-  //   if (localRegionsAnnotations.length > 0) {
-  //     let shape;
-  //     localRegionsAnnotations.forEach((eachAnnotation) => {
-  //       shape = createAnnotation(eachAnnotation);
-  //     });
-  //     if (shape && shape.type !== "viewport") canvas.add(shape);
-
-  //     const vpoint = viewer.viewport.imageToViewportRectangle(
-  //       shape.left + shape.width / 2,
-  //       shape.top + shape.height / 2
-  //     );
-  //     viewer.viewport.panTo(vpoint);
-  //   }
-
-  //   const allAnnotations = canvas.getObjects();
-  //   const filteredAnnotations = allAnnotations.filter(
-  //     (annotation) => annotation.addLocalRegion === true
-  //   );
-  //   const isObjectEqual = (obj1, obj2) => obj1.hash !== obj2.hash;
-
-  //   // Create a unique array of objects that are in arr2 but not in arr1
-  //   const uniqueArray = filteredAnnotations.filter(
-  //     (obj2) =>
-  //       !localRegionsAnnotations.some((obj1) => isObjectEqual(obj1, obj2))
-  //   );
-
-  //   // console.log({ uniqueArray });
-  //   // Remove the unwanted objects from the canvas
-  //   uniqueArray.forEach((obj) => {
-  //     canvas.remove(obj);
-  //   });
-
-  //   // console.log({ allAnnotations });
-  // }, [localRegionsAnnotations]);
-
-  // console.log({ localRegionsAnnotations });
 
   // console.log({ localRegionsAnnotations });
 
@@ -514,6 +490,30 @@ const AnnotationFeed = ({
     deleteAllAnnotations(onDeleteAnnotation);
     onDeleteConfirmationClose();
   };
+
+  const handleDeleteLocalRegion = (hash) => {
+    const sendData = {
+      hash,
+      slideId,
+    };
+    removeLocalRegionAnnotation({ variables: { body: sendData } });
+    setToolSelected("Local_Region_Deleted");
+    
+    setLoadUI(false);
+  };
+
+  useEffect(() => {
+    const canvas = fabricOverlay.fabricCanvas();
+    if (deletedLocalRegionData?.status == "success") {
+      const allAnnotations = canvas?.getObjects();
+      const filteredAnnotations = allAnnotations?.filter(
+        (annotation) => annotation?.addLocalRegion === true
+      );
+      filteredAnnotations?.forEach((obj) => {
+        canvas?.remove(obj);
+      });
+    }
+  }, [deletedLocalRegionData]);
 
   useEffect(() => {
     if (isTILBoxVisible) {
@@ -1051,7 +1051,7 @@ const AnnotationFeed = ({
             })}
 
             {localStorage.getItem("til") ? (
-              <Box my="10px" cursor="pointer">
+              <Box my="10px" w="100%" cursor="pointer">
                 <Flex
                   w="40%"
                   onClick={() => setIsTilBoxVisible(!isTILBoxVisible)}
@@ -1093,7 +1093,6 @@ const AnnotationFeed = ({
                     <Flex
                       borderBottom="1px solid lightgray"
                       my="0"
-                      ml="40px"
                       alignItems="center"
                       bg={selectedPattern === "Tumor" ? "#DEDEDE" : null}
                       onClick={() => {
@@ -1124,7 +1123,6 @@ const AnnotationFeed = ({
                     <Flex
                       borderBottom="1px solid lightgray"
                       my="0"
-                      ml="40px"
                       alignItems="center"
                       bg={selectedPattern === "Stroma" ? "#DEDEDE" : null}
                       onClick={() => {
@@ -1154,9 +1152,7 @@ const AnnotationFeed = ({
                     {/* // ###### Lymphocytes ############ */}
                     <Flex
                       my="0"
-                      ml="40px"
                       alignItems="center"
-                      borderBottom="1px solid lightgray"
                       bg={selectedPattern === "Lymphocytes" ? "#DEDEDE" : null}
                       onClick={() => {
                         if (selectedPattern === "Lymphocytes") {
@@ -1186,34 +1182,70 @@ const AnnotationFeed = ({
                               // console.log(elem);
                               setLocalRegionsAnnotations(elem.annotation);
                             }}
+                            onClose={() => {
+                              setLocalRegionsAnnotations({});
+                            }}
                             w="100%"
                           >
-                            <AccordionItem>
+                            <AccordionItem ml="-10px">
                               <h2>
                                 <AccordionButton>
-                                  <Flex ml="30px" as="span" textAlign="left">
-                                    <Box w="10%" mt="4px">
-                                      {elem.annotation?.type === "marker" ? (
-                                        <BsPlusLg color="#E23636" />
-                                      ) : elem.annotation?.type === "arrow" ? (
-                                        <BsArrowUpLeft color="#E23636" />
-                                      ) : elem.annotation?.type === "rect" ? (
-                                        <BiRectangle color="#E23636" />
-                                      ) : elem.annotation?.type ===
-                                        "polygon" ? (
-                                        <FaDrawPolygon color="#E23636" />
-                                      ) : elem.annotation?.type ===
-                                        "ellipse" ? (
-                                        <BsCircle color="#E23636" />
-                                      ) : (
-                                        <BsSlash color="#E23636" />
-                                      )}
-                                    </Box>
-                                    <Text ml="0.8vw">
-                                      Local Region {index + 1}
-                                    </Text>
+                                  <Flex
+                                    as="span"
+                                    justifyContent="space-between"
+                                    alignItems="center"
+                                    width="100%" // Ensure the entire width is utilized
+                                  >
+                                    <Flex
+                                      as="span"
+                                      textAlign="left"
+                                      alignItems="center"
+                                    >
+                                      <Box w="10%" mt="4px">
+                                        {elem.annotation?.type === "marker" ? (
+                                          <BsPlusLg color="#E23636" />
+                                        ) : elem.annotation?.type ===
+                                          "arrow" ? (
+                                          <BsArrowUpLeft color="#E23636" />
+                                        ) : elem.annotation?.type === "rect" ? (
+                                          <BiRectangle color="#E23636" />
+                                        ) : elem.annotation?.type ===
+                                          "polygon" ? (
+                                          <FaDrawPolygon color="#E23636" />
+                                        ) : elem.annotation?.type ===
+                                          "ellipse" ? (
+                                          <BsCircle color="#E23636" />
+                                        ) : (
+                                          <BsSlash color="#E23636" />
+                                        )}
+                                      </Box>
+                                      <Text ml="0.8vw">
+                                        Local Region {index + 1}
+                                      </Text>
+                                      <AccordionIcon />
+                                    </Flex>
+                                    <IconButton
+                                      icon={<MdDelete size={18} />}
+                                      size="sm"
+                                      variant="unstyled"
+                                      color="#8F8F8F"
+                                      cursor="pointer"
+                                      _focus={{
+                                        border: "none",
+                                        outline: "none",
+                                      }}
+                                      _hover={{
+                                        color: "#1B75BC",
+                                      }}
+                                      onClick={(e) => {
+                                        e.stopPropagation(); // Stop event propagation
+                                        handleDeleteLocalRegion(
+                                          elem.annotation.hash
+                                        );
+                                      }}
+                                    />
+                                    {/* Adjust ml value based on your design */}
                                   </Flex>
-                                  <AccordionIcon />
                                 </AccordionButton>
                               </h2>
                               <AccordionPanel w="100%">
@@ -1254,7 +1286,7 @@ const AnnotationFeed = ({
                                       alignItems="center"
                                       w="100%"
                                     >
-                                      <p>Intra - Tumoral Stroma Area :</p>
+                                      <p>Intra-Tumoral Stroma Area :</p>
                                       <p>
                                         {(elem.stroma_area / 1000000).toFixed(
                                           2
@@ -1283,19 +1315,17 @@ const AnnotationFeed = ({
 
                     <Flex
                       my="0"
-                      ml="40px"
+                      ml="8px"
                       alignItems="center"
                       py="8px"
                       bg="#FCFCFC"
-                      cursor="not-allowed"
-                      // onClick={() => {
-                      //   setAddLocalRegion(!addLocalRegion);
-                      // }}
-
                       // cursor="not-allowed"
+                      onClick={() => {
+                        setAddLocalRegion(!addLocalRegion);
+                      }}
                     >
-                      <AiOutlinePlusCircle size="30px" color="gray" />
-                      <Text ml="5px" color="gray">
+                      <AiOutlinePlusCircle size="40px" color="#1B75BC" />
+                      <Text ml="5px" color="#1B75BC">
                         Add Local Region
                       </Text>
                       <Flex
@@ -1304,17 +1334,13 @@ const AnnotationFeed = ({
                         w="100%"
                       ></Flex>
                     </Flex>
-                    <Box w="100%" mx="25px" my="10px" textAlign="left">
+                    <Box w="100%" my="10px" textAlign="left">
                       <Text color="#3B5D7C">TIL Values</Text>
                     </Box>
-                    <Box px="25px">
+                    <Box w="100%">
                       <Text mb="10px" borderTop="1px solid lightgray">
                         Global TIL Score : {tilScore}
                       </Text>
-                      {/* <Text mb="10px">
-                        TIL Formula : <br /> (Lymphocyte Area / Stroma Area) *
-                        100
-                      </Text> */}
                       <Text
                         mb="10px"
                         borderTop="1px solid lightgray"
@@ -1323,7 +1349,7 @@ const AnnotationFeed = ({
                         Tumor Area : {(tumorArea / 1000000).toFixed(2)} sq mm
                       </Text>
                       <Text mb="10px" borderBottom="1px solid lightgray">
-                        Intra-Tumoral Stroma Area: :{" "}
+                        Intra-Tumoral Stroma Area:{" "}
                         {(stromaArea / 1000000).toFixed(2)} sq mm
                       </Text>
                       <Text borderBottom="1px solid lightgray">

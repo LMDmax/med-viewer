@@ -96,6 +96,7 @@ const ViewerControls = ({
   accessToken,
   setIsXmlAnnotations,
   handleAnnotationClick,
+  isLocalRegion,
 }) => {
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { viewerWindow, isViewportAnalysing } = fabricOverlayState;
@@ -264,12 +265,14 @@ const ViewerControls = ({
         } catch (err) {
           console.error(err);
         }
-        toast({
-          title: "Adjustment loaded",
-          status: "success",
-          duration: 1500,
-          isClosable: true,
-        });
+        if (!localStorage.getItem("til")) {
+          toast({
+            title: "Adjustment loaded",
+            status: "success",
+            duration: 1500,
+            isClosable: true,
+          });
+        }
       }
     }
   }, [filterResponseData]);
@@ -692,7 +695,7 @@ const ViewerControls = ({
       });
       setIsXmlAnnotations(false);
     }
-  }, [xmlLink, slideId, fabricOverlay]);
+  }, [xmlLink, slideId, fabricOverlay, isLocalRegion]);
 
   // set annotation data
   useEffect(() => {
@@ -740,7 +743,7 @@ const ViewerControls = ({
             const shapeAnnotation = annotatedData.filter(
               (eachAnnotation) => eachAnnotation.type !== "textbox"
             );
-            if (shapeAnnotation.length > 0) {
+            if (shapeAnnotation.length > 0 && !localStorage.getItem("til")) {
               toast({
                 title: "Annotation loaded",
                 status: "success",
@@ -752,7 +755,7 @@ const ViewerControls = ({
               (eachAnnotation) =>
                 eachAnnotation.type == "textbox" && eachAnnotation.text !== ""
             );
-            if (textAnnotation.length > 0) {
+            if (textAnnotation.length > 0 && !localStorage.getItem("til")) {
               toast({
                 title: "Comment loaded",
                 status: "success",
@@ -843,7 +846,7 @@ const ViewerControls = ({
       setIsAnnotationLoaded(true);
     };
     loadAnnotations();
-  }, [fabricOverlay, annotatedData, slideId]);
+  }, [fabricOverlay, annotatedData, slideId, isLocalRegion]);
 
   useEffect(() => {
     const canvas = fabricOverlay?.fabricCanvas();
@@ -1330,7 +1333,6 @@ const ViewerControls = ({
         <Loading position="absolute" w="100%" zIndex="3" h="79vh" />
       ) : null}
       <Box position="absolute" left="2vw" top="5vh">
-        
         <Flex direction="column" alignItems="end" mr="23px">
           <Draggable
             bounds={{
@@ -1452,7 +1454,7 @@ const ViewerControls = ({
             handleAnnotationChat={handleAnnotationChat}
             application={application}
           />
-          
+
           <EditText
             isOpen={isEditOpen}
             onClose={closeEdit}
@@ -1477,12 +1479,8 @@ const ViewerControls = ({
             />
           )}
           <ShowMetric viewerId={viewerId} slide={slide} />
-          
         </Flex>
-        
       </Box>
-      
-      
     </Box>
   );
 };

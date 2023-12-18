@@ -78,7 +78,7 @@ const Viewer = ({
   accessToken,
   setIsXmlAnnotations,
   handleAnnotationClick,
-
+  isLocalRegion,
 }) => {
   const { setFabricOverlayState } = useFabricOverlayState();
   const [viewer, setViewer] = useState(null);
@@ -184,6 +184,7 @@ const Viewer = ({
           accessToken={accessToken}
           setIsXmlAnnotations={setIsXmlAnnotations}
           handleAnnotationClick={handleAnnotationClick}
+          isLocalRegion={isLocalRegion}
         />
       )}
       {/* <Button onClick={selection}>Select</Button> */}

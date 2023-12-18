@@ -101,6 +101,8 @@ function Move({
   setMaskAnnotationData,
   addLocalRegion,
   setAddLocalRegion,
+  setIsLocalRegion,
+  isLocalRegion,
 }) {
   const [ifBiggerScreen] = useMediaQuery("(min-width:2000px)");
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
@@ -108,7 +110,6 @@ function Move({
   const [popup, setPopup] = useState(false);
   const [TILReady, setTILReady] = useState(false);
   const [showTILS, setShowTILS] = useState(false);
-  const [isLocalRegion, setIsLocalRegion] = useState(false);
 
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { activeTool, viewerWindow } = fabricOverlayState;

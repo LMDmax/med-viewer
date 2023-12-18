@@ -314,7 +314,6 @@ const CommentFeed = ({
         <ScrollBar>
           <Flex direction="column">
             {activityFeed?.map((feed) => {
-              console.log({ feed });
               return feed?.object &&
                 feed?.object?.type === "textbox" &&
                 feed.object.text !== "" ? (
