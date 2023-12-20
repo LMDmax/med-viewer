@@ -499,7 +499,7 @@ const AnnotationFeed = ({
     };
     removeLocalRegionAnnotation({ variables: { body: sendData } });
     setToolSelected("Local_Region_Deleted");
-    
+
     setLoadUI(false);
   };
 
@@ -578,7 +578,6 @@ const AnnotationFeed = ({
     onHITLInput({ variables: { body: data } });
     // console.log(gleasonScoringData);
   };
-
 
   return (
     <Flex
@@ -1304,7 +1303,7 @@ const AnnotationFeed = ({
                                       w="100%"
                                     >
                                       <p>Lymphocyte Count :</p>
-                                      <p>{elem.counts}</p>
+                                      <p>{elem.counts} sq mm</p>
                                     </Flex>
                                   </Box>
                                 </Flex>
@@ -1354,7 +1353,7 @@ const AnnotationFeed = ({
                         Intra-Tumoral Stroma Area:{" "}
                         {(stromaArea / 1000000).toFixed(2)} sq mm
                       </Text>
-                      <Text  mb="10px" borderBottom="1px solid lightgray">
+                      <Text mb="10px" borderBottom="1px solid lightgray">
                         Lymphocytes Count : {lymphocyteCount}
                       </Text>
                       <Text borderBottom="1px solid lightgray">
