@@ -474,15 +474,19 @@ export const GET_TILS_ANALYSIS = gql`
   query Query($query: GetTilInput) {
     getTils(query: $query) {
       data {
-        TILS_score
+        slideId
         bucket_name
         key_name
-        lymphocyte_count
-        slideId
         status
+        lymphocyte_cords
+        TILS_score
+        lymphocyte_count
         stroma_area
         tumor_area
+        stroma_url
         tumor_url
+        version
+        avg_lymp_area
       }
       message
       status
@@ -806,15 +810,13 @@ export const ADD_LOCAL_REGION = gql`
   }
 `;
 
-
-
 export const DELETE_LOCAL_REGION = gql`
-mutation Mutation($body: LocalTilDeleteInput) {
-  deleteLocalTil(body: $body) {
-    status
-    message
+  mutation Mutation($body: LocalTilDeleteInput) {
+    deleteLocalTil(body: $body) {
+      status
+      message
+    }
   }
-}
 `;
 
 export const GET_LOCAL_REGION_SUBS = gql`

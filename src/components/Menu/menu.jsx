@@ -161,6 +161,7 @@ function FunctionsMenu({
   sendReportDataToHospital,
   setChangeSlide,
   All_Reader_Responses,
+  lymphocyteArea,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
@@ -1208,7 +1209,8 @@ function FunctionsMenu({
                 setToolSelected={setToolSelected}
                 viewerIds={viewerIds}
                 setAddLocalRegion={setAddLocalRegion}
-                addLocalRegion={addLocalRegion}
+                    addLocalRegion={addLocalRegion}
+                    lymphocyteArea={lymphocyteArea}
               />
             ) : selectedOption === "comments" ? (
               <CommentFeed

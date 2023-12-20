@@ -42,6 +42,7 @@ const Til = ({
   setIsLocalRegion,
   lymphocyteColor,
   showTILS,
+  setLymphocyteArea,
 }) => {
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
   const [TilHover, setTilHover] = useState(false);
@@ -177,6 +178,7 @@ const Til = ({
       setTumorArea(data?.getTils?.data?.tumor_area);
       setTilScore(data?.getTils?.data?.TILS_score);
       setLymphocyteCount(data?.getTils?.data?.lymphocyte_count);
+      setLymphocyteArea(data?.getTils?.data?.avg_lymp_area);
     }
     if (tilSubscriptionData) {
       setStromaArea(tilSubscriptionData?.tilStatus?.data?.stroma_area);
@@ -185,6 +187,7 @@ const Til = ({
       setLymphocyteCount(
         tilSubscriptionData?.tilStatus?.data?.lymphocyte_count
       );
+      setLymphocyteArea(data?.getTils?.data?.avg_lymp_area);
     }
   }, [data, tilSubscriptionData]);
 

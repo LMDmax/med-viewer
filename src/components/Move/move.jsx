@@ -103,6 +103,7 @@ function Move({
   setAddLocalRegion,
   setIsLocalRegion,
   isLocalRegion,
+  setLymphocyteArea,
 }) {
   const [ifBiggerScreen] = useMediaQuery("(min-width:2000px)");
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
@@ -317,6 +318,7 @@ function Move({
           showTILS={showTILS}
           addLocalRegion={addLocalRegion}
           setAddLocalRegion={setAddLocalRegion}
+          setLymphocyteArea={setLymphocyteArea}
         />
         {!isXmlAnnotations && application !== "education" ? (
           <AiModels

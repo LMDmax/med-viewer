@@ -94,6 +94,7 @@ function LayoutApp({
   const [tumorArea, setTumorArea] = useState();
   const [stromaArea, setStromaArea] = useState();
   const [lymphocyteCount, setLymphocyteCount] = useState();
+  const [lymphocyteArea, setLymphocyteArea] = useState();
   const [navigatorCounter, setNavigatorCounter] = useState(0);
   const [base64URL, setBase64URL] = useState(false);
   const [normalizeDefault, setNormalizeDefault] = useState(false);
@@ -619,6 +620,7 @@ function LayoutApp({
           setAddLocalRegion={setAddLocalRegion}
           setIsLocalRegion={setIsLocalRegion}
           isLocalRegion={isLocalRegion}
+          setLymphocyteArea={setLymphocyteArea}
         />
         <LayoutInnerBody>
           {sidebar ? (
@@ -706,6 +708,7 @@ function LayoutApp({
             tumorArea={tumorArea}
             stromaArea={stromaArea}
             lymphocyteCount={lymphocyteCount}
+            lymphocyteArea={lymphocyteArea}
             mediaUpload={mediaUpload}
             slideInfo={slideInfo}
             handleReport={handleReport}

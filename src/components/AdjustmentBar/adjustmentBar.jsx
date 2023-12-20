@@ -129,6 +129,7 @@ function AdjustmentBar({
   setAddLocalRegion,
   setIsLocalRegion,
   isLocalRegion,
+  setLymphocyteArea,
 }) {
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
   const { fabricOverlayState } = useFabricOverlayState();
@@ -243,6 +244,7 @@ function AdjustmentBar({
         setAddLocalRegion={setAddLocalRegion}
         setIsLocalRegion={setIsLocalRegion}
         isLocalRegion={isLocalRegion}
+        setLymphocyteArea={setLymphocyteArea}
       />
       {/* <ActionTools setToolSelected={setToolSelected} viewerId={currentViewer} /> */}
       <ScreenTools

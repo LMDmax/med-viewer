@@ -186,6 +186,7 @@ const AnnotationFeed = ({
   viewerIds,
   setAddLocalRegion,
   addLocalRegion,
+  lymphocyteArea,
 }) => {
   // console.log("lymphocyteColor", lymphocyteColor);
   // const onUpdateAnnotation = (data) => {
@@ -577,6 +578,7 @@ const AnnotationFeed = ({
     onHITLInput({ variables: { body: data } });
     // console.log(gleasonScoringData);
   };
+
 
   return (
     <Flex
@@ -1352,8 +1354,11 @@ const AnnotationFeed = ({
                         Intra-Tumoral Stroma Area:{" "}
                         {(stromaArea / 1000000).toFixed(2)} sq mm
                       </Text>
-                      <Text borderBottom="1px solid lightgray">
+                      <Text  mb="10px" borderBottom="1px solid lightgray">
                         Lymphocytes Count : {lymphocyteCount}
+                      </Text>
+                      <Text borderBottom="1px solid lightgray">
+                        Lymphocyte Area : {lymphocyteArea}
                       </Text>
                     </Box>
                   </MotionBox>
