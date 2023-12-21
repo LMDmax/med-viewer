@@ -121,9 +121,6 @@ const TypeTools = ({
       setAddLocalRegion(false);
       const canvas = fabricOverlay.fabricCanvas();
       canvas.clear();
-      setFabricOverlayState(
-        updateActivityFeed({ id: viewerId, fullFeed: [] })
-      );
     }
   };
 
