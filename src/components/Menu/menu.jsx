@@ -1209,8 +1209,9 @@ function FunctionsMenu({
                 setToolSelected={setToolSelected}
                 viewerIds={viewerIds}
                 setAddLocalRegion={setAddLocalRegion}
-                    addLocalRegion={addLocalRegion}
-                    lymphocyteArea={lymphocyteArea}
+                addLocalRegion={addLocalRegion}
+                lymphocyteArea={lymphocyteArea}
+                application={application}
               />
             ) : selectedOption === "comments" ? (
               <CommentFeed

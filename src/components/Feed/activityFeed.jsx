@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-
+import { FiDownload } from "react-icons/fi";
+import { AiOutlineClose } from "react-icons/ai";
 import { useLazyQuery, useMutation, useSubscription } from "@apollo/client";
 import { BsArrowRepeat } from "react-icons/bs";
 import {
@@ -25,6 +26,8 @@ import {
   IconButton,
   useToast,
   Collapse,
+  Button,
+  Checkbox,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import {
@@ -187,17 +190,15 @@ const AnnotationFeed = ({
   setAddLocalRegion,
   addLocalRegion,
   lymphocyteArea,
+  application,
 }) => {
-  // console.log("lymphocyteColor", lymphocyteColor);
-  // const onUpdateAnnotation = (data) => {
-  //   console.log("annotationFeed", data);
-  // };
-  // console.log("ON", selectedPattern);
   const toast = useToast();
   const [ifScreenlessthan1536px] = useMediaQuery("(max-width:1536px)");
   const [isTILBoxVisible, setIsTilBoxVisible] = useState(false);
   const [localRegionsAnnotations, setLocalRegionsAnnotations] = useState(null);
   const [selectedItemIndex, setSelectedItemIndex] = useState(null);
+  const [selectAnnotation, setSelectAnnotation] = useState(false);
+  const [json_Group_Annotation, setJson_Group_Annotation] = useState([]);
 
   const [onHITLInput, { data: analysis_data, error: analysis_error }] =
     useMutation(HITL_INPUT);
@@ -418,6 +419,7 @@ const AnnotationFeed = ({
   }, [tile]);
 
   const handleClick = (feed, index) => {
+    // console.log({ feed });
     const newAccordionState = [...accordionState];
     if (newAccordionState[index]) {
       newAccordionState[index].isOpen = !newAccordionState[index].isOpen;
@@ -579,6 +581,52 @@ const AnnotationFeed = ({
     // console.log(gleasonScoringData);
   };
 
+  // handle manual download annotation to JSON
+  const handleCheckboxChange = (feed_data) => {
+    // Your logic for adding, removing, or ignoring items in the state
+    // For example, let's assume there's an item called "feed" to add/remove
+
+    const feed = feed_data;
+    const isFeedSelected = json_Group_Annotation.includes(feed);
+
+    if (isFeedSelected) {
+      // If feed is selected, unselect it (remove from state)
+      const updatedState = json_Group_Annotation.filter(
+        (item) => item !== feed
+      );
+      setJson_Group_Annotation(updatedState);
+    } else {
+      // If feed is not selected, select it (add to state)
+      setJson_Group_Annotation([...json_Group_Annotation, feed]);
+    }
+  };
+
+  console.log({ json_Group_Annotation });
+
+  function downloadJsonFile(data, filename) {
+    const jsonBlob = new Blob([JSON.stringify(data, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(jsonBlob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+
+    // Clean up
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    setJson_Group_Annotation([]);
+    setSelectAnnotation(false);
+  }
+
+  const handleSelectAllClick = () => {
+    const allObjects = annotationFeed.map((feed) => feed.object);
+    setJson_Group_Annotation(allObjects);
+  };
+
   return (
     <Flex
       as="section"
@@ -601,45 +649,83 @@ const AnnotationFeed = ({
         flex="1"
       >
         <HStack justify="space-between">
-          <Text fontSize="1rem" pb="3px">
-            Annotation List
-          </Text>
+          {!selectAnnotation && application === "hospital" ? (
+            <Text fontSize="1rem" pb="3px">
+              Annotation List
+            </Text>
+          ) : (
+            <Text
+              onClick={() => {
+                handleSelectAllClick();
+              }}
+              fontSize="1rem"
+              pb="3px"
+              color="#007BFF"
+              cursor="pointer"
+            >
+              Select All
+            </Text>
+          )}
           <Flex>
-            {/* {isXmlAnnotations && (
-              <Tooltip
-                label={
-                  hideDescription ? "Show description" : "Hide description"
-                }
-                closeOnClick={false}
-              >
+            {!isXmlAnnotations &&
+              !selectAnnotation &&
+              application === "hospital" && (
                 <IconButton
-                  icon={
-                    hideDescription ? (
-                      <AiOutlineEyeInvisible size={18} />
-                    ) : (
-                      <AiOutlineEye size={18} />
-                    )
-                  }
+                  icon={<MdDelete size={18} />}
                   size="sm"
                   variant="unstyled"
                   cursor="pointer"
                   isDisabled={annotationFeed.length === 0}
                   _focus={{ border: "none", outline: "none" }}
-                  onClick={() => handletoggleClick()}
+                  onClick={onDeleteConfirmationOpen}
                 />
-              </Tooltip>
-            )} */}
-            {!isXmlAnnotations && (
-              <IconButton
-                icon={<MdDelete size={18} />}
-                size="sm"
-                variant="unstyled"
-                cursor="pointer"
-                isDisabled={annotationFeed.length === 0}
-                _focus={{ border: "none", outline: "none" }}
-                onClick={onDeleteConfirmationOpen}
-              />
+              )}
+
+            {!isXmlAnnotations &&
+              !selectAnnotation &&
+              application === "hospital" && (
+                <IconButton
+                  icon={<FiDownload size={18} />}
+                  size="sm"
+                  variant="unstyled"
+                  cursor="pointer"
+                  isDisabled={annotationFeed.length === 0}
+                  _focus={{ border: "none", outline: "none" }}
+                  onClick={() => setSelectAnnotation(!selectAnnotation)}
+                />
+              )}
+            {!isXmlAnnotations && selectAnnotation && (
+              <Box marginRight="15px">
+                <IconButton
+                  icon={<FiDownload size={18} color="#007BFF" />}
+                  size="sm"
+                  variant="unstyled"
+                  cursor="pointer"
+                  disabled={!json_Group_Annotation.length > 0}
+                  onClick={() => {
+                    downloadJsonFile(json_Group_Annotation, "annotations.json");
+                  }}
+                  _focus={{ border: "none", outline: "none" }}
+                />
+              </Box>
             )}
+            {!isXmlAnnotations &&
+              selectAnnotation &&
+              application === "hospital" && (
+                <Box marginRight="15px">
+                  <IconButton
+                    icon={<AiOutlineClose size={18} color="red" />}
+                    size="sm"
+                    variant="unstyled"
+                    cursor="pointer"
+                    onClick={() => {
+                      setJson_Group_Annotation([]);
+                      setSelectAnnotation(false);
+                    }}
+                    _focus={{ border: "none", outline: "none" }}
+                  />
+                </Box>
+              )}
           </Flex>
         </HStack>
         <ScrollBar>
@@ -683,8 +769,19 @@ const AnnotationFeed = ({
                                 <AiFillCaretRight color="gray" />
                               )}
                             </Box>
+                            {selectAnnotation && (
+                              <Checkbox
+                                colorScheme="green"
+                                onChange={() =>
+                                  handleCheckboxChange(feed.object)
+                                }
+                                isChecked={json_Group_Annotation.some(
+                                  (item) => item.hash === feed.object.hash
+                                )}
+                              ></Checkbox>
+                            )}
                             <Box>
-                              <Flex justifyContent="space-between">
+                              <Flex ml="20px" justifyContent="space-between">
                                 <Box w="10%" mt="4px">
                                   {feed.object?.type === "marker" ? (
                                     <BsPlusLg color="#E23636" />
@@ -739,7 +836,7 @@ const AnnotationFeed = ({
                               </Flex>
                             </Box>
                           </Flex>
-                          {!isXmlAnnotations && (
+                          {!isXmlAnnotations && !selectAnnotation && (
                             <EditTextButton
                               feed={feed}
                               handleEditClick={handleEditClick}
