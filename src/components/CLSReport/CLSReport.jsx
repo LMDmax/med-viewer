@@ -36,6 +36,11 @@ function CLSReport({
   slides,
   submitQnaReport,
   All_Reader_Responses,
+  set_Is_PreviewButton_Disable,
+  showPreviewModal,
+  setShowPreviewModal,
+  submitAdditionalResponse,
+  permission,
 }) {
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
   return (
@@ -94,6 +99,11 @@ function CLSReport({
           slideName={slideName}
           slides={slides}
           All_Reader_Responses={All_Reader_Responses}
+          set_Is_PreviewButton_Disable={set_Is_PreviewButton_Disable}
+          setShowPreviewModal={setShowPreviewModal}
+          showPreviewModal={showPreviewModal}
+          submitAdditionalResponse={submitAdditionalResponse}
+          permission={permission}
         />
       </>
       {/* )} */}

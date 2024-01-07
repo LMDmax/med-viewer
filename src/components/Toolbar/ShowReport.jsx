@@ -44,6 +44,11 @@ function ShowReport({
   slide,
   slides,
   All_Reader_Responses,
+  set_Is_PreviewButton_Disable,
+  showPreviewModal,
+  setShowPreviewModal,
+  submitAdditionalResponse,
+  permission,
 }) {
   if (application === "hospital")
     return (
@@ -96,6 +101,11 @@ function ShowReport({
         slideInfo={slide}
         slides={slides}
         All_Reader_Responses={All_Reader_Responses}
+        set_Is_PreviewButton_Disable={set_Is_PreviewButton_Disable}
+        setShowPreviewModal={setShowPreviewModal}
+        showPreviewModal={showPreviewModal}
+        submitAdditionalResponse={submitAdditionalResponse}
+        permission={permission}
       />
     );
 

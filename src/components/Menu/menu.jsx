@@ -162,6 +162,8 @@ function FunctionsMenu({
   setChangeSlide,
   All_Reader_Responses,
   lymphocyteArea,
+  submitAdditionalResponse,
+  permission,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
@@ -173,6 +175,9 @@ function FunctionsMenu({
   const [manipulationComplete, setManipulationComplete] = useState(false);
   const [targetAnnotation, setTargetAnnotation] = useState({});
   const [showNormalisation, setShowNormalisation] = useState(false);
+  const [is_PreviewButton_Disable, set_Is_PreviewButton_Disable] =
+    useState(true);
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [getAnnotation, { data: annotationData, loading, error }] =
     useLazyQuery(GET_ANNOTATION);
   const [reportData, setReportData] = useState({
@@ -190,6 +195,14 @@ function FunctionsMenu({
       [input]: value,
     }));
   };
+
+  //################# CLINICAL REPORT #####################
+
+  const handlePreviewButton = () => {
+    setShowPreviewModal(!showPreviewModal);
+  };
+
+  // ###########################################################
 
   // console.log("slideInforFromMEanu",slideInfo)
   const handleUpload = (e) => {
@@ -1232,18 +1245,38 @@ function FunctionsMenu({
                   direction="row"
                   alignItems="center"
                   justifyContent={
-                    app === "clinical" ? "center" : "space-evenly"
+                    app === "clinical" ? "space-between" : "space-evenly"
                   }
                   // p="5px 5px 0px 20px"
                   // borderBottom="1px solid #DEDEDE"
                 >
-                  <Text
-                    fontFamily="Inter"
-                    color="#3B5D7C"
-                    mr={app === "clinical" ? "0px" : "60%"}
+                  <Flex
+                    w="100%"
+                    h="30px"
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
                   >
-                    {app === "clinical" ? "Questionnaire" : "Report"}
-                  </Text>
+                    <Text
+                      fontFamily="Inter"
+                      color="#1B75BC"
+                      fontWeight="600  "
+                      mr={app === "clinical" ? "0px" : "60%"}
+                    >
+                      {app === "clinical" ? "Questionnaire" : "Report"}
+                    </Text>
+                    {app === "clinical" ? (
+                      <Button
+                        disabled={is_PreviewButton_Disable}
+                        color="#1B75BC"
+                        bg="#1B75BC40"
+                        h="90%"
+                        onClick={() => handlePreviewButton()}
+                      >
+                        Preview
+                      </Button>
+                    ) : null}
+                  </Flex>
 
                   <ShowReport
                     caseInfo={caseInfo}
@@ -1286,6 +1319,11 @@ function FunctionsMenu({
                     slide={slide}
                     slides={slides}
                     All_Reader_Responses={All_Reader_Responses}
+                    set_Is_PreviewButton_Disable={set_Is_PreviewButton_Disable}
+                    setShowPreviewModal={setShowPreviewModal}
+                            showPreviewModal={showPreviewModal}
+                            submitAdditionalResponse={submitAdditionalResponse}
+                            permission={permission}
                   />
                   {showReport || synopticType ? (
                     <GrFormClose

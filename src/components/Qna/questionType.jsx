@@ -12,7 +12,6 @@ function QuestionType({
   application,
 }) {
   const questionText = question?.question_text;
-  // console.log({questionText});
   const handleChange = ({ questionId, choice, choiceType = null,  }) => {
     setQnaResponse({ questionId, choice: [choice], choiceType, questionText });
   };

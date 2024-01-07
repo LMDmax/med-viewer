@@ -77,6 +77,8 @@ function LayoutApp({
   searchSelectedData,
   questionIndex,
   All_Reader_Responses,
+  submitAdditionalResponse,
+  permission,
 }) {
   // const { handleEvent } = useKeyboardEvents();
 
@@ -172,7 +174,6 @@ function LayoutApp({
 
   const [addLocalRegion, setAddLocalRegion] = useState(false);
   const [isLocalRegion, setIsLocalRegion] = useState(false);
-
 
   // Human - In - The -Loop
 
@@ -430,7 +431,7 @@ function LayoutApp({
     case "Local_Region_Added":
       returnText = "Local Region Added";
       break;
-      case "Local_Region_Deleted":
+    case "Local_Region_Deleted":
       returnText = "Removing Selected Local Region";
       break;
 
@@ -760,6 +761,8 @@ function LayoutApp({
             sendReportDataToHospital={sendReportDataToHospital}
             setChangeSlide={setChangeSlide}
             All_Reader_Responses={All_Reader_Responses}
+            submitAdditionalResponse={submitAdditionalResponse}
+            permission={permission}
           />
         </LayoutInnerBody>
         <Flex

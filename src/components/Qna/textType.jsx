@@ -15,7 +15,7 @@ function TextType({
     handleChange({ questionId: question?.Question?.id });
   }, [isLastDisable]);
   // console.log(slideQna);
-  // console.log(response);
+  // console.log({ response });
 
   return (
     <Input
@@ -33,8 +33,8 @@ function TextType({
       }
       isDisabled={!_.isEmpty(response) || question?.Question?.correctAnswer}
       border="1px solid black"
-		  borderRadius="none"
-		  w="250px"
+      borderRadius="none"
+      w="250px"
       _hover={{ borderBottom: "1px solid" }}
       _focus={{ border: "none", border: "1px solid black" }}
       onChange={(e) =>

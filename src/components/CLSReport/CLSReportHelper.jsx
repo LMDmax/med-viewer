@@ -35,6 +35,11 @@ function CLSReportHelper({
   setSelectedOption,
   slides,
   All_Reader_Responses,
+  set_Is_PreviewButton_Disable,
+  setShowPreviewModal,
+  showPreviewModal,
+  submitAdditionalResponse,
+  permission,
 }) {
   const [showCLSreport, setShowCLSReport] = useState(false);
   const [questionsResponse, setQuestionsResponse] = useState();
@@ -260,6 +265,11 @@ function CLSReportHelper({
             slideName={slideName}
             slides={slides}
             All_Reader_Responses={All_Reader_Responses}
+            set_Is_PreviewButton_Disable={set_Is_PreviewButton_Disable}
+            setShowPreviewModal={setShowPreviewModal}
+            showPreviewModal={showPreviewModal}
+            submitAdditionalResponse={submitAdditionalResponse}
+            permission={permission}
           />
         )}
       </Flex>
