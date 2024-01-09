@@ -1008,10 +1008,10 @@ function Questionnaire({
                   alignItems="center"
                   width="100%"
                 >
-                  <Flex direction="column" width="70%">
+                  <Flex direction="column"  mb="15px" width="70%">
                     <Flex
                       w="100%"
-                      mb="15px"
+                      mb="8px"
                       justifyContent="center"
                       alignItems="center"
                     >
