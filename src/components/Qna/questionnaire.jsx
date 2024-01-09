@@ -244,12 +244,12 @@ function Questionnaire({
 
         const qnaArray = Object.values(newQna);
 
-        // setSelectedAnswers({ qnaArray: qnaArray });
+        setSelectedAnswers({ qnaArray: qnaArray });
         return { qna: newQna };
       });
       const qnaArray = Object.values(newQna);
 
-      // setSelectedAnswers({ qnaArray: qnaArray });
+      setSelectedAnswers({ qnaArray: qnaArray });
       return { qna: newQna };
     });
   };
@@ -319,6 +319,7 @@ function Questionnaire({
     setSecondModalOpen(true);
     // changeSlide()
   };
+  console.log(caseInfo?.slides);
 
   const changeSlide = () => {
     submitQnaReport();
@@ -328,9 +329,12 @@ function Questionnaire({
     // });
     if (application === "clinical" && caseInfo?.slides?.length > 1) {
       // console.log("aaa");
-      const totalSlides = caseInfo?.slides;
+      const slideType = current_slide.slideType;
+      const totalSlides = caseInfo.slides.filter(
+        (slide) => slide.slideType === slideType
+      );
       const currentSlideId = slideId;
-
+      // console.log({ currentSlideId });
       // Find the index of the current slideId in the array
       const currentIndex = totalSlides.findIndex(
         (s) => s._id === currentSlideId
@@ -347,9 +351,6 @@ function Questionnaire({
         // console.log("1");
         // totalSlides.forEach((slide) => console.log("All Reached"));
       } else {
-        // Update the slideId with the next slide's _id
-        // Set the next slideId in your state or wherever you are storing it
-        // Assuming you have a function to set the slideId, for example:
         // submitQnaReport();
         setChangeSlide(true);
       }
@@ -402,7 +403,7 @@ function Questionnaire({
   const responsesToSubmit = Object.values(slideQna?.qna);
   // console.log({ slideName });
   // console.log({ slideInfo });
-  console.log({ All_Reader_Responses });
+  // console.log({ All_Reader_Responses });
 
   const currentSlide = slides.find((slide) => slide?._id === slideId);
   // console.log({ response });
@@ -411,7 +412,7 @@ function Questionnaire({
     .slice()
     .sort((a, b) => a.first_name.localeCompare(b.first_name));
 
-  console.log({ userInfo });
+  // console.log({ userInfo });
   return (
     <VStack
       spacing={6}
@@ -1226,7 +1227,6 @@ function Questionnaire({
             <Button
               onClick={() => {
                 handleSave_Modal();
-                // changeSlide();
               }}
               bg="#C4DAEC"
             >

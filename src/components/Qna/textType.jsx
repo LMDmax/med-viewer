@@ -35,6 +35,8 @@ function TextType({
       border="1px solid black"
       borderRadius="none"
       w="250px"
+      ml="40px"
+      mt="10px"
       _hover={{ borderBottom: "1px solid" }}
       _focus={{ border: "none", border: "1px solid black" }}
       onChange={(e) =>
