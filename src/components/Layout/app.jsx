@@ -800,6 +800,7 @@ function LayoutApp({
                   isNavigatorActive={isNavigatorActive}
                   changeSlide={changeSlide}
                   setChangeSlide={setChangeSlide}
+                  application={application}
                 />
               )}
             </Flex>

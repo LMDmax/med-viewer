@@ -69,7 +69,7 @@ function Questionnaire({
 
   const current_slide = slides.find((slide) => slide._id === slideId);
 
-  console.log({ permission });
+  // console.log({ permission });
   console.log(userInfo?.data[0]?.signatureFile);
 
   const handlePreviewModalClose = () => {
@@ -89,6 +89,10 @@ function Questionnaire({
   // ################### ADD MANUAL QUESTIONS HERE ##################
   const handleAddQuestion = () => {
     // Check if both question and answer are filled
+    setShowInputFields(true);
+  };
+
+  const handleSaveQuestions = () => {
     if (newQuestionText.trim() !== "" && newAnswerText.trim() !== "") {
       const newQuestionId = uuidv4();
       // Create a new object with question_id, Q, and response
@@ -105,15 +109,19 @@ function Questionnaire({
       // Clear the input fields for the next question
       setNewQuestionText("");
       setNewAnswerText("");
+      setShowInputFields(false);
     }
-    setShowInputFields(true);
   };
 
-  const handleDelete = (questionId) => {
+  const handleDelete = (selected_questionId) => {
     // Create a new array without the question with the specified question_id
     const updatedQuestions = newQuestions.filter(
-      (question) => question.question_id !== questionId
+      (question) => question.questionId !== selected_questionId
     );
+
+    console.log({ updatedQuestions });
+    console.log({ newQuestions });
+    // console.log({ questionId });
 
     // Update the state with the new array
     setNewQuestions(updatedQuestions);
@@ -260,7 +268,24 @@ function Questionnaire({
     ? questions?.data?.[current_slide?.slideType]
     : [];
   const questionLinked_with_section = questionArray
-    ? questionArray[questionArray?.length - 1]
+    ? questionArray
+        .slice()
+        .reverse()
+        .find((item) => {
+          const condition1 =
+            item.question_id === "70c53bcb-b7b3-41b3-9fa3-2dc3bada1049" &&
+            item.question_text === "How many balloon cells did you see?" &&
+            item.question_type === "text" &&
+            item.questionnaire_type === "HAndE";
+
+          const condition2 =
+            item.question_id === "176be3fa-c132-4020-bc91-dedcf8c9629d" &&
+            item.question_text === "How many bridges did you observe?" &&
+            item.question_type === "text" &&
+            item.questionnaire_type === "Trichrome";
+
+          return condition1 || condition2;
+        })
     : [];
 
   // useEffect(() => {
@@ -319,7 +344,7 @@ function Questionnaire({
     setSecondModalOpen(true);
     // changeSlide()
   };
-  console.log(caseInfo?.slides);
+  // console.log(caseInfo?.slides);
 
   const changeSlide = () => {
     submitQnaReport();
@@ -328,32 +353,7 @@ function Questionnaire({
     //   caseInfo,
     // });
     if (application === "clinical" && caseInfo?.slides?.length > 1) {
-      // console.log("aaa");
-      const slideType = current_slide.slideType;
-      const totalSlides = caseInfo.slides.filter(
-        (slide) => slide.slideType === slideType
-      );
-      const currentSlideId = slideId;
-      // console.log({ currentSlideId });
-      // Find the index of the current slideId in the array
-      const currentIndex = totalSlides.findIndex(
-        (s) => s._id === currentSlideId
-      );
-
-      // Log the current slide object
-      // console.log(totalSlides[currentIndex]);
-      // Update the index for the next click
-      const nextIndex = (currentIndex + 1) % totalSlides.length;
-
-      // Check if the next index is 0 (last element)
-      if (nextIndex === 0) {
-        // Log all elements
-        // console.log("1");
-        // totalSlides.forEach((slide) => console.log("All Reached"));
-      } else {
-        // submitQnaReport();
-        setChangeSlide(true);
-      }
+      setChangeSlide(true);
     }
     // submitQnaReport();
   };
@@ -876,7 +876,7 @@ function Questionnaire({
                                 (sectionQuestion) =>
                                   sectionQuestion?.response !== null
                               ) || !questionResponse
-                                ? `Q ${toRoman(i)}  ${
+                                ? `${toRoman(i)}  ${
                                     sectionQuestion?.question_text
                                   }`
                                 : null}
@@ -959,7 +959,9 @@ function Questionnaire({
                   mb="0.2rem"
                   ml="34px"
                 >
-                  {`Q  ${questionLinked_with_section?.question_text}`}
+                  {`${current_slide.slideType === "HAndE" ? "iv" : ""}  ${
+                    questionLinked_with_section?.question_text
+                  }`}
                 </Text>
                 {/* Render the question type component for the last questionLinked_with_section */}
                 <QuestionType
@@ -1047,7 +1049,7 @@ function Questionnaire({
                   </Flex>
                   <Button
                     width="20%"
-                    onClick={() => handleDelete(question.question_id)}
+                    onClick={() => handleDelete(question.questionId)}
                   >
                     Delete
                   </Button>
@@ -1059,7 +1061,9 @@ function Questionnaire({
             {showInputFields && (
               <Stack direction={direction} spacing={4} mt="10px" width="100%">
                 <Flex justifyContent="flex-start" alignItems="center">
-                  <Text marginRight="5px">Q:</Text>
+                  <Text marginRight="5px" fontWeight="bold">
+                    Q:
+                  </Text>
                   <textarea
                     value={newQuestionText}
                     onChange={(e) => setNewQuestionText(e.target.value)}
@@ -1093,7 +1097,14 @@ function Questionnaire({
               </Stack>
             )}
             {!questionResponse && application === "clinical" && (
-              <Button onClick={handleAddQuestion}>Add Question</Button>
+              <Flex>
+                {!showInputFields && (
+                  <Button onClick={handleAddQuestion}>Add Question</Button>
+                )}
+                {showInputFields && (
+                  <Button onClick={handleSaveQuestions}>Save</Button>
+                )}
+              </Flex>
             )}
           </>
         )
