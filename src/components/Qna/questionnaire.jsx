@@ -69,7 +69,7 @@ function Questionnaire({
 
   const current_slide = slides.find((slide) => slide._id === slideId);
 
-  // console.log({ permission });
+  console.log({ selectedAnswers });
   console.log(userInfo?.data[0]?.signatureFile);
 
   const handlePreviewModalClose = () => {
@@ -178,8 +178,6 @@ function Questionnaire({
           [questionId]: { questionId, choice, questionText },
         };
 
-        console.log({ questionArray });
-
         // Check if the specified questionId exists in questionArray[3]
         const masterQuestionId = questionArray[2]?.question_id;
         const masterQuestionId_HAndE = questionArray[0]?.question_id;
@@ -215,6 +213,7 @@ function Questionnaire({
                 (item.choice[0] === "2:  (Many)" ||
                   item.choice[0] === "1:  (Few)")
             );
+            console.log({ isConditionMet });
             setIsConditionMet(isConditionMet);
           }
         } else if (isLinked && currentSlide.slideType === "Trichrome") {
@@ -264,6 +263,8 @@ function Questionnaire({
 
   // console.log("asd", Object.keys(selectedAnswers).length === 0);
 
+  console.log({ selectedAnswers });
+
   const questionArray = questions
     ? questions?.data?.[current_slide?.slideType]
     : [];
@@ -273,13 +274,11 @@ function Questionnaire({
         .reverse()
         .find((item) => {
           const condition1 =
-            item.question_id === "70c53bcb-b7b3-41b3-9fa3-2dc3bada1049" &&
             item.question_text === "How many balloon cells did you see?" &&
             item.question_type === "text" &&
             item.questionnaire_type === "HAndE";
 
           const condition2 =
-            item.question_id === "176be3fa-c132-4020-bc91-dedcf8c9629d" &&
             item.question_text === "How many bridges did you observe?" &&
             item.question_type === "text" &&
             item.questionnaire_type === "Trichrome";
@@ -1102,7 +1101,7 @@ function Questionnaire({
                   <Button onClick={handleAddQuestion}>Add Question</Button>
                 )}
                 {showInputFields && (
-                  <Button onClick={handleSaveQuestions}>Save</Button>
+                  <Button onClick={handleSaveQuestions}>Add</Button>
                 )}
               </Flex>
             )}
