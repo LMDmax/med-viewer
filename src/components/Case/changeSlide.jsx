@@ -26,35 +26,41 @@ const ChangeSlide = ({
   setIsNavigatorActive,
   setChangeSlide,
   isNavigatorActive,
+  application,
   ...restProps
 }) => {
   const { fabricOverlayState, setFabricOverlayState } = useFabricOverlayState();
   const { viewerWindow, isAnnotationLoading } = fabricOverlayState;
   const { viewer, fabricOverlay, slideId } = viewerWindow[viewerId];
-  // console.log({ slideId });
+  const all_slides =
+    application === "clinical"
+      ? slides.filter((e) => e.slideType === slide.slideType)
+      : slides;
   var vKeys = Object.keys(viewerWindow);
-  const currentIndex = slides?.findIndex(
+  const currentIndex = all_slides?.findIndex(
     (s) => s.awsImageBucketUrl === slideUrl
   );
 
-  const maxIndex = slides?.length;
+  const maxIndex = all_slides?.length;
 
-  // console.log(viewerId)
+  // console.log({ slideId });
+  console.log({ all_slides });
+  // console.log(all_slides.length);
 
   const disabledLeft =
     isAnnotationLoading ||
     currentIndex - 1 < 0 ||
-    slides?.[currentIndex - 1]?.awsImageBucketUrl === "";
+    all_slides?.[currentIndex - 1]?.awsImageBucketUrl === "";
 
   const disabledRight =
     isAnnotationLoading ||
     currentIndex + 1 === maxIndex ||
-    slides?.[currentIndex + 1]?.awsImageBucketUrl === "";
+    all_slides?.[currentIndex + 1]?.awsImageBucketUrl === "";
 
   const title = `${caseInfo?.caseName}-${currentIndex + 1}`;
 
   const clickHandler = (position) => {
-    const nextSlide = slides?.[currentIndex + position];
+    const nextSlide = all_slides?.[currentIndex + position];
     // console.log(nextSlide);
     setSlideName(nextSlide?.slideName);
     setNavigatorCounter((prev) => prev + 1);
@@ -72,9 +78,42 @@ const ChangeSlide = ({
     // fabricOverlay.fabricCanvas().clear();
   };
 
+  const circularClickHandler = (direction) => {
+    const currentIndex = all_slides.findIndex((slide) => slide._id === slideId);
+    let nextIndex;
+
+    if (direction === 1) {
+      // Move to the next slide
+      nextIndex = currentIndex + 1;
+      if (nextIndex  === all_slides.length) {
+        // If reached the last slide, start from the first one
+        nextIndex = 0;
+      }
+    }
+
+    console.log({nextIndex});
+    console.log({currentIndex});
+    
+    const nextSlide = all_slides[nextIndex];
+    console.log({nextSlide});
+
+    setSlideName(nextSlide?.slideName);
+    setNavigatorCounter((prev) => prev + 1);
+    setFabricOverlayState(updateTool({ tool: "Move" }));
+    setFabricOverlayState(
+      changeTile({
+        id: viewerId,
+        tile: nextSlide?.awsImageBucketUrl,
+        slideName: nextSlide?.accessionId,
+        slideId: nextSlide?._id || nextSlide?.slideId,
+        originalFileUrl: nextSlide?.originalFileUrl,
+      })
+    );
+    viewer?.open(nextSlide?.awsImageBucketUrl);
+  };
   useEffect(() => {
     if (changeSlide === true) {
-      clickHandler(1);
+      circularClickHandler(1);
       setChangeSlide(false);
     }
   }, [changeSlide]);
@@ -112,7 +151,6 @@ const ChangeSlide = ({
           setIsNavigatorActive={setIsNavigatorActive}
           isNavigatorActive={isNavigatorActive}
           isAnnotationLoading={isAnnotationLoading}
-          
         />
       )}
     </>
