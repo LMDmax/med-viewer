@@ -358,7 +358,7 @@ function Questionnaire({
   };
 
   const questionResponse = response
-    ? response.finalQuestionnaireResponse[0]
+    ? response.filteredQuestionnaireResponse[0]
     : null;
 
   // console.log({ userInfo});
@@ -813,7 +813,7 @@ function Questionnaire({
             {questions?.data?.[current_slide?.slideType]?.map(
               (question, index) => {
                 const questionResponse = response
-                  ? response.finalQuestionnaireResponse[index]
+                  ? response.filteredQuestionnaireResponse[index]
                   : null;
                 return (
                   <Stack
@@ -859,8 +859,67 @@ function Questionnaire({
                       }`}
                     </Text>
                     {question?.is_section ? (
-                      question?.section_questions?.map((sectionQuestion, i) => {
-                        return (
+                      <>
+                        {question?.section_questions?.map(
+                          (sectionQuestion, i) => {
+                            return (
+                              <Box px="0.6rem">
+                                <Text
+                                  wordBreak="break-word"
+                                  whiteSpace="pre-wrap"
+                                  maxWidth="100%"
+                                  overflowWrap="break-word"
+                                  mb="0.2rem"
+                                  // border="1px solid red"
+                                  ml="34px"
+                                >
+                                  {questionResponse?.section_questions?.find(
+                                    (sectionQuestion) =>
+                                      sectionQuestion?.response !== null
+                                  ) || !questionResponse
+                                    ? `${toRoman(i)}  ${
+                                        sectionQuestion?.question_text
+                                      }`
+                                    : null}
+                                </Text>
+                                {!questionResponse ? (
+                                  <QuestionType
+                                    question={sectionQuestion}
+                                    direction={direction}
+                                    application={application}
+                                    response={response}
+                                    setQnaResponse={setQnaResponse}
+                                    projectQnaType={projectQnaType}
+                                    slideQna={slideQna}
+                                  />
+                                ) : questionResponse?.section_questions?.find(
+                                    (sectionQuestion) =>
+                                      sectionQuestion?.response !== null
+                                  ) || !questionResponse ? (
+                                  <Text
+                                    maxW="100%"
+                                    whiteSpace="pre-wrap" // or whiteSpace="break-word"
+                                    color={
+                                      questionResponse?.response === null
+                                        ? "gray"
+                                        : "inherit"
+                                    }
+                                  >
+                                    {`Your response:
+              ${
+                questionResponse?.section_questions[i]?.response
+                  ?.replace(/[{"]+/g, "")
+                  ?.replace(/[}"]+/g, "") || "Not Applicable"
+              }`}
+                                  </Text>
+                                ) : (
+                                  ""
+                                )}
+                              </Box>
+                            );
+                          }
+                        )}
+                        {isConditionMet && questionLinked_with_section && (
                           <Box px="0.6rem">
                             <Text
                               wordBreak="break-word"
@@ -868,54 +927,25 @@ function Questionnaire({
                               maxWidth="100%"
                               overflowWrap="break-word"
                               mb="0.2rem"
-                              // border="1px solid red"
                               ml="34px"
                             >
-                              {questionResponse?.section_questions?.find(
-                                (sectionQuestion) =>
-                                  sectionQuestion?.response !== null
-                              ) || !questionResponse
-                                ? `${toRoman(i)}  ${
-                                    sectionQuestion?.question_text
-                                  }`
-                                : null}
+                              {`${
+                                current_slide.slideType === "HAndE" ? "iv" : ""
+                              }  ${questionLinked_with_section?.question_text}`}
                             </Text>
-                            {!questionResponse ? (
-                              <QuestionType
-                                question={sectionQuestion}
-                                direction={direction}
-                                application={application}
-                                response={response}
-                                setQnaResponse={setQnaResponse}
-                                projectQnaType={projectQnaType}
-                                slideQna={slideQna}
-                              />
-                            ) : questionResponse?.section_questions?.find(
-                                (sectionQuestion) =>
-                                  sectionQuestion?.response !== null
-                              ) || !questionResponse ? (
-                              <Text
-                                maxW="100%"
-                                whiteSpace="pre-wrap" // or whiteSpace="break-word"
-                                color={
-                                  questionResponse?.response === null
-                                    ? "gray"
-                                    : "inherit"
-                                }
-                              >
-                                {`Your response:
-              ${
-                questionResponse?.section_questions[i]?.response
-                  ?.replace(/[{"]+/g, "")
-                  ?.replace(/[}"]+/g, "") || "Not Applicable"
-              }`}
-                              </Text>
-                            ) : (
-                              ""
-                            )}
+                            {/* Render the question type component for the last questionLinked_with_section */}
+                            <QuestionType
+                              question={questionLinked_with_section}
+                              direction={direction}
+                              application={application}
+                              response={response}
+                              setQnaResponse={setQnaResponse}
+                              projectQnaType={projectQnaType}
+                              slideQna={slideQna}
+                            />
                           </Box>
-                        );
-                      })
+                        )}
+                      </>
                     ) : !questionResponse ? (
                       <Box>
                         <QuestionType
@@ -948,35 +978,10 @@ function Questionnaire({
                 );
               }
             )}
-            {isConditionMet && questionLinked_with_section && (
-              <Box px="0.6rem">
-                <Text
-                  wordBreak="break-word"
-                  whiteSpace="pre-wrap"
-                  maxWidth="100%"
-                  overflowWrap="break-word"
-                  mb="0.2rem"
-                  ml="34px"
-                >
-                  {`${current_slide.slideType === "HAndE" ? "iv" : ""}  ${
-                    questionLinked_with_section?.question_text
-                  }`}
-                </Text>
-                {/* Render the question type component for the last questionLinked_with_section */}
-                <QuestionType
-                  question={questionLinked_with_section}
-                  direction={direction}
-                  application={application}
-                  response={response}
-                  setQnaResponse={setQnaResponse}
-                  projectQnaType={projectQnaType}
-                  slideQna={slideQna}
-                />
-              </Box>
-            )}
+
             {response && application === "clinical" && (
               <Box>
-                {response.finalQuestionnaireResponse
+                {response.filteredQuestionnaireResponse
                   .filter((question) => question.question_type === "remark")
                   .map((question, index) => (
                     <>
@@ -1008,7 +1013,7 @@ function Questionnaire({
                   alignItems="center"
                   width="100%"
                 >
-                  <Flex direction="column"  mb="15px" width="70%">
+                  <Flex direction="column" mb="15px" width="70%">
                     <Flex
                       w="100%"
                       mb="8px"

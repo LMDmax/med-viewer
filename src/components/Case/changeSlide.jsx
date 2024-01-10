@@ -44,7 +44,7 @@ const ChangeSlide = ({
   const maxIndex = all_slides?.length;
 
   // console.log({ slideId });
-  console.log({ all_slides });
+  // console.log({ all_slides });
   // console.log(all_slides.length);
 
   const disabledLeft =
@@ -91,11 +91,11 @@ const ChangeSlide = ({
       }
     }
 
-    console.log({nextIndex});
-    console.log({currentIndex});
+    // console.log({nextIndex});
+    // console.log({currentIndex});
     
     const nextSlide = all_slides[nextIndex];
-    console.log({nextSlide});
+    // console.log({nextSlide});
 
     setSlideName(nextSlide?.slideName);
     setNavigatorCounter((prev) => prev + 1);
