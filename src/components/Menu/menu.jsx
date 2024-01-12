@@ -164,6 +164,7 @@ function FunctionsMenu({
   lymphocyteArea,
   submitAdditionalResponse,
   permission,
+  readerSlideInfo,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
@@ -1324,6 +1325,7 @@ function FunctionsMenu({
                             showPreviewModal={showPreviewModal}
                             submitAdditionalResponse={submitAdditionalResponse}
                             permission={permission}
+                            readerSlideInfo={readerSlideInfo}
                   />
                   {showReport || synopticType ? (
                     <GrFormClose

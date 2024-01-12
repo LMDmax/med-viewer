@@ -40,6 +40,7 @@ function CLSReportHelper({
   showPreviewModal,
   submitAdditionalResponse,
   permission,
+  readerSlideInfo,
 }) {
   const [showCLSreport, setShowCLSReport] = useState(false);
   const [questionsResponse, setQuestionsResponse] = useState();
@@ -270,6 +271,7 @@ function CLSReportHelper({
             showPreviewModal={showPreviewModal}
             submitAdditionalResponse={submitAdditionalResponse}
             permission={permission}
+            readerSlideInfo={readerSlideInfo}
           />
         )}
       </Flex>

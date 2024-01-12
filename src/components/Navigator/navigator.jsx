@@ -98,7 +98,7 @@ const Navigator = ({
         changeTile({
           id: viewerId,
           tile: slide.awsImageBucketUrl,
-          slideName: slide.accessionId,
+          slideName: slide?.accessionId,
           slideId: slide?._id || slide?.slideId,
           originalFileUrl: slide.originalFileUrl,
         })

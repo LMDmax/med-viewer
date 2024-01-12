@@ -49,6 +49,7 @@ function ShowReport({
   setShowPreviewModal,
   submitAdditionalResponse,
   permission,
+  readerSlideInfo,
 }) {
   if (application === "hospital")
     return (
@@ -106,6 +107,7 @@ function ShowReport({
         showPreviewModal={showPreviewModal}
         submitAdditionalResponse={submitAdditionalResponse}
         permission={permission}
+        readerSlideInfo={readerSlideInfo}
       />
     );
 

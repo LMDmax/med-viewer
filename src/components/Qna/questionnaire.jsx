@@ -52,6 +52,7 @@ function Questionnaire({
   setShowPreviewModal,
   submitAdditionalResponse,
   permission,
+  readerSlideInfo,
   ...restProps
 }) {
   const [isPreviewModalOpen, setPreviewModalOpen] = useState(false);
@@ -64,13 +65,34 @@ function Questionnaire({
   const [newAnswerText, setNewAnswerText] = useState("");
   const [showInputFields, setShowInputFields] = useState(false);
   const [isConditionMet, setIsConditionMet] = useState(false);
+  const [edit_report, setEdit_report] = useState(false);
   // const { viewer, fabricOverlay, slideType } = viewerWindow[viewerId];
   // const { viewer, fabricOverlay, slideId } = viewerWindow[viewerId];
 
   const current_slide = slides.find((slide) => slide._id === slideId);
 
-  console.log({ selectedAnswers });
-  console.log(userInfo?.data[0]?.signatureFile);
+  console.log({ readerSlideInfo });
+  console.log({ slideId });
+
+  // ############# EDIT REPORT #########################
+
+  useEffect(() => {
+    // Filter the object whose _id matches the slideId
+    const selectedSlide = readerSlideInfo?.data.find(
+      (slide) => slide._id === slideId
+    );
+
+    // Check if the selected slide has responses and status is false
+    if (selectedSlide && selectedSlide.responses && !selectedSlide.status) {
+      setEdit_report(true);
+    } else {
+      setEdit_report(false);
+    }
+  }, [slideId, readerSlideInfo]);
+
+  // ######################################
+
+  // console.log(userInfo?.data[0]?.signatureFile);
 
   const handlePreviewModalClose = () => {
     setPreviewModalOpen(false);
@@ -119,8 +141,8 @@ function Questionnaire({
       (question) => question.questionId !== selected_questionId
     );
 
-    console.log({ updatedQuestions });
-    console.log({ newQuestions });
+    // console.log({ updatedQuestions });
+    // console.log({ newQuestions });
     // console.log({ questionId });
 
     // Update the state with the new array
@@ -149,6 +171,26 @@ function Questionnaire({
     }
   };
 
+  useEffect(() => {
+    if (response && application && edit_report) {
+      const formattedQuestions = response?.filteredQuestionnaireResponse
+        ?.filter((question) => question.question_type === "remark")
+        ?.map((question) => ({
+          questionId: `${question.question_id}`,
+          question_text: question.question_text,
+          response: question.response,
+          question_type: "remark",
+        }));
+
+      setNewQuestions((prevQuestions) => [
+        ...prevQuestions,
+        ...formattedQuestions,
+      ]);
+    }
+  }, [response, application]);
+
+  // console.log({ newQuestions });
+
   //###############################################################
 
   const scrollRef = useRef(questionIndex);
@@ -158,9 +200,8 @@ function Questionnaire({
     questionText,
   }) => {
     const questionArray = questions?.data?.[current_slide?.slideType];
-    // console.log({ questionArray });
 
-    const isLinked = questionArray.some((elem) => elem.question_link_id);
+    const isLinked = questionArray.some((elem) => elem.question_link_ids);
     // console.log({ isLinked });
 
     setSlideQna((state) => {
@@ -178,9 +219,11 @@ function Questionnaire({
           [questionId]: { questionId, choice, questionText },
         };
 
-        // Check if the specified questionId exists in questionArray[3]
+        // Check if the specified questionId exists in questionArray[2]
         const masterQuestionId = questionArray[2]?.question_id;
         const masterQuestionId_HAndE = questionArray[0]?.question_id;
+        const otherQuestionId_HAndE = questionArray[1]?.question_id;
+        const otherQuestionId_TRI = questionArray[3]?.question_id;
 
         if (currentSlide.slideType === "HAndE" && isLinked) {
           if (
@@ -189,8 +232,13 @@ function Questionnaire({
             (newQna[masterQuestionId_HAndE].choice[0] === "(2)No" ||
               newQna[masterQuestionId_HAndE].choice[0] === "No")
           ) {
-            // If the choice is "No," delete all question IDs from newQna
-            console.log("a");
+            if (
+              otherQuestionId_HAndE &&
+              newQna[otherQuestionId_HAndE]?.choice[0] !== "Other "
+            ) {
+              delete newQna[questionArray[2]?.question_id];
+            }
+            // // If the choice is "No," delete all question IDs from newQna
             questionArray[3]?.section_questions?.forEach((sectionQuestion) => {
               delete newQna[sectionQuestion.question_id];
             });
@@ -213,8 +261,11 @@ function Questionnaire({
                 (item.choice[0] === "2:  (Many)" ||
                   item.choice[0] === "1:  (Few)")
             );
-            console.log({ isConditionMet });
+            // console.log({ isConditionMet });
             setIsConditionMet(isConditionMet);
+            if (!isConditionMet) {
+              delete newQna[questionArray[4]?.question_id];
+            }
           }
         } else if (isLinked && currentSlide.slideType === "Trichrome") {
           if (
@@ -223,11 +274,18 @@ function Questionnaire({
             (newQna[masterQuestionId].choice[0] === "(2)No" ||
               newQna[masterQuestionId].choice[0] === "No")
           ) {
+            if (
+              otherQuestionId_TRI &&
+              newQna[otherQuestionId_TRI]?.choice[0] !== "Other "
+            ) {
+              delete newQna[questionArray[4]?.question_id];
+            }
             // If the choice is "No," delete specific question IDs from newQna
             questionArray[5]?.section_questions?.forEach((sectionQuestion) => {
               delete newQna[sectionQuestion.question_id];
             });
             delete newQna[questionArray[6]?.question_id];
+            delete newQna[questionArray[5]?.question_id];
             setIsConditionMet(false);
           }
           if (
@@ -246,6 +304,9 @@ function Questionnaire({
                   item.choice[0] === "3:  Bridging")
             );
             setIsConditionMet(isConditionMet);
+            if (!isConditionMet) {
+              delete newQna[questionArray[6]?.question_id];
+            }
           }
         }
 
@@ -262,8 +323,6 @@ function Questionnaire({
   };
 
   // console.log("asd", Object.keys(selectedAnswers).length === 0);
-
-  console.log({ selectedAnswers });
 
   const questionArray = questions
     ? questions?.data?.[current_slide?.slideType]
@@ -286,6 +345,8 @@ function Questionnaire({
           return condition1 || condition2;
         })
     : [];
+
+  // console.log({ questionLinked_with_section });
 
   // useEffect(() => {
   //   if (
@@ -334,7 +395,7 @@ function Questionnaire({
     } else {
       set_Is_PreviewButton_Disable(true);
     }
-  }, [slideQna]);
+  }, [slideQna, current_slide]);
   const handleSecondModalClose = () => {
     setSecondModalOpen(false);
   };
@@ -406,6 +467,7 @@ function Questionnaire({
 
   const currentSlide = slides.find((slide) => slide?._id === slideId);
   // console.log({ response });
+  // console.log({ questions });
 
   const sortedResponses = All_Reader_Responses?.data?.finalResponseArray
     .slice()
@@ -546,11 +608,11 @@ function Questionnaire({
                 <Box w="100%" px="5px">
                   {elem.reportsResponses.some(
                     (response) =>
-                      response.accession_id === currentSlide.accessionId
+                      response.accession_id === currentSlide?.accessionId
                   ) ? (
                     elem.reportsResponses.map((response, responseIndex) => {
                       if (
-                        response.accession_id === currentSlide.accessionId &&
+                        response.accession_id === currentSlide?.accessionId &&
                         currentSlide.slideType === "HAndE"
                       ) {
                         return (
@@ -660,7 +722,7 @@ function Questionnaire({
                           </Box>
                         );
                       } else if (
-                        response.accession_id === currentSlide.accessionId &&
+                        response.accession_id === currentSlide?.accessionId &&
                         currentSlide.slideType === "Trichrome"
                       ) {
                         return (
@@ -778,7 +840,7 @@ function Questionnaire({
                   )}
                   {elem.reportsResponses.some(
                     (response) =>
-                      response.accession_id === currentSlide.accessionId
+                      response.accession_id === currentSlide?.accessionId
                   ) ? (
                     <Flex direction="column" mt="40px" mb="80px">
                       <Image
@@ -815,6 +877,7 @@ function Questionnaire({
                 const questionResponse = response
                   ? response.filteredQuestionnaireResponse[index]
                   : null;
+                // console.log({ question });
                 return (
                   <Stack
                     key={index}
@@ -827,17 +890,19 @@ function Questionnaire({
                     maxW="100%"
                     // pb="10px"
                     display={
-                      questionResponse
+                      questionResponse && !edit_report
                         ? "block"
-                        : question?.question_link_id &&
-                          !responsesToSubmit?.find(
-                            (element) =>
-                              element?.questionId ===
-                                question?.question_link_id &&
-                              element?.choice?.includes(
-                                question?.conditional_value
+                        : question?.question_link_ids &&
+                          !responsesToSubmit?.some((element) => {
+                            return (
+                              question?.question_link_ids?.includes(
+                                element?.questionId
+                              ) &&
+                              element?.choice?.some((choice) =>
+                                question?.conditional_value.includes(choice)
                               )
-                          )
+                            );
+                          })
                         ? "none"
                         : "block"
                     }
@@ -848,7 +913,9 @@ function Questionnaire({
                       maxWidth="100%"
                       overflowWrap="break-word"
                       color={
-                        questionResponse?.response === null ? "gray" : "inherit"
+                        questionResponse?.response === null && !edit_report
+                          ? "gray"
+                          : "inherit"
                       }
                     >
                       <span style={{ fontWeight: "bold" }}>{`Q`}</span>
@@ -858,8 +925,9 @@ function Questionnaire({
                           : question?.section_heading
                       }`}
                     </Text>
+
                     {question?.is_section ? (
-                      <>
+                      <Box>
                         {question?.section_questions?.map(
                           (sectionQuestion, i) => {
                             return (
@@ -876,17 +944,24 @@ function Questionnaire({
                                   {questionResponse?.section_questions?.find(
                                     (sectionQuestion) =>
                                       sectionQuestion?.response !== null
-                                  ) || !questionResponse
+                                  ) ||
+                                  !questionResponse ||
+                                  edit_report
                                     ? `${toRoman(i)}  ${
                                         sectionQuestion?.question_text
                                       }`
                                     : null}
                                 </Text>
-                                {!questionResponse ? (
+                                {!questionResponse || edit_report ? (
                                   <QuestionType
                                     question={sectionQuestion}
                                     direction={direction}
+                                    clinicalResponse={
+                                      questionResponse?.section_questions[i]
+                                        ?.response
+                                    }
                                     application={application}
+                                    edit_report={edit_report}
                                     response={response}
                                     setQnaResponse={setQnaResponse}
                                     projectQnaType={projectQnaType}
@@ -898,19 +973,19 @@ function Questionnaire({
                                   ) || !questionResponse ? (
                                   <Text
                                     maxW="100%"
-                                    whiteSpace="pre-wrap" // or whiteSpace="break-word"
+                                    whiteSpace="pre-wrap"
                                     color={
                                       questionResponse?.response === null
                                         ? "gray"
                                         : "inherit"
                                     }
                                   >
-                                    {`Your response:
-              ${
-                questionResponse?.section_questions[i]?.response
-                  ?.replace(/[{"]+/g, "")
-                  ?.replace(/[}"]+/g, "") || "Not Applicable"
-              }`}
+                                    {`Your1 response:
+          ${
+            questionResponse?.section_questions[i]?.response
+              ?.replace(/[{"]+/g, "")
+              ?.replace(/[}"]+/g, "") || "Not Applicable"
+          }`}
                                   </Text>
                                 ) : (
                                   ""
@@ -919,39 +994,14 @@ function Questionnaire({
                             );
                           }
                         )}
-                        {isConditionMet && questionLinked_with_section && (
-                          <Box px="0.6rem">
-                            <Text
-                              wordBreak="break-word"
-                              whiteSpace="pre-wrap"
-                              maxWidth="100%"
-                              overflowWrap="break-word"
-                              mb="0.2rem"
-                              ml="34px"
-                            >
-                              {`${
-                                current_slide.slideType === "HAndE" ? "iv" : ""
-                              }  ${questionLinked_with_section?.question_text}`}
-                            </Text>
-                            {/* Render the question type component for the last questionLinked_with_section */}
-                            <QuestionType
-                              question={questionLinked_with_section}
-                              direction={direction}
-                              application={application}
-                              response={response}
-                              setQnaResponse={setQnaResponse}
-                              projectQnaType={projectQnaType}
-                              slideQna={slideQna}
-                            />
-                          </Box>
-                        )}
-                      </>
-                    ) : !questionResponse ? (
+                      </Box>
+                    ) : !questionResponse || edit_report ? (
                       <Box>
                         <QuestionType
                           question={question}
                           direction={direction}
                           application={application}
+                          clinicalResponse={questionResponse?.response}
                           response={response}
                           setQnaResponse={setQnaResponse}
                           projectQnaType={projectQnaType}
@@ -968,7 +1018,7 @@ function Questionnaire({
                             : "inherit"
                         }
                       >
-                        Your response:{" "}
+                        Your2 response:{" "}
                         {questionResponse?.response
                           ?.replace(/[{"]+/g, "")
                           ?.replace(/[}"]+/g, "") || "Not Applicable"}
@@ -979,25 +1029,36 @@ function Questionnaire({
               }
             )}
 
-            {response && application === "clinical" && (
+            {response && application === "clinical" && !edit_report ? (
               <Box>
                 {response.filteredQuestionnaireResponse
                   .filter((question) => question.question_type === "remark")
                   .map((question, index) => (
                     <>
-                      <Text key={index}>
+                      <Text
+                        style={{
+                          whiteSpace: "pre-line",
+                          wordBreak: "break-all",
+                        }}
+                        key={index}
+                      >
                         <span style={{ fontWeight: "bold" }}>Q:</span>{" "}
                         {question.question_text}
                       </Text>
                       <br />
-                      <Text>
-                        Your response:
+                      <Text
+                        style={{
+                          whiteSpace: "pre-line",
+                          wordBreak: "break-all",
+                        }}
+                      >
+                        Your3 response:
                         {question.response}
                       </Text>
                     </>
                   ))}
               </Box>
-            )}
+            ) : null}
 
             {newQuestions.map((question, index) => (
               <Stack
@@ -1100,7 +1161,8 @@ function Questionnaire({
                 </Flex>
               </Stack>
             )}
-            {!questionResponse && application === "clinical" && (
+            {((!questionResponse && application === "clinical") ||
+              edit_report) && (
               <Flex>
                 {!showInputFields && (
                   <Button onClick={handleAddQuestion}>Add Question</Button>
@@ -1113,19 +1175,20 @@ function Questionnaire({
           </>
         )
       )}
-      {application === "clinical" && questionResponse && (
-        <Flex direction="column">
-          <Image
-            w="11vw"
-            h="10vh"
-            src={userInfo?.data[0]?.signatureFile}
-            alt="signature"
-          />
-          <Text color="#3B5D7C">{`${response?.first_name} ${response?.last_name}`}</Text>
-          <Text>{response?.highest_qualification}</Text>
-          <Text>{response?.Institute}</Text>
-        </Flex>
-      )}
+      {(!questionResponse && application === "clinical") ||
+        (!edit_report && (
+          <Flex direction="column">
+            <Image
+              w="11vw"
+              h="10vh"
+              src={userInfo?.data[0]?.signatureFile}
+              alt="signature"
+            />
+            <Text color="#3B5D7C">{`${response?.first_name} ${response?.last_name}`}</Text>
+            <Text>{response?.highest_qualification}</Text>
+            <Text>{response?.Institute}</Text>
+          </Flex>
+        ))}
       {/* {!questionResponse &&
       application === "clinical" &&
       userInfo.data[0].role !== "PI" ? (
@@ -1172,7 +1235,7 @@ function Questionnaire({
         <ModalContent>
           <ModalHeader bg="#F0F2FF">Preview</ModalHeader>
           <ModalCloseButton />
-          <ModalBody style={{ maxHeight: "520px", overflowY: "auto" }}>
+          <ModalBody style={{ maxHeight: "500px", overflowY: "auto" }}>
             <Text style={{ fontWeight: "bold" }} my="10px">
               These are the following answers filled by you. Click save to
               submit and continue

@@ -41,6 +41,7 @@ function CLSReport({
   setShowPreviewModal,
   submitAdditionalResponse,
   permission,
+  readerSlideInfo,
 }) {
   const [ifWidthLessthan1920] = useMediaQuery("(max-width:1920px)");
   return (
@@ -104,6 +105,7 @@ function CLSReport({
           showPreviewModal={showPreviewModal}
           submitAdditionalResponse={submitAdditionalResponse}
           permission={permission}
+          readerSlideInfo={readerSlideInfo}
         />
       </>
       {/* )} */}

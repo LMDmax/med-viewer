@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import _ from "lodash";
 import { Box, Text, Flex } from "@chakra-ui/react";
 
@@ -8,12 +8,36 @@ function RadioType({
   handleChange,
   application,
   slideQna,
-  selectedAnswers,
+  clinicalResponse,
 }) {
-  const answersChoosed = selectedAnswers?.qnaArray.find(
-    (answer) => answer?.questionId === question?.question_id
-  );
-  // console.log({ slideQna });
+  const [selectedChoice, setSelectedChoice] = useState(clinicalResponse);
+
+  // Update the selected choice when the clinicalResponse changes
+
+  const handleRadioChange = (choice, questionSelected) => {
+    setSelectedChoice(choice);
+    console.log(choice);
+    handleChange({
+      questionId: questionSelected?.question_id,
+      choice,
+    });
+  };
+
+  const cleanedClinicalResponse = clinicalResponse
+    ?.replace(/[{"]+/g, "")
+    ?.replace(/[}"]+/g, "");
+
+  // console.log({ cleanedClinicalResponse });
+  // console.log({ selectedChoice });
+
+  useEffect(() => {
+    if (cleanedClinicalResponse !== undefined) {
+      handleChange({
+        questionId: question?.question_id,
+        choice: cleanedClinicalResponse,
+      });
+    }
+  }, [cleanedClinicalResponse]);
 
   return (
     <Box w="100%">
@@ -62,13 +86,17 @@ function RadioType({
                   name={question?.question_id}
                   value={choice}
                   onChange={(e) => {
+                    console.log("assas");
                     handleChange({
                       questionId: question?.question_id,
                       choice: e.target.value,
                     });
+                    setSelectedChoice(choice);
                   }}
-                  disabled={
-                    !_.isEmpty(response) || question?.Question?.correctAnswer
+                  checked={
+                    selectedChoice === undefined
+                      ? cleanedClinicalResponse === choice
+                      : selectedChoice === choice
                   }
                 />
                 <Text

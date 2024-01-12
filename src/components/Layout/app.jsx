@@ -79,6 +79,7 @@ function LayoutApp({
   All_Reader_Responses,
   submitAdditionalResponse,
   permission,
+  readerSlideInfo,
 }) {
   // const { handleEvent } = useKeyboardEvents();
 
@@ -763,6 +764,7 @@ function LayoutApp({
             All_Reader_Responses={All_Reader_Responses}
             submitAdditionalResponse={submitAdditionalResponse}
             permission={permission}
+            readerSlideInfo={readerSlideInfo}
           />
         </LayoutInnerBody>
         <Flex

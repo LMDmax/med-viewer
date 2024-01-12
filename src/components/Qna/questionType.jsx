@@ -10,7 +10,12 @@ function QuestionType({
   setQnaResponse,
   slideQna,
   application,
+  clinicalResponse,
+  edit_report,
 }) {
+
+  // console.log({response});
+
   const questionText = question?.question_text;
   const handleChange = ({ questionId, choice, choiceType = null,  }) => {
     setQnaResponse({ questionId, choice: [choice], choiceType, questionText });
@@ -27,6 +32,8 @@ function QuestionType({
         handleChange={handleChange}
         slideQna={slideQna}
         application={application}
+        clinicalResponse={clinicalResponse}
+   
         // setQnaResponse={setQnaResponse}
       />
     );
@@ -41,6 +48,8 @@ function QuestionType({
         response={response}
         handleChange={handleChange}
         slideQna={slideQna}
+        clinicalResponse={clinicalResponse}
+        edit_report={edit_report}
         // setQnaResponse={setQnaResponse}
       />
     );

@@ -9,13 +9,27 @@ function TextType({
   response,
   slideQna,
   isLastDisable,
+  clinicalResponse,
+  edit_report,
 }) {
   useEffect(() => {
     if (!isLastDisable) return;
     handleChange({ questionId: question?.Question?.id });
   }, [isLastDisable]);
   // console.log(slideQna);
-  // console.log({ response });
+  // console.log({ clinicalResponse });
+  const cleanedClinicalResponse = clinicalResponse
+    ?.replace(/[{"]+/g, "")
+    ?.replace(/[}"]+/g, "");
+  
+    useEffect(() => {
+      if (cleanedClinicalResponse) {
+        handleChange({
+          questionId: question?.question_id,
+          choice: cleanedClinicalResponse,
+        });
+      }
+    }, [cleanedClinicalResponse]);
 
   return (
     <Input
@@ -26,12 +40,12 @@ function TextType({
       // 		: slideQna?.response?.[question?.Question?.id]?.choiceText ?? ""
       // }
       defaultValue={
-        !_.isEmpty(response)
-          ? response[question?.Question?.id]?.choiceId
-          : question?.Question?.correctAnswer &&
-            question?.Question?.correctAnswer
+        cleanedClinicalResponse? cleanedClinicalResponse : !_.isEmpty(response)
+        ? response[question?.Question?.id]?.choiceId
+        : question?.Question?.correctAnswer &&
+          question?.Question?.correctAnswer
       }
-      isDisabled={!_.isEmpty(response) || question?.Question?.correctAnswer}
+      // isDisabled={(!_.isEmpty(response) || question?.Question?.correctAnswer) }
       border="1px solid black"
       borderRadius="none"
       w="250px"
