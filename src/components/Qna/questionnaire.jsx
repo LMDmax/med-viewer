@@ -980,7 +980,7 @@ function Questionnaire({
                                         : "inherit"
                                     }
                                   >
-                                    {`Your1 response:
+                                    {`Your response:
           ${
             questionResponse?.section_questions[i]?.response
               ?.replace(/[{"]+/g, "")
@@ -1018,7 +1018,7 @@ function Questionnaire({
                             : "inherit"
                         }
                       >
-                        Your2 response:{" "}
+                        Your response:{" "}
                         {questionResponse?.response
                           ?.replace(/[{"]+/g, "")
                           ?.replace(/[}"]+/g, "") || "Not Applicable"}
@@ -1052,7 +1052,7 @@ function Questionnaire({
                           wordBreak: "break-all",
                         }}
                       >
-                        Your3 response:
+                        Your response:
                         {question.response}
                       </Text>
                     </>
