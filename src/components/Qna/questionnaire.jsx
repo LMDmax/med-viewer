@@ -78,7 +78,7 @@ function Questionnaire({
 
   useEffect(() => {
     // Filter the object whose _id matches the slideId
-    const selectedSlide = readerSlideInfo?.data.find(
+    const selectedSlide = readerSlideInfo?.data?.find(
       (slide) => slide._id === slideId
     );
 
@@ -473,7 +473,7 @@ function Questionnaire({
     .slice()
     .sort((a, b) => a.first_name.localeCompare(b.first_name));
 
-  // console.log({ userInfo });
+  console.log({ sortedResponses });
   return (
     <VStack
       spacing={6}
@@ -588,7 +588,7 @@ function Questionnaire({
           );
         })
       ) : userInfo?.data[0].role === "PI" &&
-        permission.data[0].permissions.includes("viewReport") &&
+        permission?.data[0].permissions.includes("viewReport") &&
         All_Reader_Responses?.data?.finalResponseArray.length > 0 ? (
         <Accordion w="100%" allowToggle>
           {sortedResponses.map((elem, index) => (
@@ -633,7 +633,7 @@ function Questionnaire({
                                             : "inherit"
                                         }
                                       >
-                                        Q: {slideResponse?.question_text}
+                                        Q1: {slideResponse?.question_text}
                                       </Text>
                                       <Text
                                         color={
@@ -661,7 +661,7 @@ function Questionnaire({
                                       {/* Render section heading */}
                                       {/* Map and render section questions and answers */}
                                       <Text>
-                                        Q: {slideResponse?.section_heading}{" "}
+                                        QSection: {slideResponse?.section_heading}{" "}
                                       </Text>
                                       {slideResponse.section_questions.map(
                                         (sectionQuestion, sectionIndex) => (
@@ -675,7 +675,7 @@ function Questionnaire({
                                               }
                                               style={{ marginBottom: "5px" }}
                                             >
-                                              Q:{" "}
+                                              Q3:{" "}
                                               {sectionQuestion?.question_text}
                                             </Text>
                                             <Text
@@ -706,7 +706,7 @@ function Questionnaire({
                                 return (
                                   <Box key={slideIndex} mt="20px">
                                     <p style={{ marginBottom: "10px" }}>
-                                      Q: {slideResponse?.question_text}
+                                      Q6: {slideResponse?.question_text}
                                     </p>
                                     <p>
                                       A:{" "}
@@ -877,7 +877,9 @@ function Questionnaire({
                 const questionResponse = response
                   ? response.filteredQuestionnaireResponse[index]
                   : null;
-                // console.log({ question });
+                console.log({ questionResponse });
+                console.log({ response });
+                console.log({ questions });
                 return (
                   <Stack
                     key={index}

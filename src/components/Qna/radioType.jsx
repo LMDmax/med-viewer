@@ -27,7 +27,7 @@ function RadioType({
     ?.replace(/[{"]+/g, "")
     ?.replace(/[}"]+/g, "");
 
-  // console.log({ cleanedClinicalResponse });
+  console.log({ cleanedClinicalResponse });
   // console.log({ selectedChoice });
 
   useEffect(() => {
