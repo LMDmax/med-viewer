@@ -272,10 +272,10 @@ const AnnotationFeed = ({
 
   const annotationFeed = activityFeed?.filter(
     (eachAnnotation) =>
-      eachAnnotation.object.type !== "textbox" &&
-      eachAnnotation.object.addLocalRegion === false
+      (eachAnnotation.object.type !== "textbox" &&
+      eachAnnotation.object.addLocalRegion === false) || (eachAnnotation.object.roiType === "morphometry" || eachAnnotation.object.roiType === "KI67")
   );
-  // console.log({ annotationFeed });
+  console.log({ activityFeed });
   // console.log({ allLocalRegionAnnotations });
 
   // set description text and visibility
