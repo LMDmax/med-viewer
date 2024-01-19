@@ -1400,7 +1400,7 @@ const AnnotationFeed = ({
                                       w="100%"
                                     >
                                       <p>Lymphocyte Count :</p>
-                                      <p>{elem.counts} sq mm</p>
+                                      <p>{elem.counts}</p>
                                     </Flex>
                                   </Box>
                                 </Flex>
@@ -1454,7 +1454,7 @@ const AnnotationFeed = ({
                         Lymphocytes Count : {lymphocyteCount}
                       </Text>
                       <Text borderBottom="1px solid lightgray">
-                        Lymphocyte Area : {lymphocyteArea}
+                        Lymphocyte Area : {lymphocyteArea} sq mm
                       </Text>
                     </Box>
                   </MotionBox>
@@ -1745,7 +1745,7 @@ const AnnotationFeed = ({
                             : "-"}
                         </Text>
                       </Flex>
-                      <Flex w="100%" justifyContent="space-between">
+                      {/* <Flex w="100%" justifyContent="space-between">
                         <Text>Tumor Length :</Text>
                         <Text>
                           <Text>
@@ -1761,7 +1761,7 @@ const AnnotationFeed = ({
                               : "-"}
                           </Text>{" "}
                         </Text>
-                      </Flex>
+                      </Flex> */}
                       <Flex
                         // border="1px solid red"
                         w="100%"
